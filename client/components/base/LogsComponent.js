@@ -5,17 +5,17 @@ LogsComponent = function () {
     var self = this;
     var typeTitles = {};
     /* человеко-читаемые типы логов. */
-    typeTitles[LogsComponent.TYPE_DETAIL] = 'detail';
-    typeTitles[LogsComponent.TYPE_NOTIFY] = 'notify';
-    typeTitles[LogsComponent.TYPE_WARNING] = 'warning';
-    typeTitles[LogsComponent.TYPE_ERROR] = 'error';
-    typeTitles[LogsComponent.TYPE_FATAL_ERROR] = 'fatal error';
+    typeTitles[LogsComponent.LEVEL_DETAIL] = 'detail';
+    typeTitles[LogsComponent.LEVEL_NOTIFY] = 'notify';
+    typeTitles[LogsComponent.LEVEL_WARNING] = 'warning';
+    typeTitles[LogsComponent.LEVEL_ERROR] = 'error';
+    typeTitles[LogsComponent.LEVEL_FATAL_ERROR] = 'fatal error';
 
     /**
      * Уровень срабатывания по умолчанию
      * @type {number} LogsComponent.TYPE_*
      */
-    this.level = LogsComponent.TYPE_DETAIL;
+    this.level = LogsComponent.LEVEL_DETAIL;
 
     /**
      * Сюда и проходят логи.
@@ -24,17 +24,17 @@ LogsComponent = function () {
      * @param details детали
      */
     this.inLog = function (message, level, details) {
-        var timestamp, logText, levelTitle;
-        if (!level)level = LogsComponent.TYPE_DETAIL;
+        var date, timestamp, logText, levelTitle;
+        if (!level)level = LogsComponent.LEVEL_DETAIL;
         if (level < self.level)return;
-        if (!details)details = null;
-
-        timestamp = new Date().getTime();
+        date = new Date();
+        timestamp = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
         details = JSON.stringify(details);
         levelTitle = typeTitles[level];
-        logText = timestamp + ' ' + levelTitle + ' ' + message + ' ' + details;
+        logText = timestamp + ' ' + levelTitle + ' ' + message;
+        if (details) logText += ' ' + details;
         console.log(logText);
-        if (level == LogsComponent.TYPE_FATAL_ERROR) {
+        if (level == LogsComponent.LEVEL_FATAL_ERROR) {
             process.exit();
         }
     };
@@ -50,23 +50,23 @@ LogsComponent = function () {
 /**
  * Детально.
  */
-LogsComponent.TYPE_DETAIL = 1;
+LogsComponent.LEVEL_DETAIL = 1;
 /**
  * Оповещение.
  */
-LogsComponent.TYPE_NOTIFY = 2;
+LogsComponent.LEVEL_NOTIFY = 2;
 /**
  * Внимание.
  */
-LogsComponent.TYPE_WARNING = 3;
+LogsComponent.LEVEL_WARNING = 3;
 /**
  * Ошибка.
  */
-LogsComponent.TYPE_ERROR = 4;
+LogsComponent.LEVEL_ERROR = 4;
 /**
  * Фатальная ошибка.
  */
-LogsComponent.TYPE_FATAL_ERROR = 5;
+LogsComponent.LEVEL_FATAL_ERROR = 5;
 
 /**
  * Компонент тестирования.
@@ -95,33 +95,33 @@ LogsComponent.TestComponent = function () {
         self.outLog1("Some message");
         ASSERT.notEqual(capthMessage.match(/^\d* detail Some message null$/), null);
 
-        self.outLog1("Some message 2", LogsComponent.TYPE_DETAIL);
+        self.outLog1("Some message 2", LogsComponent.LEVEL_DETAIL);
         ASSERT.notEqual(capthMessage.match(/^\d* detail Some message 2 null$/), null);
 
-        self.outLog1("Some message 3", LogsComponent.TYPE_NOTIFY);
+        self.outLog1("Some message 3", LogsComponent.LEVEL_NOTIFY);
         ASSERT.notEqual(capthMessage.match(/^\d* notify Some message 3 null$/), null);
 
-        self.outLog1("Some message 4", LogsComponent.TYPE_WARNING);
+        self.outLog1("Some message 4", LogsComponent.LEVEL_WARNING);
         ASSERT.notEqual(capthMessage.match(/^\d* warning Some message 4 null$/), null);
 
-        self.outLog1("Some message 5", LogsComponent.TYPE_ERROR);
+        self.outLog1("Some message 5", LogsComponent.LEVEL_ERROR);
         ASSERT.notEqual(capthMessage.match(/^\d* error Some message 5 null$/), null);
 
-        self.outLog1("Some message 5", LogsComponent.TYPE_DETAIL, "DETAILS");
+        self.outLog1("Some message 5", LogsComponent.LEVEL_DETAIL, "DETAILS");
         ASSERT.notEqual(capthMessage.match(/^\d* detail Some message 5 "DETAILS"/), null);
 
         capthMessage = "no data";
         self.outLog2("check 1");
         ASSERT.equal(capthMessage, "no data");
 
-        self.outLog2("check 2", LogsComponent.TYPE_WARNING);
+        self.outLog2("check 2", LogsComponent.LEVEL_WARNING);
         ASSERT.equal(capthMessage, "no data");
 
-        self.outLog2("check 3", LogsComponent.TYPE_ERROR);
+        self.outLog2("check 3", LogsComponent.LEVEL_ERROR);
         ASSERT.notEqual(capthMessage.match(/^\d* error check 3 null/), null);
 
         capthExit = false;
-        self.outLog2("Fatal error", LogsComponent.TYPE_FATAL_ERROR);
+        self.outLog2("Fatal error", LogsComponent.LEVEL_FATAL_ERROR);
         ASSERT.equal(capthExit, true);
 
         // mock-back console.log function
@@ -153,7 +153,7 @@ LogsComponent.TestBoardScheme = [
         component: "LogsComponent",
         soldering: {},
         setup: {
-            level: LogsComponent.TYPE_ERROR
+            level: LogsComponent.LEVEL_ERROR
         }
     },
     {

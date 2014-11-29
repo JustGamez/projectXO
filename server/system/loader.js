@@ -9,22 +9,7 @@
 var FS = require('fs');
 var PATH = require('path');
 
-/**
- * Логи на этапах создания.
- * @param message
- */
-log = function (message) {
-    console.log(message);
-};
-
-/**
- * Ошибка создания, выводит сообщение и завершает работу.
- * @param message
- */
-error = function (message) {
-    console.log("Ошибка: " + message);
-    process.exit();
-};
+require('./functions.js');
 
 /**
  * Подключение всех компонент.

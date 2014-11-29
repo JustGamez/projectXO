@@ -56,6 +56,29 @@ var componentList = (function (path) {
     return componentList;
 })(process.cwd() + '/components/');
 
+
+/* Валидация тестового кода компонент */
+for (var i in componentList) {
+    name = componentList[i].name;
+    path = componentList[i].path;
+
+    if (!GLOBAL[name].TestBoardScheme) {
+        error("Компонент должен иметь свойство ComponentName.TestBoardScheme." +
+        "\r\nкомпонент: " + name +
+        "\r\nфайл: " + path);
+    }
+    if (!Array.isArray(GLOBAL[name].TestBoardScheme)) {
+        error("Компонент должен иметь свойство ComponentName.TestBoardScheme с типом Array." +
+        "\r\nкомпонент: " + name +
+        "\r\nфайл: " + path);
+    }
+    if (!GLOBAL[name].TestComponent) {
+        error("Компонент должен иметь свойство ComponentName.TestComponent." +
+        "\r\nкомпонент: " + name +
+        "\r\nфайл: " + path);
+    }
+}
+
 /* Проверка каждого компонента отдельно. */
 for (var i in componentList) {
     var name, path;

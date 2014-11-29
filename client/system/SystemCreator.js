@@ -1,6 +1,3 @@
-/* Подключение nodeJS модулей */
-var FS = require('fs');
-
 /**
  * Системный компонент.
  */
@@ -128,6 +125,7 @@ SystemCreator = function () {
      * Парсинг пути к пину.
      * Разбирает путь пина, вида elementName.pinName в массив из двух элементов.
      * @param pinPath путь к пину, вида elementName.pinName
+     * @param whereMessage сообщение описывающие, где мы производим парсинг, это нужно для логирования ошибок.
      * @returns Array массив, первое значение - имя элемента, второе значение - имя пина.
      */
     var parsePinPath = function (pinPath, whereMessage) {
