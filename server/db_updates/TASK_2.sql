@@ -1,5 +1,5 @@
 /* Создадим базу данных. */
 
-CREATE DATABASE `porjectxo` 
+CREATE DATABASE `xo`
 DEFAULT CHARACTER SET utf8
 DEFAULT COLLATE utf8_general_ci;

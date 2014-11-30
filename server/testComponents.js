@@ -91,6 +91,9 @@ for (var i in componentList) {
     TestComponent = GLOBAL[name].TestComponent;
     TestComponent.__path = path;
     /* Инициируем включение системы */
+    log("testing component:" + name);
     creator = new SystemCreator;
     creator.run();
 }
+
+log("testing complete.");

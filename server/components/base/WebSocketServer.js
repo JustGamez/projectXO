@@ -67,7 +67,6 @@ WebSocketServer = function () {
         init();
     };
     this.switchOff = function () {
-
     };
     /**
      * Последний id соединения.

@@ -16,5 +16,19 @@ BoardScheme = [
             reloadClientCodeEveryRequest: true,
             clientCodePath: '../client/'
         }
+    },
+    {
+        name: 'DB',
+        component: 'DBComponent',
+        soldering: {
+            'outLog': 'Logs.inLog'
+        },
+        setup: {
+            host: 'localhost',
+            username: 'root',
+            password: '',
+            database: 'xo',
+            charset: 'UTF8'
+        }
     }
 ];
