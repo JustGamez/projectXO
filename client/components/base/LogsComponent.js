@@ -1,8 +1,15 @@
 /**
  * Компонент логирования.
+ * Клиент-серверный компонент!
  */
 LogsComponent = function () {
     var self = this;
+    this.setup = function () {
+    };
+    this.switchOn = function () {
+    };
+    this.switchOff = function () {
+    };
     var typeTitles = {};
     /* человеко-читаемые типы логов. */
     typeTitles[LogsComponent.LEVEL_DETAIL] = 'detail';
@@ -10,13 +17,11 @@ LogsComponent = function () {
     typeTitles[LogsComponent.LEVEL_WARNING] = 'warning';
     typeTitles[LogsComponent.LEVEL_ERROR] = 'error';
     typeTitles[LogsComponent.LEVEL_FATAL_ERROR] = 'fatal error';
-
     /**
      * Уровень срабатывания по умолчанию
      * @type {number} LogsComponent.TYPE_*
      */
     this.level = LogsComponent.LEVEL_DETAIL;
-
     /**
      * Сюда и проходят логи.
      * @param message сообщение
@@ -37,12 +42,6 @@ LogsComponent = function () {
         if (level == LogsComponent.LEVEL_FATAL_ERROR) {
             process.exit();
         }
-    };
-
-    this.switchOn = function () {
-    };
-
-    this.switchOff = function () {
     };
 };
 
@@ -85,6 +84,7 @@ LogsComponent.TestComponent = function () {
         consoleLogTmp = console.log;
         console.log = function (message) {
             capthMessage = message;
+            capthMessage = capthMessage.replace(/\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{1,2}:\d{1,2}/g, 'DATE-TIME');
         };
 
         processExitTmp = process.exit;
@@ -92,23 +92,30 @@ LogsComponent.TestComponent = function () {
             capthExit = true;
         };
         // do some actions and asserts
-        self.outLog1("Some message");
-        ASSERT.notEqual(capthMessage.match(/^\d* detail Some message null$/), null);
+        var message = "Some message";
+        self.outLog1(message);
+        // remove replace date-time
+        ASSERT.equal(capthMessage, "DATE-TIME detail " + message);
 
-        self.outLog1("Some message 2", LogsComponent.LEVEL_DETAIL);
-        ASSERT.notEqual(capthMessage.match(/^\d* detail Some message 2 null$/), null);
+        message = "Some message 2";
+        self.outLog1(message, LogsComponent.LEVEL_DETAIL);
+        ASSERT.equal(capthMessage, "DATE-TIME detail " + message);
 
-        self.outLog1("Some message 3", LogsComponent.LEVEL_NOTIFY);
-        ASSERT.notEqual(capthMessage.match(/^\d* notify Some message 3 null$/), null);
+        message = "Some message 3";
+        self.outLog1(message, LogsComponent.LEVEL_NOTIFY);
+        ASSERT.equal(capthMessage, "DATE-TIME notify " + message);
 
-        self.outLog1("Some message 4", LogsComponent.LEVEL_WARNING);
-        ASSERT.notEqual(capthMessage.match(/^\d* warning Some message 4 null$/), null);
+        message = "Some message 4";
+        self.outLog1(message, LogsComponent.LEVEL_WARNING);
+        ASSERT.equal(capthMessage, "DATE-TIME warning " + message);
 
-        self.outLog1("Some message 5", LogsComponent.LEVEL_ERROR);
-        ASSERT.notEqual(capthMessage.match(/^\d* error Some message 5 null$/), null);
+        message = "Some message 5";
+        self.outLog1(message, LogsComponent.LEVEL_ERROR);
+        ASSERT.equal(capthMessage, "DATE-TIME error " + message);
 
-        self.outLog1("Some message 5", LogsComponent.LEVEL_DETAIL, "DETAILS");
-        ASSERT.notEqual(capthMessage.match(/^\d* detail Some message 5 "DETAILS"/), null);
+        message = "Some message 5";
+        self.outLog1(message, LogsComponent.LEVEL_DETAIL, "DETAILS");
+        ASSERT.equal(capthMessage, "DATE-TIME detail " + message + ' "DETAILS"');
 
         capthMessage = "no data";
         self.outLog2("check 1");
@@ -118,7 +125,7 @@ LogsComponent.TestComponent = function () {
         ASSERT.equal(capthMessage, "no data");
 
         self.outLog2("check 3", LogsComponent.LEVEL_ERROR);
-        ASSERT.notEqual(capthMessage.match(/^\d* error check 3 null/), null);
+        ASSERT.equal(capthMessage, "DATE-TIME error check 3");
 
         capthExit = false;
         self.outLog2("Fatal error", LogsComponent.LEVEL_FATAL_ERROR);
@@ -134,7 +141,9 @@ LogsComponent.TestComponent = function () {
     };
 
     this.switchOff = function () {
+    };
 
+    this.setup = function () {
     };
 };
 

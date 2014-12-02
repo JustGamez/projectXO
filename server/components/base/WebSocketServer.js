@@ -14,6 +14,18 @@ var PATH = require('path');
 
 WebSocketServer = function () {
     var self = this;
+    var lastConnectionId = null;
+    this.setup = function () {
+
+    };
+    /**
+     * Включение компонента, тут мы просто выполним инит.
+     */
+    this.switchOn = function () {
+        init();
+    };
+    this.switchOff = function () {
+    };
     /**
      * Сюда будут отправляться логи.
      */
@@ -21,18 +33,20 @@ WebSocketServer = function () {
     };
     /**
      * Сюда отправляются данные от клиентов. id коннекта и данные.
+     * @param data данные
+     * @param id id коннекта
      */
-    this.outData = function (id, data) {
+    this.outData = function (data, id) {
     };
     /**
      * Когда кто-то коннектися, сюда будут отправляться данные с id соедениения.
      */
-    this.outOnConnect = function (id, data) {
+    this.outOnConnect = function (id) {
     };
     /**
      * Когда кто-то дисконнектися, сюда будут отправляться данные с id соедениения.
      */
-    this.outOnDisconnect = function (id, data) {
+    this.outOnDisconnect = function (id) {
     };
     /**
      * Перезагружать ли клиентский код, каждый раз. Когда его запрашивают.
@@ -53,20 +67,13 @@ WebSocketServer = function () {
      * Отправляет данные клиенту
      * @param data
      */
-    this.inData = function (id, data) {
+    this.inData = function (data, id) {
+        if (id == undefined)id = lastConnectionId;
         if (!connectionStack[id]) {
-            self.outLog(Logs.LEVEL_WARNING, "undefined connection:" + id + ", with data:" + data);
+            self.outLog("undefined connection:" + id + " with data:" + data, LogsComponent.LEVEL_WARNING);
             return;
         }
         connectionStack[id].sendUTF(data);
-    };
-    /**
-     * Включение компонента, тут мы просто выполним инит.
-     */
-    this.switchOn = function () {
-        init();
-    };
-    this.switchOff = function () {
     };
     /**
      * Последний id соединения.
@@ -193,8 +200,9 @@ WebSocketServer = function () {
         self.outOnConnect(id);
         connection.on('message', function (message) {
             if (message.type == 'utf8') {
-                self.outLog("Получен данные.", LogsComponent.LEVEL_DETAIL, message.utf8Data);
-                self.outData(id, message.utf8Data);
+                self.outLog("Получены данные.", LogsComponent.LEVEL_DETAIL, message.utf8Data);
+                lastConnectionId = id;
+                self.outData(message.utf8Data, id);
             }
         });
         connection.on('close', function () {

@@ -48,6 +48,8 @@ WebSocketClient = function () {
         packetBuffer.push(data);
         trySend();
     };
+    this.setup = function () {
+    };
     /**
      * Просто выполним инициализацию.
      * Собсвтено подсоединимся к серверу.
@@ -120,7 +122,7 @@ WebSocketClient = function () {
      * @param event
      */
     var onMessage = function (event) {
-        self.outLog("WebSocketClient: Получены данные.");
+        self.outLog("WebSocketClient: Получены данные.", LogsComponent.LEVEL_DETAIL, event.data);
         self.outData(event.data);
     };
     /**

@@ -1,5 +1,6 @@
 /**
  * Системный компонент.
+ * Клиент-серверный компонент!
  */
 SystemCreator = function () {
     /**
@@ -18,10 +19,10 @@ SystemCreator = function () {
     this.run = function () {
         // создадим компоненты
         createElements();
-        // спаяем элементы
-        solderElements();
         // настроим компоненты
         setupElements();
+        // спаяем элементы
+        solderElements();
         // включим питание элементов
         switchOnElements();
     };
@@ -37,42 +38,71 @@ SystemCreator = function () {
      */
     var createElements = function () {
         var params, element;
-
         log("Создание элементов.");
         // создаем элементы.
         for (var n in BoardScheme) {
+            // проверяем структуру компонента.
             // Каждый элемент схемы имеет поля: name, component, soldering, setup
-            with (BoardScheme[n]) {
 
-                // проверяем возможность создать элемент.
-                if (!GLOBAL[component]) {
-                    error("Нельзя создать элемент. Нет компонента. Компонент:" + component);
-                }
-                if (board.elements[name]) {
-                    error("Нельзя создать элемент. Элемент с таким именем уже существует. Компонент:" + component);
-                }
-
-                // создаём элемент.
-                element = new GLOBAL[component];
-
-                // проверяем структуру компонента.
-                if (!element.switchOn || typeof element.switchOn != 'function') {
-                    error("Элемент должен иметь функцию switchOn.\r\n" +
-                    "элемент:" + name + "\r\n" +
-                    "компонент:" + component + "\r\n" +
-                    "файл:" + GLOBAL[component].__path);
-                }
-                if (!element.switchOff || typeof element.switchOff != 'function') {
-                    error("Элемент должен иметь функцию switchOff.\r\n" +
-                    "элемент:" + name + "\r\n" +
-                    "компонент:" + component + "\r\n" +
-                    "файл:" + GLOBAL[component].__path);
-                }
-
-                element.__name = name;
-                element.__component = component;
-                board.elements[name] = element;
+            var d = BoardScheme[n];
+            if (!d.name) {
+                error("Элемент описнаия схемы должен иметь свойство: name.\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
             }
+            if (!d.component) {
+                error("Элемент описнаия схемы должен иметь свойство: component.\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
+            }
+            if (!d.setup) {
+                error("Элемент описнаия схемы должен иметь свойство: setup.\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
+            }
+            if (!d.soldering) {
+                error("Элемент описнаия схемы должен иметь свойство: soldering.\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
+            }
+            // проверяем возможность создать элемент.
+            if (!GLOBAL[d.component]) {
+                error("Нельзя создать элемент. Нет компонента. Компонент:" + d.component);
+            }
+            if (board.elements[d.name]) {
+                error("Нельзя создать элемент. Элемент с таким именем уже существует. Компонент:" + d.component);
+            }
+
+            // создаём элемент.
+            element = new GLOBAL[d.component](d.configure);
+
+            // проверяем структуру компонента.
+            if (!element.setup || typeof element.setup != 'function') {
+                error("Элемент должен иметь функцию: setup().\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
+            }
+            if (!element.switchOn || typeof element.switchOn != 'function') {
+                error("Элемент должен иметь функцию: switchOn().\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
+            }
+            if (!element.switchOff || typeof element.switchOff != 'function') {
+                error("Элемент должен иметь функцию: switchOff().\r\n" +
+                "элемент:" + d.name + "\r\n" +
+                "компонент:" + d.component + "\r\n" +
+                "файл:" + GLOBAL[d.component].__path);
+            }
+
+            element.__name = d.name;
+            element.__component = d.component;
+            board.elements[d.name] = element;
         }
     };
     /**
@@ -110,6 +140,8 @@ SystemCreator = function () {
             for (var settingName in BoardScheme[i].setup) {
                 board.elements[BoardScheme[i].name][settingName] = BoardScheme[i].setup[settingName];
             }
+            // выполняем настройку компонента.
+            board.elements[BoardScheme[i].name].setup();
         }
     };
     /**

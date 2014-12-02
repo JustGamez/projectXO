@@ -9,6 +9,15 @@ var MYSQL = require('mysql');
 
 DBComponent = function () {
     var self = this;
+    this.setup = function () {
+
+    };
+    this.switchOn = function () {
+        init();
+    };
+    this.switchOff = function () {
+
+    };
     /**
      * Хост с базой данных.
      * @type {string}
@@ -17,15 +26,6 @@ DBComponent = function () {
     this.username = '';
     this.password = '';
     this.database = '';
-
-    this.switchOn = function () {
-        init();
-    };
-
-    this.switchOff = function () {
-
-    };
-
     this.outLog = null;
     this.outData = null;
 
@@ -76,11 +76,14 @@ DBComponent.TestComponent = function () {
     };
 
     this.switchOn = function () {
+        // simplest testing.
         self.outQuery("SELECT * FROM COLLATIONS");
     };
 
     this.switchOff = function () {
+    };
 
+    this.setup = function () {
     };
 };
 

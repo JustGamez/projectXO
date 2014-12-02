@@ -1,8 +1,15 @@
 /**
  * Компонент логирования.
+ * Клиент-серверный компонент!
  */
 LogsComponent = function () {
     var self = this;
+    this.setup = function () {
+    };
+    this.switchOn = function () {
+    };
+    this.switchOff = function () {
+    };
     var typeTitles = {};
     /* человеко-читаемые типы логов. */
     typeTitles[LogsComponent.LEVEL_DETAIL] = 'detail';
@@ -10,13 +17,11 @@ LogsComponent = function () {
     typeTitles[LogsComponent.LEVEL_WARNING] = 'warning';
     typeTitles[LogsComponent.LEVEL_ERROR] = 'error';
     typeTitles[LogsComponent.LEVEL_FATAL_ERROR] = 'fatal error';
-
     /**
      * Уровень срабатывания по умолчанию
      * @type {number} LogsComponent.TYPE_*
      */
     this.level = LogsComponent.LEVEL_DETAIL;
-
     /**
      * Сюда и проходят логи.
      * @param message сообщение
@@ -37,12 +42,6 @@ LogsComponent = function () {
         if (level == LogsComponent.LEVEL_FATAL_ERROR) {
             process.exit();
         }
-    };
-
-    this.switchOn = function () {
-    };
-
-    this.switchOff = function () {
     };
 };
 
@@ -142,7 +141,9 @@ LogsComponent.TestComponent = function () {
     };
 
     this.switchOff = function () {
+    };
 
+    this.setup = function () {
     };
 };
 

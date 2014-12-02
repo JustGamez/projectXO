@@ -6,18 +6,6 @@ BoardScheme = [
         setup: {}
     },
     {
-        name: 'Connector',
-        component: 'WebSocketServer',
-        soldering: {
-            'outLog': 'Logs.inLog'
-        },
-        setup: {
-            port: 80,
-            reloadClientCodeEveryRequest: true,
-            clientCodePath: '../client/'
-        }
-    },
-    {
         name: 'DB',
         component: 'DBComponent',
         soldering: {
@@ -30,5 +18,44 @@ BoardScheme = [
             database: 'xo',
             charset: 'UTF8'
         }
+    },
+    {
+        name: 'Connector',
+        component: 'WebSocketServer',
+        setup: {
+            port: 80,
+            reloadClientCodeEveryRequest: true,
+            clientCodePath: '../client/'
+        },
+        soldering: {
+            'outLog': 'Logs.inLog',
+            'outData': 'Port.inData'
+        }
+    },
+    {
+        name: 'Port',
+        component: 'PortComponent',
+        configure: {
+            pins: [
+                'outAuthorizationByVK',
+                'outPing',
+                'inPong'
+            ]
+        },
+        setup: {},
+        soldering: {
+            'outLog': 'Logs.inLog',
+            'outData': 'Connector.inData',
+            'outAuthorizationByVK': 'SAPIUser.inAuthorizationByVK',
+            'outPing': 'SAPIUser.inPing'
+        }
+    },
+    {
+        name: 'SAPIUser',
+        component: 'SAPIUserComponent',
+        soldering: {
+            'outPong': 'Port.inPong'
+        },
+        setup: {}
     }
 ];

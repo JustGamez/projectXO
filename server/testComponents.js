@@ -56,12 +56,22 @@ var componentList = (function (path) {
     return componentList;
 })(process.cwd() + '/components/');
 
+if (process.argv[2]) {
+    oneTest = process.argv[2];
+} else {
+    oneTest = null;
+}
 
 /* Валидация тестового кода компонент */
 for (var i in componentList) {
+    if (oneTest && componentList[i].name != oneTest) continue
     name = componentList[i].name;
     path = componentList[i].path;
 
+    if (GLOBAL[name].TestSkipped && GLOBAL[name].TestSkipped == true) {
+        log("Тест пропущен!:" + name);
+        continue;
+    }
     if (!GLOBAL[name].TestBoardScheme) {
         error("Компонент должен иметь свойство ComponentName.TestBoardScheme." +
         "\r\nкомпонент: " + name +
@@ -85,6 +95,13 @@ for (var i in componentList) {
 
     name = componentList[i].name;
     path = componentList[i].path;
+
+    if (oneTest && componentList[i].name != oneTest) continue;
+
+    if (GLOBAL[name].TestSkipped && GLOBAL[name].TestSkipped == true) {
+        continue;
+    }
+
     /* Имитируем подключение схемы */
     BoardScheme = GLOBAL[name].TestBoardScheme;
     /* Имитируем подключение тестового компонента */
