@@ -9,23 +9,27 @@ var MYSQL = require('mysql');
 
 DBComponent = function () {
     var self = this;
-    this.setup = function () {
-
+    this.setup = function (setup) {
+        if (setup.host)host = setup.host;
+        if (setup.username)username = setup.username;
+        if (setup.password)password = setup.password;
+        if (setup.database)database = setup.database;
+        if (setup.charset)charset = setup.charset;
     };
+
     this.switchOn = function () {
         init();
-    };
-    this.switchOff = function () {
-
     };
     /**
      * Хост с базой данных.
      * @type {string}
      */
-    this.host = '';
-    this.username = '';
-    this.password = '';
-    this.database = '';
+    var host = '';
+    var username = '';
+    var password = '';
+    var database = '';
+    var charset = '';
+
     this.outLog = null;
     this.outData = null;
 
@@ -38,11 +42,11 @@ DBComponent = function () {
 
     var init = function () {
         connection = MYSQL.createConnection({
-            host: self.host,
-            user: self.username,
-            password: self.password,
-            database: self.database,
-            charset: self.charset
+            host: host,
+            user: username,
+            password: password,
+            database: database,
+            charset: charset
         });
 
         connection.connect(function (err) {
@@ -78,12 +82,6 @@ DBComponent.TestComponent = function () {
     this.switchOn = function () {
         // simplest testing.
         self.outQuery("SELECT * FROM COLLATIONS");
-    };
-
-    this.switchOff = function () {
-    };
-
-    this.setup = function () {
     };
 };
 

@@ -5,6 +5,20 @@
 WebSocketClient = function () {
     var self = this;
     /**
+     * Хост сервера.
+     * @type {string}
+     */
+    var host = null;
+    /**
+     * Порт сервера.
+     * @type {int}
+     */
+    var port = null;
+    this.setup = function (setup) {
+        if (setup.port)port = setup.port;
+        if (setup.host)host = setup.host;
+    };
+    /**
      * Сюда мы будет отправлять логи.
      * @param message
      * @param level
@@ -30,16 +44,6 @@ WebSocketClient = function () {
     this.outOnDisconnect = function () {
     };
     /**
-     * Хост сервера.
-     * @type {string}
-     */
-    this.host = null;
-    /**
-     * Порт сервера.
-     * @type {int}
-     */
-    this.port = null;
-    /**
      * Сюда мы будем получать данные и отправлять их на сервер.
      * Примечание: Однако, если соединения с серверм нет, то мы будем просто добавлять их в буффер.
      * @param data string
@@ -48,17 +52,12 @@ WebSocketClient = function () {
         packetBuffer.push(data);
         trySend();
     };
-    this.setup = function () {
-    };
     /**
      * Просто выполним инициализацию.
      * Собсвтено подсоединимся к серверу.
      */
     this.switchOn = function () {
         init();
-    };
-    this.switchOff = function () {
-
     };
     /**
      * Состояние соединения:
@@ -85,7 +84,7 @@ WebSocketClient = function () {
     var init = function () {
         var uri;
         self.outLog("WebSocketClient запущен.");
-        uri = "ws://" + self.host + ":" + self.port + "/ws";
+        uri = "ws://" + host + ":" + port + "/ws";
         socket = new WebSocket(uri);
         // установим обработчики.
         socket.onopen = onOpen;

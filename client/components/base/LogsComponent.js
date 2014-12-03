@@ -4,11 +4,14 @@
  */
 LogsComponent = function () {
     var self = this;
-    this.setup = function () {
-    };
-    this.switchOn = function () {
-    };
-    this.switchOff = function () {
+    /**
+     * Уровень срабатывания.
+     * @type {number} LogsComponent.LEVEL_*
+     */
+    var level = LogsComponent.LEVEL_DETAIL;
+
+    this.setup = function (setup) {
+        if (setup.level)level = setup.level;
     };
     var typeTitles = {};
     /* человеко-читаемые типы логов. */
@@ -17,11 +20,7 @@ LogsComponent = function () {
     typeTitles[LogsComponent.LEVEL_WARNING] = 'warning';
     typeTitles[LogsComponent.LEVEL_ERROR] = 'error';
     typeTitles[LogsComponent.LEVEL_FATAL_ERROR] = 'fatal error';
-    /**
-     * Уровень срабатывания по умолчанию
-     * @type {number} LogsComponent.TYPE_*
-     */
-    this.level = LogsComponent.LEVEL_DETAIL;
+
     /**
      * Сюда и проходят логи.
      * @param message сообщение
@@ -138,12 +137,6 @@ LogsComponent.TestComponent = function () {
 
     this.switchOn = function () {
         test();
-    };
-
-    this.switchOff = function () {
-    };
-
-    this.setup = function () {
     };
 };
 

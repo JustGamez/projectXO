@@ -14,28 +14,18 @@ PortComponent = function (configure) {
             continue;
         }
         self[pinName] = function () {
-            self.sendOut(arguments.callee.pinName, arguments);
+            sendOut(arguments.callee.pinName, arguments);
         };
         self[pinName].pinName = pinName;
     }
 
-    this.sendOut = function (pinName, args) {
+    var sendOut = function (pinName, args) {
         var portPacket = {
             pinName: pinName,
             args: Array.prototype.slice.call(args)
         };
         portPacket = JSON.stringify(portPacket);
-        this.outData(portPacket);
-    };
-
-    this.switchOn = function () {
-
-    };
-    this.switchOff = function () {
-
-    };
-    this.setup = function () {
-
+        self.outData(portPacket);
     };
 
     this.inData = function (portPacket, id) {
@@ -85,8 +75,7 @@ PortComponent = function (configure) {
 
     this.outData = null;
     this.outLog = null;
-}
-;
+};
 
 PortComponent.TestBoardScheme = [
     {
@@ -179,14 +168,6 @@ PortComponent.TestComponent = function () {
         capthData = capthData.replace('inA', 'inC')
         self.outData(capthData);
         ASSERT.equal(JSON.stringify([].slice.call(capthInC_args)), JSON.stringify(['arg1', 2, {'param': 5}]));
-    };
-
-    this.switchOff = function () {
-
-    };
-
-    this.setup = function () {
-
     };
 };
 

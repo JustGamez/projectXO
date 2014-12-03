@@ -37,25 +37,30 @@ BoardScheme = [
         component: 'PortComponent',
         configure: {
             pins: [
-                'outAuthorizationByVK',
-                'outPing',
-                'inPong'
+                'outUserAuthorizationByVK',
+                'inUserAuthorizationSuccess'
             ]
         },
         setup: {},
         soldering: {
             'outLog': 'Logs.inLog',
             'outData': 'Connector.inData',
-            'outAuthorizationByVK': 'SAPIUser.inAuthorizationByVK',
-            'outPing': 'SAPIUser.inPing'
+            'outUserAuthorizationByVK': 'LogicUser.inUserAuthorizationByVK'
         }
     },
     {
-        name: 'SAPIUser',
-        component: 'SAPIUserComponent',
+        name: 'LogicUser',
+        component: 'LogicUserComponent',
+        setup: {},
         soldering: {
-            'outPong': 'Port.inPong'
-        },
-        setup: {}
+            'outUserAuthorizationSuccess': 'Port.inUserAuthorizationSuccess',
+            'outCheckAuthVK': 'SocNet.inCheckAuthVK'
+        }
+    },
+    {
+        name: 'SocNet',
+        component: 'SocNetComponent',
+        setup: {},
+        soldering: {}
     }
 ];

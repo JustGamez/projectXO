@@ -41,70 +41,89 @@ SystemCreator = function () {
         log("Создание элементов.");
         // создаем элементы.
         for (var n in BoardScheme) {
-            // проверяем структуру компонента.
-            // Каждый элемент схемы имеет поля: name, component, soldering, setup
-
-            var d = BoardScheme[n];
-            if (!d.name) {
-                error("Элемент описнаия схемы должен иметь свойство: name.\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
-            if (!d.component) {
-                error("Элемент описнаия схемы должен иметь свойство: component.\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
-            if (!d.setup) {
-                error("Элемент описнаия схемы должен иметь свойство: setup.\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
-            if (!d.soldering) {
-                error("Элемент описнаия схемы должен иметь свойство: soldering.\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
-            // проверяем возможность создать элемент.
-            if (!GLOBAL[d.component]) {
-                error("Нельзя создать элемент. Нет компонента. Компонент:" + d.component);
-            }
-            if (board.elements[d.name]) {
-                error("Нельзя создать элемент. Элемент с таким именем уже существует. Компонент:" + d.component);
-            }
-
+            var elementDescription = BoardScheme[n];
+            validateElementDescription(elementDescription);
             // создаём элемент.
-            element = new GLOBAL[d.component](d.configure);
+            element = new GLOBAL[elementDescription.component](elementDescription.configure);
+            if (element.__name) {
+                error("Элемент не должен иметь .__name. Элемент: ", elementDescription.name);
+            }
+            if (element.__component) {
+                error("Элемент не должен иметь .__name. Элемент: ", elementDescription.name);
+            }
+            element.__name = elementDescription.name;
+            element.__component = elementDescription.component;
 
-            // проверяем структуру компонента.
-            if (!element.setup || typeof element.setup != 'function') {
-                error("Элемент должен иметь функцию: setup().\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
-            if (!element.switchOn || typeof element.switchOn != 'function') {
-                error("Элемент должен иметь функцию: switchOn().\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
-            if (!element.switchOff || typeof element.switchOff != 'function') {
-                error("Элемент должен иметь функцию: switchOff().\r\n" +
-                "элемент:" + d.name + "\r\n" +
-                "компонент:" + d.component + "\r\n" +
-                "файл:" + GLOBAL[d.component].__path);
-            }
+            validateElement(element);
 
-            element.__name = d.name;
-            element.__component = d.component;
-            board.elements[d.name] = element;
+            board.elements[elementDescription.name] = element;
         }
     };
+    /**
+     * Проверяем элемент.
+     * @param element
+     */
+    var validateElement = function (element) {
+        var logDescription =
+            "элемент:" + element.__name + "\r\n" +
+            "компонент:" + element.__component + "\r\n" +
+            "файл:" + GLOBAL[element.__component].__path;
+
+        for (var name in element) {
+            if (name == '__name' && typeof element[name] == 'string')continue;
+            if (name == '__component')continue;
+
+            if (name.indexOf('in') == 0 && typeof element[name] == 'function')continue;
+            if (name.indexOf('out') == 0)continue;
+
+            if (name == 'setup' && typeof element[name] == 'function')continue;
+            if (name == 'switchOn' && typeof element[name] == 'function')continue;
+            if (name == 'switchOff' && typeof element[name] == 'function')continue;
+
+            error("Свойство элемнта может быть:" +
+                "\r\n" + "именем: __name и типом: string" +
+                "\r\n" + "именем: __component и типом: string" +
+                "\r\n" + "именем: in{Name} и типом: function" +
+                "\r\n" + "именем: out{Name} и типом: mixed" +
+                "\r\n" + "именем: setup{Name} и типом: function" +
+                "\r\n" + "именем: switch{Name} и типом: function" +
+                "\r\n" + "именем: switchOff{Name} и типом: function" +
+                "\r\n" +
+                "\r\n" + "имя свойства: " + name + " тип: " + typeof element[name] +
+                "\r\n" + logDescription
+            );
+        }
+    };
+    /**
+     * проверяем описание элемента в схеме
+     * @param description
+     */
+    var validateElementDescription = function (description) {
+        var logDescription = "элемент:" + description.name + "\r\n" +
+            "компонент:" + description.component + "\r\n" +
+            "файл:" + GLOBAL[description.component].__path;
+        if (!description.name) {
+            error("Элемент описнаия схемы должен иметь свойство: name.\r\n" + logDescription);
+
+        }
+        if (!description.component) {
+            error("Элемент описнаия схемы должен иметь свойство: component.\r\n" + logDescription);
+        }
+        if (!description.setup) {
+            error("Элемент описнаия схемы должен иметь свойство: setup.\r\n" + logDescription);
+        }
+        if (!description.soldering) {
+            error("Элемент описнаия схемы должен иметь свойство: soldering.\r\n" + logDescription);
+        }
+        // проверяем возможность создать элемент.
+        if (!GLOBAL[description.component]) {
+            error("Нельзя создать элемент. Нет компонента. Компонент:" + description.component);
+        }
+        if (board.elements[description.name]) {
+            error("Нельзя создать элемент. Элемент с таким именем уже существует. Компонент:" + description.component);
+        }
+    };
+
     /**
      * Спаиваем элементы согласно схеме.
      */
@@ -136,12 +155,12 @@ SystemCreator = function () {
      */
     var setupElements = function () {
         log("Настройка элементов.");
+        // выполняем настройку компонента.
         for (var i in BoardScheme) {
-            for (var settingName in BoardScheme[i].setup) {
-                board.elements[BoardScheme[i].name][settingName] = BoardScheme[i].setup[settingName];
+            var name = BoardScheme[i].name;
+            if (board.elements[name].setup) {
+                board.elements[name].setup(BoardScheme[i].setup);
             }
-            // выполняем настройку компонента.
-            board.elements[BoardScheme[i].name].setup();
         }
     };
     /**
@@ -150,7 +169,9 @@ SystemCreator = function () {
     var switchOnElements = function () {
         log("Включаем элементы.");
         for (var i in board.elements) {
-            board.elements[i].switchOn();
+            if (board.elements[i].switchOn) {
+                board.elements[i].switchOn();
+            }
         }
     };
     /**

@@ -15,16 +15,31 @@ var PATH = require('path');
 WebSocketServer = function () {
     var self = this;
     var lastConnectionId = null;
-    this.setup = function () {
-
+    /**
+     * Перезагружать ли клиентский код, каждый раз. Когда его запрашивают.
+     * @type {boolean}
+     */
+    var reloadClientCodeEveryRequest = null;
+    /**
+     * Порт для прослушки.
+     * @type {int};
+     */
+    var port = null;
+    /**
+     * Путь откуда загружать клиентский код.
+     * @type {string}
+     */
+    var clientCodePath = null;
+    this.setup = function (setup) {
+        if (setup.reloadClientCodeEveryRequest)reloadClientCodeEveryRequest = setup.reloadClientCodeEveryRequest;
+        if (setup.port) port = setup.port;
+        if (setup.clientCodePath) clientCodePath = setup.clientCodePath;
     };
     /**
      * Включение компонента, тут мы просто выполним инит.
      */
     this.switchOn = function () {
         init();
-    };
-    this.switchOff = function () {
     };
     /**
      * Сюда будут отправляться логи.
@@ -48,21 +63,6 @@ WebSocketServer = function () {
      */
     this.outOnDisconnect = function (id) {
     };
-    /**
-     * Перезагружать ли клиентский код, каждый раз. Когда его запрашивают.
-     * @type {boolean}
-     */
-    this.reloadClientCodeEveryRequest = null;
-    /**
-     * Порт для прослушки.
-     * @type {int};
-     */
-    this.port = null;
-    /**
-     * Путь откуда загружать клиентский код.
-     * @type {string}
-     */
-    this.clientCodePath = null;
     /**
      * Отправляет данные клиенту
      * @param data
@@ -106,7 +106,7 @@ WebSocketServer = function () {
         // создадим сервер
         http = HTTP.createServer(onHTTPRequest);
         // запустим прослушивание
-        http.listen(self.port);
+        http.listen(port);
         // создадим websocket
         server = new WEBSOCKET.server({
             httpServer: http
@@ -121,7 +121,7 @@ WebSocketServer = function () {
         var files;
         self.outLog("Load client code.");
         // загрузим список файлов клиентского кода.
-        files = getFileListRecursive(self.clientCodePath);
+        files = getFileListRecursive(clientCodePath);
         // сформирем клинтский код для списка файлов.
         clientCode = clientCodePrepareCode(files);
     };
@@ -164,7 +164,7 @@ WebSocketServer = function () {
     };
     /**
      * Обработчки запросов от HTTP сервера.
-     * при запросе /clientCode, вернёт клинтский код.
+     * при запросе ^/clientCode?*, вернёт клинтский код.
      * при любом другом запросе вернёт 404 ошибку.
      * @param request
      * @param response
@@ -175,8 +175,8 @@ WebSocketServer = function () {
             url: request.url,
             method: request.method
         });
-        if (request.url == '/clientCode') {
-            if (self.reloadClientCodeEveryRequest) {
+        if (request.url.indexOf('/clientCode?') == 0) {
+            if (reloadClientCodeEveryRequest) {
                 loadClientCode();
             }
             response.writeHead(200, {'Content-Type': 'text/html'});
