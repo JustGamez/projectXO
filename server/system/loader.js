@@ -8,7 +8,7 @@
 /* Подключаем nodeJS модули. */
 var FS = require('fs');
 var PATH = require('path');
-
+require('./../config.js');
 require('./functions.js');
 
 /**
@@ -36,6 +36,7 @@ require('./functions.js');
      */
     var includeComponent = function (path) {
         path = PATH.resolve(path);
+        log("component:" + getComponentNameFromPath(path));
         require(path);
         validateComponent(path);
         GLOBAL[getComponentNameFromPath(path)].__path = path;
@@ -61,7 +62,7 @@ require('./functions.js');
             "\r\nфайл: " + path + "" +
             "\r\nкомпонент: " + name);
         }
-        if (typeof GLOBAL[name] != 'function') {
+        if (!(typeof GLOBAL[name] == 'function' || typeof GLOBAL[name] == 'object')) {
             error("Определение компонента должно иметь тип function." +
             "\r\nфайл: " + path + "" +
             "\r\nкомпонент: " + name);
@@ -70,9 +71,3 @@ require('./functions.js');
     log("Подключение компонент.");
     includeRecursive(path);
 })(process.cwd() + '/components/');
-
-/**
- * Подключение создателя.
- */
-require('./SystemCreator.js');
-require('./../boardScheme.js');

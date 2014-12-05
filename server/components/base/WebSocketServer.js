@@ -31,46 +31,41 @@ WebSocketServer = function () {
      */
     var clientCodePath = null;
     this.setup = function (setup) {
-        if (setup.reloadClientCodeEveryRequest)reloadClientCodeEveryRequest = setup.reloadClientCodeEveryRequest;
-        if (setup.port) port = setup.port;
-        if (setup.clientCodePath) clientCodePath = setup.clientCodePath;
+        reloadClientCodeEveryRequest = setup.reloadClientCodeEveryRequest;
+        port = setup.port;
+        clientCodePath = setup.clientCodePath;
     };
     /**
      * Включение компонента, тут мы просто выполним инит.
      */
-    this.switchOn = function () {
+    this.run = function () {
+        checkBeforeInit();
         init();
     };
-    /**
-     * Сюда будут отправляться логи.
-     */
-    this.outLog = function (message, level, details) {
+
+    var checkBeforeInit = function () {
+        if (typeof  self.onConnect != 'function') {
+            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onConnect);
+        }
+        if (typeof  self.onDisconnect != 'function') {
+            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onDisconnect);
+        }
+        if (typeof  self.onData != 'function') {
+            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onData);
+        }
     };
-    /**
-     * Сюда отправляются данные от клиентов. id коннекта и данные.
-     * @param data данные
-     * @param id id коннекта
-     */
-    this.outData = function (data, id) {
-    };
-    /**
-     * Когда кто-то коннектися, сюда будут отправляться данные с id соедениения.
-     */
-    this.outOnConnect = function (id) {
-    };
-    /**
-     * Когда кто-то дисконнектися, сюда будут отправляться данные с id соедениения.
-     */
-    this.outOnDisconnect = function (id) {
-    };
+
+    this.onConnect = null;
+    this.onDisconnect = null;
+    this.onData = null;
     /**
      * Отправляет данные клиенту
      * @param data
      */
-    this.inData = function (data, id) {
-        if (id == undefined)id = lastConnectionId;
+    this.sendData = function (data, id) {
+        //if (id == undefined)id = lastConnectionId;
         if (!connectionStack[id]) {
-            self.outLog("undefined connection:" + id + " with data:" + data, LogsComponent.LEVEL_WARNING);
+            Logs.log("undefined connection:" + id + " with data:" + data, Logs.LEVEL_WARNING);
             return;
         }
         connectionStack[id].sendUTF(data);
@@ -112,14 +107,14 @@ WebSocketServer = function () {
             httpServer: http
         });
         server.on('request', onWebSocketRequest);
-        self.outLog("WebSocketServer running. port:" + self.port, LogsComponent.LEVEL_NOTIFY);
+        Logs.log("WebSocketServer running. port:" + port, Logs.LEVEL_NOTIFY);
     };
     /**
      * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
      */
     var loadClientCode = function () {
         var files;
-        self.outLog("Load client code.");
+        Logs.log("Load client code.");
         // загрузим список файлов клиентского кода.
         files = getFileListRecursive(clientCodePath);
         // сформирем клинтский код для списка файлов.
@@ -152,6 +147,10 @@ WebSocketServer = function () {
         for (var i in files) {
             path = files[i];
             file_content = FS.readFileSync(path);
+            if (file_content == 'ClientServerCompliant') {
+                path = path.replace(clientCodePath, '');
+                file_content = FS.readFileSync(path);
+            }
             clientCode += '\r\n<script type="text/javascript">' + "\r\n/* " + path + "*/\r\n" + file_content + '\r\n</script>';
             name = PATH.basename(path, '.js')
             clientCode += '<script>' +
@@ -171,7 +170,7 @@ WebSocketServer = function () {
      * @returns {boolean}
      */
     var onHTTPRequest = function (request, response) {
-        self.outLog("WebSocketServer", LogsComponent.LEVEL_DETAIL, {
+        Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {
             url: request.url,
             method: request.method
         });
@@ -196,26 +195,19 @@ WebSocketServer = function () {
         connection = request.accept(null, request.origin);
         id = ++lastId;
         connectionStack[id] = connection;
-        self.outLog("WebSocketServer.onConnected: id=" + id, LogsComponent.LEVEL_DETAIL);
-        self.outOnConnect(id);
+        Logs.log("WebSocketServer.onConnected: id=" + id, Logs.LEVEL_DETAIL);
+        self.onConnect(id);
         connection.on('message', function (message) {
             if (message.type == 'utf8') {
-                self.outLog("Получены данные.", LogsComponent.LEVEL_DETAIL, message.utf8Data);
+                Logs.log("Получены данные.", Logs.LEVEL_DETAIL, message.utf8Data);
                 lastConnectionId = id;
-                self.outData(message.utf8Data, id);
+                self.onData(message.utf8Data, id);
             }
         });
         connection.on('close', function () {
-            self.outLog("WebSocketServer.onDisconnected: id=" + id);
+            Logs.log("WebSocketServer.onDisconnected: id=" + id);
             delete connectionStack[id];
-            self.outOnDisconnect(id);
+            self.onDisconnect(id);
         });
     };
 };
-
-/* Тестовый компонент */
-WebSocketServer.TestComponent = function () {
-
-};
-
-WebSocketServer.TestBoardScheme = [];

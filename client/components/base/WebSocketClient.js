@@ -18,37 +18,16 @@ WebSocketClient = function () {
         if (setup.port)port = setup.port;
         if (setup.host)host = setup.host;
     };
-    /**
-     * Сюда мы будет отправлять логи.
-     * @param message
-     * @param level
-     * @param details
-     */
-    this.outLog = function (message, level, details) {
-    };
-    /**
-     * Вызываем при получении данных
-     * @param data данные, текстовая строка.
-     */
-    this.outData = function (data) {
-    };
-    /**
-     * Вызовем при коннекте к серверу.
-     */
-    this.outOnConnect = function () {
-    };
-    /**
-     * Вызовем при дисконнекте с сервером.
-     * Например потеря связи.
-     */
-    this.outOnDisconnect = function () {
-    };
+    this.onData = null;
+    this.onConnect = null;
+    this.onDisconnect = null;
+
     /**
      * Сюда мы будем получать данные и отправлять их на сервер.
      * Примечание: Однако, если соединения с серверм нет, то мы будем просто добавлять их в буффер.
      * @param data string
      */
-    this.inData = function (data) {
+    this.sendData = function (data) {
         packetBuffer.push(data);
         trySend();
     };
@@ -56,8 +35,20 @@ WebSocketClient = function () {
      * Просто выполним инициализацию.
      * Собсвтено подсоединимся к серверу.
      */
-    this.switchOn = function () {
+    this.run = function () {
+        checkBeforeInit();
         init();
+    };
+    var checkBeforeInit = function () {
+        if (typeof  self.onConnect != 'function') {
+            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onConnect);
+        }
+        if (typeof  self.onDisconnect != 'function') {
+            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onDisconnect);
+        }
+        if (typeof  self.onData != 'function') {
+            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onData);
+        }
     };
     /**
      * Состояние соединения:
@@ -83,7 +74,7 @@ WebSocketClient = function () {
      */
     var init = function () {
         var uri;
-        self.outLog("WebSocketClient запущен.");
+        Logs.log("WebSocketClient запущен.");
         uri = "ws://" + host + ":" + port + "/ws";
         socket = new WebSocket(uri);
         // установим обработчики.
@@ -99,8 +90,8 @@ WebSocketClient = function () {
         isConnected = true;
         // на случай, если буфер не пуст.
         trySend();
-        self.outLog("WebSocketClient: Соединение установленно:" + self.host + ':' + self.port);
-        self.outOnConnect();
+        Logs.log("WebSocketClient: Соединение установленно:" + host + ':' + port);
+        self.onConnect();
     };
     /**
      * Обработчик при закрытие соединения.
@@ -109,27 +100,27 @@ WebSocketClient = function () {
     var onClose = function (event) {
         isConnected = false;
         if (event.wasClean) {
-            self.outLog("WebSocketClient: Соединение закрыто успешно.");
+            Logs.log("WebSocketClient: Соединение закрыто успешно.");
         } else {
-            self.outLog("WebSocketClient: Соединение закрыто, отсутствует соединение.");
+            Logs.log("WebSocketClient: Соединение закрыто, отсутствует соединение.");
         }
-        self.outLog('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
-        self.outOnDisconnect();
+        Logs.log('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
+        self.onDisconnect();
     };
     /**
      * Обработчик при получении данных(сообщения) от сервера.
      * @param event
      */
     var onMessage = function (event) {
-        self.outLog("WebSocketClient: Получены данные.", LogsComponent.LEVEL_DETAIL, event.data);
-        self.outData(event.data);
+        Logs.log("WebSocketClient: Получены данные.", Logs.LEVEL_DETAIL, event.data);
+        self.onData(event.data);
     };
     /**
      * Обработчик ошибок вебсокета.
      * @param error
      */
     var onError = function (error) {
-        self.outLog("WebSocketClient: Ошибка " + error.message);
+        Logs.log("WebSocketClient: Ошибка " + error.message);
     };
     /**
      * Отправка данных из буфера.
@@ -153,7 +144,7 @@ WebSocketClient = function () {
         // берем элемент из буфера.
         data = packetBuffer.shift();
         socket.send(data);
-        self.outLog("WebSocketClient.send data: length=" + data.length, LogsComponent.LEVEL_DETAIL);
+        Logs.log("WebSocketClient.send data: length=" + data.length, Logs.LEVEL_DETAIL);
         // остальные данные отправим позже.
         if (packetBuffer.length) {
             setTimeout(trySend, this.trySendTimeout);
