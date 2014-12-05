@@ -9,6 +9,8 @@ ApiRouter = function () {
     var map = null;
 
     var connections = {};
+    var onDisconnectCallbacks = [];
+    var onFailedSendCallbacks = [];
 
     this.setup = function (setup) {
         if (setup.map) map = setup.map;
@@ -70,14 +72,17 @@ ApiRouter = function () {
     };
 
     this.onConnect = function (id) {
-        Logs.log("connection created: id=" + id, Logs.LEVEL_DETAIL)
+        Logs.log("connection created: id=" + id, Logs.LEVEL_DETAIL);
         connections[id] = {
             connectionId: id
         };
     };
 
     this.onDisconnect = function (id) {
-        Logs.log("connection close: id=" + id, Logs.LEVEL_DETAIL)
+        Logs.log("connection close: id=" + id, Logs.LEVEL_DETAIL);
+        for (var i in onDisconnectCallbacks) {
+            onDisconnectCallbacks[i].call(self, connections[id]);
+        }
         delete connections[id];
     };
 
@@ -89,7 +94,27 @@ ApiRouter = function () {
         };
         packet = JSON.stringify(packet);
         for (var i in cntxList) {
-            this.sendData(packet, cntxList[i].connectionId);
+            if (!this.sendData(packet, cntxList[i].connectionId)) {
+                for (var i in onFailedSendCallbacks) {
+                    onFailedSendCallbacks[i].call(self, cntxList[i]);
+                }
+            }
         }
+    };
+    /**
+     * Добавлить каллбэк дисконнекта.
+     * Будет вызван при дисконнекте соедеинения.
+     * @param callback
+     */
+    this.addOnDisconnectCallback = function (callback) {
+        onDisconnectCallbacks.push(callback);
+    };
+    /**
+     * Добавлить каллбэк неудачной отправки.
+     * Будет вызван при неудачной отправки данных, в разорванное соединение.
+     * @param callback
+     */
+    this.addOnFailedSendCallback = function (callback) {
+        onFailedSendCallbacks.push(callback);
     };
 };

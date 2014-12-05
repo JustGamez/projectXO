@@ -63,12 +63,12 @@ WebSocketServer = function () {
      * @param data
      */
     this.sendData = function (data, id) {
-        //if (id == undefined)id = lastConnectionId;
         if (!connectionStack[id]) {
             Logs.log("undefined connection:" + id + " with data:" + data, Logs.LEVEL_WARNING);
-            return;
+            return false;
         }
         connectionStack[id].sendUTF(data);
+        return true;
     };
     /**
      * Последний id соединения.

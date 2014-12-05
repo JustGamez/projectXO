@@ -22,4 +22,7 @@ webSocketServer.onConnect = apiRouter.onConnect;
 webSocketServer.onDisconnect = apiRouter.onDisconnect;
 webSocketServer.onData = apiRouter.onData;
 
+/* init all components */
+LogicUser.init();
+/* run all components */
 webSocketServer.run();
