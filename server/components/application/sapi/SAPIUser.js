@@ -16,6 +16,23 @@ SAPIUser = function () {
         }
         LogicUser.authorizeByVK(socNetUserId, authParams, cntx);
     };
+
+    /**
+     * Отправяел информацию о пользователи в текущие соединение.
+     * @param cntx
+     * @param userId
+     */
+    this.sendMeUserInfo = function (cntx, userId) {
+        if (!cntx.userId) {
+            Logs.log("SAPIUser.sendMeUserInfo: not found cntx.userId", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!userId || typeof userId != 'number') {
+            Logs.log("SAPIUser.sendMeUserInfo: must have userId", Logs.LEVEL_WARNING);
+            return;
+        }
+        LogicUser.sendUserInfo(userId, cntx);
+    };
 };
 /**
  * Статичный класс.

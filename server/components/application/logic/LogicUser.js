@@ -8,6 +8,12 @@ LogicUser = function () {
         apiRouter.addOnFailedSendCallback(onFailedSend);
     };
 
+    /**
+     * Авторизация пользвоателя из соц сети вКонтакте.
+     * @param socNetUserId
+     * @param authParams
+     * @param cntx
+     */
     this.authorizeByVK = function (socNetUserId, authParams, cntx) {
         var socNetTypeId = SocNet.TYPE_VK;
         var checkResult = SocNet.checkAuth(socNetTypeId, socNetUserId, authParams);
@@ -23,6 +29,21 @@ LogicUser = function () {
         // get from db
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
             authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
+        });
+    };
+
+    /**
+     * Отправка информации о пользователе.
+     * @param userId
+     * @param cntx
+     */
+    this.sendUserInfo = function (userId, cntx) {
+        DataUser.getById(userId, function (user) {
+            if (user) {
+                CAPIUser.updateUserInfo(cntx.userId, user);
+            } else {
+                Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
+            }
         });
     };
 
@@ -48,14 +69,29 @@ LogicUser = function () {
         apiRouter.executeRequest(group, method, arguments, cntxList);
     };
 
+    /**
+     * Является ли пользователь онлайн.
+     * @param userId id пользователя
+     * @returns {boolean}
+     */
     this.isUserOnline = function (userId) {
         return userGetConns(userId) ? true : false;
     };
 
+    /**
+     * Возвращает кол-во онлайн пользователей.
+     * @returns {number} кол-во онлайн пользователей.
+     */
     this.getOnlineCount = function () {
         return userToCntxCount;
     };
 
+    /**
+     * Добавить пользователю контекст соединения.
+     * Так же создаст контекст пользователя, если его нет.
+     * @param user
+     * @param cntx
+     */
     var userAddConn = function (user, cntx) {
         var userId = user.id;
         if (!userToCntx[userId]) {
@@ -73,10 +109,20 @@ LogicUser = function () {
         userToCntx[userId].connsCount++;
     };
 
+    /**
+     * Возвращает массив контекстов соединения пользователя.
+     * @param userId
+     * @returns {*}
+     */
     var userGetConns = function (userId) {
         return userToCntx[userId] ? userToCntx[userId].conns : null;
     };
 
+    /**
+     * Удаляет контекст соединения для пользователя.
+     * Так же удалит контекст пользователя, если в результате удаления не останется ни одного соединения.
+     * @param cntx
+     */
     var userDeleteConn = function (cntx) {
         var userId = cntx.userId;
         Logs.log("DELETE user conn", Logs.LEVEL_DETAIL);

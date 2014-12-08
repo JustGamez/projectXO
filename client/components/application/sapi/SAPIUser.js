@@ -8,6 +8,15 @@ SAPIUser = function () {
     this.authorizeByVK = function (socNetUserId, authParams) {
         apiRouter.executeRequest('SAPIUser', 'authorizeByVK', arguments, [{connectionId: null}]);
     };
+
+    /**
+     * Отправяел информацию о пользователи в текущие соединение.
+     * @param cntx
+     * @param userId
+     */
+    this.sendMeUserInfo = function (userId) {
+        apiRouter.executeRequest('SAPIUser', 'sendMeUserInfo', arguments, [{connectionId: null}]);
+    };
 };
 
 /**
