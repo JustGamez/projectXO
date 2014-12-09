@@ -11,7 +11,6 @@ DataUser = function () {
         lastLoginTimestamp: null,
         score: null
     };
-
     /**
      * Вернуть пользователя по данным из соцаильной сети
      * @param socNetTypeId тип социальнйо сети SocNet.TYPE_*
@@ -26,7 +25,6 @@ DataUser = function () {
             callback(rows[0] || null);
         });
     };
-
     /**
      * Вернуть пользователя по id.
      * @param userId внутрений id пользовтаеля.
@@ -34,13 +32,11 @@ DataUser = function () {
      */
     this.getById = function (userId, callback) {
         DB.queryWhere(tableName, {
-            id: userId,
+            id: userId
         }, function (rows) {
             callback(rows[0] || null);
         });
     };
-
-
     /**
      * Создать пользователя по данным из социальной сети.
      * @param socNetTypeId id социальной сети SocNet.TYPE_*
@@ -51,8 +47,8 @@ DataUser = function () {
         DB.insert(tableName, {
             firstName: '',
             lastName: '',
-            socNetUserId: socNetUserId,
             socNetTypeId: socNetTypeId,
+            socNetUserId: socNetUserId,
             createTimestamp: 1,
             lastLoginTimestamp: 1,
             score: 0
@@ -61,15 +57,25 @@ DataUser = function () {
                 id: result.insertId,
                 firstName: result.firstName,
                 lastName: result.lastName,
-                socNetUserId: result.socNetUserId,
                 socNetTypeId: result.socNetTypeId,
+                socNetUserId: result.socNetUserId,
                 createTimestamp: result.createTimestamp,
                 lastLoginTimestamp: result.lastLoginTimestamp,
                 score: result.score
             };
             callback(user);
         });
-    }
+    };
+    /**
+     * Возвращает список юзерво по параметрам.
+     * @param where {object} фильтр.
+     * @param callback
+     */
+    this.getListWhere = function (where, callback) {
+        DB.queryWhere(tableName, where, function (rows) {
+            callback(rows);
+        });
+    };
 };
 
 /**

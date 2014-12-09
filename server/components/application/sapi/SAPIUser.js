@@ -19,8 +19,8 @@ SAPIUser = function () {
 
     /**
      * Отправяел информацию о пользователи в текущие соединение.
-     * @param cntx
-     * @param userId
+     * @param cntx object
+     * @param userId number
      */
     this.sendMeUserInfo = function (cntx, userId) {
         if (!cntx.userId) {
@@ -32,6 +32,23 @@ SAPIUser = function () {
             return;
         }
         LogicUser.sendUserInfo(userId, cntx);
+    };
+
+    /**
+     * Запрос на отправку списка друзей.
+     * @param cntx
+     * @param userId
+     */
+    this.sendMeFriends = function (cntx, userId) {
+        if (!cntx.userId) {
+            Logs.log("SAPIUser.sendMeUserInfo: not found cntx.userId", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!userId || typeof userId != 'number') {
+            Logs.log("SAPIUser.sendMeFriends: must have userId", Logs.LEVEL_WARNING);
+            return;
+        }
+        LogicUser.sendFriends(userId, cntx);
     };
 };
 /**

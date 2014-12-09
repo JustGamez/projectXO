@@ -6,9 +6,12 @@
 // только для сервера, хм...
 if (typeof window == 'undefined') {
     var MD5 = require('MD5');
+    var HTTPS = require('https');
 }
 
 SocNet = function () {
+    var baseHost = 'api.vk.com';
+    var baseUrl = '/method/';
     var self = this;
     var getParams = {};
 
@@ -59,7 +62,19 @@ SocNet = function () {
     this.getSocNetTypeId = function () {
         return SocNet.TYPE_VK;
     };
-
+    /**
+     * Получить список друзей из соц сети.
+     */
+    this.getFriends = function (socNetTypId, socNetUserId, callback) {
+        executeMethod('friends.get', {user_id: socNetUserId}, callback);
+    };
+    /**
+     * Проверка авторизации
+     * @param socNetTypeId тип социальной сети SocNet.TYPE_*
+     * @param socNetUserId id в социальной сети.
+     * @param authParams специфичные для соц.сети данные проверки м.
+     * @returns {boolean} результат аутентификации.
+     */
     this.checkAuth = function (socNetTypeId, socNetUserId, authParams) {
         var generatedAuthKey;
         /*	auth_key = md5(app_id+'_'+viewer_id+'_'+app_secret); */
@@ -78,6 +93,34 @@ SocNet = function () {
         }
         Logs.log('Query Variable ' + variable + ' not found', Logs.LEVEL_WARNING);
     };
+
+    var executeMethod = function (method, params, callback) {
+        /* https://api.vk.com/method/'''METHOD_NAME'''?'''PARAMETERS'''&access_token='''ACCESS_TOKEN''' */
+        var url, options, req;
+        url = baseUrl + method + '?';
+        for (var i in params) {
+            url += i + '=' + params[i];
+        }
+        options = {};
+        options.hostname = baseHost;
+        options.port = 443;
+        options.path = url;
+        options.method = 'GET';
+
+        req = HTTPS.request(options, function (res) {
+            Logs.log("https request: " + url, Logs.LEVEL_DETAIL);
+            res.on('data', function (data) {
+                Logs.log("https answer: " + data, Logs.LEVEL_DETAIL);
+                data = JSON.parse(data);
+                data = data.response;
+                callback(data);
+            });
+        });
+        req.end();
+        req.on('error', function (e) {
+            Logs.log("SocNet.executeMethod request error:", Logs.LEVEL_ERROR, e);
+        });
+    }
 };
 /**
  * Статичный класс.

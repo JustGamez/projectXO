@@ -7,7 +7,6 @@ LogicUser = function () {
         apiRouter.addOnDisconnectCallback(onDisconnect);
         apiRouter.addOnFailedSendCallback(onFailedSend);
     };
-
     /**
      * Авторизация пользвоателя из соц сети вКонтакте.
      * @param socNetUserId
@@ -31,11 +30,10 @@ LogicUser = function () {
             authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
         });
     };
-
     /**
      * Отправка информации о пользователе.
-     * @param userId
-     * @param cntx
+     * @param userId {Number}
+     * @param cntx {object} контекст соединения
      */
     this.sendUserInfo = function (userId, cntx) {
         DataUser.getById(userId, function (user) {
@@ -45,6 +43,31 @@ LogicUser = function () {
                 Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
             }
         });
+    };
+    /**
+     * Отправка списка друзей в соединение.
+     * @param userId {Number}
+     * @param cntx {object} контекст соединения
+     */
+    this.sendFriends = function (userId, cntx) {
+        DataUser.getById(userId, function (user) {
+            if (user) {
+                SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
+                    DataUser.getListWhere({
+                        socNetTypeId: user.socNetTypeId,
+                        socNetUserId: friends
+                    }, function (rows) {
+                        var ids = [];
+                        for (var i in rows) {
+                            ids.push(rows[i].id);
+                        }
+                        CAPIUser.updateFriends(cntx.userId, userId, ids);
+                    });
+                });
+            } else {
+                Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
+            }
+        })
     };
 
     var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx) {
@@ -68,7 +91,6 @@ LogicUser = function () {
         var cntxList = userGetConns(userId);
         apiRouter.executeRequest(group, method, arguments, cntxList);
     };
-
     /**
      * Является ли пользователь онлайн.
      * @param userId id пользователя
@@ -77,7 +99,6 @@ LogicUser = function () {
     this.isUserOnline = function (userId) {
         return userGetConns(userId) ? true : false;
     };
-
     /**
      * Возвращает кол-во онлайн пользователей.
      * @returns {number} кол-во онлайн пользователей.
@@ -85,7 +106,6 @@ LogicUser = function () {
     this.getOnlineCount = function () {
         return userToCntxCount;
     };
-
     /**
      * Добавить пользователю контекст соединения.
      * Так же создаст контекст пользователя, если его нет.
@@ -108,7 +128,6 @@ LogicUser = function () {
         userToCntx[userId].conns[cntx.connectionId] = cntx;
         userToCntx[userId].connsCount++;
     };
-
     /**
      * Возвращает массив контекстов соединения пользователя.
      * @param userId
@@ -117,7 +136,6 @@ LogicUser = function () {
     var userGetConns = function (userId) {
         return userToCntx[userId] ? userToCntx[userId].conns : null;
     };
-
     /**
      * Удаляет контекст соединения для пользователя.
      * Так же удалит контекст пользователя, если в результате удаления не останется ни одного соединения.

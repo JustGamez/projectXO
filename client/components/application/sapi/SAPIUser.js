@@ -11,11 +11,18 @@ SAPIUser = function () {
 
     /**
      * Отправяел информацию о пользователи в текущие соединение.
-     * @param cntx
-     * @param userId
+     * @param userId number
      */
     this.sendMeUserInfo = function (userId) {
         apiRouter.executeRequest('SAPIUser', 'sendMeUserInfo', arguments, [{connectionId: null}]);
+    };
+
+    /**
+     * Запрос инфомрации о друзьях
+     * @param userId number
+     */
+    this.sendMeFriends = function (userId) {
+        apiRouter.executeRequest('SAPIUser', 'sendMeFriends', arguments, [{connectionId: null}]);
     };
 };
 
