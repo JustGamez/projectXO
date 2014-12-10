@@ -34,6 +34,17 @@ GUI = function () {
         element.init();
         return element;
     };
+
+    /**
+     * Создаёт дом, инициализирует его и возвращает на него ссылку.
+     * @returns {GUIDom}
+     */
+    this.createDom = function(){
+        var dom;
+        dom = new GUIDom();
+        dom.init();
+        return dom;
+    };
 };
 /**
  * Статичный "класс".

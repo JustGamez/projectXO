@@ -30,10 +30,16 @@ WebSocketServer = function () {
      * @type {string}
      */
     var clientCodePath = null;
+    /**
+     * Путь откуда загружать картинки.
+     * @type {string}
+     */
+    var imagesPath = null;
     this.setup = function (setup) {
         reloadClientCodeEveryRequest = setup.reloadClientCodeEveryRequest;
         port = setup.port;
         clientCodePath = setup.clientCodePath;
+        imagesPath = setup.imagesPath;
     };
     /**
      * Включение компонента, тут мы просто выполним инит.
@@ -42,7 +48,11 @@ WebSocketServer = function () {
         checkBeforeInit();
         init();
     };
-
+    /**
+     * Проверка перед запуском:
+     * - проверим установлены ли каллбэки пользовательским кодом;
+     * - проверим настройки: port, clientCodePath, reloadClientCodeEveryRequest
+     */
     var checkBeforeInit = function () {
         if (typeof  self.onConnect != 'function') {
             Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onConnect);
@@ -53,10 +63,32 @@ WebSocketServer = function () {
         if (typeof  self.onData != 'function') {
             Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onData);
         }
+        if (typeof port != 'number') {
+            Logs.log("port given by .setup, must be number", Logs.LEVEL_FATAL_ERROR, port);
+        }
+        if (typeof reloadClientCodeEveryRequest != 'boolean') {
+            Logs.log("reloadClientCodeEveryRequest given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, reloadClientCodeEveryRequest);
+        }
+        if (typeof clientCodePath != 'string') {
+            Logs.log("clientCodePath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, clientCodePath);
+        }
+        if (typeof imagesPath != 'string') {
+            Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
+        }
     };
-
+    /**
+     * Каллбэек будет вызываться при коннекте.
+     * @type function
+     */
     this.onConnect = null;
+    /**
+     * Каллбэек будет вызываться при диконнекте.
+     * @type function
+     */
     this.onDisconnect = null;
+    /**
+     * Каллбэек будет вызываться при получении данных.
+     */
     this.onData = null;
     /**
      * Отправляет данные клиенту
@@ -164,6 +196,7 @@ WebSocketServer = function () {
     /**
      * Обработчки запросов от HTTP сервера.
      * при запросе ^/clientCode?*, вернёт клинтский код.
+     * при запросе ^/images/*, вернёт соответствующую картинку из папки /images/
      * при любом другом запросе вернёт 404 ошибку.
      * @param request
      * @param response
@@ -174,6 +207,24 @@ WebSocketServer = function () {
             url: request.url,
             method: request.method
         });
+        /* Запрашивается картинка? */
+        if (request.url.indexOf('/images/') == 0) {
+            path = request.url.substr(8);
+
+            FS.readFile(imagesPath + path, function (err, data) {
+                if (err) {
+                    Logs.log("Image not found:" + imagesPath + path, Logs.LEVEL_WARNING);
+                    response.writeHead(404, {'Content-Type': 'text/html'});
+                    response.end('File not found.');
+                } else {
+                    Logs.log("Image sended:" + imagesPath + path + "length:", Logs.LEVEL_DETAIL);
+                    response.writeHead(200, {'Content-Type': 'image/png'});
+                    response.end(data);
+                }
+            });
+            return true;
+        }
+        /* Запрашивается клинетский код? */
         if (request.url.indexOf('/clientCode?') == 0) {
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
@@ -182,6 +233,7 @@ WebSocketServer = function () {
             response.end(clientCode);
             return true;
         }
+        /* Во всех других случаях ошибка 404(Not found) */
         response.writeHead(404, {'Content-Type': 'text/html'});
         response.end('File not found.');
         return true;

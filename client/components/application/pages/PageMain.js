@@ -3,7 +3,6 @@
  * @constructor
  */
 PageMain = function PageMain() {
-
     /**
      * Массив всех элементов страницы.
      * @type {Array}
@@ -12,12 +11,13 @@ PageMain = function PageMain() {
 
     this.init = function () {
         var element;
+
         element = GUI.createElement('ElementImage', {
-            x: 10,
-            y: 10,
-            width: 100,
-            height: 100,
-            src: '/images/someImage.png'
+            x: 0,
+            y: 0,
+            width: 788,
+            height: 594,
+            src: '/images/table.png'
         });
         this.elements.push(element);
     };

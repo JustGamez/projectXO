@@ -7,7 +7,8 @@ webSocketServer = new WebSocketServer();
 webSocketServer.setup({
     port: 80,
     reloadClientCodeEveryRequest: true,
-    clientCodePath: '../client/'
+    clientCodePath: '../client/',
+    imagesPath: '../images/'
 });
 
 /* ApiPort */

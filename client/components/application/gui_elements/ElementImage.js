@@ -29,8 +29,23 @@ ElementImage = function () {
      */
     this.src = '/path/to/image.png';
 
+    /**
+     * Дом картинки.
+     * @type {GUIElement}
+     */
+    var dom = null;
+    /**
+     * Создадим дом и настроем его.
+     */
     this.init = function () {
-        console.log(this);
+        dom = GUI.createDom();
+        dom.x = this.x;
+        dom.y = this.y;
+        dom.width = this.width;
+        dom.height = this.height;
+        dom.backgroundImage = this.src;
+        dom.show();
+        dom.redraw();
     };
 
     this.show = function () {
