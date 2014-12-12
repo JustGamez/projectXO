@@ -14,6 +14,13 @@ var PATH = require('path');
 
 WebSocketServer = function () {
     var self = this;
+    /**
+     * Префикс запрашиваемых картинок, все запросы к картинкам должны начинаться с этого префикса.
+     * Далее префикс будет удаляться, и оставшаяся часть пути будет считаться путем к картинке
+     * в папке imagesPath.
+     * @type {string}
+     */
+    var imagesPrefix = '/images/';
     var lastConnectionId = null;
     /**
      * Перезагружать ли клиентский код, каждый раз. Когда его запрашивают.
@@ -145,12 +152,46 @@ WebSocketServer = function () {
      * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
      */
     var loadClientCode = function () {
-        var files;
         Logs.log("Load client code.");
+        // сформирем клинтский код.
+        clientCode = "";
+        clientCode += "<HTML><HEAD><meta charset='utf-8' />";
+        clientCode += getClientJSCode();
+        clientCode += "</HEAD><BODY>";
+        clientCode += getClientImageCode();
+        clientCode += "</BODY></HTML>";
+    };
+    /**
+     * Вернем клиентские js-скрипты.
+     */
+    var getClientJSCode = function () {
+        var jsFiles;
         // загрузим список файлов клиентского кода.
-        files = getFileListRecursive(clientCodePath);
-        // сформирем клинтский код для списка файлов.
-        clientCode = clientCodePrepareCode(files);
+        jsFiles = getFileListRecursive(clientCodePath);
+        return clientCodePrepareCode(jsFiles);
+    };
+    /**
+     * Вернем клинетские картинки.
+     */
+    var getClientImageCode = function () {
+        var imageFiles, imageCode, path, time_postfix;
+        imageFiles = getFileListRecursive(imagesPath);
+        imageCode = "<script>";
+        imageCode += "window.images = {};";
+        time_postfix = "?t=" + new Date().getTime();
+        for (var i in imageFiles) {
+            path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
+            imageCode += "\r\nwindow.images['" + path + "']='" + path + time_postfix + "';";
+        }
+        imageCode += "</script>";
+        // добавим img тэги для предзагрузки.
+        imageCode += "<div style='display:none;'>";
+        for (var i in imageFiles) {
+            path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
+            imageCode += "\r\n<img src='" + path + time_postfix + "'>";
+        }
+        imageCode += "</div>";
+        return imageCode;
     };
     /**
      * Составляет список всех файлов, рекурсивно.
@@ -175,7 +216,7 @@ WebSocketServer = function () {
      */
     var clientCodePrepareCode = function (files) {
         var clientCode, path, file_content, name;
-        clientCode = "<HTML><HEAD><meta charset='utf-8' />";
+        clientCode = '';
         for (var i in files) {
             path = files[i];
             file_content = FS.readFileSync(path);
@@ -184,32 +225,35 @@ WebSocketServer = function () {
                 file_content = FS.readFileSync(path);
             }
             clientCode += '\r\n<script type="text/javascript">' + "\r\n/* " + path + "*/\r\n" + file_content + '\r\n</script>';
-            name = PATH.basename(path, '.js')
+            name = PATH.basename(path, '.js');
+            /* добавим пути к файлам компонент, это нужно для отладки */
             clientCode += '<script>' +
-            'if(window["' + name + '"] != undefined){' +
-            'window["' + name + '"].__path="' + path + '"' +
+            'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"' +
             '};</script>';
         }
-        clientCode += "</HEAD><BODY></BODY></HTML>";
         return clientCode;
     };
     /**
      * Обработчки запросов от HTTP сервера.
      * при запросе ^/clientCode?*, вернёт клинтский код.
-     * при запросе ^/images/*, вернёт соответствующую картинку из папки /images/
+     * при запросе ^{imagesPrefix}*, вернёт соответствующую картинку из папки imagePath
      * при любом другом запросе вернёт 404 ошибку.
      * @param request
      * @param response
      * @returns {boolean}
      */
     var onHTTPRequest = function (request, response) {
+        var path;
         Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {
             url: request.url,
             method: request.method
         });
         /* Запрашивается картинка? */
-        if (request.url.indexOf('/images/') == 0) {
-            path = request.url.substr(8);
+        if (request.url.indexOf(imagesPrefix) == 0) {
+            // отрезаем imagesPrefix
+            path = request.url.substr(imagesPrefix.length);
+            // уберём GET параметры.
+            path = path.substr(0, path.indexOf('?'));
 
             FS.readFile(imagesPath + path, function (err, data) {
                 if (err) {

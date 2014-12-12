@@ -5,6 +5,38 @@
  */
 GUI = function () {
     /**
+     * Событие нажатия мышы(левой), но не отпускания.
+     * @type {number}
+     */
+    this.EVENT_MOUSE_MOUSE_DOWN = 1;
+    /**
+     * Событияе отпускания нажатой мыши(левой).
+     * @type {number}
+     */
+    this.EVENT_MOUSE_MOUSE_UP = 2;
+    /**
+     * Событие нажатие мышкой(левой)
+     * @type {number}
+     */
+    this.EVENT_MOUSE_CLICK = 3;
+    /**
+     * Событие попадания курсора мыши в фокус
+     * @type {number}
+     */
+    this.EVENT_MOUSE_OVER = 4;
+    /**
+     * Событие ухода курсора мыши из фокуса.
+     * @type {number}
+     */
+    this.EVENT_MOUSE_OUT = 5;
+
+    this.eventNames = [];
+    this.eventNames[this.EVENT_MOUSE_MOUSE_DOWN] = 'mousedown';
+    this.eventNames[this.EVENT_MOUSE_MOUSE_UP] = 'mouseup';
+    this.eventNames[this.EVENT_MOUSE_CLICK] = 'click';
+    this.eventNames[this.EVENT_MOUSE_OVER] = 'mouseover';
+    this.eventNames[this.EVENT_MOUSE_OUT] = 'mouseout';
+    /**
      * Создаёт элемент
      * @param name {string} имя элемента Element*
      * @param params {object} параметры присваиваемые при создании элемента.
@@ -34,16 +66,37 @@ GUI = function () {
         element.init();
         return element;
     };
-
     /**
      * Создаёт дом, инициализирует его и возвращает на него ссылку.
      * @returns {GUIDom}
      */
-    this.createDom = function(){
+    this.createDom = function () {
         var dom;
         dom = new GUIDom();
         dom.init();
         return dom;
+    };
+    /**
+     * Првязываем событие к домЭлементы
+     * @param dom {GUIDom} к кому привязываем событие.
+     * @param eventId {int} id события GUIDom.EVENT_*
+     * @param callback {function}
+     */
+    this.bind = function (dom, eventId, callback, context) {
+        dom.bind(eventId, callback, context);
+    };
+    /**
+     * Заранее загруженные картинки, но с timestampom
+     * timestamp вставлять везже сложно, проще сделать это в одном месте.
+     * @param url
+     * @returns {*}
+     */
+    this.getImageURL = function (url) {
+        if (!window.images[url]) {
+            Logs.log("Image url not found for: " + url, Logs.LEVEL_ERROR);
+            return '/images/notFound.png';
+        }
+        return window.images[url];
     };
 };
 /**

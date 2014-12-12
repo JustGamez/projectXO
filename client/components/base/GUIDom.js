@@ -14,17 +14,22 @@ GUIDom = function () {
      * @type {Element}
      */
     var dom = null;
-
     /**
      * Создается элемент браузера
      * Настраиваются минимальные параметры
      */
     this.init = function () {
         dom = document.createElement("div");
-        dom.style.position = 'absolute';
-        // hidden mode..
-        dom.style.opacity = '0.07';
         this.showed = false;
+        dom.style.position = 'absolute';
+        /* hidden mode..:begin*/
+        dom.style.opacity = 0.05;
+        dom.style.border = '1px solid black';
+        /* hidden mode..:finish*/
+        /* no dragable by default */
+        dom.ondragstart = function () {
+            return false;
+        };
         document.body.appendChild(dom);
     };
 
@@ -44,8 +49,23 @@ GUIDom = function () {
             dom.style.left = this.y + 'px';
             dom.style.width = this.width + 'px';
             dom.style.height = this.height + 'px';
-            dom.style.backgroundImage = 'url(' + this.backgroundImage + ')';
+            dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
             dom.style.display = 'block';
         }
+    };
+    /**
+     * Прицепляем событие.
+     * @param eventId
+     * @param callback
+     */
+    this.bind = function (eventId, callback, context) {
+        var eventName;
+        eventName = GUI.eventNames[eventId];
+        if (!eventName) {
+            Logs.log("undefined gui eventId:" + eventId, Logs.LEVEL_FATAL_ERROR);
+        }
+        dom.addEventListener(eventName, function () {
+            callback.call(context);
+        }, false);
     };
 };
