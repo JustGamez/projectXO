@@ -42,5 +42,13 @@ PageController = function () {
                 pages[id].hide();
             }
         }
+    };
+    /**
+     * Вызывает редрей всех активных страниц.
+     */
+    this.redraw = function(){
+        for (var id in pages) {
+            pages[id].redraw();
+        }
     }
 };

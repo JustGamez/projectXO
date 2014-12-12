@@ -7,6 +7,7 @@
  * @property width {int}
  * @property height {int}
  * @property backgroundImage {url}
+ * @property innerHTML {string}
  */
 GUIDom = function () {
     /**
@@ -45,11 +46,12 @@ GUIDom = function () {
         if (!this.showed) {
             dom.style.display = 'none';
         } else {
-            dom.style.top = this.x + 'px';
-            dom.style.left = this.y + 'px';
-            dom.style.width = this.width + 'px';
-            dom.style.height = this.height + 'px';
-            dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
+            if (this.x)dom.style.top = this.x + 'px';
+            if (this.y)dom.style.left = this.y + 'px';
+            if (this.width)dom.style.width = this.width + 'px';
+            if (this.height)dom.style.height = this.height + 'px';
+            if (this.backgroundImage)dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
+            if (this.innerHTML)dom.innerHTML = this.innerHTML;
             dom.style.display = 'block';
         }
     };

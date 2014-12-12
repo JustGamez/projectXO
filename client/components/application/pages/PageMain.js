@@ -9,6 +9,12 @@ PageMain = function PageMain() {
      */
     this.elements = [];
 
+    /**
+     * Элемент-текст отображающий количество онлайн игроков.
+     * @type {ElementGraphicText}
+     */
+    this.elementOnlineIndicator = null;
+
     this.init = function () {
         var element;
         /* Задний фон */
@@ -32,14 +38,25 @@ PageMain = function PageMain() {
             onClick: LogicPageMain.onPlayButtonClick
         });
         this.elements.push(element);
+        // online indicator
+        element = GUI.createElement('ElementGraphicText', {
+            x: 470,
+            y: 485,
+            text: 'онлайн: -'
+        });
+        this.elements.push(element);
+        this.elementOnlineIndicator = element;
     };
 
     this.show = function () {
+        this.redraw();
     };
 
     this.hide = function () {
     };
 
     this.redraw = function () {
+        var onlineCount = LogicUser.getOnlineCount();
+        this.elementOnlineIndicator.updateText('онлайн: ' + (onlineCount ? onlineCount : '-'));
     };
 };

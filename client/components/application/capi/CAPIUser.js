@@ -24,6 +24,14 @@ CAPIUser = function () {
     this.updateFriends = function (cntx, userId, friends) {
         LogicUser.updateFriends(userId, friends);
     };
+    /**
+     * Обновляем кол-во о нлайн игроков.
+     * @param cntx контекст соединения.
+     * @param count кол-во онлайн игроков.
+     */
+    this.updateOnlineCount = function (cntx, count) {
+        LogicUser.updateOnlineCount(count);
+    }
 };
 
 /**

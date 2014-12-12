@@ -16,7 +16,6 @@ SAPIUser = function () {
         }
         LogicUser.authorizeByVK(socNetUserId, authParams, cntx);
     };
-
     /**
      * Отправяел информацию о пользователи в текущие соединение.
      * @param cntx object
@@ -33,7 +32,6 @@ SAPIUser = function () {
         }
         LogicUser.sendUserInfo(userId, cntx);
     };
-
     /**
      * Запрос на отправку списка друзей.
      * @param cntx
@@ -50,6 +48,17 @@ SAPIUser = function () {
         }
         LogicUser.sendFriends(userId, cntx);
     };
+    /**
+     * Запрос на отправку онлайн пользователей.
+     * @param cntx
+     */
+    this.sendMeOnlineCount = function (cntx) {
+        if (!cntx.userId) {
+            Logs.log("SAPIUser.sendMeOnlineCount: not found cntx.userId", Logs.LEVEL_WARNING);
+            return;
+        }
+        LogicUser.sendOnlineCount(cntx);
+    }
 };
 /**
  * Статичный класс.

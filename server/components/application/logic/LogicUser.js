@@ -1,5 +1,5 @@
 LogicUser = function () {
-
+    var self = this;
     var userToCntx = {};
     var userToCntxCount = 0;
 
@@ -84,9 +84,16 @@ LogicUser = function () {
     var authorizeSendSuccess = function (user, cntx) {
         // тут мы запомним его connectionId раз и на всегда
         userAddConn(user, cntx);
+        sendOnlineCountToAll();
         CAPIUser.authorizeSuccess(user.id, user.id);
     };
-
+    /**
+     * Отправить пользователю данные
+     * @param userId {int} id пользователя.
+     * @param group {string} группу апи.
+     * @param method {string} метод апи.
+     * @param arguments {Array} аргументы апи.
+     */
     this.sendToUser = function (userId, group, method, arguments) {
         var cntxList = userGetConns(userId);
         apiRouter.executeRequest(group, method, arguments, cntxList);
@@ -105,6 +112,18 @@ LogicUser = function () {
      */
     this.getOnlineCount = function () {
         return userToCntxCount;
+    };
+    /** Отправляем кол-во онлайн пользователей */
+    this.sendOnlineCount = function (cntx) {
+        CAPIUser.updateOnlineCount(cntx.userId, self.getOnlineCount());
+    };
+    /**
+     * Отправка всем данных об онлайн пользователях.
+     */
+    var sendOnlineCountToAll = function () {
+        for (var userId in userToCntx) {
+            CAPIUser.updateOnlineCount(userId, self.getOnlineCount());
+        }
     };
     /**
      * Добавить пользователю контекст соединения.
@@ -159,6 +178,7 @@ LogicUser = function () {
     var onDisconnect = function (cntx) {
         if (cntx.userId) {
             userDeleteConn(cntx);
+            sendOnlineCountToAll();
         }
     };
     /**
@@ -169,6 +189,7 @@ LogicUser = function () {
     var onFailedSend = function (cntx) {
         if (cntx.userId) {
             userDeleteConn(cntx);
+            sendOnlineCountToAll();
         }
     };
 };

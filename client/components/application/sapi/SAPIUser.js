@@ -8,7 +8,6 @@ SAPIUser = function () {
     this.authorizeByVK = function (socNetUserId, authParams) {
         apiRouter.executeRequest('SAPIUser', 'authorizeByVK', arguments, [{connectionId: null}]);
     };
-
     /**
      * Отправяел информацию о пользователи в текущие соединение.
      * @param userId number
@@ -16,7 +15,6 @@ SAPIUser = function () {
     this.sendMeUserInfo = function (userId) {
         apiRouter.executeRequest('SAPIUser', 'sendMeUserInfo', arguments, [{connectionId: null}]);
     };
-
     /**
      * Запрос инфомрации о друзьях
      * @param userId number
@@ -24,6 +22,12 @@ SAPIUser = function () {
     this.sendMeFriends = function (userId) {
         apiRouter.executeRequest('SAPIUser', 'sendMeFriends', arguments, [{connectionId: null}]);
     };
+    /**
+     * Запрос на отправку онлайн пользователей.
+     */
+    this.sendMeOnlineCount = function () {
+        apiRouter.executeRequest('SAPIUser', 'sendMeOnlineCount', arguments, [{connectionId: null}]);
+    }
 };
 
 /**

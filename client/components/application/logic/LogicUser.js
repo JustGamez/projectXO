@@ -13,6 +13,8 @@ LogicUser = function () {
      * @type {Array}
      */
     var friends = [];
+    /** Кол-во онлайн пользователей */
+    var onlineCount = null;
     /**
      * Авторизация пользователя.
      */
@@ -32,7 +34,7 @@ LogicUser = function () {
 
         var user = LogicUser.getUserById(userId);
         var friends = LogicUser.getFriendsById(userId);
-        console.log(friends);
+        SAPIUser.sendMeOnlineCount();
     };
     /**
      * Получить данные пользователя по его id.
@@ -49,7 +51,7 @@ LogicUser = function () {
     };
     /**
      * Загрузить данные о пользователе.
-     * @param useId int
+     * @param useId {int}
      */
     this.loadUserInfoById = function (userId) {
         SAPIUser.sendMeUserInfo(userId);
@@ -89,6 +91,18 @@ LogicUser = function () {
     this.updateFriends = function (userId, friendList) {
         friends[userId] = friendList;
         Logs.log("LogicUser.udpateFriends for userId=" + userId, Logs.LEVEL_DETAIL);
+    };
+    /** Возвращает количество онлайн игроков. */
+    this.getOnlineCount = function () {
+        return onlineCount;
+    };
+    /**
+     * Обновим данные о кол-во онлайн пользователей.
+     * @param count кол-во онлайн пользователей.
+     */
+    this.updateOnlineCount = function (count) {
+        onlineCount = count;
+        pageController.redraw();
     };
 };
 

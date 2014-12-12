@@ -17,13 +17,21 @@ CAPIUser = function () {
     };
     /**
      * Обновление данныех о друзьях.
-     * @param toUserId c кому отправляем
+     * @param toUserId кому отправляем
      * @param userId id int пользователя, чьи друзья
      * @param friends [] список друзей.
      */
     this.updateFriends = function (toUserId, userId, friends) {
         LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateFriends', [userId, friends]);
     };
+    /**
+     * Обновить кол-во онлайн пользователей.
+     * @param toUserId кому отправляем
+     * @param count кол-во онлайн игроков.
+     */
+    this.updateOnlineCount = function (toUserId, count) {
+        LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateOnlineCount', [count]);
+    }
 };
 
 /**
