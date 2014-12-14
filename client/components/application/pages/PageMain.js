@@ -38,7 +38,7 @@ PageMain = function PageMain() {
             onClick: LogicPageMain.onPlayButtonClick
         });
         this.elements.push(element);
-        // online indicator
+        /* online indicator */
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
             y: 425,
@@ -46,6 +46,7 @@ PageMain = function PageMain() {
         });
         this.elements.push(element);
         this.elementOnlineIndicator = element;
+        /* Выбор игры с роботом или без*/
         element = GUI.createElement("ElementFlag", {
             x: 132,
             y: 170,
@@ -55,9 +56,38 @@ PageMain = function PageMain() {
             srcHover: '/images/flags/vsRobotHover.png',
             srcActive: '/images/flags/vsRobotActive.png',
             defaultState: false,
-            onChange: LogicPageMain.onFlagVsRoboChange
+            onChange: LogicPageMain.onFlagVsRobotChange
         });
         this.elements.push(element);
+        /* Выбор знкак игры */
+        element = GUI.createElement("ElementRadio", {
+            options: [
+                {
+                    srcRest: '/images/radio/field15x15Rest.png',
+                    srcHover: '/images/radio/field15x15Hover.png',
+                    srcActive: '/images/radio/field15x15Active.png',
+                    x: 550,
+                    y: 100,
+                    width: 156,
+                    height: 85,
+                    title: 'поле 15 на 15, \r\nпобеждает линия \r\nиз 5-ти знаков.',
+                    value: 1
+                },
+                {
+                    srcRest: '/images/radio/field3x3Rest.png',
+                    srcHover: '/images/radio/field3x3Hover.png',
+                    srcActive: '/images/radio/field3x3Active.png',
+                    x: 550,
+                    y: 185,
+                    width: 123,
+                    height: 86,
+                    title: 'поле 3 на 3, \r\nпобеждает линия \r\nиз 3-ёх знаков.',
+                    value: 2
+                }
+            ],
+            currentIndex: 0,
+            onChange: LogicPageMain.onRadioSignChange
+        });
     };
 
     this.show = function () {

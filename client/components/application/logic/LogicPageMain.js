@@ -13,13 +13,23 @@ LogicPageMain = function () {
      * Действия при смене флага "С роботом".
      * @param value {boolean}
      */
-    this.onFlagVsRoboChange = function (value) {
+    this.onFlagVsRobotChange = function (value) {
+        // @todo
+        return;
         if (value) {
             alert("The rise of the robots!");
         } else {
             alert("The sunset of the robots!");
         }
-    }
+    };
+    /**
+     * Действия при смене типа поля. 3х3 или 15х15.
+     * @param value {Number}
+     * @param index {Number}
+     */
+    this.onRadioSignChange = function(value, index){
+        alert(value + " " + index);
+    };
 };
 /**
  * Константный класс.
