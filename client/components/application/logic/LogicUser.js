@@ -37,16 +37,26 @@ LogicUser = function () {
         SAPIUser.sendMeOnlineCount();
     };
     /**
+     * Возвращает текущего(авторизованного пользователя).
+     * @returns {null|Object}
+     */
+    this.getCurrentUser = function () {
+        return this.getUserById(authorizedUserId);
+    };
+    /**
      * Получить данные пользователя по его id.
      * @param userId
-     * @returns {*}
+     * @returns {null|Object}
      */
     this.getUserById = function (userId) {
         if (users[userId]) {
             return users[userId];
         } else {
             this.loadUserInfoById(userId);
-            return null;
+            return {
+                id: null,
+                score: null
+            };
         }
     };
     /**

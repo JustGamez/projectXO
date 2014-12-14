@@ -14,6 +14,11 @@ PageMain = function PageMain() {
      * @type {ElementGraphicText}
      */
     this.elementOnlineIndicator = null;
+    /**
+     * Элемент-текст отображает количество очков игрока.
+     * @type {ElementGraphicText}
+     */
+    this.elementScoreIndicator = null;
 
     this.init = function () {
         var element;
@@ -88,6 +93,14 @@ PageMain = function PageMain() {
             currentIndex: 0,
             onChange: LogicPageMain.onRadioSignChange
         });
+        /* score indicator */
+        element = GUI.createElement('ElementGraphicText', {
+            x: 570,
+            y: 455,
+            text: 'очки: -'
+        });
+        this.elements.push(element);
+        this.elementScoreIndicator = element;
     };
 
     this.show = function () {
@@ -96,9 +109,14 @@ PageMain = function PageMain() {
 
     this.hide = function () {
     };
-
+    /**
+     * Обновляем онлайн индикатор и индикатор очков.
+     */
     this.redraw = function () {
-        var onlineCount = LogicUser.getOnlineCount();
-        this.elementOnlineIndicator.updateText('онлайн: ' + (onlineCount ? onlineCount : '-'));
+        var onlineCount, score;
+        onlineCount = LogicUser.getOnlineCount();
+        score = LogicUser.getCurrentUser().score;
+        this.elementOnlineIndicator.updateText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
+        this.elementScoreIndicator.updateText('очки: ' + (typeof score == 'number' ? score : '-'));
     };
 };
