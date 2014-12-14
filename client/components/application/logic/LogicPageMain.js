@@ -9,6 +9,17 @@ LogicPageMain = function () {
     this.onPlayButtonClick = function () {
         alert('You are click me! Welcome to mysterios world!');
     };
+    /**
+     * Действия при смене флага "С роботом".
+     * @param value {boolean}
+     */
+    this.onFlagVsRoboChange = function (value) {
+        if (value) {
+            alert("The rise of the robots!");
+        } else {
+            alert("The sunset of the robots!");
+        }
+    }
 };
 /**
  * Константный класс.

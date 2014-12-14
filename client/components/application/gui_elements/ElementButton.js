@@ -40,6 +40,11 @@ ElementButton = function () {
      */
     this.srcRest = 'path/to/image/rest.png';
     /**
+     * Будет вызываться при нажатии на кнопку.
+     * @type {function}
+     */
+    this.onClick = null;
+    /**
      * Дом картинки.
      * @type {GUIDom}
      */
@@ -49,6 +54,11 @@ ElementButton = function () {
      * @type {boolean}
      */
     var mouseStateDown = false;
+    /**
+     * Мышь в фокусе.
+     * @type {boolean}
+     */
+    var mouseStateFocused = false;
     /**
      * Создадим дом и настроем его.
      */
@@ -60,13 +70,11 @@ ElementButton = function () {
         dom.height = this.height;
         dom.backgroundImage = this.srcRest;
         GUI.bind(dom, GUI.EVENT_MOUSE_MOUSE_DOWN, onMouseDown, this);
-        GUI.bind(dom, GUI.EVENT_MOUSE_MOUSE_UP, onMouseUp, this);
         GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onMouseClick, this);
         GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
         GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
-
         dom.show();
-        dom.redraw();
+        self.redraw();
     };
 
     this.show = function () {
@@ -78,44 +86,42 @@ ElementButton = function () {
     };
 
     this.redraw = function () {
-
+        var src;
+        src = self.srcRest;
+        if (mouseStateFocused)src = self.srcHover;
+        if (mouseStateFocused && mouseStateDown) src = self.srcActive;
+        if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
+        dom.backgroundImage = src;
+        dom.redraw();
+    };
+    /**
+     * Обработка события фокуса мыши.
+     */
+    var onMouseOver = function () {
+        mouseStateFocused = true;
+        self.redraw();
     };
     /**
      * Обработчик события на опускание мыши.
      */
     var onMouseDown = function () {
         mouseStateDown = true;
-        dom.backgroundImage = self.srcActive;
-        dom.redraw();
-    };
-    /**
-     * Обработчик события на отпускания мыши.
-     */
-    var onMouseUp = function () {
-        mouseStateDown = false;
-        dom.backgroundImage = self.srcRest;
-        dom.redraw();
-    };
-    /**
-     * Обработка события на клик.
-     */
-    var onMouseClick = function () {
-        dom.backgroundImage = self.srcActive;
-        dom.redraw();
-        this.onClick.call();
-    };
-    /**
-     * Обработка события фокуса мыши.
-     */
-    var onMouseOver = function () {
-        dom.backgroundImage = mouseStateDown ? self.srcActive : self.srcHover;
-        dom.redraw();
+        self.redraw();
     };
     /**
      * Обработка события выхода фокуса мыши.
      */
     var onMouseOut = function () {
-        dom.backgroundImage = self.srcRest;
-        dom.redraw();
+        mouseStateFocused = false;
+        self.redraw();
+    };
+    /**
+     * Обработка события на клик.
+     */
+    var onMouseClick = function () {
+        mouseStateDown = false;
+        mouseStateFocused = false;
+        self.redraw();
+        self.onClick.call();
     };
 };

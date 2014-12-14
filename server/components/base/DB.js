@@ -19,7 +19,9 @@ DB = function () {
      * @type {boolean}
      */
     var isConnected = false;
-
+    /**
+     * Ппроизведем коннект к БД, согласно конфигурации.
+     */
     this.init = function () {
         connection = MYSQL.createConnection({
             host: Config.DB.host,

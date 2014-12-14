@@ -22,14 +22,14 @@ PageMain = function PageMain() {
             x: 0,
             y: 0,
             width: 788,
-            height: 594,
+            height: 685,
             src: '/images/table.png'
         });
         this.elements.push(element);
         /* Кнопка играть. */
         element = GUI.createElement('ElementButton', {
-            x: 275,
-            y: 250,
+            x: 269,
+            y: 225,
             width: 225,
             height: 93,
             srcRest: '/images/buttons/playRest.png',
@@ -40,12 +40,24 @@ PageMain = function PageMain() {
         this.elements.push(element);
         // online indicator
         element = GUI.createElement('ElementGraphicText', {
-            x: 470,
-            y: 485,
+            x: 570,
+            y: 425,
             text: 'онлайн: -'
         });
         this.elements.push(element);
         this.elementOnlineIndicator = element;
+        element = GUI.createElement("ElementFlag", {
+            x: 132,
+            y: 170,
+            height: 83,
+            width: 142,
+            srcRest: '/images/flags/vsRobotRest.png',
+            srcHover: '/images/flags/vsRobotHover.png',
+            srcActive: '/images/flags/vsRobotActive.png',
+            defaultState: false,
+            onChange: LogicPageMain.onFlagVsRoboChange
+        });
+        this.elements.push(element);
     };
 
     this.show = function () {

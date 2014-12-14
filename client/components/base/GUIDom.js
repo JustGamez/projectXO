@@ -24,8 +24,10 @@ GUIDom = function () {
         this.showed = false;
         dom.style.position = 'absolute';
         /* hidden mode..:begin*/
-        dom.style.opacity = 0.05;
-        dom.style.border = '1px solid black';
+        if (GUIDom.hidePictures) {
+            dom.style.opacity = 0.05;
+            dom.style.border = '1px solid black';
+        }
         /* hidden mode..:finish*/
         /* no dragable by default */
         dom.ondragstart = function () {
@@ -46,8 +48,8 @@ GUIDom = function () {
         if (!this.showed) {
             dom.style.display = 'none';
         } else {
-            if (this.x)dom.style.top = this.x + 'px';
-            if (this.y)dom.style.left = this.y + 'px';
+            if (this.x)dom.style.left = this.x + 'px';
+            if (this.y)dom.style.top = this.y + 'px';
             if (this.width)dom.style.width = this.width + 'px';
             if (this.height)dom.style.height = this.height + 'px';
             if (this.backgroundImage)dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
@@ -71,3 +73,16 @@ GUIDom = function () {
         }, false);
     };
 };
+
+/**
+ * Этот код определит нужно ли делать картинки невидимыми.
+ * Это нужно для БоссМоуда на саммом деле :)
+ * В результате мы установим GUIDom.hidePictures = [true|false].
+ */
+(function () {
+    if (window.location.href.indexOf("hide_pictures=true") != -1) {
+        GUIDom.hidePictures = true;
+    } else {
+        GUIDom.hidePictures = false;
+    }
+})();
