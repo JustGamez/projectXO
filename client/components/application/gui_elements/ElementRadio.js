@@ -42,6 +42,7 @@ ElementRadio = function () {
             }
         }
         self.redraw();
+        self.onChange.call(self, self.currentValue, self.currentIndex);
     };
 
     this.show = function () {

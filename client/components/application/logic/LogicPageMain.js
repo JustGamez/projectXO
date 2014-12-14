@@ -27,7 +27,9 @@ LogicPageMain = function () {
      * @param value {Number}
      * @param index {Number}
      */
-    this.onRadioSignChange = function(value, index){
+    this.onRadioSignChange = function (value, index) {
+        // @todo
+        return;
         alert(value + " " + index);
     };
 };

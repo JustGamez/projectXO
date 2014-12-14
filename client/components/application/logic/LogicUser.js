@@ -72,6 +72,7 @@ LogicUser = function () {
      */
     this.updateUserInfo = function (user) {
         users[user.id] = user;
+        pageController.redraw();
     };
     /**
      * Получить список друзей по внутренему id юзера
