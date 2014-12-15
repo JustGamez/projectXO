@@ -255,21 +255,17 @@ ElementField = function () {
         switch (signId) {
             case LogicXO.SIGN_ID_X:
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignX;
-                console.log(self.configure[fieldTypeId].srcSignX);
                 break;
             case LogicXO.SIGN_ID_O:
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignO;
-                console.log(self.configure[fieldTypeId].srcSignO);
                 break;
             case LogicXO.SIGN_ID_Empty:
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;
-                console.log(self.configure[fieldTypeId].srcSignClear);
                 break;
             default:
                 Logs.log("Undefined signId:" + signId, Logs.LEVEL_FATAL_ERROR);
                 break;
         }
-        console.log("set signId:" + signId);
         self.redraw();
     };
 
