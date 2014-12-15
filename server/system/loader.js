@@ -15,6 +15,7 @@ require('./functions.js');
  * Подключение всех компонент.
  */
 (function (path) {
+
     /**
      * Рекурсивное подключение всех файлов.
      * @param path
@@ -30,6 +31,7 @@ require('./functions.js');
             }
         }
     };
+
     /**
      * Подключение компонента по пути.
      * @param path путь к файлу компонента.
@@ -41,6 +43,7 @@ require('./functions.js');
         validateComponent(path);
         GLOBAL[getComponentNameFromPath(path)].__path = path;
     };
+
     /**
      * Определить имя компонента по пути к нему.
      * @param path путь к файлу компоненат.
@@ -49,6 +52,7 @@ require('./functions.js');
     var getComponentNameFromPath = function (path) {
         return PATH.basename(path).replace('.js', '');
     };
+
     /**
      * Проверка компонента.
      * @param path путь к файлу компонента.

@@ -14,6 +14,7 @@ var PATH = require('path');
 
 WebSocketServer = function () {
     var self = this;
+
     /**
      * Префикс запрашиваемых картинок, все запросы к картинкам должны начинаться с этого префикса.
      * Далее префикс будет удаляться, и оставшаяся часть пути будет считаться путем к картинке
@@ -22,21 +23,25 @@ WebSocketServer = function () {
      */
     var imagesPrefix = '/images/';
     var lastConnectionId = null;
+
     /**
      * Перезагружать ли клиентский код, каждый раз. Когда его запрашивают.
      * @type {boolean}
      */
     var reloadClientCodeEveryRequest = null;
+
     /**
      * Порт для прослушки.
      * @type {int};
      */
     var port = null;
+
     /**
      * Путь откуда загружать клиентский код.
      * @type {string}
      */
     var clientCodePath = null;
+
     /**
      * Путь откуда загружать картинки.
      * @type {string}
@@ -48,6 +53,7 @@ WebSocketServer = function () {
         clientCodePath = setup.clientCodePath;
         imagesPath = setup.imagesPath;
     };
+
     /**
      * Включение компонента, тут мы просто выполним инит.
      */
@@ -55,6 +61,7 @@ WebSocketServer = function () {
         checkBeforeInit();
         init();
     };
+
     /**
      * Проверка перед запуском:
      * - проверим установлены ли каллбэки пользовательским кодом;
@@ -83,20 +90,24 @@ WebSocketServer = function () {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
     };
+
     /**
      * Каллбэек будет вызываться при коннекте.
      * @type function
      */
     this.onConnect = null;
+
     /**
      * Каллбэек будет вызываться при диконнекте.
      * @type function
      */
     this.onDisconnect = null;
+
     /**
      * Каллбэек будет вызываться при получении данных.
      */
     this.onData = null;
+
     /**
      * Отправляет данные клиенту
      * @param data
@@ -109,26 +120,32 @@ WebSocketServer = function () {
         connectionStack[id].sendUTF(data);
         return true;
     };
+
     /**
      * Последний id соединения.
      */
     var lastId = 0;
+
     /**
      * Стэк соединений.
      */
     var connectionStack = {};
+
     /**
      * Клинтский код.
      */
     var clientCode = '';
+
     /**
      * Тут храниться HTTP сервер, nodeJS-модуль
      */
     var http;
+
     /**
      * Тут храниться WebSocket.server, nodeJS-модуль
      */
     var server;
+
     /**
      * Загружается клиентский код.
      * Создается севрер.
@@ -148,6 +165,7 @@ WebSocketServer = function () {
         server.on('request', onWebSocketRequest);
         Logs.log("WebSocketServer running. port:" + port, Logs.LEVEL_NOTIFY);
     };
+
     /**
      * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
      */
@@ -161,6 +179,7 @@ WebSocketServer = function () {
         clientCode += getClientImageCode();
         clientCode += "</BODY></HTML>";
     };
+
     /**
      * Вернем клиентские js-скрипты.
      */
@@ -170,6 +189,7 @@ WebSocketServer = function () {
         jsFiles = getFileListRecursive(clientCodePath);
         return clientCodePrepareCode(jsFiles);
     };
+
     /**
      * Вернем клинетские картинки.
      */
@@ -193,6 +213,7 @@ WebSocketServer = function () {
         imageCode += "</div>";
         return imageCode;
     };
+
     /**
      * Составляет список всех файлов, рекурсивно.
      */
@@ -210,6 +231,7 @@ WebSocketServer = function () {
         }
         return files;
     };
+
     /**
      * Загрузим код всех файлов, конкатинируем и составим из них одну строку кода.
      * @param files[]
@@ -233,6 +255,7 @@ WebSocketServer = function () {
         }
         return clientCode;
     };
+
     /**
      * Обработчки запросов от HTTP сервера.
      * при запросе ^/clientCode?*, вернёт клинтский код.
@@ -282,6 +305,7 @@ WebSocketServer = function () {
         response.end('File not found.');
         return true;
     };
+
     /**
      * Обработчик запросов от WebSocket-а
      * Собственно это запросы на соединение.

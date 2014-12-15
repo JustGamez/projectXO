@@ -101,6 +101,7 @@ ApiRouter = function () {
             }
         }
     };
+
     /**
      * Добавлить каллбэк дисконнекта.
      * Будет вызван при дисконнекте соедеинения.
@@ -109,6 +110,7 @@ ApiRouter = function () {
     this.addOnDisconnectCallback = function (callback) {
         onDisconnectCallbacks.push(callback);
     };
+
     /**
      * Добавлить каллбэк неудачной отправки.
      * Будет вызван при неудачной отправки данных, в разорванное соединение.

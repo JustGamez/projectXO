@@ -4,61 +4,79 @@
  */
 ElementButton = function () {
     var self = this;
+
+    /**
+     * Показывать ли элемент.
+     * @type {boolean}
+     */
+    var showed = false;
+
     /**
      * Координата X кнопки.
      * @type {number}
      */
     this.x = 0;
+
     /**
      * Координата Y кнопки.
      * @type {number}
      */
     this.y = 0;
+
     /**
      * Ширина кнопки.
      * @type {number}
      */
     this.width = 0;
+
     /**
      * Высота кноки.
      * @type {number}
      */
     this.height = 0;
+
     /**
      * Ссылка на картинку при наведении фокуса(мыши).
      * @type {string}
      */
     this.srcHover = '/path/to/image/hover.png';
+
     /**
      * Ссылка на картинку при активации кнопки(клике).
      * @type {string}
      */
     this.srcActive = '/path/to/image/active.png';
+
     /**
      * Ссылка на картинку в покое(ожидании/бездействии).
      * @type {string}
      */
     this.srcRest = 'path/to/image/rest.png';
+
     /**
      * Будет вызываться при нажатии на кнопку.
      * @type {function}
      */
     this.onClick = null;
+
     /**
      * Дом картинки.
      * @type {GUIDom}
      */
     var dom = null;
+
     /**
      * Опущена ли мышка.
      * @type {boolean}
      */
     var mouseStateDown = false;
+
     /**
      * Мышь в фокусе.
      * @type {boolean}
      */
     var mouseStateFocused = false;
+
     /**
      * Создадим дом и настроем его.
      */
@@ -69,24 +87,38 @@ ElementButton = function () {
         dom.width = this.width;
         dom.height = this.height;
         dom.backgroundImage = this.srcRest;
+        dom.pointer = GUI.POINTER_HAND;
         GUI.bind(dom, GUI.EVENT_MOUSE_MOUSE_DOWN, onMouseDown, this);
         GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onMouseClick, this);
         GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
         GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
+    };
+
+    /**
+     * Покажем кнопку.
+     */
+    this.show = function () {
+        if (showed == true) return;
+        showed = true;
         dom.show();
         self.redraw();
     };
 
-    this.show = function () {
-
-    };
-
+    /**
+     * Спрячем кнопку.
+     */
     this.hide = function () {
-
+        if (showed == false) return;
+        showed = false;
+        dom.hide();
     };
 
+    /**
+     * Перерисуем кнопку.
+     */
     this.redraw = function () {
         var src;
+        if (!showed)return;
         src = self.srcRest;
         if (mouseStateFocused)src = self.srcHover;
         if (mouseStateFocused && mouseStateDown) src = self.srcActive;
@@ -94,6 +126,7 @@ ElementButton = function () {
         dom.backgroundImage = src;
         dom.redraw();
     };
+
     /**
      * Обработка события фокуса мыши.
      */
@@ -101,6 +134,7 @@ ElementButton = function () {
         mouseStateFocused = true;
         self.redraw();
     };
+
     /**
      * Обработчик события на опускание мыши.
      */
@@ -108,6 +142,7 @@ ElementButton = function () {
         mouseStateDown = true;
         self.redraw();
     };
+
     /**
      * Обработка события выхода фокуса мыши.
      */
@@ -115,6 +150,7 @@ ElementButton = function () {
         mouseStateFocused = false;
         self.redraw();
     };
+
     /**
      * Обработка события на клик.
      */

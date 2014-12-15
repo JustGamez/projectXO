@@ -4,21 +4,31 @@
  */
 ElementRadio = function () {
     var self = this;
+
+    /**
+     * Показывать ли элемент.
+     * @type {boolean}
+     */
+    var showed = false;
+
     /**
      * Тут мы будем хранить набор опций.
      * @type {Array}
      */
     this.options = [];
+
     /**
      * Текущие значение.
      * @type {null}
      */
     this.currentValue = null;
+
     /**
      * Индекс текущего активного элемента.
      * @type {Number}
      */
     this.currentIndex = null;
+
     /**
      * Для каждой натойки:
      * - создадим дом.
@@ -28,6 +38,7 @@ ElementRadio = function () {
         for (var i in self.options) {
             option = self.options[i];
             dom = GUI.createDom();
+            dom.pointer = GUI.POINTER_HAND;
             option.mouseStateFocused = false;
             option.mouseStateDown = false;
             option.index = i;
@@ -35,7 +46,6 @@ ElementRadio = function () {
             GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onMouseClick, option);
             GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, option);
             GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, option);
-            dom.show();
             option.dom = dom;
             if (option.index == self.currentIndex) {
                 this.currentValue = option.value;
@@ -45,27 +55,31 @@ ElementRadio = function () {
         self.onChange.call(self, self.currentValue, self.currentIndex);
     };
 
+    /**
+     * Покажем переключатель.
+     */
     this.show = function () {
-
+        if (showed == true) return;
+        showed = true;
+        for (var i in self.options) {
+            self.options[i].dom.show();
+        }
+        self.redraw();
     };
 
+    /**
+     * Спрячем переключатель.
+     */
     this.hide = function () {
-
+        if (showed == false) return;
+        showed = false;
+        for (var i in self.options) {
+            self.options[i].dom.hide();
+        }
     };
-    /*
-     if (flagState == false) {
-     src = self.srcRest;
-     if (mouseStateFocused)src = self.srcHover;
-     if (mouseStateFocused && mouseStateDown) src = self.srcActive;
-     if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
-     } else {
-     src = self.srcActive;
-     if (mouseStateFocused)src = self.srcHover;
-     if (mouseStateFocused && mouseStateDown) src = self.srcRest;
-     if (!mouseStateFocused && mouseStateDown) src = self.srcActive;
-     }
-     dom.backgroundImage = src;
-     dom.redraw();
+
+    /**
+     * Перерисуем переключатель.
      */
     this.redraw = function () {
         var option, src;
@@ -97,6 +111,7 @@ ElementRadio = function () {
             }
         }
     };
+
     /**
      * Обработка события фокуса мыши.
      */
@@ -104,6 +119,7 @@ ElementRadio = function () {
         this.mouseStateFocused = true;
         self.redraw();
     };
+
     /**
      * Обработчик события на опускание мыши.
      */
@@ -111,6 +127,7 @@ ElementRadio = function () {
         this.mouseStateDown = true;
         self.redraw();
     };
+
     /**
      * Обработка события выхода фокуса мыши.
      */
@@ -118,6 +135,7 @@ ElementRadio = function () {
         this.mouseStateFocused = false;
         self.redraw();
     };
+
     /**
      * Обработка события на клик.
      */

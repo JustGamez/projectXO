@@ -32,9 +32,14 @@ window.onload = function () {
 
     /* PageController */
     pageController = new PageController;
-    PageController.PAGE_ID_MAIN = 0x01;
+    PageController.PAGE_ID_BACKGROUND = 1;
+    pageController.addPage(PageController.PAGE_ID_BACKGROUND, new PageBackground());
+    PageController.PAGE_ID_MAIN = 2;
     pageController.addPage(PageController.PAGE_ID_MAIN, new PageMain());
-    pageController.showPage(PageController.PAGE_ID_MAIN);
+    PageController.PAGE_ID_XO_GAME = 3;
+    pageController.addPage(PageController.PAGE_ID_XO_GAME, new PageXOGame());
+
+    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
 
     // client specific code
     SocNet.parseSocNetURL();

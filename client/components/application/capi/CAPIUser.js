@@ -1,4 +1,5 @@
 CAPIUser = function () {
+
     /**
      * Авторизация успешна
      * @param cntx контекст соединения.
@@ -7,6 +8,7 @@ CAPIUser = function () {
     this.authorizeSuccess = function (cntx, userId) {
         LogicUser.authorizeSuccess(userId);
     };
+
     /**
      * Обновить данные о пользователи
      * @param cntx контекст соединения.
@@ -15,6 +17,7 @@ CAPIUser = function () {
     this.updateUserInfo = function (cntx, user) {
         LogicUser.updateUserInfo(user);
     };
+
     /**
      * Обновление данныех о друзьях.
      * @param cntx контекст соединения.
@@ -24,6 +27,7 @@ CAPIUser = function () {
     this.updateFriends = function (cntx, userId, friends) {
         LogicUser.updateFriends(userId, friends);
     };
+
     /**
      * Обновляем кол-во о нлайн игроков.
      * @param cntx контекст соединения.

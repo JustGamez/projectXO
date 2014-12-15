@@ -7,6 +7,7 @@ LogicUser = function () {
         apiRouter.addOnDisconnectCallback(onDisconnect);
         apiRouter.addOnFailedSendCallback(onFailedSend);
     };
+
     /**
      * Авторизация пользвоателя из соц сети вКонтакте.
      * @param socNetUserId
@@ -30,6 +31,7 @@ LogicUser = function () {
             authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
         });
     };
+
     /**
      * Отправка информации о пользователе.
      * @param userId {Number}
@@ -44,6 +46,7 @@ LogicUser = function () {
             }
         });
     };
+
     /**
      * Отправка списка друзей в соединение.
      * @param userId {Number}
@@ -87,6 +90,7 @@ LogicUser = function () {
         sendOnlineCountToAll();
         CAPIUser.authorizeSuccess(user.id, user.id);
     };
+
     /**
      * Отправить пользователю данные
      * @param userId {int} id пользователя.
@@ -98,6 +102,7 @@ LogicUser = function () {
         var cntxList = userGetConns(userId);
         apiRouter.executeRequest(group, method, arguments, cntxList);
     };
+
     /**
      * Является ли пользователь онлайн.
      * @param userId id пользователя
@@ -106,6 +111,7 @@ LogicUser = function () {
     this.isUserOnline = function (userId) {
         return userGetConns(userId) ? true : false;
     };
+
     /**
      * Возвращает кол-во онлайн пользователей.
      * @returns {number} кол-во онлайн пользователей.
@@ -113,10 +119,12 @@ LogicUser = function () {
     this.getOnlineCount = function () {
         return userToCntxCount;
     };
+
     /** Отправляем кол-во онлайн пользователей */
     this.sendOnlineCount = function (cntx) {
         CAPIUser.updateOnlineCount(cntx.userId, self.getOnlineCount());
     };
+
     /**
      * Отправка всем данных об онлайн пользователях.
      */
@@ -125,6 +133,7 @@ LogicUser = function () {
             CAPIUser.updateOnlineCount(userId, self.getOnlineCount());
         }
     };
+
     /**
      * Добавить пользователю контекст соединения.
      * Так же создаст контекст пользователя, если его нет.
@@ -147,6 +156,7 @@ LogicUser = function () {
         userToCntx[userId].conns[cntx.connectionId] = cntx;
         userToCntx[userId].connsCount++;
     };
+
     /**
      * Возвращает массив контекстов соединения пользователя.
      * @param userId
@@ -155,6 +165,7 @@ LogicUser = function () {
     var userGetConns = function (userId) {
         return userToCntx[userId] ? userToCntx[userId].conns : null;
     };
+
     /**
      * Удаляет контекст соединения для пользователя.
      * Так же удалит контекст пользователя, если в результате удаления не останется ни одного соединения.
@@ -171,6 +182,7 @@ LogicUser = function () {
             userToCntxCount--;
         }
     };
+
     /**
      * это каллбек для определения что соедиение разорвано.
      * @param cntx
@@ -181,6 +193,7 @@ LogicUser = function () {
             sendOnlineCountToAll();
         }
     };
+
     /**
      * это калбек, на случай если мы пытаемся отправить данные отконектившемуся клиенту,
      * мы попробуем удалить соединение из контекста пользователя.

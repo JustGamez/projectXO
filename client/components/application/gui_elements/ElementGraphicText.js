@@ -5,26 +5,37 @@
  */
 ElementGraphicText = function () {
     var self = this;
+
+    /**
+     * Показывать ли элемент.
+     * @type {boolean}
+     */
+    var showed = false;
+
     /**
      * Координата X текста.
      * @type {number}
      */
     this.x = 0;
+
     /**
      * Координата Y текста.
      * @type {number}
      */
     this.y = 0;
+
     /**
      * Ширина текста.
      * @type {number}
      */
     this.width = 0;
+
     /**
      * Высота текста.
      * @type {number}
      */
     this.height = 0;
+
     /**
      * Текст.
      * @type {string}
@@ -33,9 +44,10 @@ ElementGraphicText = function () {
 
     /**
      * Дом для текста.
-     * @type {GUIElement}
+     * @type {GUIDom}
      */
     var dom = null;
+
     /**
      * Создадим дом и настроем его.
      */
@@ -45,25 +57,42 @@ ElementGraphicText = function () {
         dom.y = this.y;
         dom.width = this.width;
         dom.height = this.height;
-        dom.show();
-        dom.redraw();
-        this.redraw();
+        self.redraw();
     };
 
+    /**
+     * Покажем текст.
+     */
     this.show = function () {
-
+        if (showed == true) return;
+        showed = true;
+        dom.show();
+        self.redraw();
     };
 
+    /**
+     * Спрячем текст.
+     */
     this.hide = function () {
-
+        if (showed == false) return;
+        showed = true;
+        dom.hide();
     };
 
+    /**
+     * Обновим текст и перерисуем его.
+     * @param text {string}
+     */
     this.updateText = function (text) {
         self.text = text;
         this.redraw();
     };
 
+    /**
+     * Перерисуем.
+     */
     this.redraw = function () {
+        if (!showed)return;
         refreshText();
     };
 

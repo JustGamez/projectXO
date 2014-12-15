@@ -4,6 +4,7 @@
  */
 PageController = function () {
     var pages = [];
+
     /**
      * Добавляет страницу.
      * @param id {Number} id PageController.PAGE_ID_*
@@ -31,22 +32,30 @@ PageController = function () {
 
     /**
      * Показать страницу, все остальные скрыть.
-     * @param idToShow {Number}
+     * @param idToShowList {Array}
      */
-    this.showPage = function (idToShow) {
-        Logs.log("Page show:" + idToShow, Logs.LEVEL_DETAIL);
+    this.showPages = function (idToShowList) {
+        Logs.log("Pages to show:" + idToShowList.toString(), Logs.LEVEL_DETAIL);
+        var tmp = [];
+        for (var i in idToShowList) {
+            tmp[idToShowList[i]] = idToShowList[i];
+        }
+        idToShowList = tmp;
+        /* show pages */
+        for (var id in idToShowList) {
+            pages[id].show();
+        }
+        /* hide all other */
         for (var id in pages) {
-            if (idToShow == id) {
-                pages[id].show();
-            } else {
-                pages[id].hide();
-            }
+            if (tmp[id])continue;
+            pages[id].hide();
         }
     };
+
     /**
      * Вызывает редрей всех активных страниц.
      */
-    this.redraw = function(){
+    this.redraw = function () {
         for (var id in pages) {
             pages[id].redraw();
         }

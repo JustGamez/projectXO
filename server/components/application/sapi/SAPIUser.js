@@ -1,4 +1,5 @@
 SAPIUser = function () {
+
     /**
      *
      * @param cntx контекст соединения
@@ -16,6 +17,7 @@ SAPIUser = function () {
         }
         LogicUser.authorizeByVK(socNetUserId, authParams, cntx);
     };
+
     /**
      * Отправяел информацию о пользователи в текущие соединение.
      * @param cntx object
@@ -32,6 +34,7 @@ SAPIUser = function () {
         }
         LogicUser.sendUserInfo(userId, cntx);
     };
+
     /**
      * Запрос на отправку списка друзей.
      * @param cntx
@@ -48,6 +51,7 @@ SAPIUser = function () {
         }
         LogicUser.sendFriends(userId, cntx);
     };
+
     /**
      * Запрос на отправку онлайн пользователей.
      * @param cntx

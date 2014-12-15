@@ -11,6 +11,7 @@ DataUser = function () {
         lastLoginTimestamp: null,
         score: null
     };
+
     /**
      * Вернуть пользователя по данным из соцаильной сети
      * @param socNetTypeId тип социальнйо сети SocNet.TYPE_*
@@ -25,6 +26,7 @@ DataUser = function () {
             callback(rows[0] || null);
         });
     };
+
     /**
      * Вернуть пользователя по id.
      * @param userId внутрений id пользовтаеля.
@@ -37,6 +39,7 @@ DataUser = function () {
             callback(rows[0] || null);
         });
     };
+
     /**
      * Создать пользователя по данным из социальной сети.
      * @param socNetTypeId id социальной сети SocNet.TYPE_*
@@ -66,6 +69,7 @@ DataUser = function () {
             callback(user);
         });
     };
+
     /**
      * Возвращает список юзерво по параметрам.
      * @param where {object} фильтр.

@@ -3,12 +3,15 @@
  * @constructor
  */
 LogicPageMain = function () {
+
     /**
      * Действия при нажатии кнопки "Играть".
      */
     this.onPlayButtonClick = function () {
-        alert('You are click me! Welcome to mysterios world!');
+        //alert('You are click me! Welcome to mysterios world!');
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
     };
+
     /**
      * Действия при смене флага "С роботом".
      * @param value {boolean}
@@ -22,6 +25,8 @@ LogicPageMain = function () {
             alert("The sunset of the robots!");
         }
     };
+
+
     /**
      * Действия при смене типа поля. 3х3 или 15х15.
      * @param value {Number}
@@ -33,6 +38,7 @@ LogicPageMain = function () {
         alert(value + " " + index);
     };
 };
+
 /**
  * Константный класс.
  * @type {LogicPageMain}

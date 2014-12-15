@@ -4,11 +4,13 @@
  */
 WebSocketClient = function () {
     var self = this;
+
     /**
      * Хост сервера.
      * @type {string}
      */
     var host = null;
+
     /**
      * Порт сервера.
      * @type {int}
@@ -22,6 +24,7 @@ WebSocketClient = function () {
     this.onConnect = null;
     this.onDisconnect = null;
 
+
     /**
      * Сюда мы будем получать данные и отправлять их на сервер.
      * Примечание: Однако, если соединения с серверм нет, то мы будем просто добавлять их в буффер.
@@ -31,6 +34,7 @@ WebSocketClient = function () {
         packetBuffer.push(data);
         trySend();
     };
+
     /**
      * Просто выполним инициализацию.
      * Собсвтено подсоединимся к серверу.
@@ -50,23 +54,27 @@ WebSocketClient = function () {
             Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onData);
         }
     };
+
     /**
      * Состояние соединения:
      * true - соединение активно
      * false - нет соединения.
      */
     var isConnected = false;
+
     /**
      * Буфер пакетов данных.
      * Впервую очередь все данные попадают сюда, а уже потом отправляются.
      * На случай, если нет соединения сейчас, но оно появиться потом.
      */
     var packetBuffer = [];
+
     /**
      * Собственно сокет.
      * @type {null}
      */
     var socket = null;
+
     /**
      * Инициалиизация.
      * Создадим объект клиента
@@ -83,6 +91,7 @@ WebSocketClient = function () {
         socket.onmessage = onMessage;
         socket.onerror = onError;
     };
+
     /**
      * Обработчик при открытии соединения.
      */
@@ -93,6 +102,7 @@ WebSocketClient = function () {
         Logs.log("WebSocketClient: Соединение установленно:" + host + ':' + port);
         self.onConnect();
     };
+
     /**
      * Обработчик при закрытие соединения.
      * @param event
@@ -107,6 +117,7 @@ WebSocketClient = function () {
         Logs.log('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
         self.onDisconnect();
     };
+
     /**
      * Обработчик при получении данных(сообщения) от сервера.
      * @param event
@@ -115,6 +126,7 @@ WebSocketClient = function () {
         Logs.log("WebSocketClient: Получены данные.", Logs.LEVEL_DETAIL, event.data);
         self.onData(event.data);
     };
+
     /**
      * Обработчик ошибок вебсокета.
      * @param error
@@ -122,6 +134,7 @@ WebSocketClient = function () {
     var onError = function (error) {
         Logs.log("WebSocketClient: Ошибка " + error.message);
     };
+
     /**
      * Отправка данных из буфера.
      * Если нет данных в буфере возвращаемся.

@@ -4,6 +4,7 @@
  */
 Logs = function () {
     var self = this;
+
     /**
      * Уровень срабатывания.
      * @type {number} Logs.LEVEL_*
@@ -13,6 +14,7 @@ Logs = function () {
     this.setup = function (setup) {
         if (setup.level)level = setup.level;
     };
+
     /**
      * Сюда и проходят логи.
      * @param message сообщение
@@ -45,22 +47,27 @@ Logs = function () {
         }
     };
     /* константы типов логов */
+
     /**
      * Детально.
      */
     this.LEVEL_DETAIL = 1;
+
     /**
      * Оповещение.
      */
     this.LEVEL_NOTIFY = 2;
+
     /**
      * Внимание.
      */
     this.LEVEL_WARNING = 3;
+
     /**
      * Ошибка.
      */
     this.LEVEL_ERROR = 4;
+
     /**
      * Фатальная ошибка.
      */

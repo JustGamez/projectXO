@@ -3,34 +3,22 @@
  * @constructor
  */
 PageMain = function PageMain() {
+    var self = this;
+
+    /**
+     * Показывать ли страницу.
+     * @type {boolean}
+     */
+    var showed = false;
+
     /**
      * Массив всех элементов страницы.
      * @type {Array}
      */
     this.elements = [];
 
-    /**
-     * Элемент-текст отображающий количество онлайн игроков.
-     * @type {ElementGraphicText}
-     */
-    this.elementOnlineIndicator = null;
-    /**
-     * Элемент-текст отображает количество очков игрока.
-     * @type {ElementGraphicText}
-     */
-    this.elementScoreIndicator = null;
-
     this.init = function () {
         var element;
-        /* Задний фон */
-        element = GUI.createElement('ElementImage', {
-            x: 0,
-            y: 0,
-            width: 788,
-            height: 685,
-            src: '/images/table.png'
-        });
-        this.elements.push(element);
         /* Кнопка играть. */
         element = GUI.createElement('ElementButton', {
             x: 269,
@@ -42,15 +30,7 @@ PageMain = function PageMain() {
             srcActive: '/images/buttons/playActive.png',
             onClick: LogicPageMain.onPlayButtonClick
         });
-        this.elements.push(element);
-        /* online indicator */
-        element = GUI.createElement('ElementGraphicText', {
-            x: 570,
-            y: 425,
-            text: 'онлайн: -'
-        });
-        this.elements.push(element);
-        this.elementOnlineIndicator = element;
+        self.elements.push(element);
         /* Выбор игры с роботом или без*/
         element = GUI.createElement("ElementFlag", {
             x: 132,
@@ -63,7 +43,7 @@ PageMain = function PageMain() {
             defaultState: false,
             onChange: LogicPageMain.onFlagVsRobotChange
         });
-        this.elements.push(element);
+        self.elements.push(element);
         /* Выбор знкак игры */
         element = GUI.createElement("ElementRadio", {
             options: [
@@ -93,30 +73,39 @@ PageMain = function PageMain() {
             currentIndex: 0,
             onChange: LogicPageMain.onRadioSignChange
         });
-        /* score indicator */
-        element = GUI.createElement('ElementGraphicText', {
-            x: 570,
-            y: 455,
-            text: 'очки: -'
-        });
-        this.elements.push(element);
-        this.elementScoreIndicator = element;
+        self.elements.push(element);
     };
 
+    /**
+     * Покажем все элементы на странице.
+     */
     this.show = function () {
-        this.redraw();
+        if (showed == true) return;
+        showed = true;
+        for (var i in self.elements) {
+            self.elements[i].show();
+        }
+        self.redraw();
     };
 
+    /**
+     * Спрачем все элементы на странице.
+     */
     this.hide = function () {
+        if (showed == false) return;
+        showed = false;
+        for (var i in self.elements) {
+            self.elements[i].hide();
+        }
     };
+
     /**
      * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
-        var onlineCount, score;
-        onlineCount = LogicUser.getOnlineCount();
-        score = LogicUser.getCurrentUser().score;
-        this.elementOnlineIndicator.updateText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
-        this.elementScoreIndicator.updateText('очки: ' + (typeof score == 'number' ? score : '-'));
+        if (!showed)return;
+        for (var i in self.elements) {
+            self.elements[i].redraw();
+        }
     };
 };

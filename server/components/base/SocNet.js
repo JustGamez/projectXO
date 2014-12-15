@@ -62,12 +62,14 @@ SocNet = function () {
     this.getSocNetTypeId = function () {
         return SocNet.TYPE_VK;
     };
+
     /**
      * Получить список друзей из соц сети.
      */
     this.getFriends = function (socNetTypId, socNetUserId, callback) {
         executeMethod('friends.get', {user_id: socNetUserId}, callback);
     };
+
     /**
      * Проверка авторизации
      * @param socNetTypeId тип социальной сети SocNet.TYPE_*

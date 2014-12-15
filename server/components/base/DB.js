@@ -9,16 +9,19 @@ var MYSQL = require('mysql');
 
 DB = function () {
     var self = this;
+
     /**
      * Cоединение mysql.
      * @type {Connection}
      */
     var connection = null;
+
     /**
      * Статус соединения.
      * @type {boolean}
      */
     var isConnected = false;
+
     /**
      * Ппроизведем коннект к БД, согласно конфигурации.
      */
@@ -38,6 +41,7 @@ DB = function () {
             Logs.log("Connect to DB successful.", Logs.LEVEL_NOTIFY);
         });
     };
+
     /**
      * Выполняет запрос к БД.
      * @param query {string} sql запрос
@@ -51,6 +55,7 @@ DB = function () {
             callback(rows);
         });
     };
+
     /**
      * Выполняет запрос к БД.
      * @param tableName {string} имя таблица.
@@ -70,6 +75,7 @@ DB = function () {
         }
         DB.query(query, callback);
     };
+
     /**
      * Выполняет вставку в БД.
      * @param tableName {string} имя таблицы.

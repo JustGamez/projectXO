@@ -1,20 +1,25 @@
 LogicUser = function () {
+
     /**
      * Id пользователя под которым мы сидим.
      */
     var authorizedUserId = null;
+
     /**
      * Тут мы будем хранить данные пользователей.
      * @type {Array}
      */
     var users = [];
+
     /**
      * Списки друзей.
      * @type {Array}
      */
     var friends = [];
+
     /** Кол-во онлайн пользователей */
     var onlineCount = null;
+
     /**
      * Авторизация пользователя.
      */
@@ -24,6 +29,7 @@ LogicUser = function () {
         authParams = SocNet.getAuthParams();
         SAPIUser.authorizeByVK(socNetUserId, authParams);
     };
+
     /**
      * Метод для обработки ответа от сервера об успешной авторизации.
      * @param userId
@@ -36,6 +42,7 @@ LogicUser = function () {
         var friends = LogicUser.getFriendsById(userId);
         SAPIUser.sendMeOnlineCount();
     };
+
     /**
      * Возвращает текущего(авторизованного пользователя).
      * @returns {null|Object}
@@ -43,6 +50,7 @@ LogicUser = function () {
     this.getCurrentUser = function () {
         return this.getUserById(authorizedUserId);
     };
+
     /**
      * Получить данные пользователя по его id.
      * @param userId
@@ -59,6 +67,7 @@ LogicUser = function () {
             };
         }
     };
+
     /**
      * Загрузить данные о пользователе.
      * @param useId {int}
@@ -66,6 +75,7 @@ LogicUser = function () {
     this.loadUserInfoById = function (userId) {
         SAPIUser.sendMeUserInfo(userId);
     };
+
     /**
      * Обновить данные о пользователе
      * @param user
@@ -74,6 +84,7 @@ LogicUser = function () {
         users[user.id] = user;
         pageController.redraw();
     };
+
     /**
      * Получить список друзей по внутренему id юзера
      * @param userId int внутрений id юзера.
@@ -87,6 +98,7 @@ LogicUser = function () {
             return null;
         }
     };
+
     /**
      * Загрузить данные о друзьях по внутренему ид
      * @param userId int внутрений id юзера.
@@ -94,6 +106,7 @@ LogicUser = function () {
     this.loadFriendsById = function (userId) {
         SAPIUser.sendMeFriends(userId);
     };
+
     /**
      * Обновить данные о друзьях
      * @param userId внутрений id юзера.
@@ -103,10 +116,12 @@ LogicUser = function () {
         friends[userId] = friendList;
         Logs.log("LogicUser.udpateFriends for userId=" + userId, Logs.LEVEL_DETAIL);
     };
+
     /** Возвращает количество онлайн игроков. */
     this.getOnlineCount = function () {
         return onlineCount;
     };
+
     /**
      * Обновим данные о кол-во онлайн пользователей.
      * @param count кол-во онлайн пользователей.
