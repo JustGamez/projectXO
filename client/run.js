@@ -39,7 +39,7 @@ window.onload = function () {
     PageController.PAGE_ID_XO_GAME = 3;
     pageController.addPage(PageController.PAGE_ID_XO_GAME, new PageXOGame());
 
-    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
+    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
 
     // client specific code
     SocNet.parseSocNetURL();

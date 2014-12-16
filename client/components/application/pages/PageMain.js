@@ -17,6 +17,9 @@ PageMain = function PageMain() {
      */
     this.elements = [];
 
+    /**
+     * Создадим тут все элементы страницы.
+     */
     this.init = function () {
         var element;
         /* Кнопка играть. */
@@ -44,7 +47,7 @@ PageMain = function PageMain() {
             onChange: LogicPageMain.onFlagVsRobotChange
         });
         self.elements.push(element);
-        /* Выбор знкак игры */
+        /* Выбор типа поля игры */
         element = GUI.createElement("ElementRadio", {
             options: [
                 {
@@ -56,7 +59,7 @@ PageMain = function PageMain() {
                     width: 156,
                     height: 85,
                     title: 'поле 15 на 15, \r\nпобеждает линия \r\nиз 5-ти знаков.',
-                    value: 1
+                    value: LogicXO.FIELD_TYPE_15X15
                 },
                 {
                     srcRest: '/images/radio/field3x3Rest.png',
@@ -67,7 +70,45 @@ PageMain = function PageMain() {
                     width: 123,
                     height: 86,
                     title: 'поле 3 на 3, \r\nпобеждает линия \r\nиз 3-ёх знаков.',
-                    value: 2
+                    value: LogicXO.FIELD_TYPE_3X3
+                }
+            ],
+            currentIndex: 0,
+            onChange: LogicPageMain.onRadioFieldTypeChange
+        });
+        self.elements.push(element);
+        /* Выбор знака игры */
+        element = GUI.createElement("ElementRadio", {
+            options: [
+                {
+                    srcRest: '/images/radio/signRandomRest.png.png',
+                    srcHover: '/images/radio/signRandomHover.png',
+                    srcActive: '/images/radio/signRandomActive.png',
+                    x: 120,
+                    y: 90,
+                    width: 148,
+                    height: 70,
+                    value: LogicXO.SIGN_ID_Empty
+                },
+                {
+                    srcRest: '/images/radio/signXRest.png',
+                    srcHover: '/images/radio/signXHover.png',
+                    srcActive: '/images/radio/signXActive.png',
+                    x: 146,
+                    y: 102,
+                    width: 146,
+                    height: 102,
+                    value: LogicXO.SIGN_ID_X
+                },
+                {
+                    srcRest: '/images/radio/signORest.png',
+                    srcHover: '/images/radio/signOHover.png',
+                    srcActive: '/images/radio/signOActive.png',
+                    x: 375,
+                    y: 80,
+                    width: 146,
+                    height: 102,
+                    value: LogicXO.SIGN_ID_O
                 }
             ],
             currentIndex: 0,

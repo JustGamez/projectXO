@@ -17,25 +17,25 @@ LogicPageMain = function () {
      * @param value {boolean}
      */
     this.onFlagVsRobotChange = function (value) {
-        // @todo
-        return;
-        if (value) {
-            alert("The rise of the robots!");
-        } else {
-            alert("The sunset of the robots!");
-        }
+        LogicXOSettings.requestedVsRobot = value;
     };
-
 
     /**
      * Действия при смене типа поля. 3х3 или 15х15.
      * @param value {Number}
      * @param index {Number}
      */
+    this.onRadioFieldTypeChange = function (value, index) {
+        LogicXOSettings.requestedFieldTypeId = value;
+    };
+
+    /**
+     * Действия при смене знака.
+     * @param value
+     * @param index
+     */
     this.onRadioSignChange = function (value, index) {
-        // @todo
-        return;
-        alert(value + " " + index);
+        LogicXOSettings.requestedSignId = value;
     };
 };
 

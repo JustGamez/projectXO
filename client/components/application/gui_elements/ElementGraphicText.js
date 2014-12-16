@@ -57,7 +57,6 @@ ElementGraphicText = function () {
         dom.y = this.y;
         dom.width = this.width;
         dom.height = this.height;
-        self.redraw();
     };
 
     /**
@@ -75,24 +74,23 @@ ElementGraphicText = function () {
      */
     this.hide = function () {
         if (showed == false) return;
-        showed = true;
+        showed = false;
         dom.hide();
     };
 
     /**
-     * Обновим текст и перерисуем его.
+     * Обновим текст.
      * @param text {string}
      */
-    this.updateText = function (text) {
+    this.setText = function (text) {
         self.text = text;
-        this.redraw();
     };
 
     /**
      * Перерисуем.
      */
     this.redraw = function () {
-        if (!showed)return;
+        if (!showed) return;
         refreshText();
     };
 

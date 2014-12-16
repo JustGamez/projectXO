@@ -64,6 +64,7 @@ PageBackground = function PageMain() {
     this.show = function () {
         if (showed == true) return;
         showed = true;
+        self.preset();
         for (var i in self.elements) {
             self.elements[i].show();
         }
@@ -81,15 +82,22 @@ PageBackground = function PageMain() {
     };
 
     /**
+     * Настройка перед отрисовкой.
+     */
+    this.preset = function () {
+        var onlineCount, score;
+        onlineCount = LogicUser.getOnlineCount();
+        score = LogicUser.getCurrentUser().score;
+        self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
+        self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
+    };
+
+    /**
      * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
-        var onlineCount, score;
         if (!showed)return;
-        onlineCount = LogicUser.getOnlineCount();
-        score = LogicUser.getCurrentUser().score;
-        self.elementOnlineIndicator.updateText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
-        self.elementScoreIndicator.updateText('очки: ' + (typeof score == 'number' ? score : '-'));
+        self.preset();
         for (var i in self.elements) {
             self.elements[i].redraw();
         }
