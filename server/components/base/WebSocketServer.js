@@ -55,14 +55,6 @@ WebSocketServer = function () {
     };
 
     /**
-     * Включение компонента, тут мы просто выполним инит.
-     */
-    this.run = function () {
-        checkBeforeInit();
-        init();
-    };
-
-    /**
      * Проверка перед запуском:
      * - проверим установлены ли каллбэки пользовательским кодом;
      * - проверим настройки: port, clientCodePath, reloadClientCodeEveryRequest
@@ -151,7 +143,8 @@ WebSocketServer = function () {
      * Создается севрер.
      * Инициируется прослушивание.
      */
-    var init = function () {
+    this.init = function (afterInitCallback) {
+        checkBeforeInit();
         // загрузка клиентского кода.
         loadClientCode();
         // создадим сервер
@@ -164,6 +157,8 @@ WebSocketServer = function () {
         });
         server.on('request', onWebSocketRequest);
         Logs.log("WebSocketServer running. port:" + port, Logs.LEVEL_NOTIFY);
+        Logs.log("WebSocketServer inited.", Logs.LEVEL_NOTIFY);
+        afterInitCallback();
     };
 
     /**
@@ -194,21 +189,21 @@ WebSocketServer = function () {
      * Вернем клинетские картинки.
      */
     var getClientImageCode = function () {
-        var imageFiles, imageCode, path, time_postfix;
+        var imageFiles, imageCode, path, timePostfix;
         imageFiles = getFileListRecursive(imagesPath);
         imageCode = "<script>";
         imageCode += "window.images = {};";
-        time_postfix = "?t=" + new Date().getTime();
+        timePostfix = "?t=" + new Date().getHours();
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
-            imageCode += "\r\nwindow.images['" + path + "']='" + path + time_postfix + "';";
+            imageCode += "\r\nwindow.images['" + path + "']='" + path + timePostfix + "';";
         }
         imageCode += "</script>";
         // добавим img тэги для предзагрузки.
         imageCode += "<div style='display:none;'>";
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
-            imageCode += "\r\n<img src='" + path + time_postfix + "'>";
+            imageCode += "\r\n<img src='" + path + timePostfix + "'>";
         }
         imageCode += "</div>";
         return imageCode;
@@ -267,10 +262,7 @@ WebSocketServer = function () {
      */
     var onHTTPRequest = function (request, response) {
         var path;
-        Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {
-            url: request.url,
-            method: request.method
-        });
+        /* Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {url: request.url, method: request.method}); */
         /* Запрашивается картинка? */
         if (request.url.indexOf(imagesPrefix) == 0) {
             // отрезаем imagesPrefix
@@ -284,7 +276,7 @@ WebSocketServer = function () {
                     response.writeHead(404, {'Content-Type': 'text/html'});
                     response.end('File not found.');
                 } else {
-                    Logs.log("Image sended:" + imagesPath + path + "length:", Logs.LEVEL_DETAIL);
+                    /* Logs.log("Image sended:" + imagesPath + path + "length:", Logs.LEVEL_DETAIL); */
                     response.writeHead(200, {'Content-Type': 'image/png'});
                     response.end(data);
                 }

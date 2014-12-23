@@ -81,7 +81,7 @@ PageMain = function PageMain() {
         element = GUI.createElement("ElementRadio", {
             options: [
                 {
-                    srcRest: '/images/radio/signRandomRest.png.png',
+                    srcRest: '/images/radio/signRandomRest.png',
                     srcHover: '/images/radio/signRandomHover.png',
                     srcActive: '/images/radio/signRandomActive.png',
                     x: 120,
@@ -94,8 +94,8 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/signXRest.png',
                     srcHover: '/images/radio/signXHover.png',
                     srcActive: '/images/radio/signXActive.png',
-                    x: 146,
-                    y: 102,
+                    x: 260,
+                    y: 80,
                     width: 146,
                     height: 102,
                     value: LogicXO.SIGN_ID_X

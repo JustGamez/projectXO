@@ -20,7 +20,8 @@ window.onload = function () {
     apiRouter = new ApiRouter();
     apiRouter.setup({
         map: {
-            CAPIUser: CAPIUser
+            CAPIUser: CAPIUser,
+            CAPIGame: CAPIGame
         }
     });
 

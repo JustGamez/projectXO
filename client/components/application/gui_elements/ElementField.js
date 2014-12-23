@@ -83,6 +83,7 @@ ElementField = function () {
         signWidth: 130,
         signHeight: 130,
         padding: 5,
+        signOffset: 5,
         winLineSize: 3
     };
     this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.WIN_LINE_HORIZONTAL] = '/images/fields/3x3LineHorizontal.png';
@@ -99,7 +100,8 @@ ElementField = function () {
         fieldSize: 15,
         signWidth: 26,
         signHeight: 26,
-        padding: 1,
+        padding: 0,
+        signOffset: 5,
         winLineSize: 5
     };
     this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.WIN_LINE_HORIZONTAL] = '/images/fields/15x15LineHorizontal.png';
@@ -145,8 +147,8 @@ ElementField = function () {
             self.domList[typeId].domSigns[y] = [];
             for (var x = 0; x < self.configure[typeId].fieldSize; x++) {
                 dom = GUI.createDom();
-                dom.x = self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding );
-                dom.y = self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding );
+                dom.x = self.configure[typeId].signOffset + self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding);
+                dom.y = self.configure[typeId].signOffset + self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding );
                 dom.width = self.configure[typeId].signWidth;
                 dom.height = self.configure[typeId].signHeight;
                 dom.pointer = GUI.POINTER_HAND;
@@ -239,6 +241,7 @@ ElementField = function () {
      * @param typeId
      */
     this.swithToField = function (typeId) {
+        if (fieldTypeId == typeId) return;
         self.hide();
         fieldTypeId = typeId;
         self.show();
@@ -263,7 +266,7 @@ ElementField = function () {
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;
                 break;
             default:
-                Logs.log("Undefined signId:" + signId, Logs.LEVEL_FATAL_ERROR);
+                Logs.log("Undefined signId:", Logs.LEVEL_FATAL_ERROR, signId);
                 break;
         }
         self.redraw();
@@ -301,6 +304,6 @@ ElementField = function () {
      * Обработчки нажатий на поля.
      */
     var onSignClick = function () {
-        self.onClick.call(null, this.x, this.y);
+        self.onClick.call(null, self.x, self.y);
     };
 };

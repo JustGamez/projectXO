@@ -3,9 +3,11 @@ LogicUser = function () {
     var userToCntx = {};
     var userToCntxCount = 0;
 
-    this.init = function () {
+    this.init = function (afterInitCallback) {
         apiRouter.addOnDisconnectCallback(onDisconnect);
         apiRouter.addOnFailedSendCallback(onFailedSend);
+        Logs.log("LogicUser inited.", Logs.LEVEL_NOTIFY);
+        afterInitCallback();
     };
 
     /**
@@ -17,7 +19,6 @@ LogicUser = function () {
     this.authorizeByVK = function (socNetUserId, authParams, cntx) {
         var socNetTypeId = SocNet.TYPE_VK;
         var checkResult = SocNet.checkAuth(socNetTypeId, socNetUserId, authParams);
-
         if (!checkResult) {
             Logs.log("LogicUser: cant auth, SocNet.checkAuth failed.", Logs.LEVEL_WARNING, {
                 socNeUserId: socNetUserId,
@@ -26,7 +27,7 @@ LogicUser = function () {
             return;
         }
         if (!checkResult)return;
-        // get from db
+        /* get from db */
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
             authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
         });
@@ -57,8 +58,8 @@ LogicUser = function () {
             if (user) {
                 SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
                     DataUser.getListWhere({
-                        socNetTypeId: user.socNetTypeId,
-                        socNetUserId: friends
+                        socNetTypeId: [user.socNetTypeId],
+                        socNetUserId: [friends, DB.WHERE_IN]
                     }, function (rows) {
                         var ids = [];
                         for (var i in rows) {
@@ -74,7 +75,7 @@ LogicUser = function () {
     };
 
     var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx) {
-        // if not exists create user
+        /* if not exists create user */
         if (!user) {
             DataUser.createFromSocNet(socNetTypeId, socNetUserId, function (user) {
                 authorizeSendSuccess(user, cntx);
@@ -85,7 +86,7 @@ LogicUser = function () {
     };
 
     var authorizeSendSuccess = function (user, cntx) {
-        // тут мы запомним его connectionId раз и на всегда
+        /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
         sendOnlineCountToAll();
         CAPIUser.authorizeSuccess(user.id, user.id);
@@ -141,20 +142,19 @@ LogicUser = function () {
      * @param cntx
      */
     var userAddConn = function (user, cntx) {
-        var userId = user.id;
-        if (!userToCntx[userId]) {
+        if (!userToCntx[user.id]) {
             Logs.log("CREATE user context", Logs.LEVEL_DETAIL);
-            userToCntx[userId] = {
-                user: user,
+            userToCntx[user.id] = {
                 conns: {},
                 connsCount: 0
             };
             userToCntxCount++;
         }
         Logs.log("ADD user conn", Logs.LEVEL_DETAIL);
-        cntx.userId = userId;
-        userToCntx[userId].conns[cntx.connectionId] = cntx;
-        userToCntx[userId].connsCount++;
+        cntx.userId = user.id;
+        cntx.isAuthorized = true;
+        userToCntx[user.id].conns[cntx.connectionId] = cntx;
+        userToCntx[user.id].connsCount++;
     };
 
     /**

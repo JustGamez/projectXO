@@ -16,6 +16,11 @@ ApiRouter = function () {
         if (setup.map) map = setup.map;
     };
 
+    /**
+     * Обрабатываем поступающие данные.
+     * @param packet {string} пакет данных, фомат:JSON, {group:string, method:string, args:[...]}
+     * @param id {Number} id соединения.
+     */
     this.onData = function (packet, id) {
         var group, method, args;
         try {
@@ -68,6 +73,7 @@ ApiRouter = function () {
         // добавим к аргументам контекст соединения.
         args.unshift(connections[id]);
         // выполним запрашиваемый метод.
+        Logs.log(">> " + group + "." + method, Logs.LEVEL_DETAIL);
         map[group][method].apply(self, args);
     };
 
@@ -87,14 +93,19 @@ ApiRouter = function () {
     };
 
     this.executeRequest = function (group, method, args, cntxList) {
+        Logs.log("<< " + group + "." + method, Logs.LEVEL_DETAIL);
         var packet = {
             group: group,
             method: method,
             args: Array.prototype.slice.call(args)
         };
         packet = JSON.stringify(packet);
+        if (!cntxList || cntxList.length) {
+            Logs.log("Apirouter. Try send to empty contextlist.", Logs.LEVEL_WARNING, packet);
+        }
         for (var i in cntxList) {
             if (!this.sendData(packet, cntxList[i].connectionId)) {
+                Logs.log("ApiRouter.failedToSend", Logs.LEVEL_WARNING, {packet: packet, cntx: cntxList[i]});
                 for (var i in onFailedSendCallbacks) {
                     onFailedSendCallbacks[i].call(self, cntxList[i]);
                 }

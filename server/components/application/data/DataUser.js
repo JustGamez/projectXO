@@ -20,8 +20,8 @@ DataUser = function () {
      */
     this.getFromSocNet = function (socNetTypeId, socNetUserId, callback) {
         DB.queryWhere(tableName, {
-            socNetTypeId: socNetTypeId,
-            socNetUserId: socNetUserId
+            socNetTypeId: [socNetTypeId],
+            socNetUserId: [socNetUserId]
         }, function (rows) {
             callback(rows[0] || null);
         });
@@ -34,7 +34,7 @@ DataUser = function () {
      */
     this.getById = function (userId, callback) {
         DB.queryWhere(tableName, {
-            id: userId
+            id: [userId]
         }, function (rows) {
             callback(rows[0] || null);
         });
@@ -58,20 +58,20 @@ DataUser = function () {
         }, function (result) {
             var user = {
                 id: result.insertId,
-                firstName: result.firstName,
-                lastName: result.lastName,
-                socNetTypeId: result.socNetTypeId,
-                socNetUserId: result.socNetUserId,
-                createTimestamp: result.createTimestamp,
-                lastLoginTimestamp: result.lastLoginTimestamp,
-                score: result.score
+                firstName: '',
+                lastName: '',
+                socNetTypeId: socNetTypeId,
+                socNetUserId: socNetUserId,
+                createTimestamp: 1,
+                lastLoginTimestamp: 1,
+                score: 0
             };
             callback(user);
         });
     };
 
     /**
-     * Возвращает список юзерво по параметрам.
+     * Возвращает список юзеров по параметрам.
      * @param where {object} фильтр.
      * @param callback
      */

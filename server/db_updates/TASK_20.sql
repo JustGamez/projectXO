@@ -13,7 +13,7 @@ CREATE TABLE `games`(
     `XUserId` INT(11) NOT NULL DEFAULT '0',
     `OUserId` INT(11) NOT NULL DEFAULT '0',
     `turnId` int(11) NOT NULL default '0',
-    `result_field` VARCHAR(481) NOT NULL default '',
+    `field` VARCHAR(481) NOT NULL default '',
     `status` int(11) NOT NULL default '0',
     `winnerId` int(11) NOT NULL default '0',
     KEY `status` (`status`),

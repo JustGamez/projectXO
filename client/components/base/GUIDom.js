@@ -34,8 +34,8 @@ GUIDom = function () {
         dom.style.position = 'absolute';
         /* hidden mode..:begin*/
         if (GUIDom.hidePictures) {
-            dom.style.opacity = 0.04;
-            dom.style.border = '1px solid black';
+            dom.style.opacity = 0.035;
+            dom.style.border = '1px dotted grey';
         }
         /* hidden mode..:finish*/
         /* no dragable by default */

@@ -23,9 +23,27 @@ DB = function () {
     var isConnected = false;
 
     /**
+     * Условие: эквивалентен.
+     * @type {number}
+     */
+    this.WHERE_EQUAL = 1;
+
+    /**
+     * Условие: не эквивалентен.
+     * @type {number}
+     */
+    this.WHERE_NOT_EQUAL = 2;
+
+    /**
+     * Условие: входит в множество.
+     * @type {number}
+     */
+    this.WHERE_IN = 3;
+
+    /**
      * Ппроизведем коннект к БД, согласно конфигурации.
      */
-    this.init = function () {
+    this.init = function (afterInitCallback) {
         connection = MYSQL.createConnection({
             host: Config.DB.host,
             user: Config.DB.username,
@@ -39,6 +57,8 @@ DB = function () {
             }
             isConnected = true;
             Logs.log("Connect to DB successful.", Logs.LEVEL_NOTIFY);
+            Logs.log("DB inited.", Logs.LEVEL_NOTIFY);
+            afterInitCallback();
         });
     };
 
@@ -63,14 +83,25 @@ DB = function () {
      * @param callback
      */
     this.queryWhere = function (tableName, where, callback) {
-        var query = "", value;
+        var query = "", value, valueSource, condition;
         query += "SELECT * FROM " + tableName + " WHERE 1=1 ";
         for (var name in where) {
-            value = MYSQL.escape(where[name]);
-            if (typeof where[name] == 'object' && where[name].constructor.name == 'Array') {
-                query += " AND " + name + " IN(" + value + ")";
-            } else {
-                query += " AND " + name + " = " + value;
+            valueSource = where[name][0];
+            condition = where[name][1] ? where[name][1] : DB.WHERE_EQUAL;
+            value = MYSQL.escape(valueSource);
+            switch (condition) {
+                case DB.WHERE_EQUAL:
+                    query += " AND `" + name + "` = " + value;
+                    break;
+                case DB.WHERE_NOT_EQUAL:
+                    query += " AND `" + name + "` != " + value;
+                    break;
+                case DB.WHERE_IN:
+                    query += " AND `" + name + "` IN(" + value + ")";
+                    break;
+                default:
+                    Logs.log("DB.queryWhere: unknown condition:" + condition, Logs.LEVEL_FATAL_ERROR);
+                    break;
             }
         }
         DB.query(query, callback);
@@ -80,7 +111,7 @@ DB = function () {
      * Выполняет вставку в БД.
      * @param tableName {string} имя таблицы.
      * @param values {object} значения
-     * @param callback
+     * @param callback {function}
      */
     this.insert = function (tableName, values, callback) {
         var query, value, fieldsSQL, valuesSQL;
@@ -94,6 +125,24 @@ DB = function () {
         query += "( " + fieldsSQL.substr(0, fieldsSQL.length - 1) + ")";
         query += "VALUES (" + valuesSQL.substr(0, valuesSQL.length - 1) + ")";
         DB.query(query, callback);
+    };
+    /**
+     * Выполняет обновление в БД.
+     * @param tableName {string} имя таблицы.
+     * @param values {object} значения
+     * @param callback {function}
+     */
+    this.update = function (tableName, values, callback) {
+        var query, value, setSQL, valuesSQL;
+        query = setSQL = valuesSQL = '';
+        query += "UPDATE `" + tableName + "` SET ";
+        for (var name in values) {
+            value = MYSQL.escape(values[name]);
+            setSQL += "`" + name + "` = " + value + ",";
+        }
+        query += setSQL.substr(0, setSQL.length - 1);
+        query += " WHERE `id`=" + values.id;
+        DB.query(query, callback);
     }
 };
 
@@ -102,4 +151,3 @@ DB = function () {
  * @type {DB}
  */
 DB = new DB();
-DB.init();

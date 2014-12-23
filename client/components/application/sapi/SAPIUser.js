@@ -1,8 +1,7 @@
 SAPIUser = function () {
 
-
     /**
-     *
+     * Авторизация через ВК.
      * @param socNetUserId id в социальной сети.
      * @param authParams параметры аутентификации.
      */

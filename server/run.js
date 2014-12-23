@@ -15,7 +15,8 @@ webSocketServer.setup({
 apiRouter = new ApiRouter();
 apiRouter.setup({
     map: {
-        SAPIUser: SAPIUser
+        SAPIUser: SAPIUser,
+        SAPIGame: SAPIGame
     }
 });
 apiRouter.sendData = webSocketServer.sendData;
@@ -24,6 +25,13 @@ webSocketServer.onDisconnect = apiRouter.onDisconnect;
 webSocketServer.onData = apiRouter.onData;
 
 /* init all components */
-LogicUser.init();
+sequencedInit(DB.init);
+sequencedInit(LogicUser.init);
 /* run all components */
-webSocketServer.run();
+sequencedInit(webSocketServer.init);
+
+sequencedInit(function (afterInitCallback) {
+    Logs.log("Server is runnign completly", Logs.LEVEL_NOTIFY);
+    afterInitCallback();
+});
+

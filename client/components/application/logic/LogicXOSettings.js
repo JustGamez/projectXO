@@ -24,6 +24,6 @@ LogicXOSettings = function () {
 };
 /**
  * Статичный класс.
- * @type {LogicXO}
+ * @type {LogicXOSettings}
  */
-LogicXO = new LogicXOSettings();
+LogicXOSettings = new LogicXOSettings();

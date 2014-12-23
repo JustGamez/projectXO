@@ -113,13 +113,44 @@ PageXOGame = function PageXOGame() {
      */
     this.preset = function () {
         /* Перересовываем поле */
-        self.elementField.swithToField(LogicXOSettings.requestedFieldTypeId);
-        self.elementField.setSign(1, 1, LogicXO.SIGN_ID_X);
-        self.elementField.clearField();
-        self.elementField.setSign(0, 0, LogicXO.SIGN_ID_O);
-        self.elementField.setWinLine(0, 0, LogicXO.WIN_LINE_LEFT_TO_UP);
+        var game, fieldSize, user;
+        game = LogicGame.getCurrentGame();
+        user = LogicUser.getCurrentUser();
+        if (!game) {
+            self.elementField.swithToField(LogicXOSettings.requestedFieldTypeId);
+        } else {
+            fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
+            self.elementField.swithToField(game.fieldTypeId);
+            self.elementField.clearField();
+            for (var y = 0; y < fieldSize; y++) {
+                for (var x = 0; x < fieldSize; x++) {
+                    self.elementField.setSign(y, x, game.field[y][x]);
+                }
+            }
+        }
         /* Перересовываем статус игры */
-        self.elementGameStatus.setText(gameStatusTextList.waiting);
+        if (game) {
+            if (game.status == LogicXO.STATUS_WAIT) {
+                self.elementGameStatus.setText(gameStatusTextList.waiting);
+            }
+            if (game.status == LogicXO.STATUS_RUN) {
+                if(LogicXO.isHisTurn(game, user)){
+                    if(game.turnId == LogicXO.SIGN_ID_X){
+                        self.elementGameStatus.setText(gameStatusTextList.yourTurnX);
+                    }else{
+                        self.elementGameStatus.setText(gameStatusTextList.yourTurnO);
+                    }
+                }else{
+                    if(game.turnId == LogicXO.SIGN_ID_X){
+                        self.elementGameStatus.setText(gameStatusTextList.opponentTurnX);
+                    }else{
+                        self.elementGameStatus.setText(gameStatusTextList.opponentTurnO);
+                    }
+                }
+            }
+        } else {
+            self.elementGameStatus.setText(gameStatusTextList.waiting);
+        }
     };
 
     /**

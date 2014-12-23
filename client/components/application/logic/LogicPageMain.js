@@ -6,10 +6,12 @@ LogicPageMain = function () {
 
     /**
      * Действия при нажатии кнопки "Играть".
+     * - перейдем на страницу игры;
+     * - запросим сервер встуть\создать случайную игру;
      */
     this.onPlayButtonClick = function () {
-        //alert('You are click me! Welcome to mysterios world!');
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
+        SAPIGame.requestRandomGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
     };
 
     /**

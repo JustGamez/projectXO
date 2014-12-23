@@ -32,7 +32,7 @@ WebSocketClient = function () {
      */
     this.sendData = function (data) {
         packetBuffer.push(data);
-        trySend();
+        setTimeout(trySend, 50);
     };
 
     /**
@@ -151,7 +151,7 @@ WebSocketClient = function () {
         }
         // если нет соединения пробуем позже.
         if (!isConnected) {
-            setTimeout(trySend, this.trySendTimeout);
+            setTimeout(trySend, self.trySendTimeout);
             return;
         }
         // берем элемент из буфера.
@@ -160,7 +160,7 @@ WebSocketClient = function () {
         Logs.log("WebSocketClient.send data: length=" + data.length, Logs.LEVEL_DETAIL);
         // остальные данные отправим позже.
         if (packetBuffer.length) {
-            setTimeout(trySend, this.trySendTimeout);
+            setTimeout(trySend, self.trySendTimeout);
         }
     };
 };
