@@ -6,6 +6,12 @@ PageController = function () {
     var pages = [];
 
     /**
+     * Id отображенных в данный момент страниц.
+     * @type {Array}
+     */
+    var currentShowedPageIds = [];
+
+    /**
      * Добавляет страницу.
      * @param id {Number} id PageController.PAGE_ID_*
      * @param page {object} страница.
@@ -50,6 +56,7 @@ PageController = function () {
             if (tmp[id])continue;
             pages[id].hide();
         }
+        currentShowedPageIds = idToShowList;
     };
 
     /**
@@ -59,5 +66,18 @@ PageController = function () {
         for (var id in pages) {
             pages[id].redraw();
         }
-    }
+    };
+
+    /**
+     * Показаны ли сейчас эта страница.
+     * @param pageId {Number} id Страницы.
+     */
+    this.isShowedNow = function (pageId) {
+        for (var i in currentShowedPageIds) {
+            if (pageId == currentShowedPageIds[i]) {
+                return true;
+            }
+        }
+        return false;
+    };
 };

@@ -44,7 +44,25 @@ LogicWaitersStack = function () {
         }
         Logs.log("LogicWaitersStack.getWaiter return null", Logs.LEVEL_DETAIL, arguments);
         return null;
-    }
+    };
+
+    /**
+     * Удалить все вайтеры для юзера.
+     * @param userId {Number} id юзера.
+     */
+    this.deleteByUserId = function (userId) {
+        var count;
+        count = 0;
+        for (var i in stack) {
+            if (stack[i].userId == userId) {
+                delete stack[i];
+                count++;
+            }
+        }
+        if (count) {
+            Logs.log("LogicWaitersStack. Delete waiters for user. count=" + count + " , userId=" + userId, Logs.LEVEL_DETAIL);
+        }
+    };
 };
 
 /**

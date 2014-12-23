@@ -184,11 +184,26 @@ LogicUser = function () {
     };
 
     /**
+     * Действия при выходе игрока из игры.
+     * @param userId {Number} id пользователя.
+     */
+    var onLogout = function (userId) {
+        var gameIds;
+        gameIds = LogicGameStore.getIdsForUserId(userId);
+        LogicWaitersStack.deleteByUserId(userId);
+        for (var i in gameIds) {
+            ActionsXO.closeGame(userId, gameIds[i]);
+        }
+        Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
+    };
+
+    /**
      * это каллбек для определения что соедиение разорвано.
      * @param cntx
      */
     var onDisconnect = function (cntx) {
         if (cntx.userId) {
+            onLogout(cntx.userId);
             userDeleteConn(cntx);
             sendOnlineCountToAll();
         }
@@ -201,6 +216,7 @@ LogicUser = function () {
      */
     var onFailedSend = function (cntx) {
         if (cntx.userId) {
+            onLogout(cntx.userId);
             userDeleteConn(cntx);
             sendOnlineCountToAll();
         }

@@ -8,6 +8,21 @@ SAPIGame = function () {
     this.requestRandomGame = function (fieldTypeId, signId) {
         apiRouter.executeRequest('SAPIGame', 'requestRandomGame', arguments, [{connectionId: null}]);
     };
+
+    /**
+     * Сообщим серверу, что мы больше не ждем игры.
+     */
+    this.cancelRandomGameRequests = function(){
+        apiRouter.executeRequest('SAPIGame', 'cancelRandomGameRequests', arguments, [{connectionId: null}]);
+    };
+
+    /**
+     * Закроем игру
+     * @param gameId {Number} id игры
+     */
+    this.closeGame = function (gameId) {
+        apiRouter.executeRequest('SAPIGame', 'closeGame', arguments, [{connectionId: null}]);
+    };
 };
 
 /**

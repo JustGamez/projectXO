@@ -95,7 +95,7 @@ LogicXO = function () {
      * @param vsRobot {boolean}
      * @returns {{creatorUserId: (fields.id|*|id|user.id|LogicUser.getUserById.id|string), joinerUserId: number, creatorSignId: *, joinerSignId: number, fieldTypeId: *, isRandom: *, isInvitation: *, vsRobot: *, XUserId: number, OUserId: number, turnId: number, result_field: string, status: number, winnerId: number}}
      */
-    this.createGame = function (creatorUserId, creatorSignId, fieldTypeId, isRandom, isInvitation, vsRobot) {
+    this.create = function (creatorUserId, creatorSignId, fieldTypeId, isRandom, isInvitation, vsRobot) {
         var field;
         field = createField(fieldTypeId);
         return {
@@ -225,6 +225,40 @@ LogicXO = function () {
         if (user.id == game.XUserId && game.turnId == LogicXO.SIGN_ID_X)return true;
         if (user.id == game.OUserId && game.turnId == LogicXO.SIGN_ID_O)return true;
         return false;
+    };
+
+    /**
+     * Является ли игрок участником игры.
+     * @param game {Object} объект игры.
+     * @param userId {Number} id игрока.
+     */
+    this.isMember = function (game, userId) {
+        if (game.creatorUserId == userId) return true;
+        if (game.joinerUserId == userId) return true;
+        return false;
+    };
+
+    /**
+     * Может ли пользователь закрыть игру.
+     * Игру можно закрыть, только если пользователь является участником игры и игра находиться в стаусе WAIT или RUN.
+     * @param game {Object} объект игры
+     * @param userId {Number} id юзера
+     */
+    this.userCanCloseGame = function (game, userId) {
+        if (
+            self.isMember(game, userId) &&
+            (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN)) {
+            return true;
+        }
+        return false;
+    };
+    /**
+     * Закроем игру.
+     * @param game {Object} объект игры.
+     */
+    this.close = function (game) {
+        game.status = LogicXO.STATUS_CLOSED;
+        return game;
     };
 };
 /**

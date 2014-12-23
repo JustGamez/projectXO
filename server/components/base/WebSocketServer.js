@@ -311,7 +311,7 @@ WebSocketServer = function () {
         self.onConnect(id);
         connection.on('message', function (message) {
             if (message.type == 'utf8') {
-                Logs.log("Получены данные.", Logs.LEVEL_DETAIL, message.utf8Data);
+                /* Logs.log("Получены данные.", Logs.LEVEL_DETAIL, message.utf8Data); */
                 lastConnectionId = id;
                 self.onData(message.utf8Data, id);
             }

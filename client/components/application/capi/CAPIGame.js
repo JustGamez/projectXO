@@ -10,16 +10,16 @@ CAPIGame = function () {
     };
 
     /**
-     * Оповестим, что игра создана.
+     * Оповещение, что игра создана.
      * @param cntx контекст соединения
      * @param gameId {Number} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
         /*@todo check is it game page?!*/
-        if (LogicGame.getCurrentGameId()) {
-            SAPIGame.closeGame(gameId);
-        } else {
+        if (!LogicGame.getCurrentGameId() && pageController.isShowedNow(PageController.PAGE_ID_XO_GAME)) {
             LogicGame.setCurrentGameId(gameId);
+        } else {
+            SAPIGame.closeGame(gameId);
         }
     };
 };

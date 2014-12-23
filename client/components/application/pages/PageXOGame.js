@@ -134,21 +134,25 @@ PageXOGame = function PageXOGame() {
                 self.elementGameStatus.setText(gameStatusTextList.waiting);
             }
             if (game.status == LogicXO.STATUS_RUN) {
-                if(LogicXO.isHisTurn(game, user)){
-                    if(game.turnId == LogicXO.SIGN_ID_X){
+                if (LogicXO.isHisTurn(game, user)) {
+                    if (game.turnId == LogicXO.SIGN_ID_X) {
                         self.elementGameStatus.setText(gameStatusTextList.yourTurnX);
-                    }else{
+                    } else {
                         self.elementGameStatus.setText(gameStatusTextList.yourTurnO);
                     }
-                }else{
-                    if(game.turnId == LogicXO.SIGN_ID_X){
+                } else {
+                    if (game.turnId == LogicXO.SIGN_ID_X) {
                         self.elementGameStatus.setText(gameStatusTextList.opponentTurnX);
-                    }else{
+                    } else {
                         self.elementGameStatus.setText(gameStatusTextList.opponentTurnO);
                     }
                 }
             }
-        } else {
+            if (game.status == LogicXO.STATUS_CLOSED) {
+                self.elementGameStatus.setText(gameStatusTextList.closed);
+            }
+        }
+        else {
             self.elementGameStatus.setText(gameStatusTextList.waiting);
         }
     };

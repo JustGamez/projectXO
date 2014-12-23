@@ -20,10 +20,9 @@ LogicGame = function () {
 
     /**
      * Обновить данные об игре.
-     * @param game
+     * @param game {Object} объект игры.
      */
     this.updateInfo = function (game) {
-        Logs.log("updateGameInfo and redraw, for gameId = " + game.id, Logs.LEVEL_DETAIL);
         games[game.id] = game;
         pageController.redraw();
     };

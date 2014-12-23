@@ -19,6 +19,14 @@ ActionsXO = function () {
     };
 
     /**
+     * Отменим запросы случаной игры для пользователя.
+     * @param userId {Number} id пользователя.
+     */
+    this.cancelRandomGameRequests = function (userId) {
+        LogicWaitersStack.deleteByUserId(userId);
+    };
+
+    /**
      * Создание случайной игры для двух игроков.
      * - создадим случайную игру;
      * - присоединим туда обоих участников;
@@ -35,7 +43,7 @@ ActionsXO = function () {
     this.createRandomGame = function (creatorUserId, creatorSignId, fieldTypeId, joinerUserId, joinerSignId) {
         var game;
         Logs.log("ActionsXO.createRandomGame", Logs.LEVEL_DETAIL);
-        game = LogicXO.createGame(creatorUserId, creatorSignId, fieldTypeId, true, false, false);
+        game = LogicXO.create(creatorUserId, creatorSignId, fieldTypeId, true, false, false);
         game = LogicXO.joinGame(joinerUserId, joinerSignId, game);
         game = LogicXO.setSigns(game);
         game = LogicXO.run(game);
@@ -47,6 +55,31 @@ ActionsXO = function () {
             CAPIGame.gameCreated(game.joinerUserId, game.id);
         });
     };
+
+    /**
+     * Закроем игру.
+     * @param userId {Number} id пользователя.
+     * @param gameId {Number} id игры, которую закроем.
+     */
+    this.closeGame = function (userId, gameId) {
+        var game;
+        game = LogicGameStore.load(gameId);
+        if (!game) {
+            Logs.log("ActionsXO. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
+            return;
+        }
+        if (!LogicXO.userCanCloseGame(game, userId)) {
+            Logs.log("ActionsXO. User cannot close this game", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            return;
+        }
+        game = LogicXO.close(game);
+        LogicGameStore.delete(game.id);
+        DataGame.save(game, function (game) {
+            /* @todo check user.isOnline? */
+            CAPIGame.updateInfo(game.creatorUserId, game);
+            CAPIGame.updateInfo(game.joinerUserId, game);
+        });
+    }
 };
 
 /**

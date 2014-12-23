@@ -73,7 +73,7 @@ ApiRouter = function () {
         // добавим к аргументам контекст соединения.
         args.unshift(connections[id]);
         // выполним запрашиваемый метод.
-        Logs.log(">> " + group + "." + method, Logs.LEVEL_DETAIL);
+        Logs.log(">> " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
         map[group][method].apply(self, args);
     };
 
@@ -93,16 +93,16 @@ ApiRouter = function () {
     };
 
     this.executeRequest = function (group, method, args, cntxList) {
-        Logs.log("<< " + group + "." + method, Logs.LEVEL_DETAIL);
+        /* Конвертируем объект в массив. */
+        args = Array.prototype.slice.call(args);
+        Logs.log("<< " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
         var packet = {
             group: group,
             method: method,
-            args: Array.prototype.slice.call(args)
+            args: args
         };
         packet = JSON.stringify(packet);
-        if (!cntxList || cntxList.length) {
-            Logs.log("Apirouter. Try send to empty contextlist.", Logs.LEVEL_WARNING, packet);
-        }
+        var cntxListLength = 0;
         for (var i in cntxList) {
             if (!this.sendData(packet, cntxList[i].connectionId)) {
                 Logs.log("ApiRouter.failedToSend", Logs.LEVEL_WARNING, {packet: packet, cntx: cntxList[i]});
@@ -110,6 +110,10 @@ ApiRouter = function () {
                     onFailedSendCallbacks[i].call(self, cntxList[i]);
                 }
             }
+            cntxListLength++;
+        }
+        if (cntxListLength == 0) {
+            Logs.log("ApiRouter. Try send to empty contextlist.", Logs.LEVEL_WARNING, {packet: packet, cntxList: cntxList});
         }
     };
 
