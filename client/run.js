@@ -18,11 +18,9 @@ window.onload = function () {
 
     /* ApiRouter */
     apiRouter = new ApiRouter();
-    apiRouter.setup({
-        map: {
-            CAPIUser: CAPIUser,
-            CAPIGame: CAPIGame
-        }
+    apiRouter.setMap({
+        CAPIUser: CAPIUser,
+        CAPIGame: CAPIGame
     });
 
     /* Link ApiRouter and WebSocketClient */

@@ -12,8 +12,8 @@ ApiRouter = function () {
     var onDisconnectCallbacks = [];
     var onFailedSendCallbacks = [];
 
-    this.setup = function (setup) {
-        if (setup.map) map = setup.map;
+    this.setMap = function (givenMap) {
+        map = givenMap;
     };
 
     /**

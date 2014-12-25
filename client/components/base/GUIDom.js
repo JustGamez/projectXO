@@ -34,7 +34,7 @@ GUIDom = function () {
         dom.style.position = 'absolute';
         /* hidden mode..:begin*/
         if (GUIDom.hidePictures) {
-            dom.style.opacity = 0.035;
+            dom.style.opacity = 0.38;
             dom.style.border = '1px dotted grey';
         }
         /* hidden mode..:finish*/
@@ -74,8 +74,13 @@ GUIDom = function () {
         if (this.y)dom.style.top = this.y + 'px';
         if (this.width)dom.style.width = this.width + 'px';
         if (this.height)dom.style.height = this.height + 'px';
-        if (this.backgroundImage)dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
-        if (this.innerHTML)dom.innerHTML = this.innerHTML;
+        if (GUIDom.hidePictures) {
+            if (this.innerHTML)dom.innerText = this.innerHTML;
+            if (this.backgroundImage)dom.innerHTML = this.backgroundImage.replace('/images/', '');
+        } else {
+            if (this.backgroundImage)dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
+            if (this.innerHTML)dom.innerHTML = this.innerHTML;
+        }
         if (this.pointer)dom.style.cursor = this.pointer;
     };
 

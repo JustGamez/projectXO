@@ -11,14 +11,14 @@ webSocketServer.setup({
     imagesPath: '../images/'
 });
 
-/* ApiPort */
+/* ApiRouter */
 apiRouter = new ApiRouter();
-apiRouter.setup({
-    map: {
-        SAPIUser: SAPIUser,
-        SAPIGame: SAPIGame
-    }
+apiRouter.setMap({
+    SAPIUser: SAPIUser,
+    SAPIGame: SAPIGame
 });
+
+/* links apiRouter and webSocketServer */
 apiRouter.sendData = webSocketServer.sendData;
 webSocketServer.onConnect = apiRouter.onConnect;
 webSocketServer.onDisconnect = apiRouter.onDisconnect;
@@ -31,7 +31,7 @@ sequencedInit(LogicUser.init);
 sequencedInit(webSocketServer.init);
 
 sequencedInit(function (afterInitCallback) {
-    Logs.log("Server is runnign completly", Logs.LEVEL_NOTIFY);
+    Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
     afterInitCallback();
 });
 

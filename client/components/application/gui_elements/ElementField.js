@@ -304,6 +304,7 @@ ElementField = function () {
      * Обработчки нажатий на поля.
      */
     var onSignClick = function () {
-        self.onClick.call(null, self.x, self.y);
+        /* this тут - это объект с полями x и y */
+        self.onClick.call(null, this.x, this.y);
     };
 };

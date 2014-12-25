@@ -12,7 +12,7 @@ SAPIGame = function () {
     /**
      * Сообщим серверу, что мы больше не ждем игры.
      */
-    this.cancelRandomGameRequests = function(){
+    this.cancelRandomGameRequests = function () {
         apiRouter.executeRequest('SAPIGame', 'cancelRandomGameRequests', arguments, [{connectionId: null}]);
     };
 
@@ -22,6 +22,16 @@ SAPIGame = function () {
      */
     this.closeGame = function (gameId) {
         apiRouter.executeRequest('SAPIGame', 'closeGame', arguments, [{connectionId: null}]);
+    };
+
+    /**
+     * Сделать ход в игре.
+     * @param gameId {Number} id игры
+     * @param x {Number}
+     * @param y {Number}
+     */
+    this.doMove = function (gameId, x, y) {
+        apiRouter.executeRequest('SAPIGame', 'doMove', arguments, [{connectionId: null}]);
     };
 };
 

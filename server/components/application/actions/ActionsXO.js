@@ -79,7 +79,32 @@ ActionsXO = function () {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);
         });
-    }
+    };
+
+    /**
+     * Сделать ход в игре.
+     * @param userId {Number} id игрока
+     * @param gameId {Number} id игры
+     * @param x {Number}
+     * @param y {Number}
+     */
+    this.doMove = function (userId, gameId, x, y) {
+        var game, user;
+        game = LogicGameStore.load(gameId);
+        if (!game) {
+            Logs.log("ActionsXO.doMove. game not found", Logs.LEVEL_WARNING, arguments);
+            return;
+        }
+        if (!LogicXO.userCandDoMove(game, userId, x, y)) {
+            Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
+            return;
+        }
+        game = LogicXO.setSign(game, x, y);
+        game = LogicXO.switchTurn(game);
+        LogicGameStore.save(game);
+        CAPIGame.updateInfo(game.creatorUserId, game);
+        CAPIGame.updateInfo(game.joinerUserId, game);
+    };
 };
 
 /**

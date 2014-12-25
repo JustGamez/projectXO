@@ -219,11 +219,11 @@ LogicXO = function () {
     /**
      * Возвращает true если ход переданного игрока.
      * @param game {Object}
-     * @param user {Object}
+     * @param userId {Object}
      */
-    this.isHisTurn = function (game, user) {
-        if (user.id == game.XUserId && game.turnId == LogicXO.SIGN_ID_X)return true;
-        if (user.id == game.OUserId && game.turnId == LogicXO.SIGN_ID_O)return true;
+    this.isHisTurn = function (game, userId) {
+        if (userId == game.XUserId && game.turnId == LogicXO.SIGN_ID_X) return true;
+        if (userId == game.OUserId && game.turnId == LogicXO.SIGN_ID_O) return true;
         return false;
     };
 
@@ -260,6 +260,59 @@ LogicXO = function () {
         game.status = LogicXO.STATUS_CLOSED;
         return game;
     };
+
+    /**
+     * Может ли пользователь сделать ход.
+     * @param game {Object}
+     * @param userId {Number}
+     * @param x {Number}
+     * @param y {Number}
+     */
+    this.userCandDoMove = function (game, userId, x, y) {
+        var fieldSize;
+        if (!LogicXO.isMember(game, userId)) return false;
+        if (!LogicXO.isHisTurn(game, userId)) return false;
+        if (game.status != LogicXO.STATUS_RUN) return false;
+        fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
+        if (x < 0) return false;
+        if (x >= fieldSize) return false;
+        if (y < 0) return false;
+        if (y >= fieldSize) return false;
+        if (game.field[y][x] != LogicXO.SIGN_ID_Empty) return false;
+        return true;
+    };
+
+    /**
+     * Установим текущий знак.
+     * @param game {Object}
+     * @param x {Number}
+     * @param y {Number}
+     * @returns {*}
+     */
+    this.setSign = function (game, x, y) {
+        game.field[y][x] = game.turnId;
+        return game;
+    };
+
+    /**
+     * Перевернем текущий знак
+     * @param game {Object}
+     * @returns {*}
+     */
+    this.switchTurn = function (game) {
+        switch (game.turnId) {
+            case LogicXO.SIGN_ID_X:
+                game.turnId = LogicXO.SIGN_ID_O;
+                break;
+            case LogicXO.SIGN_ID_O:
+                game.turnId = LogicXO.SIGN_ID_X;
+                break;
+            default:
+                Logs.log("Can't switch turn, because unexpected game.turnId value have.", Logs.LEVEL_WARNING, game);
+                break;
+        }
+        return game;
+    }
 };
 /**
  * Статичный класс.

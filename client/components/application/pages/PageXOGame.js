@@ -124,7 +124,7 @@ PageXOGame = function PageXOGame() {
             self.elementField.clearField();
             for (var y = 0; y < fieldSize; y++) {
                 for (var x = 0; x < fieldSize; x++) {
-                    self.elementField.setSign(y, x, game.field[y][x]);
+                    self.elementField.setSign(x, y, game.field[y][x]);
                 }
             }
         }
@@ -134,7 +134,7 @@ PageXOGame = function PageXOGame() {
                 self.elementGameStatus.setText(gameStatusTextList.waiting);
             }
             if (game.status == LogicXO.STATUS_RUN) {
-                if (LogicXO.isHisTurn(game, user)) {
+                if (LogicXO.isHisTurn(game, user.id)) {
                     if (game.turnId == LogicXO.SIGN_ID_X) {
                         self.elementGameStatus.setText(gameStatusTextList.yourTurnX);
                     } else {

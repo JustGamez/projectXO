@@ -22,7 +22,7 @@ SAPIGame = function () {
         ActionsXO.requestRandomGame(cntx.userId, fieldTypeId, signId);
     };
 
-    this.cancelRandomGameRequests = function(cntx){
+    this.cancelRandomGameRequests = function (cntx) {
         if (!cntx.isAuthorized) {
             Logs.log("SAPIGame.cancelRandomGameRequest: must be authorized", Logs.LEVEL_WARNING);
             return;
@@ -41,10 +41,37 @@ SAPIGame = function () {
             return;
         }
         if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.startRandomGame: must have fieldTypeId", Logs.LEVEL_WARNING, fieldTypeId);
+            Logs.log("SAPIGame.closeGame: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
             return;
         }
         ActionsXO.closeGame(cntx.userId, gameId);
+    };
+
+    /**
+     * Сделать ход в игре
+     * @param cntx {Object} контекст соединения.
+     * @param gameId {Number} id игры
+     * @param x {Number}
+     * @param y {Number}
+     */
+    this.doMove = function (cntx, gameId, x, y) {
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIGame.doMove: must be authorized", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!gameId || typeof gameId != 'number') {
+            Logs.log("SAPIGame.doMove: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        if (x == undefined || typeof x != 'number') {
+            Logs.log("SAPIGame.doMove: must have x with type number", Logs.LEVEL_WARNING, x);
+            return;
+        }
+        if (y == undefined || typeof y != 'number') {
+            Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
+            return;
+        }
+        ActionsXO.doMove(cntx.userId, gameId, x, y);
     };
 };
 /**

@@ -6,6 +6,9 @@ LogicPageXO = function () {
 
     /**
      * Действия при нажатии кнопки "Меню".
+     * - Мы должны выйти в основное окно и закрыть игру, если она есть, либо сообщить серверу, что мы больше не ждём игру.
+     * Итак, если есть текущая игра в статусе запущена, закроем её и установим, что текущей игры у нас нет.
+     * Если текущей игры нет, сообщим серверу, что не ждём игры.
      */
     this.onMenuButtonClick = function () {
         var game;
@@ -23,10 +26,25 @@ LogicPageXO = function () {
 
     /**
      * Действия при нажатии на знак в поле.
+     * @param x {Number}
+     * @param y {Number}
      */
     this.onFieldSignClick = function (x, y) {
-        console.log(x, y);
-
+        var game, user;
+        game = LogicGame.getCurrentGame();
+        user = LogicUser.getCurrentUser();
+        if (!game) {
+            Logs.log("game not found", Logs.LEVEL_WARNING, arguments);
+            return;
+        }
+        if (!LogicXO.userCandDoMove(game, user.id, x, y)) {
+            Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
+            return;
+        }
+        game = LogicXO.setSign(game, x, y);
+        game = LogicXO.switchTurn(game);
+        LogicGame.updateInfo(game);
+        SAPIGame.doMove(game.id, x, y);
     };
 }
 ;
