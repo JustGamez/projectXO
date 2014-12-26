@@ -30,7 +30,7 @@ LogicPageXO = function () {
      * @param y {Number}
      */
     this.onFieldSignClick = function (x, y) {
-        var game, user;
+        var game, user, winLine, checkWinLine;
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
         if (!game) {
@@ -43,8 +43,10 @@ LogicPageXO = function () {
         }
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
+        winLine = LogicXO.findWinLine(game);
+        game = LogicXO.setOutcomeResults(game, winLine);
         LogicGame.updateInfo(game);
-        SAPIGame.doMove(game.id, x, y);
+        SAPIGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
     };
 }
 ;

@@ -21,25 +21,25 @@ LogicXO = function () {
      * Линия победы: горизонтальная.
      * @type {number}
      */
-    this.WIN_LINE_HORIZONTAL = 1;
+    this.LINE_HORIZONTAL = 1;
 
     /**
      * Линия победы: вертикальная.
      * @type {number}
      */
-    this.WIN_LINE_VERTICAL = 2;
+    this.LINE_VERTICAL = 2;
 
     /**
      * Линия победы: слева и наверх.
      * @type {number}
      */
-    this.WIN_LINE_LEFT_TO_UP = 3;
+    this.LINE_LEFT_UP = 3;
 
     /**
      * Линия победы: слева и во вниз.
      * @type {number}
      */
-    this.WIN_LINE_LEFT_TO_DOWN = 4;
+    this.LINE_LEFT_DOWN = 4;
 
     /**
      * Id знака крестик.
@@ -146,6 +146,22 @@ LogicXO = function () {
                 break;
             case LogicXO.FIELD_TYPE_15X15:
                 return 15;
+                break;
+        }
+    };
+
+    /**
+     * Вернуть размер линии победы по типу поля.
+     * @param fieldTypeId LogicXO.FIELD_TYPE_*
+     * @returns {number}
+     */
+    this.getLineSize = function (fieldTypeId) {
+        switch (fieldTypeId) {
+            case LogicXO.FIELD_TYPE_3X3:
+                return 3;
+                break;
+            case LogicXO.FIELD_TYPE_15X15:
+                return 5;
                 break;
         }
     };
@@ -310,6 +326,164 @@ LogicXO = function () {
             default:
                 Logs.log("Can't switch turn, because unexpected game.turnId value have.", Logs.LEVEL_WARNING, game);
                 break;
+        }
+        return game;
+    };
+
+    /**
+     * Найти линию победы, если она конечно есть
+     * @param game {Object}
+     */
+    this.findWinLine = function (game) {
+        var fieldSize, lineSize, lineIds, loseLinesCount, winnerLineId, lastResult, res;
+        fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
+        lineSize = LogicXO.getLineSize(game.fieldTypeId);
+
+        lineIds = [LogicXO.LINE_HORIZONTAL, LogicXO.LINE_VERTICAL, LogicXO.LINE_LEFT_DOWN, LogicXO.LINE_LEFT_UP];
+        loseLinesCount = 0;
+        winnerLineId = 0;
+        lastResult = false;
+
+        for (var y = 0; y < fieldSize; y++) {
+            for (var x = 0; x < fieldSize; x++) {
+                for (var lineId in lineIds) {
+                    res = false;
+                    res = __findWinLine(game.field, x, y, lineSize, lineIds[lineId]);
+                    if (res) {
+                        if (res.isLosed) loseLinesCount++;
+                        if (res.signId) {
+                            lastResult = res;
+                        }
+                    }
+                }
+            }
+        }
+        /* нет выигрывших, нет проигравших */
+        var result = {
+            noBodyWin: false,
+            someBodyWin: false,
+            signId: 0,
+            lineId: 0,
+            x: 0,
+            y: 0
+};
+        /* Если найден хотя бы один результат */
+        if (lastResult) {
+            result = {
+                noBodyWin: false,
+                someBodyWin: true,
+                signId: lastResult.signId,
+                lineId: lastResult.lineId,
+                x: lastResult.x,
+                y: lastResult.y
+            };
+        }
+        /* Может быть ничья */
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && loseLinesCount == lineSize * 2 + 2) {
+            result.noBodyWin = true;
+        }
+        return result;
+    };
+
+    /**
+     * Найти линию-победы в заданных координатах и с задонным типом.
+     * @param field {Array}
+     * @param startX {Number}
+     * @param startY {Number}
+     * @param lineSize {Number}
+     * @param lineId {Number} LogicXO.WIN_LINE_*
+     * @private
+     */
+    var __findWinLine = function (field, startX, startY, lineSize, lineId) {
+        var x, y, Xcnt, Ocnt, isLosed, points, lastPoint, signId, direction;
+        x = startX;
+        y = startY;
+        Xcnt = Ocnt = 0;
+        isLosed = false;
+        points = [];
+        signId = 0;
+        switch (lineId) {
+            case LogicXO.LINE_HORIZONTAL:
+                direction = {x: 1, y: 0};
+                break;
+            case LogicXO.LINE_VERTICAL:
+                direction = {x: 0, y: 1};
+                break;
+            case LogicXO.LINE_LEFT_UP:
+                direction = {x: 1, y: -1};
+                break;
+            case LogicXO.LINE_LEFT_DOWN:
+                direction = {x: 1, y: 1};
+                break;
+            default:
+                Logs.log("LogicXO.__findWinLine. Undefined lineId.", Logs.LEVEL_WARNING, lineId);
+                return false;
+                break;
+        }
+        switch (lineId) {
+            case LogicXO.LINE_HORIZONTAL:
+                if (field[startY][startX + (lineSize - 1)] == undefined) return false;
+                break;
+            case LogicXO.LINE_VERTICAL:
+                if (field[startY + (lineSize - 1)] == undefined) return false;
+                break;
+            case LogicXO.LINE_LEFT_UP:
+                if (field[startY - (lineSize - 1)] == undefined) return false;
+                if (field[startY][startX + (lineSize - 1)] == undefined) return false;
+                break;
+            case LogicXO.LINE_LEFT_DOWN:
+                if (field[startY + (lineSize - 1)] == undefined) return false;
+                if (field[startY][startX + (lineSize - 1)] == undefined) return false;
+                break;
+            default:
+                Logs.log("LogicXO.__findWinLine. Undefined lineId.", Logs.LEVEL_WARNING, lineId);
+                return false;
+                break;
+        }
+        for (var offset = 0; offset < lineSize; offset++) {
+            if (field[y] [x] == LogicXO.SIGN_ID_X) Xcnt++;
+            if (field[y] [x] == LogicXO.SIGN_ID_O) Ocnt++;
+            points.push({x: x, y: y});
+            x += direction.x;
+            y += direction.y;
+        }
+        if (Xcnt == lineSize) {
+            signId = LogicXO.SIGN_ID_X;
+        }
+        if (Ocnt == lineSize) {
+            signId = LogicXO.SIGN_ID_O;
+        }
+        if (Ocnt != 0 && Xcnt != 0) isLosed = true;
+        if (lineId == LogicXO.LINE_LEFT_UP) startY -= ( lineSize - 1 );
+        return {
+            lineId: lineId,
+            isLosed: isLosed,
+            signId: signId,
+            x: startX,
+            y: startY
+        };
+    };
+
+    /**
+     * Тут мы установим линию-победы.
+     * И соответствующий статус.
+     * Либо установим ниьчю, для этой игры.
+     * @param game {Object}
+     * @param winLine {Object}
+     */
+    this.setOutcomeResults = function (game, winLine) {
+        game.outcomeResults = winLine;
+        if (winLine.noBodyWin) {
+            game.status = LogicXO.STATUS_NOBODY_WIN;
+        }
+        if (winLine.someBodyWin) {
+            game.status = LogicXO.STATUS_SOMEBODY_WIN;
+            if (winLine.signId == LogicXO.SIGN_ID_X) {
+                game.winnerId = game.XUserId;
+            }
+            if (winLine.signId == LogicXO.SIGN_ID_O) {
+                game.winnerId = game.OUserId;
+            }
         }
         return game;
     }

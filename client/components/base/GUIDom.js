@@ -34,7 +34,7 @@ GUIDom = function () {
         dom.style.position = 'absolute';
         /* hidden mode..:begin*/
         if (GUIDom.hidePictures) {
-            dom.style.opacity = 0.38;
+            dom.style.opacity = 0.12;
             dom.style.border = '1px dotted grey';
         }
         /* hidden mode..:finish*/

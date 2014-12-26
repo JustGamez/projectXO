@@ -6,6 +6,9 @@ CAPIGame = function () {
      * @param game данные об игре.
      */
     this.updateInfo = function (cntx, game) {
+        var winLine;
+        winLine = LogicXO.findWinLine(game);
+        LogicXO.setOutcomeResults(game, winLine);
         LogicGame.updateInfo(game);
     };
 
@@ -15,7 +18,6 @@ CAPIGame = function () {
      * @param gameId {Number} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
-        /*@todo check is it game page?!*/
         if (!LogicGame.getCurrentGameId() && pageController.isShowedNow(PageController.PAGE_ID_XO_GAME)) {
             LogicGame.setCurrentGameId(gameId);
         } else {

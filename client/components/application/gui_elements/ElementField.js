@@ -86,10 +86,10 @@ ElementField = function () {
         signOffset: 5,
         winLineSize: 3
     };
-    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.WIN_LINE_HORIZONTAL] = '/images/fields/3x3LineHorizontal.png';
-    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.WIN_LINE_VERTICAL] = '/images/fields/3x3LineVertical.png';
-    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.WIN_LINE_LEFT_TO_UP] = '/images/fields/3x3LineLeftToUp.png';
-    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.WIN_LINE_LEFT_TO_DOWN] = '/images/fields/3x3LineLeftToDown.png';
+    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/3x3LineHorizontal.png';
+    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_VERTICAL] = '/images/fields/3x3LineVertical.png';
+    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_LEFT_UP] = '/images/fields/3x3LineLeftToUp.png';
+    this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_LEFT_DOWN] = '/images/fields/3x3LineLeftToDown.png';
     /* Поле 15х15 */
     this.configure[LogicXO.FIELD_TYPE_15X15] = {
         srcField: '/images/fields/15x15Field.png',
@@ -104,10 +104,10 @@ ElementField = function () {
         signOffset: 5,
         winLineSize: 5
     };
-    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.WIN_LINE_HORIZONTAL] = '/images/fields/15x15LineHorizontal.png';
-    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.WIN_LINE_VERTICAL] = '/images/fields/15x15LineVertical.png';
-    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.WIN_LINE_LEFT_TO_UP] = '/images/fields/15x15LineLeftToUp.png';
-    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.WIN_LINE_LEFT_TO_DOWN] = '/images/fields/15x15LineLeftToDown.png';
+    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/15x15LineHorizontal.png';
+    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_VERTICAL] = '/images/fields/15x15LineVertical.png';
+    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_LEFT_UP] = '/images/fields/15x15LineLeftToUp.png';
+    this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_LEFT_DOWN] = '/images/fields/15x15LineLeftToDown.png';
 
     /**
      * Тут будут все домы.
@@ -197,7 +197,7 @@ ElementField = function () {
     };
 
     /**
-     * Перерисуем поел.
+     * Перерисуем поле.
      */
     this.redraw = function () {
         if (!showed)return;
@@ -215,19 +215,19 @@ ElementField = function () {
             self.domList[fieldTypeId].domWinLine.y = this.y + winLineY * (self.configure[fieldTypeId].signHeight + self.configure[fieldTypeId].padding);
             self.domList[fieldTypeId].domWinLine.backgroundImage = self.configure[fieldTypeId].lines[winLineId];
             switch (winLineId) {
-                case LogicXO.WIN_LINE_HORIZONTAL:
+                case LogicXO.LINE_HORIZONTAL:
                     self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth * self.configure[fieldTypeId].winLineSize;
                     self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight;
                     break;
-                case LogicXO.WIN_LINE_VERTICAL:
+                case LogicXO.LINE_VERTICAL:
                     self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth;
                     self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight * self.configure[fieldTypeId].winLineSize;
                     break;
-                case LogicXO.WIN_LINE_LEFT_TO_UP:
+                case LogicXO.LINE_LEFT_UP:
                     self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth * self.configure[fieldTypeId].winLineSize;
                     self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight * self.configure[fieldTypeId].winLineSize;
                     break;
-                case LogicXO.WIN_LINE_LEFT_TO_DOWN:
+                case LogicXO.LINE_LEFT_DOWN:
                     self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth * self.configure[fieldTypeId].winLineSize;
                     self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight * self.configure[fieldTypeId].winLineSize;
                     break;

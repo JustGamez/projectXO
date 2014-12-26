@@ -87,9 +87,10 @@ ActionsXO = function () {
      * @param gameId {Number} id игры
      * @param x {Number}
      * @param y {Number}
+     * @param checkWinner {Boolean}
      */
-    this.doMove = function (userId, gameId, x, y) {
-        var game, user;
+    this.doMove = function (userId, gameId, x, y, checkWinner) {
+        var game, user, winLine;
         game = LogicGameStore.load(gameId);
         if (!game) {
             Logs.log("ActionsXO.doMove. game not found", Logs.LEVEL_WARNING, arguments);
@@ -101,9 +102,22 @@ ActionsXO = function () {
         }
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
-        LogicGameStore.save(game);
-        CAPIGame.updateInfo(game.creatorUserId, game);
-        CAPIGame.updateInfo(game.joinerUserId, game);
+        if (checkWinner) {
+            winLine = LogicXO.findWinLine(game);
+            game = LogicXO.setOutcomeResults(game, winLine);
+            if (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN) {
+                /* @todo */
+                LogicGameStore.delete(game.id);
+                DataGame.save(game, function (game) {
+                    CAPIGame.updateInfo(game.creatorUserId, game);
+                    CAPIGame.updateInfo(game.joinerUserId, game);
+                })
+            }
+        } else {
+            LogicGameStore.save(game);
+            CAPIGame.updateInfo(game.creatorUserId, game);
+            CAPIGame.updateInfo(game.joinerUserId, game);
+        }
     };
 };
 

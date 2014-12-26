@@ -116,8 +116,10 @@ PageXOGame = function PageXOGame() {
         var game, fieldSize, user;
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
+        /* Установим тип поля и знаки */
         if (!game) {
             self.elementField.swithToField(LogicXOSettings.requestedFieldTypeId);
+            self.elementField.clearField();
         } else {
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
             self.elementField.swithToField(game.fieldTypeId);
@@ -128,33 +130,51 @@ PageXOGame = function PageXOGame() {
                 }
             }
         }
+        /* Посмотрим есть ли у нас линия-победы */
+        if (game && game.outcomeResults) {
+            if (game.outcomeResults.someBodyWin) {
+                self.elementField.setWinLine(game.outcomeResults.x, game.outcomeResults.y, game.outcomeResults.lineId);
+            }
+        }
         /* Перересовываем статус игры */
+        var text = gameStatusTextList.waiting;
         if (game) {
             if (game.status == LogicXO.STATUS_WAIT) {
-                self.elementGameStatus.setText(gameStatusTextList.waiting);
+                text = gameStatusTextList.waiting;
             }
             if (game.status == LogicXO.STATUS_RUN) {
                 if (LogicXO.isHisTurn(game, user.id)) {
                     if (game.turnId == LogicXO.SIGN_ID_X) {
-                        self.elementGameStatus.setText(gameStatusTextList.yourTurnX);
+                        text = gameStatusTextList.yourTurnX;
                     } else {
-                        self.elementGameStatus.setText(gameStatusTextList.yourTurnO);
+                        text = gameStatusTextList.yourTurnO;
                     }
                 } else {
                     if (game.turnId == LogicXO.SIGN_ID_X) {
-                        self.elementGameStatus.setText(gameStatusTextList.opponentTurnX);
+                        text = gameStatusTextList.opponentTurnX;
                     } else {
-                        self.elementGameStatus.setText(gameStatusTextList.opponentTurnO);
+                        text = gameStatusTextList.opponentTurnO;
                     }
                 }
             }
             if (game.status == LogicXO.STATUS_CLOSED) {
-                self.elementGameStatus.setText(gameStatusTextList.closed);
+                text = gameStatusTextList.closed;
+            }
+            if (game.status == LogicXO.STATUS_SOMEBODY_WIN) {
+                if (game.winnerId == user.id) {
+                    text = gameStatusTextList.youWinSexMan;
+                } else {
+                    text = gameStatusTextList.opponentWinSexMan;
+                }
+            }
+            if (game.status == LogicXO.STATUS_NOBODY_WIN) {
+                text = gameStatusTextList.nobodyWin;
             }
         }
         else {
-            self.elementGameStatus.setText(gameStatusTextList.waiting);
+            text = gameStatusTextList.waiting;
         }
+        self.elementGameStatus.setText(text);
     };
 
     /**

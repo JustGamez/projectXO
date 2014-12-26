@@ -53,8 +53,9 @@ SAPIGame = function () {
      * @param gameId {Number} id игры
      * @param x {Number}
      * @param y {Number}
+     * @param checkWinner {Boolean}
      */
-    this.doMove = function (cntx, gameId, x, y) {
+    this.doMove = function (cntx, gameId, x, y, checkWinner) {
         if (!cntx.isAuthorized) {
             Logs.log("SAPIGame.doMove: must be authorized", Logs.LEVEL_WARNING);
             return;
@@ -71,7 +72,11 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
             return;
         }
-        ActionsXO.doMove(cntx.userId, gameId, x, y);
+        if (checkWinner == undefined || typeof checkWinner != 'boolean') {
+            Logs.log("SAPIGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
+            return;
+        }
+        ActionsXO.doMove(cntx.userId, gameId, x, y, checkWinner);
     };
 };
 /**
