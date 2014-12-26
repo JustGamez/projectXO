@@ -80,6 +80,28 @@ DataUser = function () {
             callback(rows);
         });
     };
+
+    /**
+     * Сохраняет юзера.
+     * @param user {Object}
+     * @param callback {Function}
+     */
+    this.save = function (user, callback) {
+        var data;
+        data = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            socNetTypeId: user.socNetTypeId,
+            socNetUserId: user.socNetUserId,
+            createTimestamp: user.createTimestamp,
+            lastLoginTimestamp: user.lastLoginTimestamp,
+            score: user.score
+        };
+        DB.update(tableName, data, function (result) {
+            callback(user);
+        });
+    };
 };
 
 /**

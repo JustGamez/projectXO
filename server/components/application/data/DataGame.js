@@ -72,44 +72,11 @@ DataGame = function () {
         if (game.id) {
             data.id = game.id;
             DB.update(tableName, data, function (result) {
-                game = {
-                    id: game.id,
-                    creatorUserId: game.creatorUserId,
-                    joinerUserId: game.joinerUserId,
-                    creatorSignId: game.creatorSignId,
-                    joinerSignId: game.joinerSignId,
-                    fieldTypeId: game.fieldTypeId,
-                    isRandom: game.isRandom,
-                    isInvitation: game.isInvitation,
-                    vsRobot: game.vsRobot,
-                    XUserId: game.XUserId,
-                    OUserId: game.OUserId,
-                    turnId: game.turnId,
-                    field: game.field,
-                    status: game.status,
-                    winnerId: game.winnerId
-                };
                 callback(game);
             });
         } else {
             DB.insert(tableName, data, function (result) {
-                game = {
-                    id: result.insertId,
-                    creatorUserId: game.creatorUserId,
-                    joinerUserId: game.joinerUserId,
-                    creatorSignId: game.creatorSignId,
-                    joinerSignId: game.joinerSignId,
-                    fieldTypeId: game.fieldTypeId,
-                    isRandom: game.isRandom,
-                    isInvitation: game.isInvitation,
-                    vsRobot: game.vsRobot,
-                    XUserId: game.XUserId,
-                    OUserId: game.OUserId,
-                    turnId: game.turnId,
-                    field: game.field,
-                    status: game.status,
-                    winnerId: game.winnerId
-                };
+                game.id = result.insertId;
                 callback(game);
             });
         }

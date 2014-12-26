@@ -102,11 +102,19 @@ ElementGraphicText = function () {
             charCode = self.text.charCodeAt(i);
             /* feed line symbol: 0xAh, 10d, \n */
             if (charCode == 10) {
-                textHTML += "<br>";
+                if (GUIDom.hidePictures) {
+                    textHTML += "\r\n";
+                } else {
+                    textHTML += "<br>";
+                }
                 continue;
             }
-            symbol_url = "/images/font/" + charCode + ".png";
-            textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+            if (GUIDom.hidePictures) {
+                textHTML += symbol;
+            } else {
+                symbol_url = "/images/font/" + charCode + ".png";
+                textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+            }
         }
         dom.innerHTML = textHTML;
         dom.redraw();

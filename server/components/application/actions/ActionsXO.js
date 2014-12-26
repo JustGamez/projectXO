@@ -6,13 +6,16 @@ ActionsXO = function () {
      * @param userId {Object} id пользователя.
      * @param fieldTypeId {Number} Запрашиваемый тип поля, LogicXO.FIELD_TYPE_*
      * @param requestedSignId {Number} Запрашиваемый знак в игре, LogicXO.SIGN_ID_*
+     * @param callback {Function}
      */
-    this.requestRandomGame = function (userId, fieldTypeId, requestedSignId) {
+    this.requestRandomGame = function (userId, fieldTypeId, requestedSignId, callback) {
         var waiter;
         Logs.log("ActionsXO.requestRandomGame", Logs.LEVEL_DETAIL);
         waiter = LogicWaitersStack.getWaiter(userId, fieldTypeId, requestedSignId, 1);
         if (waiter) {
-            ActionsXO.createRandomGame(waiter.userId, waiter.signId, fieldTypeId, userId, requestedSignId);
+            ActionsXO.createRandomGame(waiter.userId, waiter.signId, fieldTypeId, userId, requestedSignId, function (game) {
+                callback(game);
+            });
         } else {
             LogicWaitersStack.createWaiter(userId, fieldTypeId, requestedSignId, 1);
         }
@@ -40,7 +43,7 @@ ActionsXO = function () {
      * @param joinerUserId {Number}  id юзера.
      * @param joinerSignId {Number} запршиваемый знак вступающего в игру.
      */
-    this.createRandomGame = function (creatorUserId, creatorSignId, fieldTypeId, joinerUserId, joinerSignId) {
+    this.createRandomGame = function (creatorUserId, creatorSignId, fieldTypeId, joinerUserId, joinerSignId, callback) {
         var game;
         Logs.log("ActionsXO.createRandomGame", Logs.LEVEL_DETAIL);
         game = LogicXO.create(creatorUserId, creatorSignId, fieldTypeId, true, false, false);
@@ -49,10 +52,7 @@ ActionsXO = function () {
         game = LogicXO.run(game);
         DataGame.save(game, function (game) {
             LogicGameStore.save(game);
-            CAPIGame.updateInfo(game.creatorUserId, game);
-            CAPIGame.updateInfo(game.joinerUserId, game);
-            CAPIGame.gameCreated(game.creatorUserId, game.id);
-            CAPIGame.gameCreated(game.joinerUserId, game.id);
+            callback(game);
         });
     };
 
@@ -60,8 +60,9 @@ ActionsXO = function () {
      * Закроем игру.
      * @param userId {Number} id пользователя.
      * @param gameId {Number} id игры, которую закроем.
+     * @param callback {Function}
      */
-    this.closeGame = function (userId, gameId) {
+    this.closeGame = function (userId, gameId, callback) {
         var game;
         game = LogicGameStore.load(gameId);
         if (!game) {
@@ -73,12 +74,7 @@ ActionsXO = function () {
             return;
         }
         game = LogicXO.close(game);
-        LogicGameStore.delete(game.id);
-        DataGame.save(game, function (game) {
-            /* @todo check user.isOnline? */
-            CAPIGame.updateInfo(game.creatorUserId, game);
-            CAPIGame.updateInfo(game.joinerUserId, game);
-        });
+        callback(game);
     };
 
     /**
@@ -88,9 +84,10 @@ ActionsXO = function () {
      * @param x {Number}
      * @param y {Number}
      * @param checkWinner {Boolean}
+     * @param callback {Function}
      */
-    this.doMove = function (userId, gameId, x, y, checkWinner) {
-        var game, user, winLine;
+    this.doMove = function (userId, gameId, x, y, checkWinner, callback) {
+        var game, user, winLine, oldStatus;
         game = LogicGameStore.load(gameId);
         if (!game) {
             Logs.log("ActionsXO.doMove. game not found", Logs.LEVEL_WARNING, arguments);
@@ -100,24 +97,15 @@ ActionsXO = function () {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
+        oldStatus = game.status;
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
         if (checkWinner) {
             winLine = LogicXO.findWinLine(game);
             game = LogicXO.setOutcomeResults(game, winLine);
-            if (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN) {
-                /* @todo */
-                LogicGameStore.delete(game.id);
-                DataGame.save(game, function (game) {
-                    CAPIGame.updateInfo(game.creatorUserId, game);
-                    CAPIGame.updateInfo(game.joinerUserId, game);
-                })
-            }
-        } else {
-            LogicGameStore.save(game);
-            CAPIGame.updateInfo(game.creatorUserId, game);
-            CAPIGame.updateInfo(game.joinerUserId, game);
         }
+        LogicGameStore.save(game);
+        callback(game, oldStatus);
     };
 };
 

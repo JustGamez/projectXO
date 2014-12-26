@@ -43,7 +43,7 @@ LogicUser = function () {
             if (user) {
                 CAPIUser.updateUserInfo(cntx.userId, user);
             } else {
-                Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
+                Logs.log("LogicUser.sendUserInfo. User not found: id=" + userId, Logs.LEVEL_WARNING);
             }
         });
     };
@@ -130,8 +130,10 @@ LogicUser = function () {
      * Отправка всем данных об онлайн пользователях.
      */
     var sendOnlineCountToAll = function () {
+        var count;
+        count = self.getOnlineCount();
         for (var userId in userToCntx) {
-            CAPIUser.updateOnlineCount(userId, self.getOnlineCount());
+            CAPIUser.updateOnlineCount(userId, count);
         }
     };
 
@@ -221,6 +223,25 @@ LogicUser = function () {
             sendOnlineCountToAll();
         }
     };
+
+    /**
+     * Если выиграл. начислим очки.
+     * @param userId
+     */
+    this.onWin = function (userId) {
+        DataUser.getById(userId, function (user) {
+            if (user) {
+                user.score++;
+                DataUser.save(user, function (user) {
+                    for (var userId in userToCntx) {
+                        CAPIUser.updateUserInfo(userId, user);
+                    }
+                });
+            } else {
+                Logs.log("LogicUser.onWin. User not found: id=" + userId, Logs.LEVEL_WARNING);
+            }
+        });
+    }
 };
 
 /**

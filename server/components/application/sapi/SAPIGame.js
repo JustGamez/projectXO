@@ -19,7 +19,12 @@ SAPIGame = function () {
             Logs.log("SAPIGame.startRandomGame: must have signId", Logs.LEVEL_WARNING, signId);
             return;
         }
-        ActionsXO.requestRandomGame(cntx.userId, fieldTypeId, signId);
+        ActionsXO.requestRandomGame(cntx.userId, fieldTypeId, signId, function (game) {
+            CAPIGame.updateInfo(game.creatorUserId, game);
+            CAPIGame.updateInfo(game.joinerUserId, game);
+            CAPIGame.gameCreated(game.creatorUserId, game.id);
+            CAPIGame.gameCreated(game.joinerUserId, game.id);
+        });
     };
 
     this.cancelRandomGameRequests = function (cntx) {
@@ -44,7 +49,13 @@ SAPIGame = function () {
             Logs.log("SAPIGame.closeGame: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        ActionsXO.closeGame(cntx.userId, gameId);
+        ActionsXO.closeGame(cntx.userId, gameId, function (game) {
+            LogicGameStore.delete(game.id);
+            DataGame.save(game, function (game) {
+                CAPIGame.updateInfo(game.creatorUserId, game);
+                CAPIGame.updateInfo(game.joinerUserId, game);
+            });
+        });
     };
 
     /**
@@ -76,7 +87,24 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
             return;
         }
-        ActionsXO.doMove(cntx.userId, gameId, x, y, checkWinner);
+        ActionsXO.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
+            /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
+            console.log(oldStatus);
+            console.log(game.status);
+            if (game.status != LogicXO.STATUS_RUN) {
+                /* Только что кто-то выиграл? */
+                if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
+                    LogicUser.onWin(game.winnerId);
+                }
+                LogicGameStore.delete(game.id);
+                DataGame.save(game, function (game) {
+                    CAPIGame.updateInfo(game.creatorUserId, game);
+                    CAPIGame.updateInfo(game.joinerUserId, game);
+                })
+            }
+            CAPIGame.updateInfo(game.creatorUserId, game);
+            CAPIGame.updateInfo(game.joinerUserId, game);
+        });
     };
 };
 /**
