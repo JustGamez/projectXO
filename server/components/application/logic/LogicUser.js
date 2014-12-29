@@ -3,6 +3,22 @@ LogicUser = function () {
     var userToCntx = {};
     var userToCntxCount = 0;
 
+    /**
+     * Константа, пол: неизвестен\неустановлен.
+     * @type {number}
+     */
+    this.SEX_UNKNOWN = 1;
+    /**
+     * Константа, пол: женский.
+     * @type {number}
+     */
+    this.SEX_WOMAN = 2;
+    /**
+     * Константа, пол: мужской.
+     * @type {number}
+     */
+    this.SEX_MAN = 3;
+
     this.init = function (afterInitCallback) {
         apiRouter.addOnDisconnectCallback(onDisconnect);
         apiRouter.addOnFailedSendCallback(onFailedSend);
@@ -35,16 +51,46 @@ LogicUser = function () {
 
     /**
      * Отправка информации о пользователе.
-     * @param userId {Number}
-     * @param cntx {object} контекст соединения
+     * @param toUserId {Number} кому отправляем.
+     * @param userId {Number} данные о каком пользователе.
      */
-    this.sendUserInfo = function (userId, cntx) {
+    this.sendUserInfo = function (userId, toUserId) {
         DataUser.getById(userId, function (user) {
             if (user) {
-                CAPIUser.updateUserInfo(cntx.userId, user);
+                refreshUserSocNetInfo(user, function (user) {
+                    CAPIUser.updateUserInfo(toUserId, user);
+                });
             } else {
                 Logs.log("LogicUser.sendUserInfo. User not found: id=" + userId, Logs.LEVEL_WARNING);
             }
+        });
+    };
+
+    /**
+     * Обновление данных из социальной сети для пользователя.
+     * @param user
+     * @param callback
+     */
+    var refreshUserSocNetInfo = function (user, callback) {
+        SocNet.getUserInfo(user.socNetTypeId, user.socNetUserId, function (info) {
+            user.firstName = info.firstName;
+            user.lastName = info.lastName;
+            user.photo50 = info.photo50;
+            switch (info.sex) {
+                case SocNet.SEX_MAN:
+                    user.sex = LogicUser.SEX_MAN;
+                    break;
+                case SocNet.SEX_WOMAN:
+                    user.sex = LogicUser.SEX_WOMAN;
+                    break;
+                default:
+                    user.sex = LogicUser.SEX_UNKNOWN;
+            }
+            DataUser.save(user, function (user) {
+                if (callback) {
+                    callback(user);
+                }
+            });
         });
     };
 

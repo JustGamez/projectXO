@@ -3,6 +3,11 @@
  * @constructor
  */
 PageController = function () {
+    var self = this;
+    /**
+     * Все страницы.
+     * @type {Array}
+     */
     var pages = [];
 
     /**
@@ -57,6 +62,7 @@ PageController = function () {
             pages[id].hide();
         }
         currentShowedPageIds = idToShowList;
+        self.redraw();
     };
 
     /**

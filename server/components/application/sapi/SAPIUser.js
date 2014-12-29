@@ -1,7 +1,7 @@
 SAPIUser = function () {
 
     /**
-     *
+     * Авторизация через вКонтакте.
      * @param cntx контекст соединения
      * @param socNetUserId id юзера в соц сети
      * @param authParams параметры аутентифиакации.
@@ -24,15 +24,15 @@ SAPIUser = function () {
      * @param userId number
      */
     this.sendMeUserInfo = function (cntx, userId) {
-        if (!cntx.userId) {
-            Logs.log("SAPIUser.sendMeUserInfo: not found cntx.userId", Logs.LEVEL_WARNING);
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIUser.sendMeUserInfo: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
         if (!userId || typeof userId != 'number') {
             Logs.log("SAPIUser.sendMeUserInfo: must have userId", Logs.LEVEL_WARNING);
             return;
         }
-        LogicUser.sendUserInfo(userId, cntx);
+        LogicUser.sendUserInfo(userId, cntx.userId);
     };
 
     /**
@@ -41,8 +41,8 @@ SAPIUser = function () {
      * @param userId
      */
     this.sendMeFriends = function (cntx, userId) {
-        if (!cntx.userId) {
-            Logs.log("SAPIUser.sendMeUserInfo: not found cntx.userId", Logs.LEVEL_WARNING);
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIUser.sendMeFriends: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
         if (!userId || typeof userId != 'number') {
@@ -57,8 +57,8 @@ SAPIUser = function () {
      * @param cntx
      */
     this.sendMeOnlineCount = function (cntx) {
-        if (!cntx.userId) {
-            Logs.log("SAPIUser.sendMeOnlineCount: not found cntx.userId", Logs.LEVEL_WARNING);
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIUser.sendMeOnlineCount: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
         LogicUser.sendOnlineCount(cntx);

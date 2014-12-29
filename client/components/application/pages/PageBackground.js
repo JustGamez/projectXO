@@ -24,6 +24,12 @@ PageBackground = function PageMain() {
     this.elementOnlineIndicator = null;
 
     /**
+     * Окно чата.
+     * @type {null}
+     */
+    this.elementChatWindow = null;
+
+    /**
      * Элемент-текст отображает количество очков игрока.
      * @type {ElementGraphicText}
      */
@@ -56,6 +62,15 @@ PageBackground = function PageMain() {
         });
         self.elements.push(element);
         self.elementScoreIndicator = element;
+        /* Chat window */
+        element = GUI.createElement('ElementChatWindow', {
+            x: 90,
+            y: 500,
+            width: 480,
+            height: 120
+        });
+        self.elements.push(element);
+        self.elementChatWindow = element;
     };
 
     /**
@@ -85,11 +100,13 @@ PageBackground = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var onlineCount, score;
+        var onlineCount, score, messages;
         onlineCount = LogicUser.getOnlineCount();
         score = LogicUser.getCurrentUser().score;
+        messages = LogicChat.getMessages();
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
         self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
+        self.elementChatWindow.updateMessages(messages);
     };
 
     /**

@@ -9,6 +9,20 @@
  * @property backgroundImage {url}
  * @property innerHTML {string}
  * @property pointer {GUI.POINTER_*}
+ * @property opacity {Number}
+ * @property fontWeight {String}
+ * @property fontSize {String}
+ * @property fontFamily {String}
+ * @property color {String}
+ * @property textShadow {String}
+ * @property borderRadius {String}
+ * @property borderTop {String}
+ * @property borderRight {String}
+ * @property borderBottom {String}
+ * @property borderLeft {String}
+ * @property padding {String}
+ * @property boxShadow {String}
+ * @property lineHeight {Number}
  */
 GUIDom = function () {
     var self = this;
@@ -81,7 +95,20 @@ GUIDom = function () {
             if (this.backgroundImage)dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
             if (this.innerHTML)dom.innerHTML = this.innerHTML;
         }
-        if (this.pointer)dom.style.cursor = this.pointer;
+        if (this.pointer) dom.style.cursor = this.pointer;
+        if (this.opacity) dom.style.opacity = this.opacity;
+        if (this.fontWeight) dom.style.fontWeight = this.fontWeight;
+        if (this.fontFamily) dom.style.fontFamily = this.fontFamily;
+        if (this.color) dom.style.color = this.color;
+        if (this.textShadow) dom.style.textShadow = this.textShadow;
+        if (this.borderRadius) dom.style.borderRadius = this.borderRadius;
+        if (this.borderTop) dom.style.borderTop = this.borderTop;
+        if (this.borderRight) dom.style.borderRight = this.borderRight;
+        if (this.borderBottom) dom.style.borderBottom = this.borderBottom;
+        if (this.borderLeft) dom.style.borderLeft = this.borderLeft;
+        if (this.padding) dom.style.padding = this.padding;
+        if (this.boxShadow) dom.style.boxShadow = this.boxShadow;
+        if (this.lineHeight) dom.style.lineHeight = this.lineHeight;
     };
 
     /**

@@ -65,9 +65,42 @@ SocNet = function () {
 
     /**
      * Получить список друзей из соц сети.
+     * @param socNetTypeId {Number} id социальной сети SoNet.TYPE_*
+     * @param socNetUserId {Number} id юзера, в социальной сети.
+     * @param callback {Function}
      */
-    this.getFriends = function (socNetTypId, socNetUserId, callback) {
+    this.getFriends = function (socNetTypeId, socNetUserId, callback) {
         executeMethod('friends.get', {user_id: socNetUserId}, callback);
+    };
+
+    /**
+     * Получит
+     * @param socNetTypeId
+     * @param socNetUserId
+     * @param callback
+     */
+    this.getUserInfo = function (socNetTypeId, socNetUserId, callback) {
+        executeMethod('users.get', {user_ids: socNetUserId, fields: 'photo_50,sex'}, function (source) {
+                var info;
+                info = {};
+                info.firstName = source[0].first_name;
+                info.lastName = source[0].last_name;
+                info.photo50 = source[0].photo_50;
+                switch (source.sex) {
+                    case 1:
+                        info.sex = SocNet.SEX_WOMAN;
+                        break;
+                    case 2:
+                        info.sex = SocNet.SEX_MAN;
+                        break;
+                    default:
+                        info.sex = SocNet.SEX_UNKNOWN;
+                        break;
+                }
+                callback(info);
+            }
+        )
+        ;
     };
 
     /**
@@ -101,7 +134,7 @@ SocNet = function () {
         var url, options, req;
         url = baseUrl + method + '?';
         for (var i in params) {
-            url += i + '=' + params[i];
+            url += '&' + i + '=' + params[i];
         }
         options = {};
         options.hostname = baseHost;
@@ -123,7 +156,8 @@ SocNet = function () {
             Logs.log("SocNet.executeMethod request error:", Logs.LEVEL_ERROR, e);
         });
     }
-};
+}
+;
 /**
  * Статичный класс.
  * @type {SocNet}
@@ -134,3 +168,18 @@ SocNet = new SocNet();
  * @type {number}
  */
 SocNet.TYPE_VK = 1;
+/**
+ * Константа пол: неизвестен\неустановлен.
+ * @type {number}
+ */
+SocNet.SEX_UNKNOWN = 1;
+/**
+ * Константа пол: женский.
+ * @type {number}
+ */
+SocNet.SEX_WOMAN = 2;
+/**
+ * Константа пол: мужской
+ * @type {number}
+ */
+SocNet.SEX_MAN = 3;

@@ -89,8 +89,6 @@ SAPIGame = function () {
         }
         ActionsXO.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
             /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
-            console.log(oldStatus);
-            console.log(game.status);
             if (game.status != LogicXO.STATUS_RUN) {
                 /* Только что кто-то выиграл? */
                 if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {

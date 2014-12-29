@@ -96,7 +96,9 @@ DataUser = function () {
             socNetUserId: user.socNetUserId,
             createTimestamp: user.createTimestamp,
             lastLoginTimestamp: user.lastLoginTimestamp,
-            score: user.score
+            score: user.score,
+            sex: user.sex,
+            photo50: user.photo50
         };
         DB.update(tableName, data, function (result) {
             callback(user);
