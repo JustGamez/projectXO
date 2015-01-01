@@ -63,9 +63,11 @@ ElementChatWindow = function () {
         dom.padding = '4px 6px';
         dom.boxShadow = '-1px 1px 1px 1px rgba(168, 87, 0, 0.2)';
         dom.lineHeight = 1.1;
-        dom.show();
-        dom.redraw();
+
+
+
     };
+
     /**
      * Покажем элемент.
      */

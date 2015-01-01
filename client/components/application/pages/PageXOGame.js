@@ -54,8 +54,8 @@ PageXOGame = function PageXOGame() {
         var element;
         /* Игровое поле*/
         element = GUI.createElement('ElementField', {
-            x: 150,
-            y: 138,
+            x: 102,
+            y: 92,
             width: 400,
             height: 400,
             onClick: LogicPageXO.onFieldSignClick

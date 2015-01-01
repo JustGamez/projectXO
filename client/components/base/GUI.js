@@ -36,6 +36,12 @@ GUI = function () {
     this.EVENT_MOUSE_OUT = 5;
 
     /**
+     * Событие опускание клавиши.
+     * @type {number}
+     */
+    this.EVENT_KEY_DOWN = 6;
+
+    /**
      * @type {string}
      */
     this.POINTER_HAND = 'hand';
@@ -46,6 +52,7 @@ GUI = function () {
     this.eventNames[this.EVENT_MOUSE_CLICK] = 'click';
     this.eventNames[this.EVENT_MOUSE_OVER] = 'mouseover';
     this.eventNames[this.EVENT_MOUSE_OUT] = 'mouseout';
+    this.eventNames[this.EVENT_KEY_DOWN] = 'keydown';
 
     /**
      * Создаёт элемент
@@ -86,6 +93,17 @@ GUI = function () {
         var dom;
         dom = new GUIDom();
         dom.init();
+        return dom;
+    };
+
+    /**
+     * Создаёт дом инпута, иницализирует его и возврщает на него ссыслку.
+     * @returns {GUIDom}
+     */
+    this.createInput = function () {
+        var dom;
+        dom = new GUIDom();
+        dom.init('input');
         return dom;
     };
 

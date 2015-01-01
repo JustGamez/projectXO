@@ -25,9 +25,15 @@ PageBackground = function PageMain() {
 
     /**
      * Окно чата.
-     * @type {null}
+     * @type {ElementChatWindow}
      */
     this.elementChatWindow = null;
+
+    /**
+     * Элемент ввода сообщения чата.
+     * @type {ElementChatInput}
+     */
+    this.elementChatInput = null;
 
     /**
      * Элемент-текст отображает количество очков игрока.
@@ -62,15 +68,26 @@ PageBackground = function PageMain() {
         });
         self.elements.push(element);
         self.elementScoreIndicator = element;
-        /* Chat window */
+        /* Окно чата. */
         element = GUI.createElement('ElementChatWindow', {
             x: 90,
             y: 500,
-            width: 480,
-            height: 120
+            width: 570,
+            height: 92
         });
         self.elements.push(element);
         self.elementChatWindow = element;
+
+        /* Форма ввода сообщения в чате.*/
+        element = GUI.createElement('ElementChatInput', {
+            x: 90,
+            y: 607,
+            width: 584,
+            height: 20,
+            onSendByEnter: LogicPageBackground.onChatInputEnterMessage
+        });
+        self.elements.push(element);
+        self.elementChatInput = element;
     };
 
     /**

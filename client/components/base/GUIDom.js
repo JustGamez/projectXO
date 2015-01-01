@@ -23,6 +23,7 @@
  * @property padding {String}
  * @property boxShadow {String}
  * @property lineHeight {Number}
+ * @property background {String}
  */
 GUIDom = function () {
     var self = this;
@@ -43,8 +44,12 @@ GUIDom = function () {
      * Создается элемент браузера
      * Настраиваются минимальные параметры
      */
-    this.init = function () {
-        dom = document.createElement("div");
+    this.init = function (type) {
+        if (type == 'input') {
+            dom = document.createElement("input");
+        } else {
+            dom = document.createElement("div");
+        }
         dom.style.position = 'absolute';
         /* hidden mode..:begin*/
         if (GUIDom.hidePictures) {
@@ -109,6 +114,7 @@ GUIDom = function () {
         if (this.padding) dom.style.padding = this.padding;
         if (this.boxShadow) dom.style.boxShadow = this.boxShadow;
         if (this.lineHeight) dom.style.lineHeight = this.lineHeight;
+        if (this.background) dom.style.background = this.background;
     };
 
     /**
@@ -123,8 +129,8 @@ GUIDom = function () {
         if (!eventName) {
             Logs.log("undefined gui eventId:" + eventId, Logs.LEVEL_FATAL_ERROR);
         }
-        dom.addEventListener(eventName, function () {
-            callback.call(context);
+        dom.addEventListener(eventName, function (event) {
+            callback.call(context, event, dom);
         }, false);
     };
 };

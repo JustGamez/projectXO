@@ -69,11 +69,20 @@ LogicUser = function () {
     };
 
     /**
+     * Запомним, чеё загрузки мы уже ждём, что бы не повторять лишних запросов.
+     * @type {Array}
+     */
+    var waitForLoading = [];
+    /**
      * Загрузить данные о пользователе.
-     * @param useId {int}
+     * @param userId {int}
      */
     this.loadUserInfoById = function (userId) {
-        SAPIUser.sendMeUserInfo(userId);
+        if (authorizedUserId == null)return;
+        if (!waitForLoading[userId]) {
+            waitForLoading[userId] = true;
+            SAPIUser.sendMeUserInfo(userId);
+        }
     };
 
     /**
@@ -81,6 +90,7 @@ LogicUser = function () {
      * @param user
      */
     this.updateUserInfo = function (user) {
+        waitForLoading[user.id] = false;
         users[user.id] = user;
         pageController.redraw();
     };
