@@ -5,7 +5,7 @@ SAPIChat = function () {
      * @param message {String}
      */
     this.sendMessage = function (message) {
-        apiRouter.executeRequest('SAPIUser', 'sendMeUserInfo', arguments, [{connectionId: null}]);
+        apiRouter.executeRequest('SAPIChat', 'sendMessage', arguments, [{connectionId: null}]);
     };
 };
 

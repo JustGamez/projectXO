@@ -63,9 +63,6 @@ ElementChatWindow = function () {
         dom.padding = '4px 6px';
         dom.boxShadow = '-1px 1px 1px 1px rgba(168, 87, 0, 0.2)';
         dom.lineHeight = 1.1;
-
-
-
     };
 
     /**
@@ -134,7 +131,7 @@ ElementChatWindow = function () {
     /**
      * Обновим сообщения.
      * и перересуем ессно.
-     * @param messages {Array} массив вида [{userId:number, text:string, timestamp:number}, ...]
+     * @param inMessages {Array} массив вида [{userId:number, text:string, timestamp:number}, ...]
      */
     this.updateMessages = function (inMessages) {
         messages = inMessages;
