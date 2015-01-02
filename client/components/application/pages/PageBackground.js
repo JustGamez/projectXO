@@ -120,7 +120,8 @@ PageBackground = function PageMain() {
         var onlineCount, score, messages;
         onlineCount = LogicUser.getOnlineCount();
         score = LogicUser.getCurrentUser().score;
-        messages = LogicChat.getMessages();
+        /* Кол-во сообщений для отображения */
+        messages = LogicChatCache.getLastMessages(5);
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
         self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
         self.elementChatWindow.updateMessages(messages);

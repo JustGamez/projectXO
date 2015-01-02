@@ -51,6 +51,7 @@ GUIDom = function () {
             dom = document.createElement("div");
         }
         dom.style.position = 'absolute';
+        dom.style.overflow = 'hidden';
         /* hidden mode..:begin*/
         if (GUIDom.hidePictures) {
             dom.style.opacity = 0.12;

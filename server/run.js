@@ -15,7 +15,8 @@ webSocketServer.setup({
 apiRouter = new ApiRouter();
 apiRouter.setMap({
     SAPIUser: SAPIUser,
-    SAPIGame: SAPIGame
+    SAPIGame: SAPIGame,
+    SAPIChat: SAPIChat
 });
 
 /* links apiRouter and webSocketServer */
@@ -27,6 +28,7 @@ webSocketServer.onData = apiRouter.onData;
 /* init all components */
 sequencedInit(DB.init);
 sequencedInit(LogicUser.init);
+sequencedInit(ActionsChat.init);
 /* run all components */
 sequencedInit(webSocketServer.init);
 

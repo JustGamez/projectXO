@@ -143,7 +143,16 @@ DB = function () {
         query += setSQL.substr(0, setSQL.length - 1);
         query += " WHERE `id`=" + values.id;
         DB.query(query, callback);
-    }
+    };
+
+    /**
+     * Экраннирование данных.
+     * @param sourcevalue {*}
+     * @returns {*}
+     */
+    this.escape = function (sourcevalue) {
+        return MYSQL.escape(sourcevalue);
+    };
 };
 
 /**

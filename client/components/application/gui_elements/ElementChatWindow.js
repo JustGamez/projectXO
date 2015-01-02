@@ -113,7 +113,7 @@ ElementChatWindow = function () {
                 text += "\r\n";
             } else {
                 text += "<b style='font-size:9pt;letter-spacing:-2px;font-weight:normal' >";
-                text += message.timestamp;
+                text += message.timeHours + ":" + message.timeMinutes + ":" + message.timeSeconds + " ";
                 text += "</b>";
                 text += "<b style='font-size:10pt;letter-spacing:-2px;font-weight:normal' >";
                 text += user.firstName;
@@ -126,6 +126,8 @@ ElementChatWindow = function () {
         }
         dom.innerHTML = text;
         dom.redraw();
+        /* На данный момент это трюк\костыль */
+        dom.__dom.scrollTop = dom.__dom.scrollHeight;
     };
 
     /**
@@ -134,6 +136,11 @@ ElementChatWindow = function () {
      * @param inMessages {Array} массив вида [{userId:number, text:string, timestamp:number}, ...]
      */
     this.updateMessages = function (inMessages) {
+        for (var i in inMessages) {
+            inMessages[i].timeHours = new Date(inMessages[i].timestamp * 1000).getHours();
+            inMessages[i].timeMinutes = new Date(inMessages[i].timestamp * 1000).getMinutes();
+            inMessages[i].timeSeconds = new Date(inMessages[i].timestamp * 1000).getSeconds();
+        }
         messages = inMessages;
         self.redraw();
     }

@@ -151,6 +151,24 @@ LogicUser = function () {
     };
 
     /**
+     * Отправить всем.
+     * @param capiFunction {Function} CAPI function.
+     * @param arg1 любой параметр.
+     * @param arg2 любой параметр.
+     * @param arg3 любой параметр.
+     * @param arg4 любой параметр.
+     * @param arg5 любой параметр.
+     * @param arg6 любой параметр.
+     * @param arg7 любой параметр.
+     * @param arg8 любой параметр.
+     */
+    this.sendToAll = function (capiFunction, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) {
+        for (var userId in userToCntx) {
+            capiFunction.call(null, userId, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+        }
+    };
+
+    /**
      * Является ли пользователь онлайн.
      * @param userId id пользователя
      * @returns {boolean}
@@ -178,9 +196,7 @@ LogicUser = function () {
     var sendOnlineCountToAll = function () {
         var count;
         count = self.getOnlineCount();
-        for (var userId in userToCntx) {
-            CAPIUser.updateOnlineCount(userId, count);
-        }
+        self.sendToAll(CAPIUser.updateOnlineCount, count);
     };
 
     /**

@@ -47,6 +47,11 @@ ElementChatInput = function () {
      */
     var dom = null;
 
+    /**
+     * Максимльная длина сообщения.
+     */
+    var messageLengthLimit = 128;
+
     this.init = function () {
         dom = GUI.createInput();
         dom.opacity = 0.7;
@@ -69,6 +74,7 @@ ElementChatInput = function () {
         dom.width = this.width;
         dom.height = this.height;
         dom.bind(GUI.EVENT_KEY_DOWN, onKeyDown, this);
+        dom.bind(GUI.EVENT_KEY_UP, onKeyUp, this);
     };
 
     /**
@@ -101,12 +107,27 @@ ElementChatInput = function () {
     /**
      * По нажатию Enter-а будем вызывать калбэк и стирать текст из поля.
      * @param event {Object}
+     * @param sourceDom {Object}
      */
     var onKeyDown = function (event, sourceDom) {
+        if (sourceDom.value.length > messageLengthLimit) {
+            sourceDom.value = sourceDom.value.substr(0, messageLengthLimit);
+        }
         /* код клавиши Enter - 13, 0xC */
         if (event.keyCode == 13) {
             self.onSendByEnter.call(null, sourceDom.value);
             sourceDom.value = '';
         }
     };
+
+    /**
+     * По отпусканию клавиши, проверим размер текста на лимит.
+     * @param event {Object}
+     * @param sourceDom {Object}
+     */
+    var onKeyUp = function (event, sourceDom) {
+        if (sourceDom.value.length > messageLengthLimit) {
+            sourceDom.value = sourceDom.value.substr(0, messageLengthLimit);
+        }
+    }
 };

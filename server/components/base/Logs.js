@@ -22,7 +22,7 @@ Logs = function () {
      * @param details детали
      */
     this.log = function (message, level, details) {
-        var date, timestamp, logText, levelTitle;
+        var date, dateFormated, logText, levelTitle;
         // если не передан уровень, то считаем его детальным.
         if (!level)level = Logs.LEVEL_DETAIL;
         // если уровень лога ниже уровня срабатывания ничего не делаем.
@@ -30,13 +30,13 @@ Logs = function () {
         // сформируем сообщение лога.
         date = new Date();
         // тут мы получим "01-01-2014 15:55:55"
-        timestamp = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        dateFormated = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
         // превратим в строку переданные детали лога.
         details = JSON.stringify(details);
         // превратим уровень лога из константы в человеко-читаемый текст.
         levelTitle = typeTitles[level];
         // соединим время, текст уровня лога и сообщение лога в одну строку
-        logText = timestamp + ' ' + levelTitle + ' ' + message;
+        logText = dateFormated + ' ' + levelTitle + ' ' + message;
         // добавим к тексту лога детали, если они были переданы
         if (details) logText += ' ' + details;
         // выведем на экран

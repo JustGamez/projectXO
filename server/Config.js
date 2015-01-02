@@ -10,7 +10,21 @@ Config = {
         database: 'xo',
         charset: 'UTF8'
     },
-    SocNet:{
+    SocNet: {
         secretKey: 'X0x2PuCZQbC5wwX0lB5R'
+    },
+    Chat: {
+        /**
+         * Размер кэша, после заполнения, будет сливаться в БД.
+         */
+        cacheSize: 100,
+        /**
+         * Кол-во сообщений, считающихся последними.
+         */
+        lastMessagesCount: 5,
+        /**
+         * Максимальная длина сообщения в чате.
+         */
+        messageLengthLimit: 128
     }
 };

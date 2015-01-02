@@ -41,6 +41,7 @@ LogicUser = function () {
         var user = LogicUser.getUserById(userId);
         var friends = LogicUser.getFriendsById(userId);
         SAPIUser.sendMeOnlineCount();
+        SAPIChat.sendMeLastMessages();
     };
 
     /**

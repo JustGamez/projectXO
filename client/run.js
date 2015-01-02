@@ -20,7 +20,8 @@ window.onload = function () {
     apiRouter = new ApiRouter();
     apiRouter.setMap({
         CAPIUser: CAPIUser,
-        CAPIGame: CAPIGame
+        CAPIGame: CAPIGame,
+        CAPIChat: CAPIChat
     });
 
     /* Link ApiRouter and WebSocketClient */

@@ -42,6 +42,12 @@ GUI = function () {
     this.EVENT_KEY_DOWN = 6;
 
     /**
+     * Событие отпускания клавиши.
+     * @type {number}
+     */
+    this.EVENT_KEY_UP = 7;
+
+    /**
      * @type {string}
      */
     this.POINTER_HAND = 'hand';
@@ -53,6 +59,7 @@ GUI = function () {
     this.eventNames[this.EVENT_MOUSE_OVER] = 'mouseover';
     this.eventNames[this.EVENT_MOUSE_OUT] = 'mouseout';
     this.eventNames[this.EVENT_KEY_DOWN] = 'keydown';
+    this.eventNames[this.EVENT_KEY_UP] = 'keyup';
 
     /**
      * Создаёт элемент

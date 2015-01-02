@@ -7,6 +7,13 @@ SAPIChat = function () {
     this.sendMessage = function (message) {
         apiRouter.executeRequest('SAPIChat', 'sendMessage', arguments, [{connectionId: null}]);
     };
+
+    /**
+     * Запрос последних сообщений.
+     */
+    this.sendMeLastMessages = function () {
+        apiRouter.executeRequest('SAPIChat', 'sendMeLastMessages', arguments, [{connectionId: null}]);
+    }
 };
 
 /**
