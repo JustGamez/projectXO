@@ -16,6 +16,7 @@
  * @property color {String}
  * @property textShadow {String}
  * @property borderRadius {String}
+ * @property border {String}
  * @property borderTop {String}
  * @property borderRight {String}
  * @property borderBottom {String}
@@ -24,6 +25,8 @@
  * @property boxShadow {String}
  * @property lineHeight {Number}
  * @property background {String}
+ * @property transform {String}
+ * @property title {String}
  */
 GUIDom = function () {
     var self = this;
@@ -43,8 +46,10 @@ GUIDom = function () {
     /**
      * Создается элемент браузера
      * Настраиваются минимальные параметры
+     * @param type [string] input|div
+     * @param parent [GUIDom] родитель.
      */
-    this.init = function (type) {
+    this.init = function (type, parent) {
         if (type == 'input') {
             dom = document.createElement("input");
         } else {
@@ -63,7 +68,12 @@ GUIDom = function () {
             return false;
         };
         this.__dom = dom;
-        document.body.appendChild(dom);
+        if (parent == undefined) {
+            parent = document.body;
+        } else {
+            parent = parent.__dom;
+        }
+        parent.appendChild(dom);
     };
 
     /**
@@ -98,7 +108,16 @@ GUIDom = function () {
             if (this.innerHTML)dom.innerText = this.innerHTML;
             if (this.backgroundImage)dom.innerHTML = this.backgroundImage.replace('/images/', '');
         } else {
-            if (this.backgroundImage)dom.style.backgroundImage = 'url(' + GUI.getImageURL(this.backgroundImage) + ')';
+            var url;
+            if (this.backgroundImage) {
+                /* для абсолютного url, используем без изменений */
+                if (this.backgroundImage.indexOf('http://') != 0) {
+                    url = GUI.getImageURL(this.backgroundImage);
+                } else {
+                    url = this.backgroundImage;
+                }
+                dom.style.backgroundImage = 'url(' + url + ')';
+            }
             if (this.innerHTML)dom.innerHTML = this.innerHTML;
         }
         if (this.pointer) dom.style.cursor = this.pointer;
@@ -108,6 +127,7 @@ GUIDom = function () {
         if (this.color) dom.style.color = this.color;
         if (this.textShadow) dom.style.textShadow = this.textShadow;
         if (this.borderRadius) dom.style.borderRadius = this.borderRadius;
+        if (this.border) dom.style.border = this.border;
         if (this.borderTop) dom.style.borderTop = this.borderTop;
         if (this.borderRight) dom.style.borderRight = this.borderRight;
         if (this.borderBottom) dom.style.borderBottom = this.borderBottom;
@@ -116,6 +136,8 @@ GUIDom = function () {
         if (this.boxShadow) dom.style.boxShadow = this.boxShadow;
         if (this.lineHeight) dom.style.lineHeight = this.lineHeight;
         if (this.background) dom.style.background = this.background;
+        if (this.transform) dom.style.transform = this.transform;
+        if (this.title) dom.setAttribute('title', this.title);
     };
 
     /**

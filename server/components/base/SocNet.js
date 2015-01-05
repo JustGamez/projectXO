@@ -129,6 +129,12 @@ SocNet = function () {
         Logs.log('Query Variable ' + variable + ' not found', Logs.LEVEL_WARNING);
     };
 
+    /**
+     * Выполнить метод для соц сети. вКонтакте.
+     * @param method {String}
+     * @param params {Object}
+     * @param callback {Function}
+     */
     var executeMethod = function (method, params, callback) {
         /* https://api.vk.com/method/'''METHOD_NAME'''?'''PARAMETERS'''&access_token='''ACCESS_TOKEN''' */
         var url, options, req;
@@ -155,9 +161,18 @@ SocNet = function () {
         req.on('error', function (e) {
             Logs.log("SocNet.executeMethod request error:", Logs.LEVEL_ERROR, e);
         });
-    }
-}
-;
+    };
+
+    /**
+     * Возвращает url на профиль пользователя в социальной сети.
+     * @param socNetTypeId {Number} id социальной сети SocNet.TYPE_*
+     * @param socNetUserId {Number} id пользователя в соц.сети.
+     * @returns {string} url на профиль пользователя в соц.сети.
+     */
+    this.getUserProfileUrl = function (socNetTypeId, socNetUserId) {
+        return 'http://vk.com/id' + socNetUserId;
+    };
+};
 /**
  * Статичный класс.
  * @type {SocNet}

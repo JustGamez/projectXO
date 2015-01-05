@@ -41,6 +41,12 @@ PageBackground = function PageMain() {
      */
     this.elementScoreIndicator = null;
 
+    /**
+     * Элемент списка друзей.
+     * @type {ElementFriendsType}
+     */
+    this.elementFriendsType = null;
+
     this.init = function () {
         var element;
         /* Задний фон */
@@ -88,6 +94,16 @@ PageBackground = function PageMain() {
         });
         self.elements.push(element);
         self.elementChatInput = element;
+        /* Лента друзей */
+        element = GUI.createElement('ElementPhoto', {
+            x: 138,
+            y: 357,
+            height: 191,
+            width: 57
+
+        });
+        self.elements.push(element);
+        self.elementFriendsType = element;
     };
 
     /**
@@ -125,6 +141,16 @@ PageBackground = function PageMain() {
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
         self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
         self.elementChatWindow.updateMessages(messages);
+        /* Тестовый пользователь */
+        self.elementFriendsType.update({
+            src: 'http://cs623718.vk.me/v623718650/11e10/vvv9AnILSH0.jpg',
+            title: 'Виктория Степанова',
+            onClick: function () {
+                //119009650
+                window.open(SocNet.getUserProfileUrl(SocNet.TYPE_VK, 119009650), '_blank');
+            },
+            online: true
+        });
     };
 
     /**

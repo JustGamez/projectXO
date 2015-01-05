@@ -94,23 +94,25 @@ GUI = function () {
 
     /**
      * Создаёт дом, инициализирует его и возвращает на него ссылку.
+     * @param parent {GUIDom} родитель, в который будет добавлен дом.
      * @returns {GUIDom}
      */
-    this.createDom = function () {
+    this.createDom = function (parent) {
         var dom;
-        dom = new GUIDom();
-        dom.init();
+        dom = new GUIDom(parent);
+        dom.init(undefined, parent);
         return dom;
     };
 
     /**
      * Создаёт дом инпута, иницализирует его и возврщает на него ссыслку.
+     * @param parent {GUIDom} родитель, в который будет добавлен дом.
      * @returns {GUIDom}
      */
-    this.createInput = function () {
+    this.createInput = function (parent) {
         var dom;
         dom = new GUIDom();
-        dom.init('input');
+        dom.init('input', parent);
         return dom;
     };
 
