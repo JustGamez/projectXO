@@ -18,6 +18,12 @@ PageMain = function PageMain() {
     this.elements = [];
 
     /**
+     * Элемент списка друзей.
+     * @type {ElementFriendsType}
+     */
+    this.elementFriendsType = null;
+
+    /**
      * Создадим тут все элементы страницы.
      */
     this.init = function () {
@@ -115,6 +121,15 @@ PageMain = function PageMain() {
             onChange: LogicPageMain.onRadioSignChange
         });
         self.elements.push(element);
+        /* Лента друзей */
+        element = GUI.createElement('ElementPhoto', {
+            x: 138,
+            y: 357,
+            height: 191,
+            width: 57
+        });
+        self.elements.push(element);
+        self.elementFriendsType = element;
     };
 
     /**
@@ -141,10 +156,26 @@ PageMain = function PageMain() {
     };
 
     /**
+     * Настройка перед отрисовкой.
+     */
+    this.preset = function () {
+        /* Тестовый пользователь */
+        self.elementFriendsType.update({
+            src: 'http://cs623718.vk.me/v623718650/11e10/vvv9AnILSH0.jpg',
+            title: 'Виктория Степанова',
+            onClick: function () {
+                //119009650
+                window.open(SocNet.getUserProfileUrl(SocNet.TYPE_VK, 119009650), '_blank');
+            },
+            online: true
+        });
+    };
+    /**
      * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
         if (!showed)return;
+        self.preset();
         for (var i in self.elements) {
             self.elements[i].redraw();
         }

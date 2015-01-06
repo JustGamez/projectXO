@@ -174,7 +174,7 @@ ElementPhoto = function () {
      */
     this.hide = function () {
         if (showed == false) return;
-        showed = true;
+        showed = false;
         domRegion.hide();
         domBorder.hide();
         domFrame.hide();
@@ -192,8 +192,10 @@ ElementPhoto = function () {
         domBorder.transform = 'rotate(' + getRealRandom(src) + 'deg)';
         if (online) {
             domOnlineIndicator.backgroundImage = '/images/photo/iconOnline.png';
+            domOnlineIndicator.title = 'онлайн';
         } else {
             domOnlineIndicator.backgroundImage = '/images/photo/iconOffline.png';
+            domOnlineIndicator.title = 'оффлайн';
         }
         domRegion.redraw();
         domPhoto.redraw();
