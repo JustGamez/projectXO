@@ -1,10 +1,4 @@
 /**
- * Компонент обслуживающий соединения на сервере.
- * А так же возвращающий клиентский код.
- * @constructor
- */
-
-/**
  * Подключаем nodeJS модули.
  */
 var WEBSOCKET = require('websocket');
@@ -12,6 +6,11 @@ var HTTP = require('http');
 var FS = require('fs');
 var PATH = require('path');
 
+/**
+ * Компонент обслуживающий соединения на сервере.
+ * А так же возвращающий клиентский код.
+ * @constructor
+ */
 WebSocketServer = function () {
     var self = this;
 
@@ -47,6 +46,11 @@ WebSocketServer = function () {
      * @type {string}
      */
     var imagesPath = null;
+
+    /**
+     * Настройка компонента.
+     * @param setup {Object}
+     */
     this.setup = function (setup) {
         reloadClientCodeEveryRequest = setup.reloadClientCodeEveryRequest;
         port = setup.port;
@@ -101,8 +105,9 @@ WebSocketServer = function () {
     this.onData = null;
 
     /**
-     * Отправляет данные клиенту
-     * @param data
+     * Отправляет данные клиенту.
+     * @param data {String} данные для отправки, строка данных.
+     * @param id {Number} id соединения
      */
     this.sendData = function (data, id) {
         if (!connectionStack[id]) {
@@ -166,9 +171,10 @@ WebSocketServer = function () {
      */
     var loadClientCode = function () {
         Logs.log("Load client code.");
-        // сформирем клинтский код.
+        /* Сформируем клинтский код. */
         clientCode = "";
         clientCode += "<HTML><HEAD><meta charset='utf-8' />";
+        clientCode += "<script src='http://vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
         clientCode += getClientJSCode();
         clientCode += "</HEAD><BODY>";
         clientCode += getClientImageCode();
@@ -180,7 +186,7 @@ WebSocketServer = function () {
      */
     var getClientJSCode = function () {
         var jsFiles;
-        // загрузим список файлов клиентского кода.
+        /* Загрузим список файлов клиентского кода. */
         jsFiles = getFileListRecursive(clientCodePath);
         return clientCodePrepareCode(jsFiles);
     };
@@ -241,9 +247,11 @@ WebSocketServer = function () {
                 path = path.replace(clientCodePath, '');
                 file_content = FS.readFileSync(path);
             }
-            clientCode += '\r\n<script type="text/javascript">' + "\r\n/* " + path + "*/\r\n" + file_content + '\r\n</script>';
+            clientCode += "\r\n<script type='text/javascript'>" +
+            "\r\n/* " + path + " */\r\n" +
+            file_content + "\r\n</script>";
             name = PATH.basename(path, '.js');
-            /* добавим пути к файлам компонент, это нужно для отладки */
+            /* Добавим пути к файлам компонент, это нужно для отладки */
             clientCode += '<script>' +
             'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"' +
             '};</script>';

@@ -33,7 +33,7 @@ sequencedInit = function (initFunction) {
 };
 
 var tryInitNext = function () {
-    if (!sequencedInitStack.length){
+    if (!sequencedInitStack.length) {
         log("Init stack empty now.");
         return;
     }
@@ -45,3 +45,21 @@ var tryInitNext = function () {
         tryInitNext();
     });
 };
+
+/**
+ * Динициализация\остановка системы.
+ */
+var deInitCallbacks = [];
+addDeInitCallback = function (callback) {
+    deInitCallbacks.push(callback);
+};
+
+/**
+ * При вызове process.exit(), выполниться каллбэки деинициализации.
+ */
+process.on('exit', function () {
+    log("Deinit callbacks is raised.");
+    for (var i in deInitCallbacks) {
+        deInitCallbacks[i].call();
+    }
+});

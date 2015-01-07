@@ -8,17 +8,31 @@ ActionsChat = function () {
      */
     this.sendMessage = function (userId, text) {
         var timestamp;
-        Logs.log("ActionsXO.sendMessage", Logs.LEVEL_DETAIL);
         timestamp = Math.floor(new Date() / 1000);
         LogicChatCache.add(userId, text, timestamp);
         LogicUser.sendToAll(CAPIChat.getNewMessage, userId, text, timestamp);
-        /* Сброси кэш, если надо */
+        /* Сбросим кэш, если надо */
         var cacheSize;
         cacheSize = LogicChatCache.getCacheSize();
-        if (cacheSize > Config.Chat.cacheSize) {
-            DataChat.saveList(LogicChatCache.getLastMessages(cacheSize));
-            LogicChatCache.sliceCache(Config.Chat.lastMessagesCount);
+        Logs.log("ActionsXO.sendMessage. CacheSize=" + cacheSize, Logs.LEVEL_DETAIL);
+        if (cacheSize >= Config.Chat.cacheSize) {
+            self.flushCache(Config.Chat.lastMessagesCount);
         }
+    };
+
+    /**
+     * Сольём кэш чата.
+     * @param retailSize {Number} сколько оставить в кэше.
+     */
+    this.flushCache = function (retailSize) {
+        var cacheSize;
+        if (!retailSize) {
+            retailSize = 0;
+        }
+        cacheSize = LogicChatCache.getCacheSize();
+        DataChat.saveList(LogicChatCache.getFirstMessages(cacheSize - retailSize));
+        LogicChatCache.sliceCache(cacheSize - retailSize);
+        Logs.log('Chat cache flushed.');
     };
 
     /**

@@ -1,13 +1,16 @@
 window.onload = function () {
 
-    // совместимость клиентского и серверного кода.
+    /* Эмуляция совместимости клиентского и серверного кода. */
     GLOBAL = window;
     process = {};
     process.exit = function () {
-        console.log("Внезапное завершение работы!")
+        console.log("Внезапное завершение работы!");
         document.body.innerHTML = 'Всё поламалось!';
         throw new Error("Всё поламалось!");
     };
+
+    /** init some cpomopnents */
+    SocNet.initVK();
 
     /* WebSocket Client */
     webSocketClient = new WebSocketClient();
@@ -27,7 +30,10 @@ window.onload = function () {
     /* Link ApiRouter and WebSocketClient */
     apiRouter.sendData = webSocketClient.sendData;
     webSocketClient.onData = apiRouter.onData;
-    webSocketClient.onConnect = apiRouter.onConnect;
+    webSocketClient.onConnect = function (connectionId) {
+        apiRouter.onConnect(connectionId);
+        LogicUser.authorize();
+    };
     webSocketClient.onDisconnect = apiRouter.onDisconnect;
 
     /* PageController */
@@ -41,12 +47,9 @@ window.onload = function () {
 
     pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
 
-    // client specific code
+    /* client specific code */
     SocNet.parseSocNetURL();
 
-    // running
+    /* running */
     webSocketClient.run();
-
-    // executing some code
-    LogicUser.authorize();
 };

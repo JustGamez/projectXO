@@ -172,6 +172,31 @@ SocNet = function () {
     this.getUserProfileUrl = function (socNetTypeId, socNetUserId) {
         return 'http://vk.com/id' + socNetUserId;
     };
+
+    /**
+     * Открыть диалог приглашения друзей.
+     * @returns {boolean}
+     */
+    this.openInviteFriendDialog = function () {
+        VK.callMethod('showInviteBox');
+    };
+
+    /**
+     * Инициализация VK.
+     * @see WebSocketServer : var loadClientCode {Function}
+     */
+    this.initVK = function () {
+        var apiVersoin, onSuccess, onFail;
+        apiVersion = '5.5';
+        onSuccess = function () {
+            Logs.log("VK client API inited.", Logs.LEVEL_NOTIFY);
+        };
+        onFail = function () {
+            // @todo send fail to server? may be...
+            alert('Произошла ошибка доступа к вКонтакте, обратитесь к автору приложения.');
+        };
+        VK.init(onSuccess, onFail, apiVersion);
+    }
 };
 /**
  * Статичный класс.

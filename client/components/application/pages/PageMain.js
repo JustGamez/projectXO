@@ -122,11 +122,13 @@ PageMain = function PageMain() {
         });
         self.elements.push(element);
         /* Лента друзей */
-        element = GUI.createElement('ElementPhoto', {
+        element = GUI.createElement('ElementFriendsType', {
             x: 138,
             y: 357,
-            height: 191,
-            width: 57
+            spacing: 79,
+            columns: 5,
+            friends: [],
+            onClickDummy: SocNet.openInviteFriendDialog
         });
         self.elements.push(element);
         self.elementFriendsType = element;
@@ -160,7 +162,7 @@ PageMain = function PageMain() {
      */
     this.preset = function () {
         /* Тестовый пользователь */
-        self.elementFriendsType.update({
+        self.elementFriendsType.update([{
             src: 'http://cs623718.vk.me/v623718650/11e10/vvv9AnILSH0.jpg',
             title: 'Виктория Степанова',
             onClick: function () {
@@ -168,7 +170,7 @@ PageMain = function PageMain() {
                 window.open(SocNet.getUserProfileUrl(SocNet.TYPE_VK, 119009650), '_blank');
             },
             online: true
-        });
+        }]);
     };
     /**
      * Обновляем онлайн индикатор и индикатор очков.

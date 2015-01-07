@@ -12,6 +12,11 @@ WebSocketClient = function () {
     var host = null;
 
     /**
+     * По сути это просто номер соединения в пределах жизни скрипта.
+     */
+    var connectionId = 0;
+
+    /**
      * Порт сервера.
      * @type {int}
      */
@@ -23,7 +28,6 @@ WebSocketClient = function () {
     this.onData = null;
     this.onConnect = null;
     this.onDisconnect = null;
-
 
     /**
      * Сюда мы будем получать данные и отправлять их на сервер.
@@ -84,9 +88,16 @@ WebSocketClient = function () {
     var init = function () {
         var uri;
         Logs.log("WebSocketClient запущен.");
+        connect();
+    };
+
+    /**
+     * Реализовать коннект.
+     */
+    var connect = function () {
         uri = "ws://" + host + ":" + port + "/ws";
         socket = new WebSocket(uri);
-        // установим обработчики.
+        /* установим обработчики. */
         socket.onopen = onOpen;
         socket.onclose = onClose;
         socket.onmessage = onMessage;
@@ -98,10 +109,10 @@ WebSocketClient = function () {
      */
     var onOpen = function () {
         isConnected = true;
-        // на случай, если буфер не пуст.
+        /* На случай, если буфер не пуст. */
         trySend();
         Logs.log("WebSocketClient: Соединение установленно:" + host + ':' + port);
-        self.onConnect();
+        self.onConnect(++connectionId);
     };
 
     /**
@@ -116,7 +127,17 @@ WebSocketClient = function () {
             Logs.log("WebSocketClient: Соединение закрыто, отсутствует соединение.");
         }
         Logs.log('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
-        self.onDisconnect();
+        self.onDisconnect(connectionId);
+        tryReconnect();
+    };
+
+    var tryReconnect = function () {
+        if (isConnected == false) {
+            Logs.log('Try reconnect', Logs.LEVEL_NOTIFY);
+            connect();
+            /* Попытка реконнетка, через некоторое время */
+            setTimeout(tryReconnect, 8958);
+        }
     };
 
     /**
@@ -150,16 +171,16 @@ WebSocketClient = function () {
         if (!packetBuffer.length) {
             return;
         }
-        // если нет соединения пробуем позже.
+        /* Если нет соединения пробуем позже. */
         if (!isConnected) {
             setTimeout(trySend, self.trySendTimeout);
             return;
         }
-        // берем элемент из буфера.
+        /* Берем элемент из буфера. */
         data = packetBuffer.shift();
         socket.send(data);
         /* Logs.log("WebSocketClient.send data: length=" + data.length, Logs.LEVEL_DETAIL); */
-        // остальные данные отправим позже.
+        /* Остальные данные отправим позже. */
         if (packetBuffer.length) {
             setTimeout(trySend, self.trySendTimeout);
         }

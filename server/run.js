@@ -25,7 +25,11 @@ webSocketServer.onConnect = apiRouter.onConnect;
 webSocketServer.onDisconnect = apiRouter.onDisconnect;
 webSocketServer.onData = apiRouter.onData;
 
+/* set deinit callbacks */
+addDeInitCallback(ActionsChat.flushCache);
+
 /* init all components */
+sequencedInit(CommandLineController.init);
 sequencedInit(DB.init);
 sequencedInit(LogicUser.init);
 sequencedInit(ActionsChat.init);
@@ -36,4 +40,3 @@ sequencedInit(function (afterInitCallback) {
     Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
     afterInitCallback();
 });
-

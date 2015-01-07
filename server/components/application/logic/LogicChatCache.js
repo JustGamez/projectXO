@@ -23,24 +23,42 @@ LogicChatCache = function () {
     };
 
     /**
-     * Взять последние сообщения.
-     * @param count {number}
+     * Вернёт последнии сообщения.
+     * Сообщения будут отсортированы по времени.
+     * @param count {number} кол-во сообщений.
+     * @returns {Array} массив сообщений.
      */
     this.getLastMessages = function (count) {
-        return cache.slice(-count);
+        var messages;
+        messages = cache.slice(-count);
+        messages.sort(function (a, b) {
+            if (a.timestamp < b.timestamp) return -1;
+            if (a.timestamp > b.timestamp) return +1;
+            return 0;
+        });
+        return messages;
+    };
+
+    /**
+     * Вернёт первые сообщения.
+     * @param count {number} кол-во сообщений.
+     * @returns {Array} массив сообщений.
+     */
+    this.getFirstMessages = function (count) {
+        return cache.slice(0, count);
     };
 
     /**
      * Возвращает текущий размер кэша.
-     * @returns {Number}
+     * @returns {Number} кол-во сообщений в кэше.
      */
     this.getCacheSize = function () {
         return cache.length;
     };
 
     /**
-     * Убрезать кэш, оставим последние собщения.
-     * @param size {number}
+     * Обрежет кэш, оставим последние собщения.
+     * @param size {number} кол-во сообщний на конце, которые останутся.
      */
     this.sliceCache = function (size) {
         cache = cache.slice(-size);
