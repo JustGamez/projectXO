@@ -27,7 +27,7 @@ LogicUser = function () {
     };
 
     /**
-     * Авторизация пользвоателя из соц сети вКонтакте.
+     * Авторизация пользователя из соц сети вКонтакте.
      * @param socNetUserId
      * @param authParams
      * @param cntx
@@ -58,6 +58,7 @@ LogicUser = function () {
         DataUser.getById(userId, function (user) {
             if (user) {
                 refreshUserSocNetInfo(user, function (user) {
+                    user.online = self.isUserOnline(user.id);
                     CAPIUser.updateUserInfo(toUserId, user);
                 });
             } else {
@@ -134,7 +135,7 @@ LogicUser = function () {
     var authorizeSendSuccess = function (user, cntx) {
         /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
-        sendOnlineCountToAll();
+        sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
     };
 
@@ -192,11 +193,13 @@ LogicUser = function () {
 
     /**
      * Отправка всем данных об онлайн пользователях.
+     * @param userId {Number}
+     * @param direction {Boolean} true - если пользователь вошел в игру, false - если вышел.
      */
-    var sendOnlineCountToAll = function () {
+    var sendOnlineCountToAll = function (userId, direction) {
         var count;
         count = self.getOnlineCount();
-        self.sendToAll(CAPIUser.updateOnlineCount, count);
+        self.sendToAll(CAPIUser.updateOnlineCount, count, userId, direction);
     };
 
     /**
@@ -269,7 +272,7 @@ LogicUser = function () {
         if (cntx.userId) {
             onLogout(cntx.userId);
             userDeleteConn(cntx);
-            sendOnlineCountToAll();
+            sendOnlineCountToAll(cntx.userId, false);
         }
     };
 
@@ -282,7 +285,7 @@ LogicUser = function () {
         if (cntx.userId) {
             onLogout(cntx.userId);
             userDeleteConn(cntx);
-            sendOnlineCountToAll();
+            sendOnlineCountToAll(cntx.userId, false);
         }
     };
 

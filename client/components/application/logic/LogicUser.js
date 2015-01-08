@@ -1,5 +1,5 @@
 LogicUser = function () {
-
+    var self = this;
     /**
      * Id пользователя под которым мы сидим.
      */
@@ -10,12 +10,6 @@ LogicUser = function () {
      * @type {Array}
      */
     var users = [];
-
-    /**
-     * Списки друзей.
-     * @type {Array}
-     */
-    var friends = [];
 
     /** Кол-во онлайн пользователей */
     var onlineCount = null;
@@ -37,9 +31,7 @@ LogicUser = function () {
     this.authorizeSuccess = function (userId) {
         authorizedUserId = userId;
         Logs.log("Authorization success. userId:" + userId, Logs.LEVEL_NOTIFY);
-
         var user = LogicUser.getUserById(userId);
-        var friends = LogicUser.getFriendsById(userId);
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
     };
@@ -59,73 +51,58 @@ LogicUser = function () {
      */
     this.getUserById = function (userId) {
         if (users[userId]) {
+            /* Догрузим данные, это немного костыль... но время деньги :)*/
+            if (!users[userId].socNetUserId) {
+                self.loadUserInfoById(userId);
+            }
             return users[userId];
         } else {
-            this.loadUserInfoById(userId);
+            self.loadUserInfoById(userId);
             return {
                 id: null,
-                score: null
+                score: null,
+                firstName: '',
+                lastName: ''
             };
         }
     };
 
     /**
-     * Запомним, чеё загрузки мы уже ждём, что бы не повторять лишних запросов.
+     * Запомним, чьи загрузки мы уже ждём, что бы не повторять лишних запросов.
      * @type {Array}
      */
-    var waitForLoading = [];
+    var waitForLoadingUser = [];
+
     /**
      * Загрузить данные о пользователе.
      * @param userId {int}
      */
     this.loadUserInfoById = function (userId) {
         if (authorizedUserId == null)return;
-        if (!waitForLoading[userId]) {
-            waitForLoading[userId] = true;
+        if (!waitForLoadingUser[userId]) {
+            waitForLoadingUser[userId] = true;
             SAPIUser.sendMeUserInfo(userId);
         }
     };
 
     /**
-     * Обновить данные о пользователе
-     * @param user
+     * Обновить данные о пользователе.
+     * @param user {Object}
      */
     this.updateUserInfo = function (user) {
-        waitForLoading[user.id] = false;
-        users[user.id] = user;
-        pageController.redraw();
-    };
-
-    /**
-     * Получить список друзей по внутренему id юзера
-     * @param userId int внутрений id юзера.
-     * @returns {*}
-     */
-    this.getFriendsById = function (userId) {
-        if (friends[userId]) {
-            return friends[userId];
-        } else {
-            this.loadFriendsById(userId);
-            return null;
+        waitForLoadingUser[user.id] = false;
+        if (users[user.id] == undefined) {
+            /* Заглушка */
+            users[user.id] = {
+                id: user.id,
+                firstName: '',
+                lastName: ''
+            };
         }
-    };
-
-    /**
-     * Загрузить данные о друзьях по внутренему ид
-     * @param userId int внутрений id юзера.
-     */
-    this.loadFriendsById = function (userId) {
-        SAPIUser.sendMeFriends(userId);
-    };
-
-    /**
-     * Обновить данные о друзьях
-     * @param userId внутрений id юзера.
-     * @param friendList внутрение id друзей.
-     */
-    this.updateFriends = function (userId, friendList) {
-        friends[userId] = friendList;
-        Logs.log("LogicUser.udpateFriends for userId=" + userId, Logs.LEVEL_DETAIL);
+        for (var paramName in user) {
+            users[user.id][paramName] = user[paramName];
+        }
+        pageController.redraw();
     };
 
     /** Возвращает количество онлайн игроков. */
@@ -137,8 +114,9 @@ LogicUser = function () {
      * Обновим данные о кол-во онлайн пользователей.
      * @param count кол-во онлайн пользователей.
      */
-    this.updateOnlineCount = function (count) {
+    this.updateOnlineCount = function (count, userId, direction) {
         onlineCount = count;
+        self.updateUserInfo({id: userId, online: direction});
         pageController.redraw();
     };
 };

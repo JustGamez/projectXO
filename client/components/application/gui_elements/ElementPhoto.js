@@ -116,6 +116,13 @@ ElementPhoto = function () {
     var regionHeight = 95;
 
     /**
+     * Пользовательская информация.
+     * Будет передаваться при клике.
+     * @type {{}}
+     */
+    var photoInfo = {};
+
+    /**
      * Создадим домы и настроем их.
      */
     this.init = function () {
@@ -213,6 +220,7 @@ ElementPhoto = function () {
         title = params.title;
         onClick = params.onClick;
         online = params.online;
+        photoInfo = params.photoInfo;
     };
 
     /**
@@ -243,6 +251,6 @@ ElementPhoto = function () {
      * И в процессе может меняться.
      */
     var onClickMediator = function () {
-        onClick.call();
+        onClick.call(null, photoInfo);
     }
 };

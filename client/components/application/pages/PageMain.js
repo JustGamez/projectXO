@@ -161,17 +161,29 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        /* Тестовый пользователь */
-        self.elementFriendsType.update([{
-            src: 'http://cs623718.vk.me/v623718650/11e10/vvv9AnILSH0.jpg',
-            title: 'Виктория Степанова',
-            onClick: function () {
-                //119009650
-                window.open(SocNet.getUserProfileUrl(SocNet.TYPE_VK, 119009650), '_blank');
-            },
-            online: true
-        }]);
+        var friends, ids, user, currentUserId;
+        friends = [];
+        if (currentUserId = LogicUser.getCurrentUser().id) {
+            ids = LogicFriends.getFriendsById(currentUserId);
+        }
+        if (ids) {
+            for (var i in ids) {
+                user = LogicUser.getUserById(ids[i]);
+                if (!user)continue;
+                friends.push({
+                    src: user.photo50,
+                    title: user.firstName + " " + user.lastName,
+                    online: user.online,
+                    onClick: function (photoInfo) {
+                        window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+                    },
+                    photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
+                });
+            }
+        }
+        self.elementFriendsType.update(friends);
     };
+
     /**
      * Обновляем онлайн индикатор и индикатор очков.
      */
@@ -182,4 +194,5 @@ PageMain = function PageMain() {
             self.elements[i].redraw();
         }
     };
-};
+}
+;

@@ -32,9 +32,11 @@ CAPIUser = function () {
      * Обновить кол-во онлайн пользователей.
      * @param toUserId кому отправляем
      * @param count кол-во онлайн игроков.
+     * @param userId {Number}
+     * @param direction {Boolean} true - вошел в игру, false - вышел из игры.
      */
-    this.updateOnlineCount = function (toUserId, count) {
-        LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateOnlineCount', [count]);
+    this.updateOnlineCount = function (toUserId, count, userId, direction) {
+        LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateOnlineCount', [count, userId, direction]);
     }
 };
 

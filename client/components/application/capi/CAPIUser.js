@@ -25,16 +25,18 @@ CAPIUser = function () {
      * @param friends [] список друзей.
      */
     this.updateFriends = function (cntx, userId, friends) {
-        LogicUser.updateFriends(userId, friends);
+        LogicFriends.updateFriends(userId, friends);
     };
 
     /**
      * Обновляем кол-во о нлайн игроков.
      * @param cntx контекст соединения.
      * @param count кол-во онлайн игроков.
+     * @param userId {Number}
+     * @param direction {Boolean} true - вошел в игру, false - вышел из игры.
      */
-    this.updateOnlineCount = function (cntx, count) {
-        LogicUser.updateOnlineCount(count);
+    this.updateOnlineCount = function (cntx, count, userId, direction) {
+        LogicUser.updateOnlineCount(count, userId, direction);
     }
 };
 
