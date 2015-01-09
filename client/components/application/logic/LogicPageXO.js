@@ -46,7 +46,12 @@ LogicPageXO = function () {
         winLine = LogicXO.findWinLine(game);
         game = LogicXO.setOutcomeResults(game, winLine);
         LogicGame.updateInfo(game);
-        SAPIGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
+        if (game.isRandom) {
+            SAPIGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
+        }
+        if (game.vsRobot) {
+            SAPIRobotGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
+        }
     };
 }
 ;

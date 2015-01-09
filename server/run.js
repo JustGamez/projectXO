@@ -16,7 +16,8 @@ apiRouter = new ApiRouter();
 apiRouter.setMap({
     SAPIUser: SAPIUser,
     SAPIGame: SAPIGame,
-    SAPIChat: SAPIChat
+    SAPIChat: SAPIChat,
+    SAPIRobotGame: SAPIRobotGame
 });
 
 /* links apiRouter and webSocketServer */

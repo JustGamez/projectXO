@@ -14,7 +14,7 @@ ActionsChat = function () {
         /* Сбросим кэш, если надо */
         var cacheSize;
         cacheSize = LogicChatCache.getCacheSize();
-        Logs.log("ActionsXO.sendMessage. CacheSize=" + cacheSize, Logs.LEVEL_DETAIL);
+        Logs.log("ActionsChat.sendMessage. CacheSize=" + cacheSize, Logs.LEVEL_DETAIL);
         if (cacheSize >= Config.Chat.cacheSize) {
             self.flushCache(Config.Chat.lastMessagesCount);
         }

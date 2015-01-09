@@ -259,7 +259,7 @@ LogicUser = function () {
         gameIds = LogicGameStore.getIdsForUserId(userId);
         LogicWaitersStack.deleteByUserId(userId);
         for (var i in gameIds) {
-            ActionsXO.closeGame(userId, gameIds[i]);
+            ActionsRandomGame.closeGame(userId, gameIds[i]);
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
     };

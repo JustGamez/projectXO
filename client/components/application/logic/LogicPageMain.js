@@ -11,7 +11,11 @@ LogicPageMain = function () {
      */
     this.onPlayButtonClick = function () {
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
-        SAPIGame.requestRandomGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
+        if (LogicXOSettings.requestedVsRobot) {
+            SAPIRobotGame.startGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
+        } else {
+            SAPIGame.requestRandomGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
+        }
     };
 
     /**

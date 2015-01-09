@@ -102,7 +102,7 @@ LogicXO = function () {
             creatorUserId: creatorUserId,
             joinerUserId: 0,
             creatorSignId: creatorSignId,
-            joinerSignId: 0,
+            joinerSignId: vsRobot ? LogicXO.SIGN_ID_Empty : 0,
             fieldTypeId: fieldTypeId,
             isRandom: (isRandom) ? 1 : 0,
             isInvitation: (isInvitation) ? 1 : 0,
@@ -206,7 +206,7 @@ LogicXO = function () {
                 game.OUserId = game.creatorUserId;
             }
         }
-        /* Только приглашенный имеет знак*/
+        /* Только приглашенный имеет знак */
         if (game.creatorSignId == LogicXO.SIGN_ID_Empty && game.joinerSignId != LogicXO.SIGN_ID_Empty) {
             if (game.joinerSignId == LogicXO.SIGN_ID_X) {
                 game.XUserId = game.joinerUserId;
@@ -216,15 +216,18 @@ LogicXO = function () {
                 game.OUserId = game.joinerUserId;
             }
         }
-        if (!game.XUserId || !game.OUserId) {
-            Logs.log("Не удалось установить участников", Logs.LEVEL_FATAL_ERROR, game);
+        if (!game.vsRobot && (!game.XUserId || !game.OUserId)) {
+            Logs.log("Не удалось установить участников. Игра без робота.", Logs.LEVEL_FATAL_ERROR, game);
+        }
+        if (game.vsRobot && (!(game.XUserId > 0 && game.OUserId == 0) && !(game.XUserId == 0 && game.OUserId > 0))) {
+            Logs.log("Не удалось установить участников. Игра с роботом.", Logs.LEVEL_FATAL_ERROR, game);
         }
         return game;
     };
 
     /**
      * Запустить игру.
-     * @param game
+     * @param game {Object}
      * @returns {*}
      */
     this.run = function (game) {
@@ -366,7 +369,7 @@ LogicXO = function () {
             lineId: 0,
             x: 0,
             y: 0
-};
+        };
         /* Если найден хотя бы один результат */
         if (lastResult) {
             result = {

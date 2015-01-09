@@ -1,60 +1,27 @@
-SAPIGame = function () {
+SAPIRobotGame = function () {
 
     /**
-     * Запрос на создание игры.
+     * Создание игры с роботом
      * @param cntx {Object} контекст соединения.
      * @param fieldTypeId {Number} тип поля LogicXO.FIELD_TYPE_ID_*
      * @param signId {Number} тип знака LogicXO.SIGN_ID_*
      */
-    this.requestRandomGame = function (cntx, fieldTypeId, signId) {
+    this.startGame = function (cntx, fieldTypeId, signId) {
         if (!cntx.isAuthorized) {
-            Logs.log("SAPIGame.startRandomGame: must be authorized", Logs.LEVEL_WARNING);
+            Logs.log("SAPIRobotGame.startGame: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
         if (!fieldTypeId || !(fieldTypeId == LogicXO.FIELD_TYPE_3X3 || fieldTypeId == LogicXO.FIELD_TYPE_15X15)) {
-            Logs.log("SAPIGame.startRandomGame: must have fieldTypeId", Logs.LEVEL_WARNING, fieldTypeId);
+            Logs.log("SAPIRobotGame.startGame: must have fieldTypeId", Logs.LEVEL_WARNING, fieldTypeId);
             return;
         }
         if (!signId || !(signId == LogicXO.SIGN_ID_X || signId == LogicXO.SIGN_ID_O || signId == LogicXO.SIGN_ID_Empty)) {
-            Logs.log("SAPIGame.startRandomGame: must have signId", Logs.LEVEL_WARNING, signId);
+            Logs.log("SAPIRobotGame.startGame: must have signId", Logs.LEVEL_WARNING, signId);
             return;
         }
-        ActionsRandomGame.requestRandomGame(cntx.userId, fieldTypeId, signId, function (game) {
+        ActionsRobotGame.createGame(cntx.userId, fieldTypeId, signId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
-            CAPIGame.updateInfo(game.joinerUserId, game);
             CAPIGame.gameCreated(game.creatorUserId, game.id);
-            CAPIGame.gameCreated(game.joinerUserId, game.id);
-        });
-    };
-
-    this.cancelRandomGameRequests = function (cntx) {
-        if (!cntx.isAuthorized) {
-            Logs.log("SAPIGame.cancelRandomGameRequest: must be authorized", Logs.LEVEL_WARNING);
-            return;
-        }
-        ActionsRandomGame.cancelRandomGameRequests(cntx.userId);
-    };
-
-    /**
-     * Закроем игру, обычно это означает, что игрок вышел из игры.
-     * @param cntx {Object} контекст соединения.
-     * @param gameId {Number} id игры
-     */
-    this.closeGame = function (cntx, gameId) {
-        if (!cntx.isAuthorized) {
-            Logs.log("SAPIGame.closeGame: must be authorized", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.closeGame: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
-            LogicGameStore.delete(game.id);
-            DataGame.save(game, function (game) {
-                CAPIGame.updateInfo(game.creatorUserId, game);
-                CAPIGame.updateInfo(game.joinerUserId, game);
-            });
         });
     };
 
@@ -87,7 +54,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
             return;
         }
-        ActionsRandomGame.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
+        ActionsRobotGame.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
             /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
             if (game.status != LogicXO.STATUS_RUN) {
                 /* Только что кто-то выиграл? */
@@ -97,16 +64,15 @@ SAPIGame = function () {
                 LogicGameStore.delete(game.id);
                 DataGame.save(game, function (game) {
                     CAPIGame.updateInfo(game.creatorUserId, game);
-                    CAPIGame.updateInfo(game.joinerUserId, game);
                 })
             }
             CAPIGame.updateInfo(game.creatorUserId, game);
-            CAPIGame.updateInfo(game.joinerUserId, game);
         });
     };
 };
+
 /**
  * Статичный класс.
- * @type {SAPIGame}
+ * @type {SAPIRobotGame}
  */
-SAPIGame = new SAPIGame();
+SAPIRobotGame = new SAPIRobotGame();

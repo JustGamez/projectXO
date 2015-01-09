@@ -1,4 +1,4 @@
-ActionsXO = function () {
+ActionsRandomGame = function () {
     var self = this;
 
     /**
@@ -10,10 +10,10 @@ ActionsXO = function () {
      */
     this.requestRandomGame = function (userId, fieldTypeId, requestedSignId, callback) {
         var waiter;
-        Logs.log("ActionsXO.requestRandomGame", Logs.LEVEL_DETAIL);
+        Logs.log("ActionsRandomGame.requestRandomGame", Logs.LEVEL_DETAIL);
         waiter = LogicWaitersStack.getWaiter(userId, fieldTypeId, requestedSignId, 1);
         if (waiter) {
-            ActionsXO.createRandomGame(waiter.userId, waiter.signId, fieldTypeId, userId, requestedSignId, function (game) {
+            ActionsRandomGame.createRandomGame(waiter.userId, waiter.signId, fieldTypeId, userId, requestedSignId, function (game) {
                 callback(game);
             });
         } else {
@@ -45,7 +45,7 @@ ActionsXO = function () {
      */
     this.createRandomGame = function (creatorUserId, creatorSignId, fieldTypeId, joinerUserId, joinerSignId, callback) {
         var game;
-        Logs.log("ActionsXO.createRandomGame", Logs.LEVEL_DETAIL);
+        Logs.log("ActionsRandomGame.createRandomGame", Logs.LEVEL_DETAIL);
         game = LogicXO.create(creatorUserId, creatorSignId, fieldTypeId, true, false, false);
         game = LogicXO.joinGame(joinerUserId, joinerSignId, game);
         game = LogicXO.setSigns(game);
@@ -66,11 +66,15 @@ ActionsXO = function () {
         var game;
         game = LogicGameStore.load(gameId);
         if (!game) {
-            Logs.log("ActionsXO. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
+            Logs.log("ActionsRandomGame.closeGame. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
             return;
         }
         if (!LogicXO.userCanCloseGame(game, userId)) {
-            Logs.log("ActionsXO. User cannot close this game", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            Logs.log("ActionsRandomGame.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            return;
+        }
+        if (!game.isRandom) {
+            Logs.log("ActionsRandomGame.closeGame. User cannot close this game. Because is not random game.", Logs.LEVEL_WARNING, {game: game, userId: userId});
             return;
         }
         game = LogicXO.close(game);
@@ -90,11 +94,15 @@ ActionsXO = function () {
         var game, user, winLine, oldStatus;
         game = LogicGameStore.load(gameId);
         if (!game) {
-            Logs.log("ActionsXO.doMove. game not found", Logs.LEVEL_WARNING, arguments);
+            Logs.log("ActionsRandomGame.doMove. game not found", Logs.LEVEL_WARNING, arguments);
             return;
         }
         if (!LogicXO.userCandDoMove(game, userId, x, y)) {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
+            return;
+        }
+        if (!game.isRandom) {
+            Logs.log("ActionsRandomGame.doMove. User cannot do move, because is not random game.", Logs.LEVEL_WARNING, {game: game, userId: userId});
             return;
         }
         oldStatus = game.status;
@@ -111,6 +119,6 @@ ActionsXO = function () {
 
 /**
  * Константный класс.
- * @type {ActionsXO}
+ * @type {ActionsRandomGame}
  */
-ActionsXO = new ActionsXO();
+ActionsRandomGame = new ActionsRandomGame();
