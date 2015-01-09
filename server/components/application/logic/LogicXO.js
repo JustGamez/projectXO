@@ -176,11 +176,11 @@ LogicXO = function () {
     };
 
     /**
-     * Выставить знаки согласно параметами игры.
-     * @param game
+     * Выставить знаки согласно параметрам игры.
+     * @param game {Object}
      * @returns {*}
      */
-    this.setSigns = function (game) {
+    this.chooseSigns = function (game) {
         /* Оба не имеют запрашиваемые знаки */
         if (game.creatorSignId == LogicXO.SIGN_ID_Empty && game.joinerSignId == LogicXO.SIGN_ID_Empty) {
             if (Math.round(Math.random() * 2) > 1) {

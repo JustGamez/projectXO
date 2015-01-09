@@ -48,7 +48,7 @@ ActionsRandomGame = function () {
         Logs.log("ActionsRandomGame.createRandomGame", Logs.LEVEL_DETAIL);
         game = LogicXO.create(creatorUserId, creatorSignId, fieldTypeId, true, false, false);
         game = LogicXO.joinGame(joinerUserId, joinerSignId, game);
-        game = LogicXO.setSigns(game);
+        game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
         DataGame.save(game, function (game) {
             LogicGameStore.save(game);

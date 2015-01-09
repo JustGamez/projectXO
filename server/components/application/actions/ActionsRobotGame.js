@@ -3,6 +3,7 @@ ActionsRobotGame = function () {
 
     /**
      * Создание игры с роботом.
+     * Если ход робота, вызываем его ход.
      * @param userId {Object} id пользователя.
      * @param fieldTypeId {Number} Запрашиваемый тип поля, LogicXO.FIELD_TYPE_*
      * @param signId {Number} Запрашиваемый знак в игре, LogicXO.SIGN_ID_*
@@ -10,12 +11,18 @@ ActionsRobotGame = function () {
      */
     this.createGame = function (userId, fieldTypeId, signId, callback) {
         var game;
-        Logs.log("ActionsRobotGame.createRandomGame", Logs.LEVEL_DETAIL);
+        Logs.log("ActionsRobotGame.createGame", Logs.LEVEL_DETAIL);
         game = LogicXO.create(userId, signId, fieldTypeId, false, false, true);
-        game = LogicXO.setSigns(game);
+        game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
         DataGame.save(game, function (game) {
             LogicGameStore.save(game);
+            /* Если ход робота, то надо сделать ему ход */
+            if (LogicXO.isHisTurn(game, 0)) {
+                self.raiseAIMove(game.id, function (game) {
+                    callback(game);
+                });
+            }
             callback(game);
         });
     };
@@ -53,6 +60,36 @@ ActionsRobotGame = function () {
         }
         LogicGameStore.save(game);
         callback(game, oldStatus);
+    };
+
+    /**
+     * Выполнить ход искуственным интеллектом.
+     * @param gameId {Number}
+     * @param callback {Function}
+     */
+    this.raiseAIMove = function (gameId, callback) {
+        var game, rX, rY;
+        game = LogicGameStore.load(gameId);
+        if (!game) {
+            Logs.log("ActionsRobotGame.raiseAIMove. game does not exists.", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        /* 0 is bot id, but bot is not exists */
+        if (!LogicXO.isHisTurn(game, 0)) {
+            Logs.log("ActionsRobotGame.raiseAIMove. Is not turn of robot.", Logs.LEVEL_WARNING, game);
+            return;
+        }
+        /* сюда будем ставить ход. */
+        rX = 1;
+        rY = 1;
+        if (!LogicXO.userCandDoMove(game, 0, rX, rY)) {
+            Logs.log("ActionsRobotGame.raiseAIMove. Robot can not do move.x:" + rX + ", y:" + rY, Logs.LEVEL_WARNING, game);
+            return;
+        }
+        game = LogicXO.setSign(game, rX, rY);
+        game = LogicXO.switchTurn(game);
+        LogicGameStore.save(game);
+        callback(game);
     };
 };
 

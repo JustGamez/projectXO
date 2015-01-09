@@ -64,9 +64,13 @@ SAPIRobotGame = function () {
                 LogicGameStore.delete(game.id);
                 DataGame.save(game, function (game) {
                     CAPIGame.updateInfo(game.creatorUserId, game);
-                })
+                });
             }
             CAPIGame.updateInfo(game.creatorUserId, game);
+            ActionsRobotGame.raiseAIMove(game.id, function (game) {
+                CAPIGame.updateInfo(game.creatorUserId, game);
+                //CAPIGame.robotDoMove(game.id);
+            });
         });
     };
 };
