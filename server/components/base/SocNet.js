@@ -136,8 +136,8 @@ SocNet = function () {
      * @param callback {Function}
      */
     var executeMethod = function (method, params, callback) {
+        var url, options, req, key, data;
         /* https://api.vk.com/method/'''METHOD_NAME'''?'''PARAMETERS'''&access_token='''ACCESS_TOKEN''' */
-        var url, options, req;
         url = baseUrl + method + '?';
         for (var i in params) {
             url += '&' + i + '=' + params[i];
@@ -147,13 +147,20 @@ SocNet = function () {
         options.port = 443;
         options.path = url;
         options.method = 'GET';
-
+        Logs.log("https request: " + baseHost + url, Logs.LEVEL_DETAIL);
+        key = baseHost + url;
+        if (data = UrlCache.get(key)) {
+            Logs.log("https answer(cached): " + data, Logs.LEVEL_DETAIL);
+            callback(data);
+            return;
+        }
+        /* Далее выполняем запрос */
         req = HTTPS.request(options, function (res) {
-            Logs.log("https request: " + url, Logs.LEVEL_DETAIL);
             res.on('data', function (data) {
                 Logs.log("https answer: " + data, Logs.LEVEL_DETAIL);
                 data = JSON.parse(data);
                 data = data.response;
+                UrlCache.set(key, data);
                 callback(data);
             });
         });

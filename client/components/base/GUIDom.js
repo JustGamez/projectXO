@@ -32,6 +32,14 @@ GUIDom = function () {
     var self = this;
 
     /**
+     * Старые свойства.
+     * Их мы будем хранить, что бы не перерисовывать лишний раз,
+     * то что не меняется.
+     * @type {{}}
+     */
+    var oldProps = {};
+
+    /**
      * Показывтаь ли дом.
      * @type {boolean}
      */
@@ -50,23 +58,30 @@ GUIDom = function () {
      * @param parent [GUIDom] родитель.
      */
     this.init = function (type, parent) {
+        /* Начальное значение старых свойств */
+        for (var i in props) {
+            oldProps[i] = undefined;
+        }
+        /* Создадим дом */
         if (type == 'input') {
             dom = document.createElement("input");
         } else {
             dom = document.createElement("div");
         }
+        /* значения по умолчанию для дом-ов.*/
         dom.style.position = 'absolute';
         dom.style.overflow = 'hidden';
+        /* no dragable by default */
+        dom.ondragstart = function () {
+            return false;
+        };
         /* hidden mode..:begin*/
         if (GUIDom.hidePictures) {
             dom.style.opacity = 0.12;
             dom.style.border = '1px dotted grey';
         }
         /* hidden mode..:finish*/
-        /* no dragable by default */
-        dom.ondragstart = function () {
-            return false;
-        };
+        /* Добавим дом к родителю. */
         this.__dom = dom;
         if (parent == undefined) {
             parent = document.body;
@@ -80,7 +95,9 @@ GUIDom = function () {
      * Покажем дом.
      */
     this.show = function () {
-        if (showed == true)return;
+        if (showed == true) {
+            return;
+        }
         showed = true;
         dom.style.display = 'block';
         self.redraw();
@@ -90,54 +107,27 @@ GUIDom = function () {
      * Спрячем дом.
      */
     this.hide = function () {
-        if (showed == false)return;
+        if (showed == false) {
+            return;
+        }
         showed = false;
         dom.style.display = 'none';
     };
 
     /**
      * Перересовка дома.
+     * Только те свойства, которые изменились.
      */
     this.redraw = function () {
-        if (!showed)return;
-        if (this.x)dom.style.left = this.x + 'px';
-        if (this.y)dom.style.top = this.y + 'px';
-        if (this.width)dom.style.width = this.width + 'px';
-        if (this.height)dom.style.height = this.height + 'px';
-        if (GUIDom.hidePictures) {
-            if (this.innerHTML)dom.innerText = this.innerHTML;
-            if (this.backgroundImage)dom.innerHTML = this.backgroundImage.replace('/images/', '');
-        } else {
-            var url;
-            if (this.backgroundImage) {
-                /* для абсолютного url, используем без изменений */
-                if (this.backgroundImage.indexOf('http://') != 0) {
-                    url = GUI.getImageURL(this.backgroundImage);
-                } else {
-                    url = this.backgroundImage;
-                }
-                dom.style.backgroundImage = 'url(' + url + ')';
-            }
-            if (this.innerHTML)dom.innerHTML = this.innerHTML;
+        if (!showed) {
+            return;
         }
-        if (this.pointer) dom.style.cursor = this.pointer;
-        if (this.opacity) dom.style.opacity = this.opacity;
-        if (this.fontWeight) dom.style.fontWeight = this.fontWeight;
-        if (this.fontFamily) dom.style.fontFamily = this.fontFamily;
-        if (this.color) dom.style.color = this.color;
-        if (this.textShadow) dom.style.textShadow = this.textShadow;
-        if (this.borderRadius) dom.style.borderRadius = this.borderRadius;
-        if (this.border) dom.style.border = this.border;
-        if (this.borderTop) dom.style.borderTop = this.borderTop;
-        if (this.borderRight) dom.style.borderRight = this.borderRight;
-        if (this.borderBottom) dom.style.borderBottom = this.borderBottom;
-        if (this.borderLeft) dom.style.borderLeft = this.borderLeft;
-        if (this.padding) dom.style.padding = this.padding;
-        if (this.boxShadow) dom.style.boxShadow = this.boxShadow;
-        if (this.lineHeight) dom.style.lineHeight = this.lineHeight;
-        if (this.background) dom.style.background = this.background;
-        if (this.transform) dom.style.transform = this.transform;
-        if (this.title) dom.setAttribute('title', this.title);
+        for (var name in props) {
+            if (oldProps[name] != self[name]) {
+                props[name].call();
+                oldProps[name] = self[name];
+            }
+        }
     };
 
     /**
@@ -155,6 +145,129 @@ GUIDom = function () {
         dom.addEventListener(eventName, function (event) {
             callback.call(context, event, dom);
         }, false);
+    };
+
+    /* Далее идут методы перерисовки. */
+    var redrawX = function () {
+        dom.style.left = self.x + 'px';
+    };
+    var redrawY = function () {
+        dom.style.top = self.y + 'px';
+    };
+    var redrawWidth = function () {
+        dom.style.width = self.width + 'px';
+    };
+    var redrawHeight = function () {
+        dom.style.height = self.height + 'px';
+    };
+    var redrawBackgroundImage = function () {
+        if (GUIDom.hidePictures) {
+            dom.innerHTML = this.backgroundImage.replace('/images/', '');
+        } else {
+            var url;
+            /* абсолютный url, используем без изменений */
+            if (self.backgroundImage.indexOf('http://') != 0) {
+                url = GUI.getImageURL(self.backgroundImage);
+            } else {
+                url = self.backgroundImage;
+            }
+            dom.style.backgroundImage = 'url(' + url + ')';
+        }
+    };
+    var redrawInnerHTML = function () {
+        if (GUIDom.hidePictures) {
+            dom.innerText = self.innerHTML;
+        } else {
+            dom.innerHTML = self.innerHTML;
+        }
+    };
+    var redrawPointer = function () {
+        dom.style.cursor = self.pointer;
+    };
+    var redrawOpacity = function () {
+        dom.style.opacity = self.opacity;
+    };
+    var redrawFontWeight = function () {
+        dom.style.fontWeight = self.fontWeight;
+    };
+    var redrawFontSize = function () {
+        dom.style.fontSize = self.fontSize;
+    };
+    var redrawFontFamily = function () {
+        dom.style.fontFamily = self.fontFamily;
+    };
+    var redrawColor = function () {
+        dom.style.color = self.color;
+    };
+    var redrawTextShadow = function () {
+        dom.style.textShadow = self.textShadow;
+    };
+    var redrawBorderRadius = function () {
+        dom.style.borderRadius = self.borderRadius;
+    };
+    var redrawBorder = function () {
+        dom.style.border = self.border;
+    };
+    var redrawBorderTop = function () {
+        dom.style.borderTop = self.borderTop;
+    };
+    var redrawBorderRight = function () {
+        dom.style.borderRight = self.borderRight;
+    };
+    var redrawBorderBottom = function () {
+        dom.style.borderBottom = self.borderBottom;
+    };
+    var redrawBorderLeft = function () {
+        dom.style.borderLeft = self.borderLeft;
+    };
+    var redrawPadding = function () {
+        dom.style.padding = self.padding;
+    };
+    var redrawBoxShadow = function () {
+        dom.style.boxShadow = self.boxShadow;
+    };
+    var redrawLineHeight = function () {
+        dom.style.lineHeight = self.lineHeight;
+    };
+    var redrawBackground = function () {
+        dom.style.background = self.background;
+    };
+    var redrawTransform = function () {
+        dom.style.transform = self.transform;
+    };
+    var redrawTitle = function () {
+        dom.setAttribute('title', self.title);
+    };
+    /**
+     * Имена свойств и их методы обработки.
+     * @type {{x: Function, y: Function, width: Function, height: Function, backgroundImage: *, innerHTML: Function, pointer: Function, opacity: Function, fontWeight: *, fontSize: *, fontFamily: Function, color: Function, textShadow: Function, borderRadius: Function, border: Function, borderTop: Function, borderRight: Function, borderBottom: Function, borderLeft: Function, padding: Function, boxShadow: Function, lineHeight: Function, background: Function, transform: Function, title: *}}
+     */
+    var props = {
+        x: redrawX,
+        y: redrawY,
+        width: redrawWidth,
+        height: redrawHeight,
+        backgroundImage: redrawBackgroundImage,
+        innerHTML: redrawInnerHTML,
+        pointer: redrawPointer,
+        opacity: redrawOpacity,
+        fontWeight: redrawFontWeight,
+        fontSize: redrawFontSize,
+        fontFamily: redrawFontFamily,
+        color: redrawColor,
+        textShadow: redrawTextShadow,
+        borderRadius: redrawBorderRadius,
+        border: redrawBorder,
+        borderTop: redrawBorderTop,
+        borderRight: redrawBorderRight,
+        borderBottom: redrawBorderBottom,
+        borderLeft: redrawBorderLeft,
+        padding: redrawPadding,
+        boxShadow: redrawBoxShadow,
+        lineHeight: redrawLineHeight,
+        background: redrawBackground,
+        transform: redrawTransform,
+        title: redrawTitle
     };
 };
 

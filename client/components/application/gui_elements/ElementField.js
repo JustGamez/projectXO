@@ -128,6 +128,7 @@ ElementField = function () {
         /* Поле 15 х 15 */
         initFieldByTypeId(LogicXO.FIELD_TYPE_15X15);
     };
+
     /**
      * Инициализирует поле с указанным типом.
      * @param typeId
@@ -169,7 +170,9 @@ ElementField = function () {
      * Покажем поле.
      */
     this.show = function () {
-        if (showed == true) return;
+        if (showed == true) {
+            return;
+        }
         showed = true;
         self.domList[fieldTypeId].domField.show();
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
@@ -185,7 +188,9 @@ ElementField = function () {
      * Спрячем поле.
      */
     this.hide = function () {
-        if (showed == false) return;
+        if (showed == false) {
+            return;
+        }
         showed = false;
         self.domList[fieldTypeId].domField.hide();
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
@@ -238,14 +243,15 @@ ElementField = function () {
 
     /**
      * Переключимся на поле соответствующего типа.
-     * @param typeId
+     * @param typeId {Number} LogicXO.FIELD_TYPE_*
      */
-    this.swithToField = function (typeId) {
-        if (fieldTypeId == typeId) return;
+    this.switchToField = function (typeId) {
+        if (fieldTypeId == typeId) {
+            return;
+        }
         self.hide();
         fieldTypeId = typeId;
         self.show();
-        self.redraw();
     };
 
     /**
@@ -269,14 +275,12 @@ ElementField = function () {
                 Logs.log("Undefined signId:", Logs.LEVEL_FATAL_ERROR, signId);
                 break;
         }
-        self.redraw();
     };
 
     /**
      * Очистить поле.
      */
     this.clearField = function () {
-        self.domList[fieldTypeId].domField.redraw();
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
             for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;
@@ -304,7 +308,7 @@ ElementField = function () {
      * Обработчки нажатий на поля.
      */
     var onSignClick = function () {
-        /* this тут - это объект с полями x и y */
+        /* this тут - это объект с полями x и y, этот контест должен быть присвоин во время биндингом эвента. */
         self.onClick.call(null, this.x, this.y);
     };
 };

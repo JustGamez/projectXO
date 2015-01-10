@@ -78,6 +78,7 @@ PageXOGame = function PageXOGame() {
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
             y: 175,
+            width: 157,
             text: ''
         });
         self.elements.push(element);
@@ -118,11 +119,11 @@ PageXOGame = function PageXOGame() {
         user = LogicUser.getCurrentUser();
         /* Установим тип поля и знаки */
         if (!game) {
-            self.elementField.swithToField(LogicXOSettings.requestedFieldTypeId);
+            self.elementField.switchToField(LogicXOSettings.requestedFieldTypeId);
             self.elementField.clearField();
         } else {
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
-            self.elementField.swithToField(game.fieldTypeId);
+            self.elementField.switchToField(game.fieldTypeId);
             self.elementField.clearField();
             for (var y = 0; y < fieldSize; y++) {
                 for (var x = 0; x < fieldSize; x++) {

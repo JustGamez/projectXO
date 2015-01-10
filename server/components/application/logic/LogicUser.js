@@ -57,6 +57,8 @@ LogicUser = function () {
     this.sendUserInfo = function (userId, toUserId) {
         DataUser.getById(userId, function (user) {
             if (user) {
+                user.online = self.isUserOnline(user.id);
+                CAPIUser.updateUserInfo(toUserId, user);
                 refreshUserSocNetInfo(user, function (user) {
                     user.online = self.isUserOnline(user.id);
                     CAPIUser.updateUserInfo(toUserId, user);

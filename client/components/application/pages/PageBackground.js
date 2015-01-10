@@ -56,6 +56,7 @@ PageBackground = function PageMain() {
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
             y: 425,
+            width: 140,
             text: 'онлайн: -'
         });
         self.elements.push(element);
@@ -64,6 +65,7 @@ PageBackground = function PageMain() {
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
             y: 455,
+            width: 140,
             text: 'очки: -'
         });
         self.elements.push(element);

@@ -37,7 +37,7 @@ LogicPageXO = function () {
             Logs.log("game not found", Logs.LEVEL_WARNING, arguments);
             return;
         }
-        if (!LogicXO.userCandDoMove(game, user.id, x, y)) {
+        if (!LogicXO.userCanDoMove(game, user.id, x, y)) {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }

@@ -16,25 +16,25 @@ ElementGraphicText = function () {
      * Координата X текста.
      * @type {number}
      */
-    this.x = 0;
+    this.x = undefined;
 
     /**
      * Координата Y текста.
      * @type {number}
      */
-    this.y = 0;
+    this.y = undefined;
 
     /**
      * Ширина текста.
      * @type {number}
      */
-    this.width = 0;
+    this.width = undefined;
 
     /**
      * Высота текста.
      * @type {number}
      */
-    this.height = 0;
+    this.height = undefined;
 
     /**
      * Текст.

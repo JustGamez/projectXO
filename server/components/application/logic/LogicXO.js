@@ -42,6 +42,12 @@ LogicXO = function () {
     this.LINE_LEFT_DOWN = 4;
 
     /**
+     * id всех линий.
+     * @type {*[]}
+     */
+    this.lineIds = [self.LINE_HORIZONTAL, self.LINE_VERTICAL, self.LINE_LEFT_DOWN, self.LINE_LEFT_UP];
+
+    /**
      * Id знака крестик.
      * @type {number}
      */
@@ -146,6 +152,10 @@ LogicXO = function () {
                 break;
             case LogicXO.FIELD_TYPE_15X15:
                 return 15;
+                break;
+            default:
+                Logs.log("Undefined field type if. (" + fieldTypeId + ")", Logs.LEVEL_ERROR);
+                return 0;
                 break;
         }
     };
@@ -271,6 +281,7 @@ LogicXO = function () {
         }
         return false;
     };
+
     /**
      * Закроем игру.
      * @param game {Object} объект игры.
@@ -287,7 +298,7 @@ LogicXO = function () {
      * @param x {Number}
      * @param y {Number}
      */
-    this.userCandDoMove = function (game, userId, x, y) {
+    this.userCanDoMove = function (game, userId, x, y) {
         var fieldSize;
         if (!LogicXO.isMember(game, userId)) return false;
         if (!LogicXO.isHisTurn(game, userId)) return false;
@@ -398,31 +409,15 @@ LogicXO = function () {
      * @private
      */
     var __findWinLine = function (field, startX, startY, lineSize, lineId) {
-        var x, y, Xcnt, Ocnt, isLosed, points, lastPoint, signId, direction;
+        var x, y, Xcnt, Ocnt, isLosed, points, lastPoint, signId, vector;
         x = startX;
         y = startY;
         Xcnt = Ocnt = 0;
         isLosed = false;
         points = [];
         signId = 0;
-        switch (lineId) {
-            case LogicXO.LINE_HORIZONTAL:
-                direction = {x: 1, y: 0};
-                break;
-            case LogicXO.LINE_VERTICAL:
-                direction = {x: 0, y: 1};
-                break;
-            case LogicXO.LINE_LEFT_UP:
-                direction = {x: 1, y: -1};
-                break;
-            case LogicXO.LINE_LEFT_DOWN:
-                direction = {x: 1, y: 1};
-                break;
-            default:
-                Logs.log("LogicXO.__findWinLine. Undefined lineId.", Logs.LEVEL_WARNING, lineId);
-                return false;
-                break;
-        }
+        vector = LogicXO.getLineVector(lineId);
+        if (!vector)return;
         switch (lineId) {
             case LogicXO.LINE_HORIZONTAL:
                 if (field[startY][startX + (lineSize - 1)] == undefined) return false;
@@ -447,8 +442,8 @@ LogicXO = function () {
             if (field[y] [x] == LogicXO.SIGN_ID_X) Xcnt++;
             if (field[y] [x] == LogicXO.SIGN_ID_O) Ocnt++;
             points.push({x: x, y: y});
-            x += direction.x;
-            y += direction.y;
+            x += vector.x;
+            y += vector.y;
         }
         if (Xcnt == lineSize) {
             signId = LogicXO.SIGN_ID_X;
@@ -465,6 +460,38 @@ LogicXO = function () {
             x: startX,
             y: startY
         };
+    };
+
+    /**
+     * Возвращает вектор с длиной 1, для линии.
+     * @param lineId id линии. DataGame.LINE_*
+     * @param direction направление true - A, false - B.
+     */
+    this.getLineVector = function (lineId, direction) {
+        var vector;
+        switch (lineId) {
+            case LogicXO.LINE_HORIZONTAL:
+                vector = {x: 1, y: 0};
+                break;
+            case LogicXO.LINE_VERTICAL:
+                vector = {x: 0, y: 1};
+                break;
+            case LogicXO.LINE_LEFT_UP:
+                vector = {x: 1, y: -1};
+                break;
+            case LogicXO.LINE_LEFT_DOWN:
+                vector = {x: 1, y: 1};
+                break;
+            default:
+                Logs.log("LogicXO.getLineVector. undefined lineId:" + lineId, Logs.LEVEL_ERROR);
+                return false;
+                break;
+        }
+        if (direction) {
+            vector.x *= -1;
+            vector.y *= -1;
+        }
+        return vector;
     };
 
     /**
@@ -489,7 +516,40 @@ LogicXO = function () {
             }
         }
         return game;
-    }
+    };
+
+    /**
+     * Проверяет находятся ли координаты вне поля.
+     * @param fieldSize {Number}
+     * @param x {Number}
+     * @param y {Number}
+     * @returns {boolean}
+     */
+    this.notInField = function (x, y, fieldSize) {
+        if (x < 0) return true;
+        if (x >= fieldSize) return true;
+        if (y < 0) return true;
+        if (y >= fieldSize) return true;
+        return false;
+    };
+
+    /**
+     * Вернёт противоположный знак.
+     * @param signId {Number} LogicXO.SIGN_ID_*
+     */
+    this.getOppositeSignId = function (signId) {
+        switch (signId) {
+            case LogicXO.SIGN_ID_X:
+                return LogicXO.SIGN_ID_O;
+                break;
+            case LogicXO.SIGN_ID_O:
+                return LogicXO.SIGN_ID_X;
+                break;
+            default:
+                Logs.log("LogicXO.getOppositeSignId. Undefined Sign Id." + signId, Logs.LEVEL_ERROR);
+                break;
+        }
+    };
 };
 /**
  * Статичный класс.

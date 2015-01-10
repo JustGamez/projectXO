@@ -97,7 +97,7 @@ ActionsRandomGame = function () {
             Logs.log("ActionsRandomGame.doMove. game not found", Logs.LEVEL_WARNING, arguments);
             return;
         }
-        if (!LogicXO.userCandDoMove(game, userId, x, y)) {
+        if (!LogicXO.userCanDoMove(game, userId, x, y)) {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
