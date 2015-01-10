@@ -206,7 +206,6 @@ LogicRobot = function () {
         }
     };
 
-
     /**
      * Обновляем или добавляем линию.
      * Пробегаем по всем линиям знака новой линии,
@@ -258,8 +257,16 @@ LogicRobot = function () {
         /* Добавляем линию. */
         state.lines.push(newLine);
     };
-}
-;
+
+    /**
+     * Удалить состояние игры, видимо игра закончена и более не нуждается
+     * в дополонительной информации для AI.
+     * @param gameId {Number}
+     */
+    this.removeState = function (gameId) {
+        delete stateCache[gameId];
+    }
+};
 
 /**
  * Статичный класс.

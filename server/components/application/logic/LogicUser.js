@@ -284,7 +284,7 @@ LogicUser = function () {
      * @param cntx
      */
     var onFailedSend = function (cntx) {
-        if (cntx.userId) {
+        if (cntx && cntx.userId) {
             onLogout(cntx.userId);
             userDeleteConn(cntx);
             sendOnlineCountToAll(cntx.userId, false);

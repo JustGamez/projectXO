@@ -67,9 +67,8 @@ ActionsRobotGame = function () {
     /**
      * Выполнить ход искуственным интеллектом.
      * @param gameId {Number}
-     * @param callback {Function}
      */
-    this.raiseAIMove = function (gameId, callback) {
+    this.raiseAIMove = function (gameId) {
         var game, AICoords;
         game = LogicGameStore.load(gameId);
         if (!game) {
@@ -103,7 +102,8 @@ ActionsRobotGame = function () {
         game = LogicXO.switchTurn(game);
         LogicGameStore.save(game);
         LogicRobot.updateGameState(game);
-        callback(game);
+        CAPIGame.updateInfo(game.creatorUserId, game);
+        CAPIGame.robotDoMove(game.creatorUserId, game.id);
     };
 };
 

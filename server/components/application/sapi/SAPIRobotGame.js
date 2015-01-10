@@ -35,23 +35,23 @@ SAPIRobotGame = function () {
      */
     this.doMove = function (cntx, gameId, x, y, checkWinner) {
         if (!cntx.isAuthorized) {
-            Logs.log("SAPIGame.doMove: must be authorized", Logs.LEVEL_WARNING);
+            Logs.log("SAPIRobotGame.doMove: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
         if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.doMove: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
+            Logs.log("SAPIRobotGame.doMove: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
         if (x == undefined || typeof x != 'number') {
-            Logs.log("SAPIGame.doMove: must have x with type number", Logs.LEVEL_WARNING, x);
+            Logs.log("SAPIRobotGame.doMove: must have x with type number", Logs.LEVEL_WARNING, x);
             return;
         }
         if (y == undefined || typeof y != 'number') {
-            Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
+            Logs.log("SAPIRobotGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
             return;
         }
         if (checkWinner == undefined || typeof checkWinner != 'boolean') {
-            Logs.log("SAPIGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
+            Logs.log("SAPIRobotGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
             return;
         }
         ActionsRobotGame.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
@@ -62,14 +62,91 @@ SAPIRobotGame = function () {
                     LogicUser.onWin(game.winnerId);
                 }
                 LogicGameStore.delete(game.id);
+                LogicRobot.removeState(game.id);
                 DataGame.save(game, function (game) {
                     CAPIGame.updateInfo(game.creatorUserId, game);
                 });
+            } else {
+                ActionsRobotGame.raiseAIMove(game.id)
             }
             CAPIGame.updateInfo(game.creatorUserId, game);
-            ActionsRobotGame.raiseAIMove(game.id, function (game) {
+        });
+    };
+
+    /**
+     * Проверим, есть ли победитель.
+     * @param cntx {Object} контекст соединения.
+     * @param gameId {Number} id игры.
+     */
+    this.checkWinner = function (cntx, gameId) {
+        var game, winLine, oldStatus;
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIRobotGame.checkWinner: must be authorized", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!gameId || typeof gameId != 'number') {
+            Logs.log("SAPIRobotGame.checkWinner: must have gameId", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        game = LogicGameStore.load(gameId);
+        if (!gameId) {
+            Logs.log("SAPIRobotGame.checkWinner: game does not exits.", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        oldStatus = game.status;
+        winLine = LogicXO.findWinLine(game);
+        game = LogicXO.setOutcomeResults(game, winLine);
+        /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
+        if (game.status != LogicXO.STATUS_RUN) {
+            /* Только что кто-то выиграл? */
+            if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
+                if (game.winnerId) {
+                    LogicUser.onWin(game.winnerId);
+                }
+            }
+            LogicGameStore.delete(game.id);
+            LogicRobot.removeState(game.id);
+            DataGame.save(game, function (game) {
                 CAPIGame.updateInfo(game.creatorUserId, game);
             });
+        }
+    };
+
+    /**
+     * Закроем игру, обычно это означает, что игрок вышел из игры.
+     * @param cntx {Object} контекст соединения.
+     * @param gameId {Number} id игры
+     */
+    this.closeGame = function (cntx, gameId) {
+        var game;
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIGame.closeGame: must be authorized", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!gameId || typeof gameId != 'number') {
+            Logs.log("SAPIGame.closeGame: must have gameId", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        game = LogicGameStore.load(gameId);
+        if (!game) {
+            Logs.log("ActionsRobotGame.closeGame. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: cntx.userId, gameId: gameId});
+            return;
+        }
+        /* 0 - это id робота, хотя самого роботоа не существует физически. */
+        if (!LogicXO.userCanCloseGame(game, 0)) {
+            Logs.log("ActionsRobotGame.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {game: game, userId: cntx.userId});
+            return;
+        }
+        if (!game.vsRobot) {
+            Logs.log("ActionsRobotGame.closeGame. User cannot close this game. Because is not random game.", Logs.LEVEL_WARNING, {game: game, userId: cntx.userId});
+            return;
+        }
+        game = LogicXO.close(game);
+        LogicGameStore.delete(game.id);
+        LogicRobot.removeState(game.id);
+        DataGame.save(game, function (game) {
+            CAPIChat.getNewMessage(game.creatorUserId, game.creatorUserId, 'message', 12321321);
+            CAPIGame.updateInfo(game.creatorUserId, game);
         });
     };
 };

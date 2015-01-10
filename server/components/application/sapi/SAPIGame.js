@@ -46,7 +46,7 @@ SAPIGame = function () {
             return;
         }
         if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.closeGame: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
+            Logs.log("SAPIGame.closeGame: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
         ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {

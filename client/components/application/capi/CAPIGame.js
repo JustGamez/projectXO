@@ -2,8 +2,8 @@ CAPIGame = function () {
 
     /**
      * Обновить данные об игре
-     * @param cntx контекст соединения
-     * @param game данные об игре.
+     * @param cntx {Object} контекст соединения
+     * @param game {Object} данные об игре.
      */
     this.updateInfo = function (cntx, game) {
         var winLine;
@@ -14,7 +14,7 @@ CAPIGame = function () {
 
     /**
      * Оповещение, что игра создана.
-     * @param cntx контекст соединения
+     * @param cntx {Object} контекст соединения
      * @param gameId {Number} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
@@ -22,6 +22,31 @@ CAPIGame = function () {
             LogicGame.setCurrentGameId(gameId);
         } else {
             SAPIGame.closeGame(gameId);
+        }
+    };
+
+    /**
+     * Робот сделал ход.
+     * После хода робота, проверим есть ли победитель, ну или, либо ничья.
+     * @param cntx {Object} контекст соединения
+     * @param gameId {Number} id игры, в которой бот сделал ход.
+     */
+    this.robotDoMove = function (cntx, gameId) {
+        var winLine, game, checkWinner;
+        game = LogicGame.getCurrentGame();
+        if (!game) {
+            Logs.log("CAPIGame.robotDoMove. game does not exists.", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        if (game.id != gameId) {
+            Logs.log("CAPIGame.robotDoMove. gameId mismatch requsted.", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+        winLine = LogicXO.findWinLine(game);
+        LogicXO.setOutcomeResults(game, winLine);
+        checkWinner = game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin;
+        if (checkWinner) {
+            SAPIRobotGame.checkWinner(gameId);
         }
     };
 };

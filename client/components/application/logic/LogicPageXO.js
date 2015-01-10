@@ -16,7 +16,11 @@ LogicPageXO = function () {
         game = LogicGame.getCurrentGame();
         if (game) {
             if (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN) {
-                SAPIGame.closeGame(game.id);
+                if (game.vsRobot) {
+                    SAPIRobotGame.closeGame(game.id);
+                } else {
+                    SAPIGame.closeGame(game.id);
+                }
             }
             LogicGame.setCurrentGameId(null);
         } else {

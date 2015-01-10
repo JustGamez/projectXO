@@ -19,6 +19,22 @@ SAPIRobotGame = function () {
     this.doMove = function (gameId, x, y, checkWinner) {
         apiRouter.executeRequest('SAPIRobotGame', 'doMove', arguments, [{connectionId: null}]);
     };
+
+    /**
+     * Просим сервер проверить, есть ли победитель.
+     * @param gameId {Number} id игры.
+     */
+    this.checkWinner = function (gameId) {
+        apiRouter.executeRequest('SAPIRobotGame', 'checkWinner', arguments, [{connectionId: null}]);
+    };
+
+    /**
+     * Закрыть игру с роботом.
+     * @param gameId {Number}
+     */
+    this.closeGame = function (gameId) {
+        apiRouter.executeRequest('SAPIRobotGame', 'closeGame', arguments, [{connectionId: null}]);
+    };
 };
 
 /**
