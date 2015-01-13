@@ -30,7 +30,14 @@ Logs = function () {
         // сформируем сообщение лога.
         date = new Date();
         // тут мы получим "01-01-2014 15:55:55"
-        dateFormated = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        var day, month, year, hour, minutes, seconds;
+        year = date.getFullYear();
+        day = str_pad(date.getDate());
+        month = str_pad(date.getMonth() + 1);
+        hour = str_pad(date.getHours());
+        minutes = str_pad(date.getMinutes());
+        seconds = str_pad(date.getSeconds());
+        dateFormated = day + '-' + month + '-' + year + ' ' + hour + ':' + minutes + ':' + seconds;
         // превратим в строку переданные детали лога.
         details = JSON.stringify(details);
         // превратим уровень лога из константы в человеко-читаемый текст.
@@ -46,6 +53,16 @@ Logs = function () {
             throw new Error("Vse polamalos'!");
         }
     };
+
+    /**
+     * Дополним нулями значение и вернёт строку
+     * Тут это специфичная функция, дополнит нулями число спереди до 2ух знаков.
+     * @param sourceValue {Mixed}
+     */
+    var str_pad = function (sourceValue) {
+        return "00000".substr(0, 2 - sourceValue.toString().length) + sourceValue;
+    };
+
     /* константы типов логов */
 
     /**

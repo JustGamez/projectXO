@@ -11,6 +11,7 @@ window.onload = function () {
 
     /** init some cpomopnents */
     SocNet.initVK();
+    GUI.init();
 
     /* WebSocket Client */
     webSocketClient = new WebSocketClient();

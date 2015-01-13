@@ -30,6 +30,12 @@ ElementPhoto = function () {
     var src = '/path/to/image.png';
 
     /**
+     * Загрушка, на случай, если фотографии нет.
+     * @type {string}
+     */
+    var srcDummy = '/images/photo/camera_c.gif';
+
+    /**
      * Текст появляется при наведении мышки.
      * @type {string}
      */
@@ -123,6 +129,58 @@ ElementPhoto = function () {
     var photoInfo = {};
 
     /**
+     * Далее идут переменные кнопки пригласить\играём? и индикатора ждём...
+     */
+
+    /**
+     * Кнопка пригласить в игру.
+     * @type {ElementButton}
+     */
+    var buttonInvite = null;
+
+    /**
+     * Калбэк при нажатии кнопки пригласить в игру.
+     * @type {Function}
+     */
+    var onButtonInviteClick = null;
+
+    /**
+     * Кнопка "Играём?"
+     * @type {ElementButton}
+     */
+    var buttonLetsPlay = null;
+
+    /**
+     * Калбэк при нажатии кнопки "Играём?"
+     * @type {ElementButton}
+     */
+    var onButtonLetsPlayClick = null;
+
+    /**
+     * Индикатор "ждём..."
+     * @type {null}
+     */
+    var domIndicatorWaiting = null;
+
+    /**
+     * Показывать ли кнопку пригласить.
+     * @type {boolean}
+     */
+    var showButtonInvite = false;
+
+    /**
+     * Показывть ли кнопку "Играем?"
+     * @type {boolean}
+     */
+    var showButtonLetsPlay = false;
+
+    /**
+     * Показывтаь ли индикатор "Ждём..."
+     * @type {boolean}
+     */
+    var showIndicatorWaiting = false;
+
+    /**
      * Создадим домы и настроем их.
      */
     this.init = function () {
@@ -160,6 +218,43 @@ ElementPhoto = function () {
         domOnlineIndicator.y = regionHeight - 18;
         domOnlineIndicator.width = 15;
         domOnlineIndicator.height = 14;
+        /* Кнопка приглашения в игру */
+        buttonInvite = GUI.createElement("ElementButton", {
+            x: 24,
+            y: regionHeight - 18,
+            width: 32,
+            height: 16,
+            srcRest: '/images/photo/buttonInviteRest.png',
+            srcHover: '/images/photo/buttonInviteHover.png',
+            srcActive: '/images/photo/buttonInviteActive.png',
+            onClick: function (mouseEvent, dom) {
+                /* остановим "движение клика", снизу у нас дом региона фотографии, и у него тоже есть онклик эвент */
+                mouseEvent.stopPropagation();
+                onButtonInviteClick.call(null, photoInfo);
+            }
+        }, domRegion);
+        /* Кнопка "Играём?" */
+        buttonLetsPlay = GUI.createElement("ElementButton", {
+            x: -4,
+            y: regionHeight - 18 - 17,
+            width: 90,
+            height: 41,
+            srcRest: '/images/photo/buttonLetsPlayRest.png',
+            srcHover: '/images/photo/buttonLetsPlayHover.png',
+            srcActive: '/images/photo/buttonLetsPlayActive.png',
+            onClick: function (mouseEvent, dom) {
+                /* остановим "движение клика", снизу у нас дом региона фотографии, и у него тоже есть онклик эвент */
+                mouseEvent.stopPropagation();
+                onButtonLetsPlayClick.call(null, photoInfo);
+            }
+        }, domRegion);
+        /* Индикатор "Ждём..." */
+        domIndicatorWaiting = GUI.createDom(domRegion);
+        domIndicatorWaiting.x = -2;
+        domIndicatorWaiting.y = regionHeight - 18 - 18;
+        domIndicatorWaiting.width = 90;
+        domIndicatorWaiting.height = 41;
+        domIndicatorWaiting.backgroundImage = '/images/photo/indicatorLetsWait.png';
     };
 
     /**
@@ -174,6 +269,11 @@ ElementPhoto = function () {
         domPhoto.show();
         domOnlineIndicator.show();
         self.redraw();
+        /**
+         *  Элементы:
+         *  domIndicatorWaiting, buttonInvite, buttonLetsPlay
+         *  показываются в функции redraw(), т.к. их отобржение не безусловно.
+         */
     };
 
     /**
@@ -187,6 +287,9 @@ ElementPhoto = function () {
         domFrame.hide();
         domPhoto.hide();
         domOnlineIndicator.hide();
+        domIndicatorWaiting.hide();
+        buttonInvite.hide();
+        buttonLetsPlay.hide();
     };
 
     /**
@@ -195,6 +298,10 @@ ElementPhoto = function () {
     this.redraw = function () {
         if (!showed) return;
         domRegion.title = title;
+        /* Если, нет фотографии, то отображаем заглушку */
+        if (src == null || src == undefined || src == '') {
+            src = srcDummy;
+        }
         domPhoto.backgroundImage = src;
         domBorder.transform = 'rotate(' + getRealRandom(src) + 'deg)';
         if (online) {
@@ -209,6 +316,18 @@ ElementPhoto = function () {
         domBorder.redraw();
         domFrame.redraw();
         domOnlineIndicator.redraw();
+        if (showIndicatorWaiting) {
+            domIndicatorWaiting.show();
+            domIndicatorWaiting.redraw();
+        }
+        if (showButtonInvite) {
+            buttonInvite.show();
+            buttonInvite.redraw();
+        }
+        if (showButtonLetsPlay) {
+            buttonLetsPlay.show();
+            buttonLetsPlay.redraw();
+        }
     };
 
     /**
@@ -218,9 +337,14 @@ ElementPhoto = function () {
     this.update = function (params) {
         src = params.src;
         title = params.title;
-        onClick = params.onClick;
         online = params.online;
         photoInfo = params.photoInfo;
+        showButtonInvite = params.showButtonInvite;
+        showButtonLetsPlay = params.showButtonLetsPlay;
+        showIndicatorWaiting = params.showIndicatorWaiting;
+        onClick = params.onClick;
+        onButtonInviteClick = params.onButtonInviteClick;
+        onButtonLetsPlayClick = params.onButtonLetsPlayClick;
     };
 
     /**
@@ -228,9 +352,9 @@ ElementPhoto = function () {
      * @returns {number}
      */
     var getRealRandom = function (string) {
-        // random rotate photo
-        // super real-random
-        // считаем сумму всех кодов знаков из строки, умноженных на позицию знака(*256)
+        /* random rotate photo */
+        /* super real-random */
+        /* считаем сумму всех кодов знаков из строки, умноженных на позицию знака(*256) */
         var deg, number, date, superPosition, degreesDiapazon;
         degreesDiapazon = 16;
         superPosition = 360;
@@ -240,7 +364,7 @@ ElementPhoto = function () {
         }
         date = new Date;
         number += date.getDay(); //TODO switch to getTime()
-        // super real-random
+        /* super real-random */
         deg = (number % ( superPosition + 1)) - (( superPosition + 1) / 2);
         deg = deg / superPosition * degreesDiapazon;
         return deg;

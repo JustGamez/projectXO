@@ -161,7 +161,7 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var friends, ids, user, currentUserId;
+        var friends, ids, user, currentUserId, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting;
         friends = [];
         if (currentUserId = LogicUser.getCurrentUser().id) {
             ids = LogicFriends.getFriendsById(currentUserId);
@@ -169,13 +169,39 @@ PageMain = function PageMain() {
         if (ids) {
             for (var i in ids) {
                 user = LogicUser.getUserById(ids[i]);
-                if (!user)continue;
+                if (!user) {
+                    continue;
+                }
+                /**
+                 * установить случая отображения:
+                 * - инвайт да;
+                 * - инвайт нет, если есть приглшание;
+                 * - инвайт нет, если отправлено приглашение;
+                 * - приглашение нет;
+                 * - приглашение да, если есть приглашение;
+                 * - ожидание нет;
+                 * - ожидание да, если отправлено приглашение;
+                 */
+                showButtonInvite = false;
+                showButtonLetsPlay = false;
+                showIndicatorWaiting = false;
                 friends.push({
                     src: user.photo50,
                     title: user.firstName + " " + user.lastName,
                     online: user.online,
+                    showButtonInvite: showButtonInvite,
+                    showButtonLetsPlay: showButtonLetsPlay,
+                    showIndicatorWaiting: showIndicatorWaiting,
                     onClick: function (photoInfo) {
                         window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+                    },
+                    onButtonInviteClick: function (photoInfo) {
+                        /* @todo */
+                        console.log(photoInfo);
+                    },
+                    onButtonLetsPlayClick: function (photoInfo) {
+                        /* @todo */
+                        console.log(photoInfo);
                     },
                     photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
                 });

@@ -68,23 +68,23 @@ GUIDom = function () {
         } else {
             dom = document.createElement("div");
         }
-        /* значения по умолчанию для дом-ов.*/
+        /* значения по умолчанию для дом-ов. */
         dom.style.position = 'absolute';
         dom.style.overflow = 'hidden';
         /* no dragable by default */
         dom.ondragstart = function () {
             return false;
         };
-        /* hidden mode..:begin*/
+        /* hidden mode..:begin */
         if (GUIDom.hidePictures) {
-            dom.style.opacity = 0.12;
+            dom.style.opacity = 0.15;
             dom.style.border = '1px dotted grey';
         }
-        /* hidden mode..:finish*/
+        /* hidden mode..:finish */
         /* Добавим дом к родителю. */
         this.__dom = dom;
         if (parent == undefined) {
-            parent = document.body;
+            parent = GUI.getCurrentParent();
         } else {
             parent = parent.__dom;
         }
@@ -161,22 +161,30 @@ GUIDom = function () {
         dom.style.height = self.height + 'px';
     };
     var redrawBackgroundImage = function () {
-        if (GUIDom.hidePictures) {
-            dom.innerHTML = this.backgroundImage.replace('/images/', '');
+        var url;
+        /* абсолютный url, используем без изменений */
+        if (self.backgroundImage.indexOf('http://') != 0) {
+            url = GUI.getImageURL(self.backgroundImage);
         } else {
-            var url;
-            /* абсолютный url, используем без изменений */
-            if (self.backgroundImage.indexOf('http://') != 0) {
-                url = GUI.getImageURL(self.backgroundImage);
+            url = self.backgroundImage;
+        }
+        if (GUIDom.hidePictures) {
+            if (GUIDom.makeTransparent) {
+                dom.style.backgroundImage = 'url(' + url + ')';
             } else {
-                url = self.backgroundImage;
+                dom.innerHTML = url.replace('/images/', '');
             }
+        } else {
             dom.style.backgroundImage = 'url(' + url + ')';
         }
     };
     var redrawInnerHTML = function () {
         if (GUIDom.hidePictures) {
-            dom.innerText = self.innerHTML;
+            if (GUIDom.makeTransparent) {
+                dom.innerHTML = self.innerHTML;
+            } else {
+                dom.innerText = self.innerHTML;
+            }
         } else {
             dom.innerHTML = self.innerHTML;
         }
@@ -277,9 +285,16 @@ GUIDom = function () {
  * В результате мы установим GUIDom.hidePictures = [true|false].
  */
 (function () {
+    /* режим скрытых картинок */
     if (window.location.href.indexOf("hide_pictures=true") != -1) {
         GUIDom.hidePictures = true;
     } else {
         GUIDom.hidePictures = false;
+    }
+    /* просто делать картинки прозрачными */
+    if (window.location.href.indexOf("make_transparent=true") != -1) {
+        GUIDom.makeTransparent = true;
+    } else {
+        GUIDom.makeTransparent = false;
     }
 })();

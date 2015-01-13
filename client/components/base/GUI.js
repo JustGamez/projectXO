@@ -62,12 +62,28 @@ GUI = function () {
     this.eventNames[this.EVENT_KEY_UP] = 'keyup';
 
     /**
+     * Стэк родителей.
+     * На верхуши стэка находиться элемент в который будет добавлены новые элементы.
+     * @type {Array}
+     */
+    var parentsStack = [];
+
+    /**
+     * Инициализация.
+     * - установим родителя, это будет тело документа.
+     */
+    this.init = function () {
+        parentsStack.push(document.body);
+    };
+
+    /**
      * Создаёт элемент
      * @param name {string} имя элемента Element*
      * @param params {object} параметры присваиваемые при создании элемента.
+     * @param parentDom {GUIDom} необязательный параметр, родительский дом, который будет использован в пределах инициализации элемента.
      * @returns {GUIDom}
      */
-    this.createElement = function (name, params) {
+    this.createElement = function (name, params, parentDom) {
         var element;
         if (!window[name]) {
             Logs.log("GUI.createElement: не определен элемент:" + name, Logs.LEVEL_FATAL_ERROR);
@@ -88,8 +104,39 @@ GUI = function () {
         for (var i in params) {
             element[i] = params[i];
         }
+        if (parentDom) {
+            GUI.pushParent(parentDom);
+        }
         element.init();
+        if (parentDom) {
+            GUI.popParent();
+        }
         return element;
+    };
+
+    /**
+     * Добавляем на верхушку стэка - родителя.
+     * @param parentDom {Element}
+     * @return {Number} длина стэка родителей.
+     */
+    this.pushParent = function (parentDom) {
+        return parentsStack.push(parentDom.__dom);
+    };
+
+    /**
+     * Убираем с верхушки стэка дом родителя.
+     * @returns {Element}
+     */
+    this.popParent = function () {
+        return parentsStack.pop();
+    };
+
+    /**
+     * Возвращает текущего родителя, т.е. с верхушки стэка.
+     * @returns {Element}
+     */
+    this.getCurrentParent = function () {
+        return parentsStack[parentsStack.length - 1];
     };
 
     /**

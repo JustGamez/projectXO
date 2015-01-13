@@ -153,11 +153,13 @@ ElementButton = function () {
 
     /**
      * Обработка события на клик.
+     * @param mouseEvent {MouseEvent}
+     * @param dom {Element}
      */
-    var onMouseClick = function () {
+    var onMouseClick = function (mouseEvent, dom) {
         mouseStateDown = false;
         mouseStateFocused = false;
         self.redraw();
-        self.onClick.call();
+        return self.onClick.call(null, mouseEvent, dom);
     };
 };
