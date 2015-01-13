@@ -17,7 +17,8 @@ apiRouter.setMap({
     SAPIUser: SAPIUser,
     SAPIGame: SAPIGame,
     SAPIChat: SAPIChat,
-    SAPIRobotGame: SAPIRobotGame
+    SAPIRobotGame: SAPIRobotGame,
+    SAPIInvites: SAPIInvites
 });
 
 /* links apiRouter and webSocketServer */
@@ -41,3 +42,4 @@ sequencedInit(function (afterInitCallback) {
     Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
     afterInitCallback();
 });
+

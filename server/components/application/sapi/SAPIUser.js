@@ -46,7 +46,7 @@ SAPIUser = function () {
             return;
         }
         if (!userId || typeof userId != 'number') {
-            Logs.log("SAPIUser.sendMeFriends: must have userId", Logs.LEVEL_WARNING);
+            Logs.log("SAPIUser.sendMeFriends: must have userId", Logs.LEVEL_WARNING, {cntx: cntx, userId: userId});
             return;
         }
         LogicUser.sendFriends(userId, cntx);

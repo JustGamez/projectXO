@@ -15,7 +15,7 @@ LogicFriends = function () {
 
     /**
      * Получить список друзей по внутренему id юзера
-     * @param userId int внутрений id юзера.
+     * @param userId {Number} внутрений id юзера.
      * @returns {*}
      */
     this.getFriendsById = function (userId) {
@@ -29,9 +29,12 @@ LogicFriends = function () {
 
     /**
      * Загрузить данные о друзьях по внутренему ид
-     * @param userId int внутрений id юзера.
+     * @param userId {Number} внутрений id юзера.
      */
     this.loadFriendsById = function (userId) {
+        if (!LogicUser.isAuthorized()) {
+            return;
+        }
         if (!waitForLoadingUser[userId]) {
             waitForLoadingUser[userId] = true;
             SAPIUser.sendMeFriends(userId);
@@ -40,8 +43,8 @@ LogicFriends = function () {
 
     /**
      * Обновить данные о друзьях
-     * @param userId внутрений id юзера.
-     * @param friendList внутрение id друзей.
+     * @param userId {Number} внутрений id юзера.
+     * @param friendList {Number} внутрение id друзей.
      */
     this.updateFriends = function (userId, friendList) {
         waitForLoadingUser[userId] = false;

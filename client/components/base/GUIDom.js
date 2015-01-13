@@ -77,7 +77,11 @@ GUIDom = function () {
         };
         /* hidden mode..:begin */
         if (GUIDom.hidePictures) {
-            dom.style.opacity = 0.15;
+            if (GUIDom.makeTransparent) {
+                document.body.style.opacity = 0.06;
+            } else {
+                document.body.style.opacity = 0.2;
+            }
             dom.style.border = '1px dotted grey';
         }
         /* hidden mode..:finish */
@@ -172,7 +176,9 @@ GUIDom = function () {
             if (GUIDom.makeTransparent) {
                 dom.style.backgroundImage = 'url(' + url + ')';
             } else {
-                dom.innerHTML = url.replace('/images/', '');
+                dom.style.fontSize = '10px';
+                url = url.replace('/images/', '');
+                dom.innerHTML = url.substr(url.indexOf('/') + 1, url.indexOf('.') - url.indexOf('/') - 1);
             }
         } else {
             dom.style.backgroundImage = 'url(' + url + ')';

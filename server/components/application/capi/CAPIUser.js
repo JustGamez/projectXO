@@ -2,7 +2,7 @@ CAPIUser = function () {
 
     /**
      * Авторизация успешна
-     * @param toUserId кому отправляем.
+     * @param toUserId {Number} кому отправляем.
      * @param userId какой id авторизованного юзера сообщаем.
      */
     this.authorizeSuccess = function (toUserId, userId) {
@@ -11,7 +11,7 @@ CAPIUser = function () {
 
     /**
      * Обновить данные о пользователи
-     * @param toUserId кому отправляем.
+     * @param toUserId {Number} кому отправляем.
      * @param user юзер инфо
      */
     this.updateUserInfo = function (toUserId, user) {
@@ -20,7 +20,7 @@ CAPIUser = function () {
 
     /**
      * Обновление данныех о друзьях.
-     * @param toUserId кому отправляем
+     * @param toUserId {Number} кому отправляем.
      * @param userId id int пользователя, чьи друзья
      * @param friends [] список друзей.
      */
@@ -30,7 +30,7 @@ CAPIUser = function () {
 
     /**
      * Обновить кол-во онлайн пользователей.
-     * @param toUserId кому отправляем
+     * @param toUserId {Number} кому отправляем.
      * @param count кол-во онлайн игроков.
      * @param userId {Number}
      * @param direction {Boolean} true - вошел в игру, false - вышел из игры.

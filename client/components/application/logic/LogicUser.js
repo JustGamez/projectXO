@@ -37,6 +37,14 @@ LogicUser = function () {
     };
 
     /**
+     * Авторизован ли текущий юзер.
+     * @returns {Boolean}
+     */
+    this.isAuthorized = function () {
+        return authorizedUserId ? true : false;
+    };
+
+    /**
      * Возвращает текущего(авторизованного пользователя).
      * @returns {null|Object}
      */

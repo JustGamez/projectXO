@@ -161,10 +161,11 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var friends, ids, user, currentUserId, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting;
+        var friends, ids, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting;
         friends = [];
-        if (currentUserId = LogicUser.getCurrentUser().id) {
-            ids = LogicFriends.getFriendsById(currentUserId);
+        currentUser = LogicUser.getCurrentUser();
+        if (currentUser.id) {
+            ids = LogicFriends.getFriendsById(currentUser.id);
         }
         if (ids) {
             for (var i in ids) {
@@ -173,18 +174,31 @@ PageMain = function PageMain() {
                     continue;
                 }
                 /**
-                 * установить случая отображения:
+                 * установить случаи отображения:
                  * - инвайт да;
                  * - инвайт нет, если есть приглшание;
                  * - инвайт нет, если отправлено приглашение;
-                 * - приглашение нет;
-                 * - приглашение да, если есть приглашение;
-                 * - ожидание нет;
-                 * - ожидание да, если отправлено приглашение;
+                 * - "играем?" нет;
+                 * - "играем?" да, если есть приглашение;
+                 * - "ждём..." нет;
+                 * - "ждём..." да, если отправлено приглашение;
                  */
-                showButtonInvite = false;
+                /* шаг 1. Значения по умолчанию */
+                showButtonInvite = true;
                 showButtonLetsPlay = false;
                 showIndicatorWaiting = false;
+                /* шаг 2. Условия отключения кнопки приглашения. */
+                if (LogicInvites.haveInvite(currentUser.id)) {
+                    showButtonInvite = false;
+                }
+                /* шаг 3. Условия включения "играем?" */
+                if (LogicInvites.isInviteExists(user.id, currentUser.id)) {
+                    showButtonLetsPlay = true;
+                }
+                /* шаг 4. Условия включения "ждём..." */
+                if (LogicInvites.isInviteExists(currentUser.id, user.id)) {
+                    showIndicatorWaiting = true;
+                }
                 friends.push({
                     src: user.photo50,
                     title: user.firstName + " " + user.lastName,
@@ -195,14 +209,8 @@ PageMain = function PageMain() {
                     onClick: function (photoInfo) {
                         window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
                     },
-                    onButtonInviteClick: function (photoInfo) {
-                        /* @todo */
-                        console.log(photoInfo);
-                    },
-                    onButtonLetsPlayClick: function (photoInfo) {
-                        /* @todo */
-                        console.log(photoInfo);
-                    },
+                    onButtonInviteClick: LogicPageMain.onInviteClick,
+                    onButtonLetsPlayClick: LogicPageMain.onLetsPlayClick,
                     photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
                 });
             }
@@ -220,5 +228,5 @@ PageMain = function PageMain() {
             self.elements[i].redraw();
         }
     };
-}
-;
+};
+

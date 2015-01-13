@@ -37,11 +37,33 @@ LogicPageMain = function () {
 
     /**
      * Действия при смене знака.
-     * @param value
-     * @param index
+     * @param value {Number}
+     * @param index {Number}
      */
     this.onRadioSignChange = function (value, index) {
         LogicXOSettings.requestedSignId = value;
+    };
+
+    /**
+     * Действия при нажатии на френд-ленте "пригласить в игру".
+     * @param photoInfo {Object}
+     */
+    this.onInviteClick = function (photoInfo) {
+        var whoId, whomId;
+        whoId = LogicUser.getCurrentUser().id;
+        whomId = photoInfo.id;
+        SAPIInvites.send(whoId, whomId);
+        LogicInvites.save(whoId, whomId);
+        LogicTimers.start('invite_' + whomId, Config.Invites.inviteTimeout, LogicInvites.clearInvite, [whoId, whomId]);
+    };
+
+    /**
+     * Действия при нажатии на френд-ленте "играем?".
+     * @param photoInfo {Object}
+     */
+    this.onLetsPlayClick = function (photoInfo) {
+        /* @todo */
+        console.log(photoInfo);
     };
 };
 

@@ -9,6 +9,17 @@ window.onload = function () {
         throw new Error("Всё поламалось!");
     };
 
+    /**
+     * Конфигурация, вынести в отдельный файл.
+     * @type {Object}
+     */
+    Config = {
+        Invites: {
+            inviteTimeout: 12000,
+            letsPlaytimeout: 10000
+        }
+    };
+
     /** init some cpomopnents */
     SocNet.initVK();
     GUI.init();
@@ -25,7 +36,8 @@ window.onload = function () {
     apiRouter.setMap({
         CAPIUser: CAPIUser,
         CAPIGame: CAPIGame,
-        CAPIChat: CAPIChat
+        CAPIChat: CAPIChat,
+        CAPIInvites: CAPIInvites
     });
 
     /* Link ApiRouter and WebSocketClient */
@@ -54,3 +66,4 @@ window.onload = function () {
     /* running */
     webSocketClient.run();
 };
+

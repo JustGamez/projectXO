@@ -60,6 +60,12 @@ ElementButton = function () {
     this.onClick = null;
 
     /**
+     * Подсказка кнопки.
+     * @type {String}
+     */
+    this.title = null;
+
+    /**
      * Дом картинки.
      * @type {GUIDom}
      */
@@ -124,6 +130,7 @@ ElementButton = function () {
         if (mouseStateFocused && mouseStateDown) src = self.srcActive;
         if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
         dom.backgroundImage = src;
+        if (self.title) dom.title = self.title;
         dom.redraw();
     };
 

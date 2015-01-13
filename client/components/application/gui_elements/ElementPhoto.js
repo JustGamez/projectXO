@@ -227,6 +227,7 @@ ElementPhoto = function () {
             srcRest: '/images/photo/buttonInviteRest.png',
             srcHover: '/images/photo/buttonInviteHover.png',
             srcActive: '/images/photo/buttonInviteActive.png',
+            title: 'Пригласить в игру.',
             onClick: function (mouseEvent, dom) {
                 /* остановим "движение клика", снизу у нас дом региона фотографии, и у него тоже есть онклик эвент */
                 mouseEvent.stopPropagation();
@@ -254,7 +255,7 @@ ElementPhoto = function () {
         domIndicatorWaiting.y = regionHeight - 18 - 18;
         domIndicatorWaiting.width = 90;
         domIndicatorWaiting.height = 41;
-        domIndicatorWaiting.backgroundImage = '/images/photo/indicatorLetsWait.png';
+        domIndicatorWaiting.backgroundImage = '/images/photo/indicatorWait.png';
     };
 
     /**
@@ -319,14 +320,20 @@ ElementPhoto = function () {
         if (showIndicatorWaiting) {
             domIndicatorWaiting.show();
             domIndicatorWaiting.redraw();
+        } else {
+            domIndicatorWaiting.hide();
         }
         if (showButtonInvite) {
             buttonInvite.show();
             buttonInvite.redraw();
+        } else {
+            buttonInvite.hide();
         }
         if (showButtonLetsPlay) {
             buttonLetsPlay.show();
             buttonLetsPlay.redraw();
+        } else {
+            buttonLetsPlay.hide();
         }
     };
 
