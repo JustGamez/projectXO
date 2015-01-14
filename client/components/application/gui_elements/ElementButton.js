@@ -66,6 +66,12 @@ ElementButton = function () {
     this.title = null;
 
     /**
+     * Активна ли кнопка.
+     * @type {boolean}
+     */
+    this.enabled = true;
+
+    /**
      * Дом картинки.
      * @type {GUIDom}
      */
@@ -124,13 +130,14 @@ ElementButton = function () {
      */
     this.redraw = function () {
         var src;
-        if (!showed)return;
+        if (!showed) return;
         src = self.srcRest;
         if (mouseStateFocused)src = self.srcHover;
         if (mouseStateFocused && mouseStateDown) src = self.srcActive;
         if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
         dom.backgroundImage = src;
         if (self.title) dom.title = self.title;
+        dom.opacity = self.enabled ? 0.5 : 1.0;
         dom.redraw();
     };
 
@@ -138,6 +145,7 @@ ElementButton = function () {
      * Обработка события фокуса мыши.
      */
     var onMouseOver = function () {
+        if (!self.enabled) return;
         mouseStateFocused = true;
         self.redraw();
     };
@@ -146,6 +154,7 @@ ElementButton = function () {
      * Обработчик события на опускание мыши.
      */
     var onMouseDown = function () {
+        if (!self.enabled) return;
         mouseStateDown = true;
         self.redraw();
     };
@@ -154,6 +163,7 @@ ElementButton = function () {
      * Обработка события выхода фокуса мыши.
      */
     var onMouseOut = function () {
+        if (!self.enabled) return;
         mouseStateFocused = false;
         self.redraw();
     };
@@ -164,6 +174,9 @@ ElementButton = function () {
      * @param dom {Element}
      */
     var onMouseClick = function (mouseEvent, dom) {
+        /* Да, тут мы останавливаем дальнейшие течение клика. */
+        mouseEvent.stopPropagation();
+        if (!self.enabled) return;
         mouseStateDown = false;
         mouseStateFocused = false;
         self.redraw();

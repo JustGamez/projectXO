@@ -1,8 +1,8 @@
 CAPIGame = function () {
 
     /**
-     * Обновить данные об игре
-     * @param cntx {Object} контекст соединения
+     * Обновить данные об игре.
+     * @param cntx {Object} контекст соединения.
      * @param game {Object} данные об игре.
      */
     this.updateInfo = function (cntx, game) {
@@ -14,21 +14,21 @@ CAPIGame = function () {
 
     /**
      * Оповещение, что игра создана.
-     * @param cntx {Object} контекст соединения
+     * @param cntx {Object} контекст соединения.
      * @param gameId {Number} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
         if (!LogicGame.getCurrentGameId() && pageController.isShowedNow(PageController.PAGE_ID_XO_GAME)) {
             LogicGame.setCurrentGameId(gameId);
         } else {
-            SAPIGame.closeGame(gameId);
+            SAPIGame.closeRandomGame(gameId);
         }
     };
 
     /**
      * Робот сделал ход.
      * После хода робота, проверим есть ли победитель, ну или, либо ничья.
-     * @param cntx {Object} контекст соединения
+     * @param cntx {Object} контекст соединения.
      * @param gameId {Number} id игры, в которой бот сделал ход.
      */
     this.robotDoMove = function (cntx, gameId) {

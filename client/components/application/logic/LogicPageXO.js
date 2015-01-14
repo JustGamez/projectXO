@@ -18,8 +18,13 @@ LogicPageXO = function () {
             if (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN) {
                 if (game.vsRobot) {
                     SAPIRobotGame.closeGame(game.id);
-                } else {
-                    SAPIGame.closeGame(game.id);
+                }
+                if (game.isRandom) {
+                    /* @todo вынести этот метод в SAPIRandomGame, наверное. */
+                    SAPIGame.closeRandomGame(game.id);
+                }
+                if (game.isInvitation) {
+                    SAPIInvites.closeGame(game.id);
                 }
             }
             LogicGame.setCurrentGameId(null);
@@ -51,14 +56,18 @@ LogicPageXO = function () {
         game = LogicXO.setOutcomeResults(game, winLine);
         LogicGame.updateInfo(game);
         if (game.isRandom) {
+            /* @todo на саммом деле это doMoveOnRandomGame. т.е. надо вынести это в SAPIRandomGame, должно быть */
             SAPIGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
         }
         if (game.vsRobot) {
             SAPIRobotGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
         }
+        if (game.isInvitation) {
+            SAPIInvites.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
+        }
     };
-}
-;
+};
+
 /**
  * Константный класс.
  * @type {LogicPageXO}

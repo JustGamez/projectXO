@@ -7,7 +7,7 @@ LogicPageMain = function () {
     /**
      * Действия при нажатии кнопки "Играть".
      * - перейдем на страницу игры;
-     * - запросим сервер встуть\создать случайную игру;
+     * - запросим сервер встуть\создать случайную игру.
      */
     this.onPlayButtonClick = function () {
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
@@ -62,8 +62,8 @@ LogicPageMain = function () {
      * @param photoInfo {Object}
      */
     this.onLetsPlayClick = function (photoInfo) {
-        /* @todo */
-        console.log(photoInfo);
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
+        SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, photoInfo.id);
     };
 };
 

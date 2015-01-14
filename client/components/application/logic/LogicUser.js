@@ -59,13 +59,14 @@ LogicUser = function () {
      */
     this.getUserById = function (userId) {
         if (users[userId]) {
-            /* Догрузим данные, это немного костыль... но время деньги :)*/
+            /* Догрузим данные, это немного костыль... но время деньги :) */
             if (!users[userId].socNetUserId) {
                 self.loadUserInfoById(userId);
             }
             return users[userId];
         } else {
             self.loadUserInfoById(userId);
+            /* некоторая заглушка */
             return {
                 id: null,
                 score: null,

@@ -161,7 +161,7 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var friends, ids, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting;
+        var friends, ids, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, enableButtonInvite;
         friends = [];
         currentUser = LogicUser.getCurrentUser();
         if (currentUser.id) {
@@ -184,19 +184,21 @@ PageMain = function PageMain() {
                  * - "ждём..." да, если отправлено приглашение;
                  */
                 /* шаг 1. Значения по умолчанию */
+                enableButtonInvite = true;
                 showButtonInvite = true;
                 showButtonLetsPlay = false;
                 showIndicatorWaiting = false;
                 /* шаг 2. Условия отключения кнопки приглашения. */
-                if (LogicInvites.haveInvite(currentUser.id)) {
+                if (LogicInvites.haveInvite(user.id)) {
                     showButtonInvite = false;
                 }
+                enableButtonInvite = user.online && !user.isBusy && !user.onGameId;
                 /* шаг 3. Условия включения "играем?" */
                 if (LogicInvites.isInviteExists(user.id, currentUser.id)) {
                     showButtonLetsPlay = true;
                 }
                 /* шаг 4. Условия включения "ждём..." */
-                if (LogicInvites.isInviteExists(currentUser.id, user.id)) {
+                if (LogicInvites.isInviteExists(currentUser.id, user.id) && !showButtonLetsPlay) {
                     showIndicatorWaiting = true;
                 }
                 friends.push({
@@ -204,6 +206,7 @@ PageMain = function PageMain() {
                     title: user.firstName + " " + user.lastName,
                     online: user.online,
                     showButtonInvite: showButtonInvite,
+                    enableButtonInvite: enableButtonInvite,
                     showButtonLetsPlay: showButtonLetsPlay,
                     showIndicatorWaiting: showIndicatorWaiting,
                     onClick: function (photoInfo) {
@@ -216,7 +219,7 @@ PageMain = function PageMain() {
             }
         }
         self.elementFriendsType.update(friends);
-    };
+    } ;
 
     /**
      * Обновляем онлайн индикатор и индикатор очков.

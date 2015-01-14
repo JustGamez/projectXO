@@ -145,19 +145,25 @@ ElementPhoto = function () {
     var onButtonInviteClick = null;
 
     /**
-     * Кнопка "Играём?"
+     * Активна ли кнопка приглашения в игру.
+     * @type {boolean}
+     */
+    var enableButtonInvite = false;
+
+    /**
+     * Кнопка "Играём?".
      * @type {ElementButton}
      */
     var buttonLetsPlay = null;
 
     /**
-     * Калбэк при нажатии кнопки "Играём?"
+     * Калбэк при нажатии кнопки "Играём?".
      * @type {ElementButton}
      */
     var onButtonLetsPlayClick = null;
 
     /**
-     * Индикатор "ждём..."
+     * Индикатор "ждём...".
      * @type {null}
      */
     var domIndicatorWaiting = null;
@@ -169,13 +175,13 @@ ElementPhoto = function () {
     var showButtonInvite = false;
 
     /**
-     * Показывть ли кнопку "Играем?"
+     * Показывть ли кнопку "Играем?".
      * @type {boolean}
      */
     var showButtonLetsPlay = false;
 
     /**
-     * Показывтаь ли индикатор "Ждём..."
+     * Показывтаь ли индикатор "Ждём...".
      * @type {boolean}
      */
     var showIndicatorWaiting = false;
@@ -229,8 +235,6 @@ ElementPhoto = function () {
             srcActive: '/images/photo/buttonInviteActive.png',
             title: 'Пригласить в игру.',
             onClick: function (mouseEvent, dom) {
-                /* остановим "движение клика", снизу у нас дом региона фотографии, и у него тоже есть онклик эвент */
-                mouseEvent.stopPropagation();
                 onButtonInviteClick.call(null, photoInfo);
             }
         }, domRegion);
@@ -244,8 +248,6 @@ ElementPhoto = function () {
             srcHover: '/images/photo/buttonLetsPlayHover.png',
             srcActive: '/images/photo/buttonLetsPlayActive.png',
             onClick: function (mouseEvent, dom) {
-                /* остановим "движение клика", снизу у нас дом региона фотографии, и у него тоже есть онклик эвент */
-                mouseEvent.stopPropagation();
                 onButtonLetsPlayClick.call(null, photoInfo);
             }
         }, domRegion);
@@ -324,6 +326,7 @@ ElementPhoto = function () {
             domIndicatorWaiting.hide();
         }
         if (showButtonInvite) {
+            buttonInvite.enabled = enableButtonInvite;
             buttonInvite.show();
             buttonInvite.redraw();
         } else {
@@ -352,6 +355,7 @@ ElementPhoto = function () {
         onClick = params.onClick;
         onButtonInviteClick = params.onButtonInviteClick;
         onButtonLetsPlayClick = params.onButtonLetsPlayClick;
+        enableButtonInvite = params.enableButtonInvite;
     };
 
     /**

@@ -27,6 +27,10 @@ SAPIGame = function () {
         });
     };
 
+    /**
+     * Отменим запросы случаной игры для пользователя.
+     * @param cntx {Object} контекст соединения.
+     */
     this.cancelRandomGameRequests = function (cntx) {
         if (!cntx.isAuthorized) {
             Logs.log("SAPIGame.cancelRandomGameRequest: must be authorized", Logs.LEVEL_WARNING);
@@ -40,13 +44,13 @@ SAPIGame = function () {
      * @param cntx {Object} контекст соединения.
      * @param gameId {Number} id игры
      */
-    this.closeGame = function (cntx, gameId) {
+    this.closeRandomGame = function (cntx, gameId) {
         if (!cntx.isAuthorized) {
-            Logs.log("SAPIGame.closeGame: must be authorized", Logs.LEVEL_WARNING);
+            Logs.log("SAPIGame.closeRandomGame: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
         if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.closeGame: must have gameId", Logs.LEVEL_WARNING, gameId);
+            Logs.log("SAPIGame.closeRandomGame: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
         ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
@@ -59,9 +63,9 @@ SAPIGame = function () {
     };
 
     /**
-     * Сделать ход в игре
+     * Сделать ход в игре.
      * @param cntx {Object} контекст соединения.
-     * @param gameId {Number} id игры
+     * @param gameId {Number} id игры.
      * @param x {Number}
      * @param y {Number}
      * @param checkWinner {Boolean}
@@ -72,7 +76,7 @@ SAPIGame = function () {
             return;
         }
         if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.doMove: must have fieldTypeId", Logs.LEVEL_WARNING, gameId);
+            Logs.log("SAPIGame.doMove: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
         if (x == undefined || typeof x != 'number') {

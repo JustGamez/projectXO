@@ -93,12 +93,12 @@ LogicXO = function () {
 
     /**
      * Создать игру.
-     * @param creatorUserId {object}
-     * @param creatorSignId {number}
-     * @param fieldTypeId {number}
-     * @param isRandom {boolean}
-     * @param isInvitation {boolean}
-     * @param vsRobot {boolean}
+     * @param creatorUserId {object} внутрений id пользователя создающего игру.
+     * @param creatorSignId {number} id запрашиваемого создателем игры знака, LogicXO.SIGN_ID_*
+     * @param fieldTypeId {number} id типа поля, LogicXO.FIELD_TYPE_*
+     * @param isRandom {boolean} true - если это случайная игра.
+     * @param isInvitation {boolean} true - если игра по приглашению
+     * @param vsRobot {boolean} true - если игра с роботом.
      * @returns {{creatorUserId: (fields.id|*|id|user.id|LogicUser.getUserById.id|string), joinerUserId: number, creatorSignId: *, joinerSignId: number, fieldTypeId: *, isRandom: *, isInvitation: *, vsRobot: *, XUserId: number, OUserId: number, turnId: number, result_field: string, status: number, winnerId: number}}
      */
     this.create = function (creatorUserId, creatorSignId, fieldTypeId, isRandom, isInvitation, vsRobot) {
@@ -154,7 +154,7 @@ LogicXO = function () {
                 return 15;
                 break;
             default:
-                Logs.log("Undefined field type if. (" + fieldTypeId + ")", Logs.LEVEL_ERROR);
+                Logs.log("Undefined field type id. (" + fieldTypeId + ")", Logs.LEVEL_ERROR);
                 return 0;
                 break;
         }
@@ -178,6 +178,10 @@ LogicXO = function () {
 
     /**
      * Присоединить игрока к игре.
+     * @param joinerUserId {Number} внутрений id игрока, присоединяемого к игре.
+     * @param joinerSignId {Number} id знака запрашиваемого присоединяемым игроком, LogicXO.SIGN_ID_*.
+     * @param game {Object} собсвтенно игра.
+     * @returns {*}
      */
     this.joinGame = function (joinerUserId, joinerSignId, game) {
         game.joinerUserId = joinerUserId;
@@ -270,8 +274,8 @@ LogicXO = function () {
     /**
      * Может ли пользователь закрыть игру.
      * Игру можно закрыть, только если пользователь является участником игры и игра находиться в стаусе WAIT или RUN.
-     * @param game {Object} объект игры
-     * @param userId {Number} id юзера
+     * @param game {Object} объект игры.
+     * @param userId {Number} id юзера.
      */
     this.userCanCloseGame = function (game, userId) {
         if (
@@ -325,7 +329,7 @@ LogicXO = function () {
     };
 
     /**
-     * Перевернем текущий знак
+     * Перевернем текущий знак.
      * @param game {Object}
      * @returns {*}
      */
@@ -345,7 +349,7 @@ LogicXO = function () {
     };
 
     /**
-     * Найти линию победы, если она конечно есть
+     * Найти линию победы, если она конечно есть.
      * @param game {Object}
      */
     this.findWinLine = function (game) {
@@ -372,7 +376,7 @@ LogicXO = function () {
                 }
             }
         }
-        /* нет выигрывших, нет проигравших */
+        /* Нет выигрывших, нет проигравших */
         var result = {
             noBodyWin: false,
             someBodyWin: false,
@@ -401,11 +405,11 @@ LogicXO = function () {
 
     /**
      * Найти линию-победы в заданных координатах и с задонным типом.
-     * @param field {Array}
-     * @param startX {Number}
-     * @param startY {Number}
-     * @param lineSize {Number}
-     * @param lineId {Number} LogicXO.WIN_LINE_*
+     * @param field {Array} поле, вида field[y][x] = LogicXO.SIGN_ID_*.
+     * @param startX {Number} начальная X координаты линии-победы.
+     * @param startY {Number} начальная Y координаты линии-победы.
+     * @param lineSize {Number} длина линии-победы.
+     * @param lineId {Number} id линии-победы, LogicXO.WIN_LINE_*.
      * @private
      */
     var __findWinLine = function (field, startX, startY, lineSize, lineId) {
