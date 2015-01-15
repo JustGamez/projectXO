@@ -12,6 +12,7 @@ LogicPageXO = function () {
      */
     this.onMenuButtonClick = function () {
         var game;
+        SAPIUserState.isNoBusy();
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
         game = LogicGame.getCurrentGame();
         if (game) {
@@ -27,6 +28,7 @@ LogicPageXO = function () {
                     SAPIInvites.closeGame(game.id);
                 }
             }
+            SAPIUserState.onGame(0);
             LogicGame.setCurrentGameId(null);
         } else {
             SAPIGame.cancelRandomGameRequests();

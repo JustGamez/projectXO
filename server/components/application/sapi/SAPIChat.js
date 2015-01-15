@@ -22,7 +22,7 @@ SAPIChat = function () {
     };
 
     /**
-     * Запрос последних сообщений
+     * Запрос последних сообщений.
      * @param cntx {Object} контекст соединения.
      */
     this.sendMeLastMessages = function (cntx) {

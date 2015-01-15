@@ -3,8 +3,8 @@ CAPIInvites = function () {
     /**
      * Отправить клиенту новое сообщение.
      * @param toUserId {Number} кому отправляем.
-     * @param whoId {Number} данные об игре.
-     * @param whomId {Number} данные об игре.
+     * @param whoId {Number} внутрений id пользователя, который пригласил.
+     * @param whomId {Number} внутрений id пользователя, которого пригласили.
      */
     this.receive = function (toUserId, whoId, whomId) {
         LogicUser.sendToUser(toUserId, 'CAPIInvites', 'receive', [whoId, whomId]);

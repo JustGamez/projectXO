@@ -219,7 +219,7 @@ PageMain = function PageMain() {
             }
         }
         self.elementFriendsType.update(friends);
-    } ;
+    };
 
     /**
      * Обновляем онлайн индикатор и индикатор очков.

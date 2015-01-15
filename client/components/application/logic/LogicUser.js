@@ -96,6 +96,8 @@ LogicUser = function () {
 
     /**
      * Обновить данные о пользователе.
+     * Обновит\создаст, только переданные поля!
+     * При создании, создаются дефолтовые поля: firstName: '', lastName: '', isBusy: false, onGameId: 0
      * @param user {Object}
      */
     this.updateUserInfo = function (user) {
@@ -105,7 +107,9 @@ LogicUser = function () {
             users[user.id] = {
                 id: user.id,
                 firstName: '',
-                lastName: ''
+                lastName: '',
+                isBusy: false,
+                onGameId: 0
             };
         }
         for (var paramName in user) {

@@ -52,9 +52,23 @@ LogicInvites = function () {
      * @param whoId {Number} внутрений id пользователя который пригласил.
      * @param whomId {Number} внутрений id пользователя которого пригласили.
      */
-    this.clearInvite = function (whoId, whomId) {
+    this.clearInviteByPare = function (whoId, whomId) {
         for (var i in invites) {
             if (invites[i].whoId == whoId && invites[i].whomId == whomId) {
+                delete invites[i];
+                break;
+            }
+        }
+        pageController.redraw();
+    };
+
+    /**
+     * Удалить приглашения для указанно пользователя.
+     * @param userId {Number} внутрений id пользователя.
+     */
+    this.clearInvitesByUserId = function (userId) {
+        for (var i in invites) {
+            if (invites[i].whoId == userId || invites[i].whomId == userId) {
                 delete invites[i];
                 break;
             }

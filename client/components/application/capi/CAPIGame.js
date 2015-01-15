@@ -19,8 +19,10 @@ CAPIGame = function () {
      */
     this.gameCreated = function (cntx, gameId) {
         if (!LogicGame.getCurrentGameId() && pageController.isShowedNow(PageController.PAGE_ID_XO_GAME)) {
+            SAPIUserState.onGame(gameId);
             LogicGame.setCurrentGameId(gameId);
         } else {
+            SAPIUserState.onGame(0);
             SAPIGame.closeRandomGame(gameId);
         }
     };

@@ -155,15 +155,15 @@ LogicUser = function () {
 
     /**
      * Отправить всем.
-     * @param capiFunction {Function} CAPI function.
-     * @param arg1 любой параметр.
-     * @param arg2 любой параметр.
-     * @param arg3 любой параметр.
-     * @param arg4 любой параметр.
-     * @param arg5 любой параметр.
-     * @param arg6 любой параметр.
-     * @param arg7 любой параметр.
-     * @param arg8 любой параметр.
+     * @param capiFunction {Function} CAPI-функция, CAPI{groupName}.{functionName}.
+     * @param arg1 {*} любой параметр, будет передан в CAPI-функцию 1-ым.
+     * @param arg2 {*} любой параметр, будет передан в CAPI-функцию 2-ым.
+     * @param arg3 {*} любой параметр, будет передан в CAPI-функцию 3-ым.
+     * @param arg4 {*} любой параметр, будет передан в CAPI-функцию 4-ым.
+     * @param arg5 {*} любой параметр, будет передан в CAPI-функцию 5-ым.
+     * @param arg6 {*} любой параметр, будет передан в CAPI-функцию 6-ым.
+     * @param arg7 {*} любой параметр, будет передан в CAPI-функцию 7-ым
+     * @param arg8 {*} любой параметр, будет передан в CAPI-функцию 8-ым.
      */
     this.sendToAll = function (capiFunction, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) {
         for (var userId in userToCntx) {
@@ -173,7 +173,7 @@ LogicUser = function () {
 
     /**
      * Является ли пользователь онлайн.
-     * @param userId id пользователя
+     * @param userId {Number} id пользователя.
      * @returns {boolean}
      */
     this.isUserOnline = function (userId) {

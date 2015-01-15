@@ -37,7 +37,8 @@ window.onload = function () {
         CAPIUser: CAPIUser,
         CAPIGame: CAPIGame,
         CAPIChat: CAPIChat,
-        CAPIInvites: CAPIInvites
+        CAPIInvites: CAPIInvites,
+        CAPIUserState: CAPIUserState
     });
 
     /* Link ApiRouter and WebSocketClient */

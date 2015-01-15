@@ -10,6 +10,7 @@ LogicPageMain = function () {
      * - запросим сервер встуть\создать случайную игру.
      */
     this.onPlayButtonClick = function () {
+        SAPIUserState.isBusy();
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
         if (LogicXOSettings.requestedVsRobot) {
             SAPIRobotGame.startGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
@@ -54,7 +55,7 @@ LogicPageMain = function () {
         whomId = photoInfo.id;
         SAPIInvites.send(whoId, whomId);
         LogicInvites.save(whoId, whomId);
-        LogicTimers.start('invite_' + whomId, Config.Invites.inviteTimeout, LogicInvites.clearInvite, [whoId, whomId]);
+        LogicTimers.start('invite_' + whomId, Config.Invites.inviteTimeout, LogicInvites.clearInviteByPare, [whoId, whomId]);
     };
 
     /**
@@ -62,6 +63,7 @@ LogicPageMain = function () {
      * @param photoInfo {Object}
      */
     this.onLetsPlayClick = function (photoInfo) {
+        SAPIUserState.isBusy();
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
         SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, photoInfo.id);
     };
