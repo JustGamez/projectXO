@@ -1,6 +1,6 @@
 /**
  * Файл конфигурации.
- * @type {{DB: {}}}
+ * @type {Object}
  */
 Config = {
     DB: {
@@ -26,5 +26,8 @@ Config = {
          * Максимальная длина сообщения в чате.
          */
         messageLengthLimit: 128
+    },
+    Rating: {
+        TopLimitSize: 10
     }
 };

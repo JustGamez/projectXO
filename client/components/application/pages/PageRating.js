@@ -77,59 +77,42 @@ PageRating = function PageRating() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var list, user;
-        /* тестовые данные. */
-        list = [];
-        user = LogicUser.getCurrentUser();
-        list.push({
-            photoData: {
-                src: user.photo50,
-                title: user.firstName + " " + user.lastName,
-                online: user.online,
-                showButtonInvite: false,
-                enableButtonInvite: false,
-                showButtonLetsPlay: false,
-                showIndicatorWaiting: false,
-                showOnlineIndicator: false,
-                onClick: function (photoInfo) {
-                    window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+        var ratingList, rating, usersList, user;
+        ratingList = LogicRating.getTopList();
+        usersList = [];
+        for (var i in ratingList) {
+            rating = ratingList[i];
+            user = LogicUser.getUserById(rating.userId);
+            usersList.push({
+                photoData: {
+                    src: user.photo50,
+                    title: user.firstName + " " + user.lastName,
+                    online: user.online,
+                    showButtonInvite: false,
+                    enableButtonInvite: false,
+                    showButtonLetsPlay: false,
+                    showIndicatorWaiting: false,
+                    showOnlineIndicator: false,
+                    onClick: function (photoInfo) {
+                        window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+                    },
+                    onButtonInviteClick: null,
+                    onButtonLetsPlayClick: null,
+                    photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
                 },
-                onButtonInviteClick: null,
-                onButtonLetsPlayClick: null,
-                photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
-            },
-            name: user.firstName + " " + user.lastName,
-            score: user.score,
-            position: user.position
-        });
-        list.push({
-            photoData: {
-                src: user.photo50,
-                title: user.firstName + " " + user.lastName,
-                online: user.online,
-                showButtonInvite: false,
-                enableButtonInvite: false,
-                showButtonLetsPlay: false,
-                showIndicatorWaiting: false,
-                onClick: function (photoInfo) {
-                    window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
-                },
-                onButtonInviteClick: null,
-                onButtonLetsPlayClick: null,
-                photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
-            },
-            name: user.firstName + " " + user.lastName,
-            score: user.score,
-            position: user.position
-        });
-        elementRatingList.update(list);
+                name: user.firstName + " " + user.lastName,
+                score: rating.score,
+                position: rating.position
+            });
+        }
+        elementRatingList.update(usersList);
     };
 
     /**
      * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
-        if (!showed)return;
+        if (!showed) return;
         self.preset();
         for (var i in self.elements) {
             self.elements[i].redraw();

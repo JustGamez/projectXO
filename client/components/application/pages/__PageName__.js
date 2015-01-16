@@ -57,7 +57,7 @@ __PageName__ = function __PageName__() {
      * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
-        if (!showed)return;
+        if (!showed) return;
         self.preset();
         for (var i in self.elements) {
             self.elements[i].redraw();

@@ -48,7 +48,7 @@ ElementRatingList = function () {
 
     /**
      * Тут будем хранит массив пользователей.
-     * @type {Array}
+     * @type {{}[]}
      */
     var rowsData = [];
 
@@ -105,14 +105,7 @@ ElementRatingList = function () {
     this.show = function () {
         if (showed == true) return;
         showed = true;
-        for (var i = 0; i < self.rowsCount; i++) {
-            if (rowsData[i]) {
-                rowsElements[i].photo.show();
-                rowsElements[i].name.show();
-                rowsElements[i].score.show();
-                rowsElements[i].position.show();
-            }
-        }
+        /* показ элементов определяет redraw, ввиду специфичности, какие элементы отображать, а какие нет.*/
         self.redraw();
     };
 
@@ -145,10 +138,19 @@ ElementRatingList = function () {
                 elements.score.setText(data.score);
                 elements.position.setText(data.position);
                 /* Перерисуем */
+                elements.photo.show();
+                elements.name.show();
+                elements.score.show();
+                elements.position.show();
                 elements.photo.redraw();
                 elements.name.redraw();
                 elements.score.redraw();
                 elements.position.redraw();
+            } else {
+                elements.photo.hide();
+                elements.name.hide();
+                elements.score.hide();
+                elements.position.hide();
             }
         }
     };
@@ -166,5 +168,5 @@ ElementRatingList = function () {
         }
         rowsData = users;
         self.redraw();
-    }
+    };
 };

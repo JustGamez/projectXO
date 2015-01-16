@@ -19,7 +19,8 @@ apiRouter.setMap({
     SAPIChat: SAPIChat,
     SAPIRobotGame: SAPIRobotGame,
     SAPIInvites: SAPIInvites,
-    SAPIUserState: SAPIUserState
+    SAPIUserState: SAPIUserState,
+    SAPIRating: SAPIRating
 });
 
 /* links apiRouter and webSocketServer */
