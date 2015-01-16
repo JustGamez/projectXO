@@ -58,6 +58,8 @@ window.onload = function () {
     pageController.addPage(PageController.PAGE_ID_MAIN, new PageMain());
     PageController.PAGE_ID_XO_GAME = 3;
     pageController.addPage(PageController.PAGE_ID_XO_GAME, new PageXOGame());
+    PageController.PAGE_ID_RATING = 4;
+    pageController.addPage(PageController.PAGE_ID_RATING, new PageRating());
 
     pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
 

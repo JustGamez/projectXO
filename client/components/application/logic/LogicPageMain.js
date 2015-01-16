@@ -67,6 +67,15 @@ LogicPageMain = function () {
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
         SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, photoInfo.id);
     };
+
+    /**
+     * Действия при нажатии на кнопку "Рейтинг.
+     * Откроем страницу рейтинга.
+     */
+    this.onRatingButtonClick = function () {
+        SAPIUserState.isBusy();
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_RATING]);
+    };
 };
 
 /**

@@ -92,7 +92,7 @@ ElementChatInput = function () {
      */
     this.hide = function () {
         if (showed == false) return;
-        showed = true;
+        showed = false;
         dom.hide();
     };
 

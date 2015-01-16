@@ -2,7 +2,7 @@
  * Страница бэкграудна.
  * @constructor
  */
-PageBackground = function PageMain() {
+PageBackground = function PageBackground() {
     var self = this;
 
     /**
@@ -110,6 +110,7 @@ PageBackground = function PageMain() {
      */
     this.hide = function () {
         if (showed == false) return;
+        showed = false;
         for (var i in self.elements) {
             self.elements[i].hide();
         }

@@ -1,6 +1,9 @@
 /**
  * Элемент фотография.
  * @constructor
+ * Инициирующие параметры:
+ * x : number координта X
+ * y : number координта Y
  */
 ElementPhoto = function () {
     var self = this;
@@ -175,16 +178,22 @@ ElementPhoto = function () {
     var showButtonInvite = false;
 
     /**
-     * Показывть ли кнопку "Играем?".
+     * Показывать ли кнопку "Играем?".
      * @type {boolean}
      */
     var showButtonLetsPlay = false;
 
     /**
-     * Показывтаь ли индикатор "Ждём...".
+     * Показывать ли индикатор "Ждём...".
      * @type {boolean}
      */
     var showIndicatorWaiting = false;
+
+    /**
+     * Показывать ли онлайн индикатор.
+     * @type {boolean}
+     */
+    var showOnlineIndicator = true;
 
     /**
      * Создадим домы и настроем их.
@@ -307,18 +316,23 @@ ElementPhoto = function () {
         }
         domPhoto.backgroundImage = src;
         domBorder.transform = 'rotate(' + getRealRandom(src) + 'deg)';
-        if (online) {
-            domOnlineIndicator.backgroundImage = '/images/photo/iconOnline.png';
-            domOnlineIndicator.title = 'онлайн';
-        } else {
-            domOnlineIndicator.backgroundImage = '/images/photo/iconOffline.png';
-            domOnlineIndicator.title = 'оффлайн';
-        }
         domRegion.redraw();
         domPhoto.redraw();
         domBorder.redraw();
         domFrame.redraw();
-        domOnlineIndicator.redraw();
+        if (showOnlineIndicator) {
+            if (online) {
+                domOnlineIndicator.backgroundImage = '/images/photo/iconOnline.png';
+                domOnlineIndicator.title = 'онлайн';
+            } else {
+                domOnlineIndicator.backgroundImage = '/images/photo/iconOffline.png';
+                domOnlineIndicator.title = 'оффлайн';
+            }
+            domOnlineIndicator.show();
+            domOnlineIndicator.redraw();
+        } else {
+            domOnlineIndicator.hide();
+        }
         if (showIndicatorWaiting) {
             domIndicatorWaiting.show();
             domIndicatorWaiting.redraw();
@@ -342,7 +356,20 @@ ElementPhoto = function () {
 
     /**
      * Обновление данных фотографии.
-     * @param params {Object}
+     * @param params { {
+     *       src: string,
+     *       title: string,
+     *       online: boolean,
+     *       photoInfo: object,
+     *       showButtonInvite: boolean,
+     *       showButtonLetsPlay: boolean,
+     *       showIndicatorWaiting: boolean,
+     *       onClick: Function,
+     *       onButtonInviteClick: Function,
+     *       onButtonLetsPlayClick: Function,
+     *       enableButtonInvite: boolean,
+     *       showOnlineIndicator: boolean
+     *   }}
      */
     this.update = function (params) {
         src = params.src;
@@ -352,6 +379,7 @@ ElementPhoto = function () {
         showButtonInvite = params.showButtonInvite;
         showButtonLetsPlay = params.showButtonLetsPlay;
         showIndicatorWaiting = params.showIndicatorWaiting;
+        showOnlineIndicator = params.showOnlineIndicator;
         onClick = params.onClick;
         onButtonInviteClick = params.onButtonInviteClick;
         onButtonLetsPlayClick = params.onButtonLetsPlayClick;

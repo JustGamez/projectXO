@@ -132,6 +132,18 @@ PageMain = function PageMain() {
         });
         self.elements.push(element);
         self.elementFriendsType = element;
+        /* Кнопка рейтинг. */
+        element = GUI.createElement('ElementButton', {
+            x: 560,
+            y: 360,
+            width: 140,
+            height: 48,
+            srcRest: '/images/buttons/ratingRest.png',
+            srcHover: '/images/buttons/ratingHover.png',
+            srcActive: '/images/buttons/ratingActive.png',
+            onClick: LogicPageMain.onRatingButtonClick
+        });
+        self.elements.push(element);
     };
 
     /**
@@ -209,6 +221,7 @@ PageMain = function PageMain() {
                     enableButtonInvite: enableButtonInvite,
                     showButtonLetsPlay: showButtonLetsPlay,
                     showIndicatorWaiting: showIndicatorWaiting,
+                    showOnlineIndicator: true,
                     onClick: function (photoInfo) {
                         window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
                     },

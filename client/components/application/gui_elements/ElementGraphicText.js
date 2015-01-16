@@ -2,6 +2,12 @@
  * Элемент графический текст.
  * Тут каждая буква будет текстом.
  * @constructor
+ * Инициирующие параметры:
+ * x : number координата X
+ * y : number координата Y
+ * width : number ширина поля
+ * height : number высота поля
+ * text : string текст
  */
 ElementGraphicText = function () {
     var self = this;
