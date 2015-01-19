@@ -1,18 +1,18 @@
 CAPIUser = function () {
 
     /**
-     * Авторизация успешна
-     * @param cntx контекст соединения.
-     * @param userId какой id авторизованного юзера сообщаем.
+     * Авторизация успешна.
+     * @param cntx {Object} контекст соединения.
+     * @param userId {Number} какой id авторизованного юзера сообщаем.
      */
     this.authorizeSuccess = function (cntx, userId) {
         LogicUser.authorizeSuccess(userId);
     };
 
     /**
-     * Обновить данные о пользователи
-     * @param cntx контекст соединения.
-     * @param user юзер инфо
+     * Обновить данные о пользователи.
+     * @param cntx {Object} контекст соединения.
+     * @param user {Object} юзер инфо.
      */
     this.updateUserInfo = function (cntx, user) {
         LogicUser.updateUserInfo(user);
@@ -20,9 +20,9 @@ CAPIUser = function () {
 
     /**
      * Обновление данныех о друзьях.
-     * @param cntx контекст соединения.
-     * @param userId id int пользователя, чьи друзья
-     * @param friends [] список друзей.
+     * @param cntx {Object} контекст соединения.
+     * @param userId {Number} id int пользователя, чьи друзья
+     * @param friends {Number[]} список друзей.
      */
     this.updateFriends = function (cntx, userId, friends) {
         LogicFriends.updateFriends(userId, friends);
@@ -30,9 +30,9 @@ CAPIUser = function () {
 
     /**
      * Обновляем кол-во о нлайн игроков.
-     * @param cntx контекст соединения.
-     * @param count кол-во онлайн игроков.
-     * @param userId {Number}
+     * @param cntx {Object} контекст соединения.
+     * @param count {Number} кол-во онлайн игроков.
+     * @param userId {Number} внутрений id пользователя.
      * @param direction {Boolean} true - вошел в игру, false - вышел из игры.
      */
     this.updateOnlineCount = function (cntx, count, userId, direction) {

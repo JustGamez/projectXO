@@ -122,7 +122,7 @@ ElementPhoto = function () {
      * Высота области активности вокруг фотографии.
      * @type {number}
      */
-    var regionHeight = 95;
+    var regionHeight = 145;
 
     /**
      * Пользовательская информация.
@@ -230,13 +230,13 @@ ElementPhoto = function () {
         /* Индикатор онлайн пользователя */
         domOnlineIndicator = GUI.createDom(domRegion);
         domOnlineIndicator.x = 12;
-        domOnlineIndicator.y = regionHeight - 18;
+        domOnlineIndicator.y = 77;
         domOnlineIndicator.width = 15;
         domOnlineIndicator.height = 14;
         /* Кнопка приглашения в игру */
         buttonInvite = GUI.createElement("ElementButton", {
             x: 24,
-            y: regionHeight - 18,
+            y: 77,
             width: 32,
             height: 16,
             srcRest: '/images/photo/buttonInviteRest.png',
@@ -249,8 +249,8 @@ ElementPhoto = function () {
         }, domRegion);
         /* Кнопка "Играём?" */
         buttonLetsPlay = GUI.createElement("ElementButton", {
-            x: -4,
-            y: regionHeight - 18 - 17,
+            x: -2,
+            y: 85,
             width: 90,
             height: 41,
             srcRest: '/images/photo/buttonLetsPlayRest.png',
@@ -262,8 +262,8 @@ ElementPhoto = function () {
         }, domRegion);
         /* Индикатор "Ждём..." */
         domIndicatorWaiting = GUI.createDom(domRegion);
-        domIndicatorWaiting.x = -2;
-        domIndicatorWaiting.y = regionHeight - 18 - 18;
+        domIndicatorWaiting.x = 0;
+        domIndicatorWaiting.y = 85;
         domIndicatorWaiting.width = 90;
         domIndicatorWaiting.height = 41;
         domIndicatorWaiting.backgroundImage = '/images/photo/indicatorWait.png';

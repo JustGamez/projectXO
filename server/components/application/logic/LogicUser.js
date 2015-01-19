@@ -126,14 +126,32 @@ LogicUser = function () {
     var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx) {
         /* if not exists create user */
         if (!user) {
-            DataUser.createFromSocNet(socNetTypeId, socNetUserId, function (user) {
+            createUser(socNetTypeId, socNetUserId, function (user) {
                 authorizeSendSuccess(user, cntx);
-            });
+            })
         } else {
             authorizeSendSuccess(user, cntx);
         }
     };
 
+    /**
+     * Создаёт юзера по данным социальной сети.
+     * @param socNetTypeId {Number} id социальной сети, LogicUser.SocNet.TYPE_*.
+     * @param socNetUserId {Number} id юзера в социальной сети.
+     * @param callback {Function} будет вызван после создания пользователя.
+     */
+    var createUser = function (socNetTypeId, socNetUserId, callback) {
+        DataUser.createFromSocNet(socNetTypeId, socNetUserId, function (user) {
+            LogicRating.onUserCreated(user);
+            callback(user);
+        });
+    };
+
+    /**
+     * Отправить уведомомление клиенту, что авторизация прошла успешно.
+     * @param user {Object} инфо пользователя.
+     * @param cntx {Object} контекст соединения.
+     */
     var authorizeSendSuccess = function (user, cntx) {
         /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
@@ -173,7 +191,7 @@ LogicUser = function () {
 
     /**
      * Является ли пользователь онлайн.
-     * @param userId {Number} id пользователя.
+     * @param userId {int} id пользователя.
      * @returns {boolean}
      */
     this.isUserOnline = function (userId) {
@@ -298,11 +316,10 @@ LogicUser = function () {
     this.onWin = function (userId) {
         DataUser.getById(userId, function (user) {
             if (user) {
+                LogicRating.onPositionScoreUp(user.id);
                 user.score++;
                 DataUser.save(user, function (user) {
-                    for (var userId in userToCntx) {
-                        CAPIUser.updateUserInfo(userId, user);
-                    }
+                    LogicUser.sendToAll(CAPIUser.updateUserInfo, user);
                 });
             } else {
                 Logs.log("LogicUser.onWin. User not found: id=" + userId, Logs.LEVEL_WARNING);

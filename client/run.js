@@ -27,7 +27,7 @@ window.onload = function () {
     /* WebSocket Client */
     webSocketClient = new WebSocketClient();
     webSocketClient.setup({
-        host: 'localhost',
+        host: '192.168.205.2',
         port: 80
     });
 

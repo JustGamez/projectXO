@@ -41,7 +41,7 @@ PageRating = function PageRating() {
             y: 58,
             width: 162,
             height: 82,
-            src: '/images/buttons/ratingMenuRest.png',
+            srcRest: '/images/buttons/ratingMenuRest.png',
             srcHover: '/images/buttons/ratingMenuHover.png',
             srcActive: '/images/buttons/ratingMenuActive.png',
             onClick: LogicPageRating.onMenuButtonClick

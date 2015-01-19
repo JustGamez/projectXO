@@ -110,8 +110,8 @@ DB = function () {
     /**
      * Выполняет вставку в БД.
      * @param tableName {string} имя таблицы.
-     * @param values {object} значения
-     * @param callback {function}
+     * @param values {object} объект значений { fieldName: value }.
+     * @param callback {function}.
      */
     this.insert = function (tableName, values, callback) {
         var query, value, fieldsSQL, valuesSQL;

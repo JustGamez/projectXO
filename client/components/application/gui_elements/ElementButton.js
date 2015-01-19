@@ -137,7 +137,7 @@ ElementButton = function () {
         if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
         dom.backgroundImage = src;
         if (self.title) dom.title = self.title;
-        dom.opacity = self.enabled ? 0.5 : 1.0;
+        dom.opacity = self.enabled ? 1.0 : 0.5;
         dom.redraw();
     };
 

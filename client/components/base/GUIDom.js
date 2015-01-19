@@ -78,9 +78,9 @@ GUIDom = function () {
         /* hidden mode..:begin */
         if (GUIDom.hidePictures) {
             if (GUIDom.makeTransparent) {
-                document.body.style.opacity = 0.06;
+                document.body.style.opacity = 0.03;
             } else {
-                document.body.style.opacity = 0.2;
+                document.body.style.opacity = 0.10;
             }
             dom.style.border = '1px dotted grey';
         }

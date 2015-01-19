@@ -28,7 +28,9 @@ CommandLineController = function () {
             var chunk = process.stdin.read();
             if (chunk !== null) {
                 /* Remove feed line and return carriage */
-                chunk = chunk.replace("\r\n", "");
+                /* В Unix будет только '\n', а в windows '\r\n' */
+                chunk = chunk.replace("\n", "");
+                chunk = chunk.replace("\r", "");
                 switch (chunk) {
                     case 'help':
                         console.log('help!!!');
@@ -39,7 +41,7 @@ CommandLineController = function () {
                         process.exit();
                         break;
                     default:
-                        log("Unknown command");
+                        log("Unknown command: `" + chunk + "`");
                         showHelp();
                         break;
                 }

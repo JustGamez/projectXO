@@ -8,7 +8,7 @@
 /* Подключаем nodeJS модули. */
 var FS = require('fs');
 var PATH = require('path');
-require('./../config.js');
+require('./../Config.js');
 require('./functions.js');
 
 /**
@@ -55,8 +55,7 @@ require('./functions.js');
 
     /**
      * Проверка компонента.
-     * @param path путь к файлу компонента.
-     * @param name имя компонената.
+     * @param path {string} путь к файлу компонента.
      */
     var validateComponent = function (path) {
         var name;

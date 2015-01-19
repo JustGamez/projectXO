@@ -69,9 +69,10 @@ LogicUser = function () {
             /* некоторая заглушка */
             return {
                 id: null,
-                score: null,
-                firstName: '',
-                lastName: ''
+                firstName: '-',
+                lastName: '-',
+                isBusy: false,
+                onGameId: 0
             };
         }
     };
@@ -87,7 +88,9 @@ LogicUser = function () {
      * @param userId {int}
      */
     this.loadUserInfoById = function (userId) {
-        if (authorizedUserId == null)return;
+        if (authorizedUserId == null) {
+            return;
+        }
         if (!waitForLoadingUser[userId]) {
             waitForLoadingUser[userId] = true;
             SAPIUser.sendMeUserInfo(userId);
@@ -106,8 +109,8 @@ LogicUser = function () {
             /* Заглушка */
             users[user.id] = {
                 id: user.id,
-                firstName: '',
-                lastName: '',
+                firstName: '-',
+                lastName: '-',
                 isBusy: false,
                 onGameId: 0
             };

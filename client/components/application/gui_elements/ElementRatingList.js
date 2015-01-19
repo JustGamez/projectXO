@@ -163,10 +163,16 @@ ElementRatingList = function () {
      */
     this.update = function (users) {
         for (var i in users) {
-            users[i].score = users[i].score ? users[i].score.toString() : '-';
-            users[i].position = users[i].position ? users[i].position.toString() : '-';
+            users[i].score = typeof users[i].score == 'number' ? users[i].score.toString() : '-';
+            users[i].position = typeof users[i].position == 'number' ? users[i].position.toString() : '-';
         }
         rowsData = users;
+        /* Отсортируем по позициям. */
+        rowsData.sort(function (a, b) {
+            if (a.position < b.position) return -1;
+            if (a.position > b.position) return 1;
+            return 0;
+        });
         self.redraw();
     };
 };

@@ -17,9 +17,9 @@ Logs = function () {
 
     /**
      * Сюда и проходят логи.
-     * @param message сообщение
-     * @param level тип Logs.LEVEL_*
-     * @param details детали
+     * @param message {string} сообщение.
+     * @param level {int} тип Logs.LEVEL_*.
+     * @param [details] {*} необязательный параметр, детали.
      */
     this.log = function (message, level, details) {
         var date, dateFormated, logText, levelTitle;
