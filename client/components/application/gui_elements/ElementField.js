@@ -72,6 +72,7 @@ ElementField = function () {
      * @type {function}
      */
     this.onClick = null;
+
     /* Поле 3х3 */
     this.configure[LogicXO.FIELD_TYPE_3X3] = {
         srcField: '/images/fields/3x3Field.png',
@@ -90,6 +91,7 @@ ElementField = function () {
     this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_VERTICAL] = '/images/fields/3x3LineVertical.png';
     this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_LEFT_UP] = '/images/fields/3x3LineLeftToUp.png';
     this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_LEFT_DOWN] = '/images/fields/3x3LineLeftToDown.png';
+
     /* Поле 15х15 */
     this.configure[LogicXO.FIELD_TYPE_15X15] = {
         srcField: '/images/fields/15x15Field.png',
@@ -149,7 +151,7 @@ ElementField = function () {
             for (var x = 0; x < self.configure[typeId].fieldSize; x++) {
                 dom = GUI.createDom();
                 dom.x = self.configure[typeId].signOffset + self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding);
-                dom.y = self.configure[typeId].signOffset + self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding );
+                dom.y = self.configure[typeId].signOffset + self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding);
                 dom.width = self.configure[typeId].signWidth;
                 dom.height = self.configure[typeId].signHeight;
                 dom.pointer = GUI.POINTER_HAND;

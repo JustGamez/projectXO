@@ -73,7 +73,10 @@ ApiRouter = function () {
         // добавим к аргументам контекст соединения.
         args.unshift(connections[id]);
         // выполним запрашиваемый метод.
-        Logs.log(">> " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
+        var connectionsKey;
+        connectionsKey = '';
+        if (id)connectionsKey = id;
+        Logs.log(id + " " + ">> " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
         map[group][method].apply(self, args);
     };
 
@@ -94,8 +97,13 @@ ApiRouter = function () {
 
     this.executeRequest = function (group, method, args, cntxList) {
         /* Конвертируем объект в массив. */
+        var connectionsKey;
+        connectionsKey = '';
+        for (var i in cntxList) {
+            connectionsKey += cntxList[i].connectionId
+        }
         args = Array.prototype.slice.call(args);
-        Logs.log("<< " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
+        Logs.log(connectionsKey + " " + "<< " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
         var packet = {
             group: group,
             method: method,
@@ -113,7 +121,10 @@ ApiRouter = function () {
             cntxListLength++;
         }
         if (cntxListLength == 0) {
-            Logs.log("ApiRouter. Try send to empty contextlist.", Logs.LEVEL_WARNING, {packet: packet, cntxList: cntxList});
+            Logs.log("ApiRouter. Try send to empty contextlist.", Logs.LEVEL_WARNING, {
+                packet: packet,
+                cntxList: cntxList
+            });
         }
     };
 

@@ -77,12 +77,14 @@ GUIDom = function () {
         };
         /* hidden mode..:begin */
         if (GUIDom.hidePictures) {
-            if (GUIDom.makeTransparent) {
-                document.body.style.opacity = 0.03;
-            } else {
-                document.body.style.opacity = 0.10;
-            }
+            document.body.style.opacity = 0.10;
             dom.style.border = '1px dotted grey';
+        }
+        /* Указанная прозрачность картинок. */
+        if (GUIDom.pictureOpacities) {
+            document.body.style.opacity = GUIDom.pictureOpacities;
+            dom.style.border = '4px solid black';
+            dom.style.backgroundColor = 'black';
         }
         /* hidden mode..:finish */
         /* Добавим дом к родителю. */
@@ -291,16 +293,25 @@ GUIDom = function () {
  * В результате мы установим GUIDom.hidePictures = [true|false].
  */
 (function () {
-    /* режим скрытых картинок */
-    if (window.location.href.indexOf("hide_pictures=true") != -1) {
+    /* Распарсим по быстром url адрес. */
+    var urlParams;
+    (function () {
+        var tmp1, tmp2;
+        urlParams = {};
+        url = window.location.href;
+        tmp1 = url.substr(url.indexOf('?') + 1).split('&');
+        for (var i in tmp1) {
+            tmp = tmp1[i].split('=');
+            urlParams[tmp[0]] = tmp[1];
+        }
+    })();
+    /* Режим скрытых картинок */
+    if (urlParams.hide_pictures && urlParams.hide_pictures == 'true') {
         GUIDom.hidePictures = true;
     } else {
         GUIDom.hidePictures = false;
     }
-    /* просто делать картинки прозрачными */
-    if (window.location.href.indexOf("make_transparent=true") != -1) {
-        GUIDom.makeTransparent = true;
-    } else {
-        GUIDom.makeTransparent = false;
+    if (urlParams.picture_opacities) {
+        GUIDom.pictureOpacities = urlParams.picture_opacities;
     }
 })();

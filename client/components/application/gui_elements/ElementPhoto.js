@@ -256,6 +256,7 @@ ElementPhoto = function () {
             srcRest: '/images/photo/buttonLetsPlayRest.png',
             srcHover: '/images/photo/buttonLetsPlayHover.png',
             srcActive: '/images/photo/buttonLetsPlayActive.png',
+            title: 'Согласиться и войти в игру.',
             onClick: function (mouseEvent, dom) {
                 onButtonLetsPlayClick.call(null, photoInfo);
             }
@@ -267,6 +268,7 @@ ElementPhoto = function () {
         domIndicatorWaiting.width = 90;
         domIndicatorWaiting.height = 41;
         domIndicatorWaiting.backgroundImage = '/images/photo/indicatorWait.png';
+        domIndicatorWaiting.title = 'Ожидание оппонента.';
     };
 
     /**

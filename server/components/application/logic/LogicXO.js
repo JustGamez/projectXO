@@ -70,21 +70,25 @@ LogicXO = function () {
      * @type {number}
      */
     this.STATUS_WAIT = 1;
+
     /**
      * Игра запущена, идёт игра.
      * @type {number}
      */
     this.STATUS_RUN = 2;
+
     /**
      * Игра закрыта до результата. Видимо кто-то вышел из игры.
      * @type {number}
      */
     this.STATUS_CLOSED = 3;
+
     /**
      * Кто то выиграл.
      * @type {number}
      */
     this.STATUS_SOMEBODY_WIN = 4;
+
     /**
      * Никто не выиграл.
      * @type {number}
@@ -195,7 +199,7 @@ LogicXO = function () {
      * @returns {*}
      */
     this.chooseSigns = function (game) {
-        /* Оба не имеют запрашиваемые знаки */
+        /* Оба не имеют запрашиваемых знаков. */
         if (game.creatorSignId == LogicXO.SIGN_ID_Empty && game.joinerSignId == LogicXO.SIGN_ID_Empty) {
             if (Math.round(Math.random() * 2) > 1) {
                 game.XUserId = game.creatorUserId;
@@ -205,10 +209,16 @@ LogicXO = function () {
                 game.OUserId = game.creatorUserId;
             }
         }
-        /* Оба нимеют запрашиваемые знаки */
+        /* Оба имеют запрашиваемых знаков. */
         if (game.creatorSignId != LogicXO.SIGN_ID_Empty && game.joinerSignId != LogicXO.SIGN_ID_Empty) {
-            game.XUserId = (game.creatorSignId == LogicXO.SIGN_ID_X) ? game.creatorUserId : game.joinerUserId;
-            game.OUserId = (game.joinerUserId == LogicXO.SIGN_ID_O) ? game.joinerUserId : game.creatorUserId;
+            /* Тут немного хитро, мы пологаем что одинаковые знаки не придут к нам. */
+            if (game.creatorSignId == LogicXO.SIGN_ID_X) {
+                game.XUserId = game.creatorUserId;
+                game.OUserId = game.joinerUserId;
+            } else {
+                game.XUserId = game.joinerUserId;
+                game.OUserId = game.creatorUserId;
+            }
         }
         /* Только создатель имеет знак */
         if (game.creatorSignId != LogicXO.SIGN_ID_Empty && game.joinerSignId == LogicXO.SIGN_ID_Empty) {

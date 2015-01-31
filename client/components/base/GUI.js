@@ -106,11 +106,12 @@ GUI = function () {
         }
         if (parentDom) {
             GUI.pushParent(parentDom);
-        }
-        element.init();
-        if (parentDom) {
+            element.init();
             GUI.popParent();
+        } else {
+            element.init();
         }
+
         return element;
     };
 

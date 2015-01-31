@@ -230,7 +230,7 @@ LogicUser = function () {
      */
     var userAddConn = function (user, cntx) {
         if (!userToCntx[user.id]) {
-            Logs.log("CREATE user context", Logs.LEVEL_DETAIL);
+            Logs.log("CREATE user context. uid:" + user.id + ", cid:" + cntx.connectionId, Logs.LEVEL_DETAIL);
             userToCntx[user.id] = {
                 conns: {},
                 connsCount: 0
@@ -279,7 +279,10 @@ LogicUser = function () {
         gameIds = LogicGameStore.getIdsForUserId(userId);
         LogicWaitersStack.deleteByUserId(userId);
         for (var i in gameIds) {
-            ActionsRandomGame.closeGame(userId, gameIds[i]);
+            ActionsRandomGame.closeGame(userId, gameIds[i], function (game) {
+                CAPIGame.updateInfo(game.creatorUserId, game);
+                CAPIGame.updateInfo(game.joinerUserId, game);
+            });
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
     };
