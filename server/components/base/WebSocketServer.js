@@ -24,10 +24,16 @@ WebSocketServer = function () {
     var lastConnectionId = null;
 
     /**
-     * Перезагружать ли клиентский код, каждый раз. Когда его запрашивают.
+     * Перезагружать ли клиентский код, каждый раз, когда его запрашивают.
      * @type {boolean}
      */
     var reloadClientCodeEveryRequest = null;
+
+    /**
+     * Перезагружать ли код робота Криспи, каждый раз, когда его запрашивают.
+     * @type {boolean}
+     */
+    var reloadRobotKrispiCodeEveryRequest = true;
 
     /**
      * Порт для прослушки.
@@ -40,6 +46,12 @@ WebSocketServer = function () {
      * @type {string}
      */
     var clientCodePath = null;
+
+    /**
+     * Путь где находиться код робота Криспи.
+     * @type {string}
+     */
+    var robotCodePath = '../robotKrispi/';
 
     /**
      * Путь откуда загружать картинки.
@@ -129,9 +141,15 @@ WebSocketServer = function () {
     var connectionStack = {};
 
     /**
-     * Клинтский код.
+     * Клиентский код.
+     * @type {string}
      */
     var clientCode = '';
+    /**
+     * Код робота Криспи.
+     * @type {string}
+     */
+    var robotKrispiCode = null;
 
     /**
      * Тут храниться HTTP сервер, nodeJS-модуль
@@ -182,6 +200,19 @@ WebSocketServer = function () {
     };
 
     /**
+     * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
+     */
+    var loadRobotKrispiCode = function () {
+        Logs.log("Load Krispi robot code.");
+        /* Сформируем код робота. */
+        robotKrispiCode = "";
+        robotKrispiCode += "<HTML><HEAD><meta charset='utf-8' />";
+        robotKrispiCode += getRobotKrispiJSCode();
+        robotKrispiCode += "</HEAD><BODY>";
+        robotKrispiCode += "</BODY></HTML>";
+    };
+
+    /**
      * Вернем клиентские js-скрипты.
      */
     var getClientJSCode = function () {
@@ -189,6 +220,16 @@ WebSocketServer = function () {
         /* Загрузим список файлов клиентского кода. */
         jsFiles = getFileListRecursive(clientCodePath);
         return clientCodePrepareCode(jsFiles);
+    };
+
+    /**
+     * Вернем js-код робота.(js-scripts).
+     */
+    var getRobotKrispiJSCode = function () {
+        var jsFiles;
+        /* Загрузим список файлов робота кода. */
+        jsFiles = getFileListRecursive(robotCodePath);
+        return robotCodePrepareCode(jsFiles);
     };
 
     /**
@@ -260,8 +301,43 @@ WebSocketServer = function () {
     };
 
     /**
+     * Загрузим код всех файлов, конкатинируем и составим из них одну строку кода.
+     * @param files[]
+     */
+    var robotCodePrepareCode = function (files) {
+        var code, path, file_content, name;
+        code = '';
+        for (var i in files) {
+            path = files[i];
+            file_content = FS.readFileSync(path);
+            if (file_content == 'LoadFromClientCode') {
+                /*
+                 Меняем базовый путь роботского-кода на клиентский путь и загружаем аналогичный файл,
+                 по идентичному относительному пути.
+                 */
+                path = path.replace(robotCodePath, clientCodePath);
+                file_content = FS.readFileSync(path);
+                if (file_content == 'ClientServerCompliant') {
+                    path = path.replace(clientCodePath, '');
+                    file_content = FS.readFileSync(path);
+                }
+            }
+            code += "\r\n<script type='text/javascript'>" +
+            "\r\n/* " + path + " */\r\n" +
+            file_content + "\r\n</script>";
+            name = PATH.basename(path, '.js');
+            /* Добавим пути к файлам компонент, это нужно для отладки */
+            code += '<script>' +
+            'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"' +
+            '};</script>';
+        }
+        return code;
+    };
+
+    /**
      * Обработчки запросов от HTTP сервера.
      * при запросе ^/clientCode?*, вернёт клинтский код.
+     * при запросе ^/robotKrispiCode?*, вернёт код робота Криспи.
      * при запросе ^{imagesPrefix}*, вернёт соответствующую картинку из папки imagePath
      * при любом другом запросе вернёт 404 ошибку.
      * @param request
@@ -298,6 +374,18 @@ WebSocketServer = function () {
             }
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end(clientCode);
+            return true;
+        }
+        /* Запрашивается код робота Криспи. ? */
+        /**
+         * @todo create config varialbe, like a Configuration.robotKrispiEnabled or something like this.
+         */
+        if (request.url.indexOf('/robotKrispiCode?') == 0) {
+            if (reloadRobotKrispiCodeEveryRequest) {
+                loadRobotKrispiCode();
+            }
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end(robotKrispiCode);
             return true;
         }
         /* Во всех других случаях ошибка 404(Not found) */

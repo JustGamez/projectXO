@@ -43,84 +43,11 @@ LogicUser = function () {
             return;
         }
         if (!checkResult)return;
+        Profiler.start(Profiler.ID_AUTHORIZATION_BY_VK);
         /* get from db */
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
             authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
         });
-    };
-
-    /**
-     * Отправка информации о пользователе.
-     * @param toUserId {Number} кому отправляем.
-     * @param userId {Number} данные о каком пользователе.
-     */
-    this.sendUserInfo = function (userId, toUserId) {
-        DataUser.getById(userId, function (user) {
-            if (user) {
-                user.online = self.isUserOnline(user.id);
-                CAPIUser.updateUserInfo(toUserId, user);
-                refreshUserSocNetInfo(user, function (user) {
-                    user.online = self.isUserOnline(user.id);
-                    CAPIUser.updateUserInfo(toUserId, user);
-                });
-            } else {
-                Logs.log("LogicUser.sendUserInfo. User not found: id=" + userId, Logs.LEVEL_WARNING);
-            }
-        });
-    };
-
-    /**
-     * Обновление данных из социальной сети для пользователя.
-     * @param user
-     * @param callback
-     */
-    var refreshUserSocNetInfo = function (user, callback) {
-        SocNet.getUserInfo(user.socNetTypeId, user.socNetUserId, function (info) {
-            user.firstName = info.firstName;
-            user.lastName = info.lastName;
-            user.photo50 = info.photo50;
-            switch (info.sex) {
-                case SocNet.SEX_MAN:
-                    user.sex = LogicUser.SEX_MAN;
-                    break;
-                case SocNet.SEX_WOMAN:
-                    user.sex = LogicUser.SEX_WOMAN;
-                    break;
-                default:
-                    user.sex = LogicUser.SEX_UNKNOWN;
-            }
-            DataUser.save(user, function (user) {
-                if (callback) {
-                    callback(user);
-                }
-            });
-        });
-    };
-
-    /**
-     * Отправка списка друзей в соединение.
-     * @param userId {Number}
-     * @param cntx {object} контекст соединения
-     */
-    this.sendFriends = function (userId, cntx) {
-        DataUser.getById(userId, function (user) {
-            if (user) {
-                SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
-                    DataUser.getListWhere({
-                        socNetTypeId: [user.socNetTypeId],
-                        socNetUserId: [friends, DB.WHERE_IN]
-                    }, function (rows) {
-                        var ids = [];
-                        for (var i in rows) {
-                            ids.push(rows[i].id);
-                        }
-                        CAPIUser.updateFriends(cntx.userId, userId, ids);
-                    });
-                });
-            } else {
-                Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
-            }
-        })
     };
 
     var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx) {
@@ -156,7 +83,94 @@ LogicUser = function () {
         /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
+        Profiler.stop(Profiler.ID_AUTHORIZATION_BY_VK);
         CAPIUser.authorizeSuccess(user.id, user.id);
+    };
+
+    /**
+     * Отправка информации о пользователе.
+     * @param toUserId {Number} кому отправляем.
+     * @param userId {Number} данные о каком пользователе.
+     */
+    this.sendUserInfo = function (userId, toUserId) {
+        Profiler.start(Profiler.ID_SEND_USER_INFO);
+        DataUser.getById(userId, function (user) {
+            if (user) {
+                user.online = self.isUserOnline(user.id);
+                Profiler.stop(Profiler.ID_SEND_USER_INFO);
+                CAPIUser.updateUserInfo(toUserId, user);
+                refreshUserSocNetInfo(user, function (user) {
+                    user.online = self.isUserOnline(user.id);
+                    CAPIUser.updateUserInfo(toUserId, user);
+                });
+            } else {
+                Logs.log("LogicUser.sendUserInfo. User not found: id=" + userId, Logs.LEVEL_WARNING);
+            }
+        });
+    };
+
+    /**
+     * Обновление данных из социальной сети для пользователя.
+     * @param user
+     * @param callback
+     */
+    var refreshUserSocNetInfo = function (user, callback) {
+        Profiler.start(Profiler.ID_UPDATE_USER_SOCNET_INFO);
+        SocNet.getUserInfo(user.socNetTypeId, user.socNetUserId, function (info) {
+            user.firstName = info.firstName;
+            user.lastName = info.lastName;
+            user.photo50 = info.photo50;
+            switch (info.sex) {
+                case SocNet.SEX_MAN:
+                    user.sex = LogicUser.SEX_MAN;
+                    break;
+                case SocNet.SEX_WOMAN:
+                    user.sex = LogicUser.SEX_WOMAN;
+                    break;
+                default:
+                    user.sex = LogicUser.SEX_UNKNOWN;
+            }
+            DataUser.save(user, function (user) {
+                if (callback) {
+                    Profiler.stop(Profiler.ID_UPDATE_USER_SOCNET_INFO);
+                    callback(user);
+                }
+            });
+        });
+    };
+
+    /**
+     * Отправка списка друзей в соединение.
+     * @param userId {Number}
+     * @param cntx {object} контекст соединения
+     */
+    this.sendFriends = function (userId, cntx) {
+        Profiler.start(Profiler.ID_SEND_FRIENDS);
+        DataUser.getById(userId, function (user) {
+            if (user) {
+                SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
+                    if (friends == undefined) {
+                        CAPIUser.updateFriends(cntx.userId, userId, []);
+                        Profiler.stop(Profiler.ID_SEND_FRIENDS);
+                        return;
+                    }
+                    DataUser.getListWhere({
+                        socNetTypeId: [user.socNetTypeId],
+                        socNetUserId: [friends, DB.WHERE_IN]
+                    }, function (rows) {
+                        var ids = [];
+                        for (var i in rows) {
+                            ids.push(rows[i].id);
+                        }
+                        Profiler.stop(Profiler.ID_SEND_FRIENDS);
+                        CAPIUser.updateFriends(cntx.userId, userId, ids);
+                    });
+                });
+            } else {
+                Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
+                Profiler.stop(Profiler.ID_SEND_FRIENDS);
+            }
+        })
     };
 
     /**
@@ -208,7 +222,9 @@ LogicUser = function () {
 
     /** Отправляем кол-во онлайн пользователей */
     this.sendOnlineCount = function (cntx) {
+        Profiler.start(Profiler.ID_SENDME_ONLINE_COUNT);
         CAPIUser.updateOnlineCount(cntx.userId, self.getOnlineCount());
+        Profiler.stop(Profiler.ID_SENDME_ONLINE_COUNT);
     };
 
     /**

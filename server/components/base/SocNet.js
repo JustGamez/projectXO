@@ -158,10 +158,14 @@ SocNet = function () {
         req = HTTPS.request(options, function (res) {
             res.on('data', function (data) {
                 Logs.log("https answer: " + data, Logs.LEVEL_DETAIL);
-                data = JSON.parse(data);
-                data = data.response;
-                UrlCache.set(key, data);
-                callback(data);
+                try {
+                    data = JSON.parse(data);
+                    data = data.response;
+                    UrlCache.set(key, data);
+                    callback(data);
+                } catch (e) {
+                    Logs.log("JSON.parse error", Logs.LEVEL_ERROR, data);
+                }
             });
         });
         req.end();

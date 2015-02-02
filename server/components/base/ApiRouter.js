@@ -77,6 +77,8 @@ ApiRouter = function () {
         connectionsKey = '';
         if (id)connectionsKey = id;
         Logs.log(id + " " + ">> " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
+        /* group_method.counter ++ */
+        ApiRouterMetrics[group][method]++;
         map[group][method].apply(self, args);
     };
 
@@ -104,6 +106,8 @@ ApiRouter = function () {
         }
         args = Array.prototype.slice.call(args);
         Logs.log(connectionsKey + " " + "<< " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
+        /* group_method.counter ++ */
+        ApiRouterMetrics[group][method]++;
         var packet = {
             group: group,
             method: method,

@@ -9,10 +9,12 @@ Logs = function () {
      * Уровень срабатывания.
      * @type {number} Logs.LEVEL_*
      */
-    var level = null;
+    var trigger_level = null;
 
     this.setup = function (setup) {
-        if (setup.level)level = setup.level;
+        if (setup.level) {
+            trigger_level = setup.level;
+        }
     };
 
     /**
@@ -24,9 +26,11 @@ Logs = function () {
     this.log = function (message, level, details) {
         var date, dateFormated, logText, levelTitle;
         // если не передан уровень, то считаем его детальным.
-        if (!level)level = Logs.LEVEL_DETAIL;
+        if (!level) {
+            level = Logs.LEVEL_DETAIL;
+        }
         // если уровень лога ниже уровня срабатывания ничего не делаем.
-        if (level < self.level)return;
+        if (level < trigger_level)return;
         // сформируем сообщение лога.
         date = new Date();
         // тут мы получим "01-01-2014 15:55:55"

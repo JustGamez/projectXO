@@ -86,7 +86,6 @@ WebSocketClient = function () {
      * Установим обработчики.
      */
     var init = function () {
-        var uri;
         Logs.log("WebSocketClient запущен.");
         connect();
     };

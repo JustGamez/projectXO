@@ -15,6 +15,13 @@ SAPIUser = function () {
             Logs.log("SAPIUser.authorizeByVK: must have authParams", Logs.LEVEL_WARNING);
             return;
         }
+        if (cntx.isAuthorized) {
+            Logs.log("SAPIUser.authorizeByVK: user already authorized", Logs.LEVEL_WARNING, {
+                userId: cntx.userId,
+                socNetUserId: socNetUserId
+            });
+            return;
+        }
         LogicUser.authorizeByVK(socNetUserId, authParams, cntx);
     };
 
