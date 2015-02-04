@@ -17,15 +17,8 @@ DataGames = function () {
         games[game.id].lastY = old.lastY;
     };
 
-    this.getRunGames = function () {
-        var out;
-        out = new Array();
-        for (var i in games) {
-            if (games[i].status == LogicXO.STATUS_RUN) {
-                out.push(games[i]);
-            }
-        }
-        return out;
+    this.getAll = function () {
+        return games;
     }
 };
 
