@@ -350,9 +350,9 @@ WebSocketServer = function () {
         /* Запрашивается картинка? */
         if (request.url.indexOf(imagesPrefix) == 0) {
             Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
-            // отрезаем imagesPrefix
+            /* отрезаем imagesPrefix */
             path = request.url.substr(imagesPrefix.length);
-            // уберём GET параметры.
+            /* уберём GET параметры. */
             path = path.substr(0, path.indexOf('?'));
 
             FS.readFile(imagesPath + path, function (err, data) {
@@ -372,11 +372,13 @@ WebSocketServer = function () {
         }
         /* Запрашивается клинетский код? */
         if (request.url.indexOf('/clientCode?') == 0) {
+            Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
             }
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end(clientCode);
+            Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
             return true;
         }
         /* Запрашивается код робота Криспи. ? */
