@@ -53,6 +53,10 @@ Profiler = function () {
             output += rps;
             output += "\r\n";
         }
+        var memoryUsage = process.memoryUsage();
+        output += "rss: " + Math.round(memoryUsage.rss / 1024 / 1024) + " Mb\r\n";
+        output += "heapTotal: " + Math.round(memoryUsage.heapTotal / 1024 / 1024) + " Mb\r\n";
+        output += "heapUsed: " + Math.round(memoryUsage.heapUsed / 1024 / 1024) + " Mb\r\n";
         console.log(output);
     };
 };

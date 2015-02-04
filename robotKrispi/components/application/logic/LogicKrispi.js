@@ -7,7 +7,18 @@ LogicKrispiRobot = function () {
 
     var onAuthorizeCallback = null;
 
+    /**
+     * id всех авторизованных юзеров.
+     * @type {Array}
+     */
+    this.allUserIds = [];
+
+    /**
+     * id авторизованого юзера, под которым Криспи делает все запросы.
+     * @type {null}
+     */
     this.authorizedUserId = null;
+
     /**
      * Точка входа, тут всё начнётся :)
      */
@@ -38,6 +49,7 @@ LogicKrispiRobot = function () {
      * После авторизации запустим тест.
      */
     this.onAuthorizationSuccess = function (userId) {
+        LogicKrispiRobot.allUserIds.push(userId);
         LogicKrispiRobot.authorizedUserId = userId;
         onAuthorizeCallback(userId);
     };

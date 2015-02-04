@@ -42,6 +42,14 @@ Profiler.ID_SAPIGAME_DO_MOVE = Profiler.getNewId("ID_SAPIGAME_DO_MOVE");
 /* ActionsRandomGame */
 Profiler.ID_ACTIONSRANDOMGAME_CREATE_WAITER = Profiler.getNewId("ID_ACTIONSRANDOMGAME_CREATE_WAITER");
 Profiler.ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME = Profiler.getNewId("ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME");
+/* SAPIRobot */
+Profiler.ID_SAPIROBOT_CREATE_GAME = Profiler.getNewId("ID_SAPIROBOT_CREATE_GAME");
+Profiler.ID_SAPIROBOT_DO_MOVE = Profiler.getNewId("ID_SAPIROBOT_DO_MOVE");
+Profiler.ID_SAPIROBOT_CHECKWINNER = Profiler.getNewId("ID_SAPIROBOT_CHECKWINNER");
+Profiler.ID_SAPIROBOT_CLOSE_GAME = Profiler.getNewId("ID_SAPIROBOT_CLOSE_GAME");
+/* LogicXO */
+Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
+
 
 /*  WebSocketServer */
 webSocketServer = new WebSocketServer();

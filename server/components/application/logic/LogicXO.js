@@ -363,6 +363,7 @@ LogicXO = function () {
      * @param game {Object}
      */
     this.findWinLine = function (game) {
+        Profiler.start(Profiler.LOGIC_XO_FIND_WIN_LINE);
         var fieldSize, lineSize, lineIds, loseLinesCount, winnerLineId, lastResult, res;
         fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
         lineSize = LogicXO.getLineSize(game.fieldTypeId);
@@ -410,6 +411,7 @@ LogicXO = function () {
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && loseLinesCount == lineSize * 2 + 2) {
             result.noBodyWin = true;
         }
+        Profiler.stop(Profiler.LOGIC_XO_FIND_WIN_LINE);
         return result;
     };
 

@@ -16,14 +16,14 @@ KrispiCases = function () {
         setInterval(self.SAPIRobotGame, self.intensivityInterval + deviation());
         setInterval(self.SAPIUser, self.intensivityInterval + deviation());
         setInterval(self.SAPIUserState, self.intensivityInterval + deviation());
-        /* умножим на большое число, всё таки там 140 картинок пачкой запрашиваются. */
+        /* Умножим на большое число, всё таки там 140 картинок пачкой запрашиваются. */
         setInterval(self.getImages, self.intensivityInterval * 10 + deviation());
         setInterval(self.loadClient, self.intensivityInterval + deviation());
     };
 
     /**
      * Нагрузка, загрузка клиента.
-     * state: ...
+     * state: completed.
      */
     this.loadClient = function () {
         var list, xmlhttp;
@@ -203,6 +203,11 @@ KrispiCases = function () {
         SAPIChat.sendMessage(rndMessageString());
     };
 
+    /**
+     * Нагрузка SAPIGame do move.s
+     * state: completed.
+     * @constructor
+     */
     this.SAPIGameDoMove = function () {
         var allGames = DataGames.getAll();
         /* Переберем каждую отдельную, активную игру, и сделаем в ней ход. */
@@ -214,7 +219,12 @@ KrispiCases = function () {
                 continue;
             }
             if (LogicXO.userCanDoMove(game, LogicKrispiRobot.authorizedUserId, game.lastX, game.lastY)) {
-                SAPIGame.doMove(game.id, game.lastX, game.lastY, true);
+                if (game.isRandom) {
+                    SAPIGame.doMove(game.id, game.lastX, game.lastY, true);
+                }
+                if (game.vsRobot) {
+                    SAPIRobotGame.doMove(game.id, game.lastX, game.lastY, true);
+                }
             }
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
             game.lastX++;
@@ -223,18 +233,29 @@ KrispiCases = function () {
                 game.lastY++;
             }
             if (game.lastY >= fieldSize) {
-                SAPIGame.closeRandomGame(game.id);
+                if (game.isRandom) {
+                    SAPIGame.closeRandomGame(game.id);
+                }
+                if (game.vsRobot) {
+                    SAPIRobotGame.closeGame(game.id);
+                    SAPIRobotGame.checkWinner(game.id);
+                }
             }
         }
     };
 
+    /**
+     * Нагрузка SAPIGame cancel random game.
+     * state: completed.
+     * @constructor
+     */
     this.SAPIGameCancelRandomGame = function () {
         SAPIGame.cancelRandomGameRequests();
     };
 
     /**
      * Нагрузка SAPIGame. create random game.
-     * state: uncompleted.
+     * state: completed.
      * @constructor
      */
     this.SAPIGameСreateRandomGame = function () {
@@ -252,12 +273,15 @@ KrispiCases = function () {
      * @constructor
      */
     this.SAPIInvites = function () {
-        SAPIInvites.send(LogicKrispiRobot.authorizedUserId, rndId());
+        var uid, n;
+        n = Math.round(Math.random() * LogicKrispiRobot.allUserIds.length) - 1;
+        uid = LogicKrispiRobot.allUserIds[n];
+        SAPIInvites.send(LogicKrispiRobot.authorizedUserId, uid);
     };
 
     /**
      * Нагрузка SAPIRating.
-     * state: uncompleted.
+     * state: completed.
      * @constructor
      */
     this.SAPIRating = function () {
@@ -270,7 +294,12 @@ KrispiCases = function () {
      * @constructor
      */
     this.SAPIRobotGame = function () {
-
+        SAPIRobotGame.startGame(LogicXO.FIELD_TYPE_15X15, LogicXO.SIGN_ID_Empty);
+        SAPIRobotGame.startGame(LogicXO.FIELD_TYPE_15X15, LogicXO.SIGN_ID_X);
+        SAPIRobotGame.startGame(LogicXO.FIELD_TYPE_15X15, LogicXO.SIGN_ID_O);
+        SAPIRobotGame.startGame(LogicXO.FIELD_TYPE_3X3, LogicXO.SIGN_ID_Empty);
+        SAPIRobotGame.startGame(LogicXO.FIELD_TYPE_3X3, LogicXO.SIGN_ID_X);
+        SAPIRobotGame.startGame(LogicXO.FIELD_TYPE_3X3, LogicXO.SIGN_ID_O);
     };
 
     /**
