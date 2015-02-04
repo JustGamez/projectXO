@@ -91,6 +91,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
             return;
         }
+        Profiler.start(Profiler.ID_SAPIGAME_DO_MOVE);
         ActionsRandomGame.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
             /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
             if (game.status != LogicXO.STATUS_RUN) {
@@ -106,6 +107,7 @@ SAPIGame = function () {
             }
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);
+            Profiler.stop(Profiler.ID_SAPIGAME_DO_MOVE);
         });
     };
 };

@@ -8,6 +8,7 @@ ActionsChat = function () {
      */
     this.sendMessage = function (userId, text) {
         var timestamp;
+        Profiler.start(Profiler.ID_SAPICHAT_SEND_MESSAGE);
         timestamp = Math.floor(new Date() / 1000);
         LogicChatCache.add(userId, text, timestamp);
         LogicUser.sendToAll(CAPIChat.getNewMessage, userId, text, timestamp);
@@ -18,6 +19,7 @@ ActionsChat = function () {
         if (cacheSize >= Config.Chat.cacheSize) {
             self.flushCache(Config.Chat.lastMessagesCount);
         }
+        Profiler.stop(Profiler.ID_SAPICHAT_SEND_MESSAGE);
     };
 
     /**

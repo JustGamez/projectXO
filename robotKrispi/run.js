@@ -13,20 +13,17 @@ window.onload = function () {
      * Конфигурация, вынести в отдельный файл.
      * @type {Object}
      */
-    Config = {};
+    Config = {
+        intensivityInterval: 1000,
+        onlinePassiveUsers: 2,
+        ApiRouterMetricsReportnterval: 50000
+    };
 
     /**
      * Настройки логов.
      */
     Logs.setup({
-        level: Logs.LEVEL_DETAIL
-    });
-
-    /* WebSocket Client */
-    webSocketClient = new WebSocketClient();
-    webSocketClient.setup({
-        host: '192.168.205.2',
-        port: 80
+        level: Logs.LEVEL_ERROR
     });
 
     /* ApiRouterMetrics */
@@ -46,30 +43,70 @@ window.onload = function () {
         CAPIUser: true,
         CAPIUserState: true
     });
+    setInterval(ApiRouterMetrics.printMetrics, Config.ApiRouterMetricsReportnterval);
 
-    setInterval(ApiRouterMetrics.printMetrics, 5000);
-
-    /* ApiRouter */
-    apiRouter = new ApiRouter();
-    apiRouter.setMap({
-        CAPIUser: CAPIUser,
-        CAPIGame: CAPIGame,
-        CAPIChat: CAPIChat,
-        CAPIInvites: CAPIInvites,
-        CAPIUserState: CAPIUserState,
-        CAPIRating: CAPIRating
+    /**
+     * Просто подключение, авторизованного пользователя, для эмитации множества онлайн-пользователей.
+     * Сервер будет перенаправлять им широковещательные данные, что может играть роль в нагрузке.
+     * @param afterInitCallback
+     */
+    var createPassiveUser = function (afterInitCallback) {
+        var result = createConnection(function () {
+            LogicKrispiRobot.authorize(function () {
+                console.log("Passive user created");
+                afterInitCallback();
+            });
+        });
+        apiRouter = result.apiRouter;
+        result.webSocketClient.run();
+    };
+    /* Создаём пасивных юзеров .*/
+    for (var i = 0; i < Config.onlinePassiveUsers; i++) {
+        sequencedInit(createPassiveUser);
+    }
+    /* А тут мы уже запустим роботоа криспи. */
+    sequencedInit(function (afterInitCallback) {
+        var result = createConnection(function () {
+            LogicKrispiRobot.main();
+        });
+        apiRouter = result.apiRouter;
+        result.webSocketClient.run();
+        afterInitCallback();
     });
 
-    /* Link ApiRouter and WebSocketClient */
-    apiRouter.sendData = webSocketClient.sendData;
-    webSocketClient.onData = apiRouter.onData;
-    webSocketClient.onConnect = function (connectionId) {
-        apiRouter.onConnect(connectionId);
-        LogicKrispi.main();
-    };
-    webSocketClient.onDisconnect = apiRouter.onDisconnect;
-
-    /* running */
-    webSocketClient.run();
+    /**
+     * Создать подключение.
+     * @returns {{webSocketClient: (WebSocketClient|*), apiRouter: (ApiRouter|*)}}
+     */
+    function createConnection(onConnect) {
+        var webSocketClient, apiRouter;
+        /* WebSocket Client */
+        webSocketClient = new WebSocketClient();
+        webSocketClient.setup({
+            host: '192.168.205.2',
+            port: 80
+        });
+        /* ApiRouter */
+        apiRouter = new ApiRouter();
+        apiRouter.setMap({
+            CAPIUser: CAPIUser,
+            CAPIGame: CAPIGame,
+            CAPIChat: CAPIChat,
+            CAPIInvites: CAPIInvites,
+            CAPIUserState: CAPIUserState,
+            CAPIRating: CAPIRating
+        });
+        /* Link ApiRouter and WebSocketClient */
+        apiRouter.sendData = webSocketClient.sendData;
+        webSocketClient.onData = apiRouter.onData;
+        webSocketClient.onConnect = function (connectionId) {
+            apiRouter.onConnect(connectionId);
+            onConnect();
+        };
+        webSocketClient.onDisconnect = apiRouter.onDisconnect;
+        return {
+            webSocketClient: webSocketClient,
+            apiRouter: apiRouter
+        };
+    }
 };
-

@@ -1,4 +1,4 @@
-SAPIInvites = function () {
+SAPIInvites = function ()   {
 
     /**
      * Отправка приглашения на сервер.
@@ -28,7 +28,9 @@ SAPIInvites = function () {
             return;
         }
         /* @todo проверить, что это друг */
+        Profiler.start(Profiler.ID_SAPIINVITES_SEND);
         CAPIInvites.receive(whomId, whoId, whomId);
+        Profiler.stop(Profiler.ID_SAPIINVITES_SEND);
     };
 
     /**

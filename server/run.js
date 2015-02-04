@@ -6,18 +6,41 @@ require('./system/loader.js');
  * Настройка лога.
  */
 Logs.setup({
-    level: Logs.LEVEL_WARNING
+    level: Logs.LEVEL_ERROR
 });
 
 /**
  * Id-ишники профайлера.
  * и таймер профайлера.
  */
-Profiler.ID_AUTHORIZATION_BY_VK = Profiler.getNewId("ID_AUTHORIZATION_BY_VK");
-Profiler.ID_SEND_USER_INFO = Profiler.getNewId("ID_SEND_USER_INFO");
-Profiler.ID_UPDATE_USER_SOCNET_INFO = Profiler.getNewId("ID_UPDATE_USER_SOCNET_INFO");
-Profiler.ID_SEND_FRIENDS = Profiler.getNewId("ID_SEND_FRIENDS");
-Profiler.ID_SENDME_ONLINE_COUNT = Profiler.getNewId("ID_SENDME_ONLINE_COUNT");
+/* SAPIUser */
+Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK = Profiler.getNewId("ID_SAPIUSER_AUTHORIZATION_BY_VK");
+Profiler.ID_SAPIUSER_SEND_USER_INFO = Profiler.getNewId("ID_SAPIUSER_SEND_USER_INFO");
+Profiler.ID_SAPIUSER_UPDATE_USER_SOCNET_INFO = Profiler.getNewId("ID_SAPIUSER_UPDATE_USER_SOCNET_INFO");
+Profiler.ID_SAPIUSER_SEND_FRIENDS = Profiler.getNewId("ID_SAPIUSER_SEND_FRIENDS");
+Profiler.ID_SAPIUSER_SENDME_ONLINE_COUNT = Profiler.getNewId("ID_SAPIUSER_SENDME_ONLINE_COUNT");
+/* SAPIChat */
+Profiler.ID_SAPICHAT_GET_LAST_MESSAGES = Profiler.getNewId("ID_SAPICHAT_GET_LAST_MESSAGES");
+Profiler.ID_SAPICHAT_SEND_MESSAGE = Profiler.getNewId("ID_SAPICHAT_SEND_MESSAGE");
+/* SAPIUserState */
+Profiler.ID_SAPIUSERSTATE_IS_BUSY = Profiler.getNewId("ID_SAPIUSERSTATE_IS_BUSY");
+Profiler.ID_SAPIUSERSTATE_IS_NO_BUSY = Profiler.getNewId("ID_SAPIUSERSTATE_IS_NO_BUSY");
+Profiler.ID_SAPIUSERSTATE_ON_GAME = Profiler.getNewId("ID_SAPIUSERSTATE_ON_GAME");
+/* SAPIInvites */
+Profiler.ID_SAPIINVITES_SEND = Profiler.getNewId("ID_SAPIINVITES_SEND");
+/* LogicUser */
+Profiler.ID_LOGIC_USER_SEND_TO_ALL = Profiler.getNewId("ID_LOGIC_USER_SEND_TO_ALL");
+/* WebSocketServer */
+Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE = Profiler.getNewId("ID_WEBSOCKETSERVER_SEND_IMAGE");
+/* SAPIRating*/
+Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST = Profiler.getNewId("ID_SAPIRATING_SEND_ME_TOP_LIST");
+/* SAPIGame */
+Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME = Profiler.getNewId("ID_SAPIGAME_REQUEST_RANDOM_GAME");
+Profiler.ID_SAPIGAME_CANCEL_RANDOM_GAME = Profiler.getNewId("ID_SAPIGAME_CANCEL_RANDOM_GAME");
+Profiler.ID_SAPIGAME_DO_MOVE = Profiler.getNewId("ID_SAPIGAME_DO_MOVE");
+/* ActionsRandomGame */
+Profiler.ID_ACTIONSRANDOMGAME_CREATE_WAITER = Profiler.getNewId("ID_ACTIONSRANDOMGAME_CREATE_WAITER");
+Profiler.ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME = Profiler.getNewId("ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME");
 
 /*  WebSocketServer */
 webSocketServer = new WebSocketServer();

@@ -7,7 +7,7 @@ CAPIUser = function () {
      */
     this.authorizeSuccess = function (cntx, userId) {
         Logs.log('authorize success');
-        LogicKrispi.onAuthorizationSuccess(userId);
+        LogicKrispiRobot.onAuthorizationSuccess(userId);
     };
 
     /**
@@ -16,7 +16,7 @@ CAPIUser = function () {
      * @param user {Object} юзер инфо.
      */
     this.updateUserInfo = function (cntx, user) {
-        Logs.log('updateUserInfo');
+        /* Nothing to do. */
     };
 
     /**
@@ -26,7 +26,7 @@ CAPIUser = function () {
      * @param friends {Number[]} список друзей.
      */
     this.updateFriends = function (cntx, userId, friends) {
-        Logs.log('updateFriends');
+        /* Nothing to do. */
     };
 
     /**
@@ -37,7 +37,7 @@ CAPIUser = function () {
      * @param direction {Boolean} true - вошел в игру, false - вышел из игры.
      */
     this.updateOnlineCount = function (cntx, count, userId, direction) {
-        Logs.log('updateOnlineCount');
+        /* Nothing to do. */
     }
 };
 

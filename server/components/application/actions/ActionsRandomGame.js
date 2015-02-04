@@ -10,14 +10,22 @@ ActionsRandomGame = function () {
      */
     this.requestRandomGame = function (userId, fieldTypeId, requestedSignId, callback) {
         var waiter;
+        Profiler.start(Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME);
         Logs.log("ActionsRandomGame.requestRandomGame", Logs.LEVEL_DETAIL);
         waiter = LogicWaitersStack.getWaiter(userId, fieldTypeId, requestedSignId, 1);
         if (waiter) {
+            Profiler.start(Profiler.ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME);
             ActionsRandomGame.createRandomGame(waiter.userId, waiter.signId, fieldTypeId, userId, requestedSignId, function (game) {
                 callback(game);
+                Profiler.stop(Profiler.ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME);
+                Profiler.stop(Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME);
+
             });
         } else {
+            Profiler.start(Profiler.ID_ACTIONSRANDOMGAME_CREATE_WAITER);
             LogicWaitersStack.createWaiter(userId, fieldTypeId, requestedSignId, 1);
+            Profiler.stop(Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME);
+            Profiler.stop(Profiler.ID_ACTIONSRANDOMGAME_CREATE_WAITER);
         }
     };
 
@@ -26,7 +34,9 @@ ActionsRandomGame = function () {
      * @param userId {Number} id пользователя.
      */
     this.cancelRandomGameRequests = function (userId) {
+        Profiler.start(Profiler.ID_SAPIGAME_CANCEL_RANDOM_GAME);
         LogicWaitersStack.deleteByUserId(userId);
+        Profiler.stop(Profiler.ID_SAPIGAME_CANCEL_RANDOM_GAME);
     };
 
     /**
@@ -66,15 +76,24 @@ ActionsRandomGame = function () {
         var game;
         game = LogicGameStore.load(gameId);
         if (!game) {
-            Logs.log("ActionsRandomGame.closeGame. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
+            Logs.log("ActionsRandomGame.closeGame. Game to Close not found in Store", Logs.LEVEL_WARNING, {
+                userId: userId,
+                gameId: gameId
+            });
             return;
         }
         if (!LogicXO.userCanCloseGame(game, userId)) {
-            Logs.log("ActionsRandomGame.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            Logs.log("ActionsRandomGame.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {
+                game: game,
+                userId: userId
+            });
             return;
         }
         if (!game.isRandom) {
-            Logs.log("ActionsRandomGame.closeGame. User cannot close this game. Because is not random game.", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            Logs.log("ActionsRandomGame.closeGame. User cannot close this game. Because is not random game.", Logs.LEVEL_WARNING, {
+                game: game,
+                userId: userId
+            });
             return;
         }
         game = LogicXO.close(game);
@@ -102,7 +121,10 @@ ActionsRandomGame = function () {
             return;
         }
         if (!game.isRandom) {
-            Logs.log("ActionsRandomGame.doMove. User cannot do move, because is not random game.", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            Logs.log("ActionsRandomGame.doMove. User cannot do move, because is not random game.", Logs.LEVEL_WARNING, {
+                game: game,
+                userId: userId
+            });
             return;
         }
         oldStatus = game.status;

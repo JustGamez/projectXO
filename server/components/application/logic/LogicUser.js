@@ -43,7 +43,7 @@ LogicUser = function () {
             return;
         }
         if (!checkResult)return;
-        Profiler.start(Profiler.ID_AUTHORIZATION_BY_VK);
+        Profiler.start(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         /* get from db */
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
             authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
@@ -83,7 +83,7 @@ LogicUser = function () {
         /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
-        Profiler.stop(Profiler.ID_AUTHORIZATION_BY_VK);
+        Profiler.stop(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         CAPIUser.authorizeSuccess(user.id, user.id);
     };
 
@@ -93,11 +93,11 @@ LogicUser = function () {
      * @param userId {Number} данные о каком пользователе.
      */
     this.sendUserInfo = function (userId, toUserId) {
-        Profiler.start(Profiler.ID_SEND_USER_INFO);
+        Profiler.start(Profiler.ID_SAPIUSER_SEND_USER_INFO);
         DataUser.getById(userId, function (user) {
             if (user) {
                 user.online = self.isUserOnline(user.id);
-                Profiler.stop(Profiler.ID_SEND_USER_INFO);
+                Profiler.stop(Profiler.ID_SAPIUSER_SEND_USER_INFO);
                 CAPIUser.updateUserInfo(toUserId, user);
                 refreshUserSocNetInfo(user, function (user) {
                     user.online = self.isUserOnline(user.id);
@@ -115,7 +115,7 @@ LogicUser = function () {
      * @param callback
      */
     var refreshUserSocNetInfo = function (user, callback) {
-        Profiler.start(Profiler.ID_UPDATE_USER_SOCNET_INFO);
+        Profiler.start(Profiler.ID_SAPIUSER_UPDATE_USER_SOCNET_INFO);
         SocNet.getUserInfo(user.socNetTypeId, user.socNetUserId, function (info) {
             user.firstName = info.firstName;
             user.lastName = info.lastName;
@@ -132,7 +132,7 @@ LogicUser = function () {
             }
             DataUser.save(user, function (user) {
                 if (callback) {
-                    Profiler.stop(Profiler.ID_UPDATE_USER_SOCNET_INFO);
+                    Profiler.stop(Profiler.ID_SAPIUSER_UPDATE_USER_SOCNET_INFO);
                     callback(user);
                 }
             });
@@ -145,13 +145,13 @@ LogicUser = function () {
      * @param cntx {object} контекст соединения
      */
     this.sendFriends = function (userId, cntx) {
-        Profiler.start(Profiler.ID_SEND_FRIENDS);
+        Profiler.start(Profiler.ID_SAPIUSER_SEND_FRIENDS);
         DataUser.getById(userId, function (user) {
             if (user) {
                 SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
                     if (friends == undefined) {
                         CAPIUser.updateFriends(cntx.userId, userId, []);
-                        Profiler.stop(Profiler.ID_SEND_FRIENDS);
+                        Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
                         return;
                     }
                     DataUser.getListWhere({
@@ -162,13 +162,13 @@ LogicUser = function () {
                         for (var i in rows) {
                             ids.push(rows[i].id);
                         }
-                        Profiler.stop(Profiler.ID_SEND_FRIENDS);
+                        Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
                         CAPIUser.updateFriends(cntx.userId, userId, ids);
                     });
                 });
             } else {
                 Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
-                Profiler.stop(Profiler.ID_SEND_FRIENDS);
+                Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
             }
         })
     };
@@ -198,9 +198,11 @@ LogicUser = function () {
      * @param arg8 {*} любой параметр, будет передан в CAPI-функцию 8-ым.
      */
     this.sendToAll = function (capiFunction, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) {
+        Profiler.start(Profiler.ID_LOGIC_USER_SEND_TO_ALL);
         for (var userId in userToCntx) {
             capiFunction.call(null, userId, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
         }
+        Profiler.stop(Profiler.ID_LOGIC_USER_SEND_TO_ALL);
     };
 
     /**
@@ -222,9 +224,9 @@ LogicUser = function () {
 
     /** Отправляем кол-во онлайн пользователей */
     this.sendOnlineCount = function (cntx) {
-        Profiler.start(Profiler.ID_SENDME_ONLINE_COUNT);
+        Profiler.start(Profiler.ID_SAPIUSER_SENDME_ONLINE_COUNT);
         CAPIUser.updateOnlineCount(cntx.userId, self.getOnlineCount());
-        Profiler.stop(Profiler.ID_SENDME_ONLINE_COUNT);
+        Profiler.stop(Profiler.ID_SAPIUSER_SENDME_ONLINE_COUNT);
     };
 
     /**

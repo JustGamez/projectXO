@@ -77,7 +77,7 @@ ElementRatingList = function () {
             row.name = GUI.createElement('ElementGraphicText', {
                 x: self.x + 131,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 25,
-                width: 220,
+                width: 280,
                 height: 40,
                 text: ' - '
             });

@@ -38,7 +38,7 @@ Profiler = function () {
     this.printReport = function () {
         var output, row, rps;
         output = '';
-        output += "id, title, sumTime, count, rps\r\n";
+        output += "id " + str_pad("title", maxTitleLength + 3) + "  sumTime    count   rps\r\n";
         for (var id in data) {
             row = data[id];
             output += str_pad(id.toString(), 3);
@@ -47,7 +47,7 @@ Profiler = function () {
             output += ' ';
             output += str_pad((row.sumTime / 1000).toString(), 10);
             output += ' ';
-            output += str_pad((row.count).toString(), 5);
+            output += str_pad((row.count).toString(), 7);
             output += ' ';
             rps = Math.round((row.count / (row.sumTime / 1000)) * 100) / 100;
             output += rps;

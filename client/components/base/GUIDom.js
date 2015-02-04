@@ -77,14 +77,14 @@ GUIDom = function () {
         };
         /* hidden mode..:begin */
         if (GUIDom.hidePictures) {
-            document.body.style.opacity = 0.10;
+            document.body.style.opacity = 0.01;
             dom.style.border = '1px dotted grey';
         }
         /* Указанная прозрачность картинок. */
         if (GUIDom.pictureOpacities) {
             document.body.style.opacity = GUIDom.pictureOpacities;
-            dom.style.border = '4px solid black';
-            dom.style.backgroundColor = 'black';
+            dom.style.border = '2px solid lightgrey';
+            //dom.style.backgroundColor = 'black';
         }
         /* hidden mode..:finish */
         /* Добавим дом к родителю. */

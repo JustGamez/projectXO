@@ -12,9 +12,11 @@ WebSocketClient = function () {
     var host = null;
 
     /**
-     * По сути это просто номер соединения в пределах жизни скрипта.
+     * id соединиения.
+     * Если вдруг у нас несколько соединений.
+     * @type {null}
      */
-    var connectionId = 0;
+    var connectionId = null;
 
     /**
      * Порт сервера.
@@ -111,7 +113,8 @@ WebSocketClient = function () {
         /* На случай, если буфер не пуст. */
         trySend();
         Logs.log("WebSocketClient: Соединение установленно:" + host + ':' + port);
-        self.onConnect(++connectionId);
+        connectionId = ++WebSocketClient.connectionId;
+        self.onConnect(connectionId);
     };
 
     /**
@@ -145,7 +148,7 @@ WebSocketClient = function () {
      */
     var onMessage = function (event) {
         /* Logs.log("WebSocketClient: Получены данные.", Logs.LEVEL_DETAIL, event.data); */
-        self.onData(event.data);
+        self.onData(event.data, connectionId);
     };
 
     /**
@@ -185,3 +188,8 @@ WebSocketClient = function () {
         }
     };
 };
+
+/**
+ * По сути это просто номер соединения в пределах жизни скрипта.
+ */
+WebSocketClient.connectionId = 0;

@@ -38,6 +38,25 @@ window.onload = function () {
         port: 80
     });
 
+    /* ApiRouterMetrics */
+    ApiRouterMetrics.setup({
+        SAPIUser: true,
+        SAPIGame: true,
+        SAPIChat: true,
+        SAPIRobotGame: true,
+        SAPIInvites: true,
+        SAPIUserState: true,
+        SAPIRating: true,
+
+        CAPIChat: true,
+        CAPIGame: true,
+        CAPIInvites: true,
+        CAPIRating: true,
+        CAPIUser: true,
+        CAPIUserState: true
+    });
+    // setInterval(ApiRouterMetrics.printMetrics, 5000);
+
     /* ApiRouter */
     apiRouter = new ApiRouter();
     apiRouter.setMap({
@@ -77,4 +96,3 @@ window.onload = function () {
     /* running */
     webSocketClient.run();
 };
-

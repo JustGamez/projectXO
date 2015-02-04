@@ -31,11 +31,13 @@ SAPIChat = function () {
             Logs.log("SAPIChat.sendMeLastMessages: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
+        Profiler.start(Profiler.ID_SAPICHAT_GET_LAST_MESSAGES);
         list = LogicChatCache.getLastMessages(Config.Chat.lastMessagesCount);
         for (var i in list) {
             messages = list[i];
             CAPIChat.getNewMessage(cntx.userId, messages.userId, messages.text, messages.timestamp);
         }
+        Profiler.stop(Profiler.ID_SAPICHAT_GET_LAST_MESSAGES);
     };
 };
 /**

@@ -2,64 +2,59 @@
  * Логика робота Криспи.
  * @constructor
  */
-LogicKrispi = function () {
+LogicKrispiRobot = function () {
     var self = this;
 
+    var onAuthorizeCallback = null;
+
+    this.authorizedUserId = null;
+    /**
+     * Точка входа, тут всё начнётся :)
+     */
     this.main = function () {
-        self.authorize();
+        console.log('Krispi running.');
+        /**
+         * Частота запросов.
+         * @type {number}
+         */
+        KrispiCases.intensivityInterval = Config.intensivityInterval;
+        self.authorize(function () {
+            KrispiCases.variant1();
+        });
     };
 
-    this.authorize = function () {
+    /**
+     * Авторизуемся, это нужно всёгда.
+     */
+    this.authorize = function (afterAuthorizeCallback) {
+        onAuthorizeCallback = afterAuthorizeCallback;
         var socNetUserId, authParams, user;
-
-
-        user = DataUsers.getUserDataByUserNetId(rnd());
+        socNetUserId = self.rnd();
+        user = DataUsers.getUserDataByUserNetId(socNetUserId);
         SAPIUser.authorizeByVK(user.socNetUserId, user.authParams);
-
     };
 
-    this.onAuthorizationSuccess = function () {
-
-        for (var i = 0; i < 1; i++) {
-            SAPIUser.sendMeOnlineCount();
-            SAPIUser.sendMeUserInfo(rnd());
-            SAPIUser.sendMeFriends(rnd());
-        }
-        SAPIGame.requestRandomGame(1, 1);
+    /**
+     * После авторизации запустим тест.
+     */
+    this.onAuthorizationSuccess = function (userId) {
+        LogicKrispiRobot.authorizedUserId = userId;
+        onAuthorizeCallback(userId);
     };
 
-    var rnd = function () {
+    /**
+     * Будем использовать случайные айдишники.
+     * @returns {number}
+     */
+    this.rnd = function () {
         var id;
         id = Math.round(Math.random() * 1500) + 1;
         return id;
     };
 };
 
-DataUsers = function () {
-    var self = this;
-
-    var appId = '4467180';
-    var secretKey = 'X0x2PuCZQbC5wwX0lB5R';
-
-    this.getUserDataByUserNetId = function (socNetUserId) {
-        return {
-            socNetUserId: socNetUserId,
-            authParams: {
-                authKey: md5(appId + '_' + socNetUserId + '_' + secretKey),
-                appId: appId
-            }
-        }
-    }
-};
-
 /**
  * Статичный класс.
- * @type {DataUsers}
+ * @type {LogicKrispiRobot}
  */
-DataUsers = new DataUsers();
-
-/**
- * Статичный класс.
- * @type {LogicKrispi}
- */
-LogicKrispi = new LogicKrispi();
+LogicKrispiRobot = new LogicKrispiRobot();

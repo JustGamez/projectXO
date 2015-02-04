@@ -349,6 +349,7 @@ WebSocketServer = function () {
         /* Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {url: request.url, method: request.method}); */
         /* Запрашивается картинка? */
         if (request.url.indexOf(imagesPrefix) == 0) {
+            Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
             // отрезаем imagesPrefix
             path = request.url.substr(imagesPrefix.length);
             // уберём GET параметры.
@@ -359,10 +360,12 @@ WebSocketServer = function () {
                     Logs.log("Image not found:" + imagesPath + path, Logs.LEVEL_WARNING);
                     response.writeHead(404, {'Content-Type': 'text/html'});
                     response.end('File not found.');
+                    Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
                 } else {
                     /* Logs.log("Image sended:" + imagesPath + path + "length:", Logs.LEVEL_DETAIL); */
                     response.writeHead(200, {'Content-Type': 'image/png'});
                     response.end(data);
+                    Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
                 }
             });
             return true;
