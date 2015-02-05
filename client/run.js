@@ -88,6 +88,7 @@ window.onload = function () {
         SAPIInvites: true,
         SAPIUserState: true,
         SAPIRating: true,
+        SAPIRepeatGame: true,
 
         CAPIChat: true,
         CAPIGame: true,

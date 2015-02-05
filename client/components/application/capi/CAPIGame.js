@@ -15,14 +15,21 @@ CAPIGame = function () {
     /**
      * Оповещение, что игра создана.
      * @param cntx {Object} контекст соединения.
-     * @param gameId {Number} id игры.
+     * @param gameId {int} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
-        if (!LogicGame.getCurrentGameId() && pageController.isShowedNow(PageController.PAGE_ID_XO_GAME)) {
+        var newGame, currentGameId, xoPageShowedNow;
+        newGame = LogicGame.getGameById(gameId);
+        currentGameId = LogicGame.getCurrentGameId();
+        xoPageShowedNow = pageController.isShowedNow(PageController.PAGE_ID_XO_GAME);
+        if (
+            (!currentGameId && xoPageShowedNow)
+            ||
+            (currentGameId && xoPageShowedNow && currentGameId == newGame.copyFromId && LogicGame.getCurrentGame().status != LogicXO.STATUS_RUN)
+        ) {
             SAPIUserState.onGame(gameId);
             LogicGame.setCurrentGameId(gameId);
         } else {
-            SAPIUserState.onGame(0);
             SAPIGame.closeRandomGame(gameId);
         }
     };

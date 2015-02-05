@@ -2,8 +2,8 @@ SAPIUser = function () {
 
     /**
      * Авторизация через ВК.
-     * @param socNetUserId {Number} id в социальной сети.
-     * @param authParams {Object} параметры аутентификации.
+     * @param socNetUserId {int} id в социальной сети.
+     * @param authParams {object} параметры аутентификации.
      */
     this.authorizeByVK = function (socNetUserId, authParams) {
         apiRouter.executeRequest('SAPIUser', 'authorizeByVK', arguments, [{connectionId: null}]);
@@ -11,15 +11,15 @@ SAPIUser = function () {
 
     /**
      * Отправяел информацию о пользователи в текущие соединение.
-     * @param userId {Number}
+     * @param userId {int}
      */
     this.sendMeUserInfo = function (userId) {
         apiRouter.executeRequest('SAPIUser', 'sendMeUserInfo', arguments, [{connectionId: null}]);
     };
 
     /**
-     * Запрос инфомрации о друзьях
-     * @param userId {Number}
+     * Запрос инфомрации о друзьях.
+     * @param userId {int}
      */
     this.sendMeFriends = function (userId) {
         apiRouter.executeRequest('SAPIUser', 'sendMeFriends', arguments, [{connectionId: null}]);

@@ -39,9 +39,8 @@ LogicGame = function () {
 
     /**
      * Получить текущую игру.
-     * @param gameId
      */
-    this.getCurrentGameId = function (gameId) {
+    this.getCurrentGameId = function () {
         return currentGameId;
     };
 
@@ -55,6 +54,15 @@ LogicGame = function () {
             return null;
         }
     };
+
+    /**
+     * Возвращает игру по id, если она конечно есть в "кэшэ".
+     * @param gameId {int}
+     * @returns {Object}
+     */
+    this.getGameById = function (gameId) {
+        return games[gameId];
+    }
 };
 
 /**

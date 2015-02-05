@@ -49,7 +49,8 @@ DataGame = function () {
 
     /**
      * Сохраняет игру.
-     * @param game
+     * @param game {object}
+     * @param callback {function}
      */
     this.save = function (game, callback) {
         var data;

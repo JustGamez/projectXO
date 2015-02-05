@@ -68,6 +68,13 @@ LogicPageXO = function () {
             SAPIInvites.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
         }
     };
+
+    /**
+     * Действия, при нажатии на кнопку "Ещё"
+     */
+    this.onAgainButtonClick = function () {
+        SAPIRepeatGame.repeat(LogicGame.getCurrentGameId());
+    };
 };
 
 /**

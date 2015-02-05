@@ -26,7 +26,7 @@ SAPIGame = function () {
 
     /**
      * Сделать ход в игре.
-     * @param gameId {Number} id игры
+     * @param gameId {Number} id игры.
      * @param x {Number}
      * @param y {Number}
      */

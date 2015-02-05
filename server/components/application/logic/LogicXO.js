@@ -123,7 +123,8 @@ LogicXO = function () {
             result_field: '',
             status: LogicXO.STATUS_WAIT,
             winnerId: 0,
-            field: field
+            field: field,
+            copyFromId: 0
         };
     };
 
@@ -579,6 +580,25 @@ LogicXO = function () {
             return game.XUserId;
         }
         return false;
+    };
+
+    /**
+     * Копирует игру, соответствено id-шник будет сброшен.
+     * @param oldGame {Object}
+     * @param callback {Function}
+     */
+    this.copy = function (oldGame, callback) {
+        var newGame;
+        newGame = self.create(oldGame.creatorUserId, oldGame.creatorSignId, oldGame.fieldTypeId, oldGame.isRandom, oldGame.isInvitation, oldGame.vsRobot);
+        newGame = self.joinGame(oldGame.joinerUserId, oldGame.joinerSignId, newGame);
+        newGame = self.chooseSigns(newGame);
+        newGame = self.run(newGame);
+        newGame.copyFromId = oldGame.id;
+        DataGame.save(newGame, function (newGame) {
+            console.log(oldGame, newGame);
+            LogicGameStore.save(newGame);
+            callback(newGame);
+        });
     };
 };
 /**

@@ -68,6 +68,7 @@ ApiRouterMetrics.setup({
     SAPIInvites: true,
     SAPIUserState: true,
     SAPIRating: true,
+    SAPIRepeatGame: true,
 
     CAPIChat: true,
     CAPIGame: true,
@@ -82,7 +83,7 @@ Profiler.printReport();
 setInterval(function () {
         ApiRouterMetrics.printMetrics();
         Profiler.printReport();
-    }, 3000
+    }, 10000
 );
 
 /* ApiRouter */
@@ -94,7 +95,8 @@ apiRouter.setMap({
     SAPIRobotGame: SAPIRobotGame,
     SAPIInvites: SAPIInvites,
     SAPIUserState: SAPIUserState,
-    SAPIRating: SAPIRating
+    SAPIRating: SAPIRating,
+    SAPIRepeatGame: SAPIRepeatGame
 });
 
 /* links apiRouter and webSocketServer */

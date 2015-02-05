@@ -36,6 +36,12 @@ PageXOGame = function PageXOGame() {
     this.elementOpponentPhoto = null;
 
     /**
+     * Элемент, кнопка играть "Ещё".
+     * @type {ElementButton}
+     */
+    this.elementButtonAgain = null;
+
+    /**
      * Тексты для статусов игры.
      * @type {{waiting: string, yourTurnX: string, yourTurnO: string, opponentTurnX: string, opponentTurnO: string, closed: string, nobodyWin: string, youWinSexMan: string, youWinSexWoman: string, opponentWinSexMan: string, opponentWinSexWoman: string}}
      */
@@ -96,6 +102,19 @@ PageXOGame = function PageXOGame() {
         });
         self.elements.push(element);
         self.elementGameStatus = element;
+        /* Кнопка играть "Еще". */
+        element = GUI.createElement('ElementButton', {
+            x: 535,
+            y: 312,
+            width: 175,
+            height: 94,
+            srcRest: '/images/buttons/againRest.png',
+            srcHover: '/images/buttons/againHover.png',
+            srcActive: '/images/buttons/againActive.png',
+            onClick: LogicPageXO.onAgainButtonClick
+        });
+        self.elementButtonAgain = element;
+        self.elements.push(element);
     };
 
     /**
@@ -224,6 +243,12 @@ PageXOGame = function PageXOGame() {
             enableButtonInvite: false,
             photoInfo: opponent
         });
+        /* Кнопка "Еще" */
+        if (game && (game.status == LogicXO.STATUS_NOBODY_WIN || game.status == LogicXO.STATUS_SOMEBODY_WIN )) {
+            self.elementButtonAgain.show();
+        } else {
+            self.elementButtonAgain.hide();
+        }
     };
 
     /**
