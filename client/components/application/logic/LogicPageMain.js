@@ -76,6 +76,13 @@ LogicPageMain = function () {
         SAPIUserState.isBusy();
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_RATING]);
     };
+
+    /**
+     * Действия при нажатии кнопки добавления друзей.
+     */
+    this.onAddFriendButtonClick = function () {
+        SocNet.openInviteFriendDialog();
+    };
 };
 
 /**

@@ -30,6 +30,12 @@ PageXOGame = function PageXOGame() {
     this.elementGameStatus = null;
 
     /**
+     * Элемент фото оппонента.
+     * @type {ElementPhoto}
+     */
+    this.elementOpponentPhoto = null;
+
+    /**
      * Тексты для статусов игры.
      * @type {{waiting: string, yourTurnX: string, yourTurnO: string, opponentTurnX: string, opponentTurnO: string, closed: string, nobodyWin: string, youWinSexMan: string, youWinSexWoman: string, opponentWinSexMan: string, opponentWinSexWoman: string}}
      */
@@ -41,10 +47,10 @@ PageXOGame = function PageXOGame() {
         opponentTurnO: 'ход: О\nоппонент',
         closed: 'оппонент \nпокинул игру',
         nobodyWin: 'ничья.',
-        youWinSexMan: 'ты выиграл!',
-        youWinSexWoman: 'ты выиграла!',
-        opponentWinSexMan: 'ты проиграл!',
-        opponentWinSexWoman: 'ты проиграла!'
+        youWinSexMan: 'вы выиграли!',
+        youWinSexWoman: 'вы выиграли!',
+        opponentWinSexMan: 'оппонент \nвыиграл!',
+        opponentWinSexWoman: 'оппонент \nвыиграл!'
     };
 
     /**
@@ -74,10 +80,17 @@ PageXOGame = function PageXOGame() {
             onClick: LogicPageXO.onMenuButtonClick
         });
         self.elements.push(element);
-        /* game status */
+        /* Фото оппонента. */
+        element = GUI.createElement("ElementPhoto", {
+            x: 585,
+            y: 163
+        });
+        self.elements.push(element);
+        self.elementOpponentPhoto = element;
+        /* Статус игры. */
         element = GUI.createElement('ElementGraphicText', {
-            x: 570,
-            y: 175,
+            x: 578,
+            y: 258,
             width: 157,
             text: ''
         });
@@ -176,6 +189,41 @@ PageXOGame = function PageXOGame() {
             text = gameStatusTextList.waiting;
         }
         self.elementGameStatus.setText(text);
+        /* Фото оппонента. */
+        var opponent, photoSrc, opponentTitle, opponentUserId;
+        photoSrc = '/images/photo/camera_c.gif';
+        opponentTitle = '';
+        if (game) {
+            if (game.vsRobot) {
+                photoSrc = '/images/photo/vsRobot.png';
+                opponentTitle = 'Игра с роботом.';
+            } else {
+                opponentUserId = LogicXO.getOpponentUserId(game, user.id);
+                if (opponentUserId) {
+                    opponent = LogicUser.getUserById(opponentUserId);
+                    if (opponent) {
+                        opponentTitle = opponent.firstName + ' ' + opponent.lastName;
+                        photoSrc = opponent.photo50;
+                    }
+                }
+            }
+        }
+        self.elementOpponentPhoto.update({
+            src: photoSrc,
+            title: opponentTitle,
+            online: null,
+            showButtonInvite: false,
+            showButtonLetsPlay: false,
+            showIndicatorWaiting: false,
+            showOnlineIndicator: false,
+            onClick: function (photoInfo) {
+                window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+            },
+            onButtonInviteClick: false,
+            onButtonLetsPlayClick: false,
+            enableButtonInvite: false,
+            photoInfo: opponent
+        });
     };
 
     /**

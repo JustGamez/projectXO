@@ -566,6 +566,20 @@ LogicXO = function () {
                 break;
         }
     };
+    /**
+     * Возвращает id оппонента.
+     * @param game {Object}
+     * @param userId {int} внутрений id пользователя.
+     */
+    this.getOpponentUserId = function (game, userId) {
+        if (game.XUserId == userId) {
+            return game.OUserId;
+        }
+        if (game.OUserId == userId) {
+            return game.XUserId;
+        }
+        return false;
+    };
 };
 /**
  * Статичный класс.

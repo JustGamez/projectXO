@@ -144,6 +144,18 @@ PageMain = function PageMain() {
             onClick: LogicPageMain.onRatingButtonClick
         });
         self.elements.push(element);
+        /* Кнопка, добавить друга. */
+        element = GUI.createElement('ElementButton', {
+            x: 70,
+            y: 355,
+            width: 75,
+            height: 80,
+            srcRest: '/images/buttons/addFriendRest.png',
+            srcHover: '/images/buttons/addFriendHover.png',
+            srcActive: '/images/buttons/addFriendActive.png',
+            onClick: LogicPageMain.onAddFriendButtonClick
+        });
+        self.elements.push(element);
     };
 
     /**

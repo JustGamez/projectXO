@@ -100,7 +100,6 @@ SocNet = function () {
                 callback(info);
             }
         )
-        ;
     };
 
     /**
