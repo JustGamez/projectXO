@@ -14,8 +14,8 @@ window.onload = function () {
      * @type {Object}
      */
     Config = {
-        intensivityInterval: 1000,
-        onlinePassiveUsers: 2,
+        intensivityInterval: 10000,
+        onlinePassiveUsers: 50,
         ApiRouterMetricsReportnterval: 50000
     };
 

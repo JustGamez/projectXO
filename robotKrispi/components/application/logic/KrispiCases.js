@@ -290,7 +290,7 @@ KrispiCases = function () {
 
     /**
      * Нагрузка SAPIRobot.
-     * state: uncompleted.
+     * state: completed.
      * @constructor
      */
     this.SAPIRobotGame = function () {
@@ -310,8 +310,8 @@ KrispiCases = function () {
     this.SAPIUser = function () {
         SAPIUser.sendMeOnlineCount();
         /* @todo только после включения кэширования соцнетапи-запросов. */
-        //SAPIUser.sendMeUserInfo(rndId());
-        //SAPIUser.sendMeFriends(rndId());
+        SAPIUser.sendMeUserInfo(rndId());
+        SAPIUser.sendMeFriends(rndId());
     };
 
     /**

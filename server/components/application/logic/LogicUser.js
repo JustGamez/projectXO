@@ -149,7 +149,7 @@ LogicUser = function () {
         DataUser.getById(userId, function (user) {
             if (user) {
                 SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
-                    if (friends == undefined) {
+                    if (friends == undefined || friends.length == 0) {
                         CAPIUser.updateFriends(cntx.userId, userId, []);
                         Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
                         return;
