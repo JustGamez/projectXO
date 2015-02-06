@@ -218,8 +218,8 @@ ElementField = function () {
             self.domList[fieldTypeId].domWinLine.hide();
         } else {
             self.domList[fieldTypeId].domWinLine.show();
-            self.domList[fieldTypeId].domWinLine.x = this.x + winLineX * (self.configure[fieldTypeId].signWidth + self.configure[fieldTypeId].padding);
-            self.domList[fieldTypeId].domWinLine.y = this.y + winLineY * (self.configure[fieldTypeId].signHeight + self.configure[fieldTypeId].padding);
+            self.domList[fieldTypeId].domWinLine.x = self.x + self.configure[fieldTypeId].signOffset + winLineX * (self.configure[fieldTypeId].signWidth + self.configure[fieldTypeId].padding);
+            self.domList[fieldTypeId].domWinLine.y = self.y + self.configure[fieldTypeId].signOffset + winLineY * (self.configure[fieldTypeId].signHeight + self.configure[fieldTypeId].padding);
             self.domList[fieldTypeId].domWinLine.backgroundImage = self.configure[fieldTypeId].lines[winLineId];
             switch (winLineId) {
                 case LogicXO.LINE_HORIZONTAL:
