@@ -28,6 +28,7 @@
  * @property background {String}
  * @property transform {String}
  * @property title {String}
+ * @property isItsepia {Bool}
  */
 GUIDom = function () {
     var self = this;
@@ -257,6 +258,18 @@ GUIDom = function () {
     var redrawTitle = function () {
         dom.setAttribute('title', self.title);
     };
+    var redrawIsItSepia = function () {
+        /*
+         filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'old-timey\'><feColorMatrix type=\'matrix\' values=\'0.14 0.45 0.05 0 0 0.12 0.39 0.04 0 0 0.08 0.28 0.03 0 0 0 0 0 1 0\'/></filter></svg>#old-timey");
+         -webkit-filter: sepia(0.5);
+         -webkit-filter: sepia(95%) grayscale(50%);
+         -moz-filter: sepia(80%);
+         -ms-filter: sepia(80%);
+         -o-filter: sepia(80%);
+         filter: sepia(80%);
+         */
+        dom.className += 'sepia';
+    };
     /**
      * Имена свойств и их методы обработки.
      * @type {{x: Function, y: Function, width: Function, height: Function, backgroundImage: *, innerHTML: Function, pointer: Function, opacity: Function, fontWeight: *, fontSize: *, fontFamily: Function, color: Function, textShadow: Function, borderRadius: Function, border: Function, borderTop: Function, borderRight: Function, borderBottom: Function, borderLeft: Function, padding: Function, boxShadow: Function, lineHeight: Function, background: Function, transform: Function, title: *}}
@@ -287,7 +300,8 @@ GUIDom = function () {
         lineHeight: redrawLineHeight,
         background: redrawBackground,
         transform: redrawTransform,
-        title: redrawTitle
+        title: redrawTitle,
+        isItsepia: redrawIsItSepia
     };
 };
 

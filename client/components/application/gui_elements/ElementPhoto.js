@@ -228,6 +228,7 @@ ElementPhoto = function () {
         domPhoto.height = self.photoHeight;
         domPhoto.width = self.photoWidth;
         domPhoto.backgroundSize = self.photoWidth;
+        domPhoto.isItsepia = true;
         /* Индикатор онлайн пользователя */
         domOnlineIndicator = GUI.createDom(domRegion);
         domOnlineIndicator.x = 12;

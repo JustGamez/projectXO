@@ -74,6 +74,18 @@ GUI = function () {
      */
     this.init = function () {
         parentsStack.push(document.body);
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = '.sepia { ' +
+        'filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'old-timey\'><feColorMatrix type=\'matrix\' values=\'0.14 0.45 0.05 0 0 0.12 0.39 0.04 0 0 0.08 0.28 0.03 0 0 0 0 0 1 0\'/></filter></svg>#old-timey");' +
+        '-webkit-filter: sepia(0.5);' +
+        '-webkit-filter: sepia(95%) grayscale(50%);' +
+        '-moz-filter: sepia(80%);' +
+        '-ms-filter: sepia(80%);' +
+        '-o-filter: sepia(80%);' +
+        'filter: sepia(80%);' +
+        '}';
+        document.getElementsByTagName('head')[0].appendChild(style);
     };
 
     /**

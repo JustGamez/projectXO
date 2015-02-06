@@ -9,7 +9,7 @@
 - ElementPhoto - effect old photo like-a
 - 15 на 15 ухала лини€победы слева на право вверх.
 - imageChatLabel.png
-
+	
 
 
 - —писок игр.
