@@ -67,16 +67,18 @@ ElementRatingList = function () {
          * Какой высоты считаем строку.
          * @type {number}
          */
-        rowHeight = 80;
+        rowHeight = 55;
         for (var i = 0; i < self.rowsCount; i++) {
             row = {};
             row.photo = GUI.createElement('ElementPhoto', {
                 x: self.x + 1,
-                y: self.y + i * (self.rowSpacing + rowHeight)
+                y: self.y + i * (self.rowSpacing + rowHeight),
+                photoWidth: 32,
+                photoHeight: 32
             });
             row.name = GUI.createElement('ElementGraphicText', {
                 x: self.x + 131,
-                y: self.y + i * (self.rowSpacing + rowHeight) + 25,
+                y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: 280,
                 height: 40,
                 text: ' - '
@@ -89,7 +91,7 @@ ElementRatingList = function () {
                 text: '-'
             });
             row.position = GUI.createElement('ElementGraphicText', {
-                x: self.x + 550,
+                x: self.x + 530,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 25,
                 width: 50,
                 height: 40,

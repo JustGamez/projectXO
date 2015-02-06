@@ -2,7 +2,7 @@
  * Страница шаблон.
  * @constructor
  */
-__PageName__ = function __PageName__() {
+PageOnlineScore = function PageOnlineScore() {
     var self = this;
 
     /**
@@ -17,9 +17,39 @@ __PageName__ = function __PageName__() {
      */
     this.elements = [];
 
+    /**
+     * Элемент-текст отображающий количество онлайн игроков.
+     * @type {ElementGraphicText}
+     */
+    this.elementOnlineIndicator = null;
+
+    /**
+     * Элемент-текст отображает количество очков игрока.
+     * @type {ElementGraphicText}
+     */
+    this.elementScoreIndicator = null;
+
     this.init = function () {
         var element;
         /* Тут создаются элементы страницы. */
+        /* online indicator */
+        element = GUI.createElement('ElementGraphicText', {
+            x: 570,
+            y: 425,
+            width: 140,
+            text: 'онлайн: -'
+        });
+        self.elements.push(element);
+        self.elementOnlineIndicator = element;
+        /* score indicator */
+        element = GUI.createElement('ElementGraphicText', {
+            x: 570,
+            y: 455,
+            width: 140,
+            text: 'очки: -'
+        });
+        self.elements.push(element);
+        self.elementScoreIndicator = element;
     };
 
     /**
@@ -50,11 +80,16 @@ __PageName__ = function __PageName__() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
+        var onlineCount, score;
         /* Возможны какие то обновления, до отрисовки. */
+        onlineCount = LogicUser.getOnlineCount();
+        score = LogicUser.getCurrentUser().score;
+        self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
+        self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
     };
 
     /**
-     * Обновляем элементы и перерисовываем их.
+     * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
         if (!showed) return;

@@ -11,7 +11,7 @@ LogicPageMain = function () {
      */
     this.onPlayButtonClick = function () {
         SAPIUserState.isBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         if (LogicXOSettings.requestedVsRobot) {
             SAPIRobotGame.startGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
         } else {
@@ -64,7 +64,7 @@ LogicPageMain = function () {
      */
     this.onLetsPlayClick = function (photoInfo) {
         SAPIUserState.isBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, photoInfo.id);
     };
 

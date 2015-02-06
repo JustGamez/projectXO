@@ -18,12 +18,6 @@ PageBackground = function PageBackground() {
     this.elements = [];
 
     /**
-     * Элемент-текст отображающий количество онлайн игроков.
-     * @type {ElementGraphicText}
-     */
-    this.elementOnlineIndicator = null;
-
-    /**
      * Окно чата.
      * @type {ElementChatWindow}
      */
@@ -34,12 +28,6 @@ PageBackground = function PageBackground() {
      * @type {ElementChatInput}
      */
     this.elementChatInput = null;
-
-    /**
-     * Элемент-текст отображает количество очков игрока.
-     * @type {ElementGraphicText}
-     */
-    this.elementScoreIndicator = null;
 
     this.init = function () {
         var element;
@@ -52,24 +40,6 @@ PageBackground = function PageBackground() {
             src: '/images/table.png'
         });
         self.elements.push(element);
-        /* online indicator */
-        element = GUI.createElement('ElementGraphicText', {
-            x: 570,
-            y: 425,
-            width: 140,
-            text: 'онлайн: -'
-        });
-        self.elements.push(element);
-        self.elementOnlineIndicator = element;
-        /* score indicator */
-        element = GUI.createElement('ElementGraphicText', {
-            x: 570,
-            y: 455,
-            width: 140,
-            text: 'очки: -'
-        });
-        self.elements.push(element);
-        self.elementScoreIndicator = element;
         /* Окно чата. */
         element = GUI.createElement('ElementChatWindow', {
             x: 90,
@@ -120,13 +90,9 @@ PageBackground = function PageBackground() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var onlineCount, score, messages;
-        onlineCount = LogicUser.getOnlineCount();
-        score = LogicUser.getCurrentUser().score;
+        var messages;
         /* Кол-во сообщений для отображения */
         messages = LogicChatCache.getLastMessages(5);
-        self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
-        self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
         self.elementChatWindow.updateMessages(messages);
     };
 

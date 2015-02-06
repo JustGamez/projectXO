@@ -123,14 +123,16 @@ window.onload = function () {
     pageController = new PageController;
     PageController.PAGE_ID_BACKGROUND = 1;
     pageController.addPage(PageController.PAGE_ID_BACKGROUND, new PageBackground());
-    PageController.PAGE_ID_MAIN = 2;
+    PageController.PAGE_ID_ONLINE_SCORE = 2;
+    pageController.addPage(PageController.PAGE_ID_ONLINE_SCORE, new PageOnlineScore());
+    PageController.PAGE_ID_MAIN = 3;
     pageController.addPage(PageController.PAGE_ID_MAIN, new PageMain());
-    PageController.PAGE_ID_XO_GAME = 3;
+    PageController.PAGE_ID_XO_GAME = 4;
     pageController.addPage(PageController.PAGE_ID_XO_GAME, new PageXOGame());
-    PageController.PAGE_ID_RATING = 4;
+    PageController.PAGE_ID_RATING = 5;
     pageController.addPage(PageController.PAGE_ID_RATING, new PageRating());
 
-    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
+    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
 
     /* client specific code */
     SocNet.parseSocNetURL();

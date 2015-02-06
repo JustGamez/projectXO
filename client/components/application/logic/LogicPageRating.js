@@ -10,7 +10,7 @@ LogicPageRating = function () {
      */
     this.onMenuButtonClick = function () {
         SAPIUserState.isNoBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
     };
 };
 

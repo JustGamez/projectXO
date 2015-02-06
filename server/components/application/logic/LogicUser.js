@@ -97,10 +97,14 @@ LogicUser = function () {
         DataUser.getById(userId, function (user) {
             if (user) {
                 user.online = self.isUserOnline(user.id);
-                Profiler.stop(Profiler.ID_SAPIUSER_SEND_USER_INFO);
+                user.isBusy = self.isUserBusy(user.id);
+                user.onGame = self.isUserOnGame(user.id);
                 CAPIUser.updateUserInfo(toUserId, user);
+                Profiler.stop(Profiler.ID_SAPIUSER_SEND_USER_INFO);
                 refreshUserSocNetInfo(user, function (user) {
                     user.online = self.isUserOnline(user.id);
+                    user.isBusy = self.isUserBusy(user.id);
+                    user.onGame = self.isUserOnGame(user.id);
                     CAPIUser.updateUserInfo(toUserId, user);
                 });
             } else {
@@ -214,6 +218,16 @@ LogicUser = function () {
         return userGetConns(userId) ? true : false;
     };
 
+    this.isUserBusy = function (userId) {
+        console.log(userToCntx[userId]);
+        if (userToCntx[userId] == undefined)return undefined;
+        return userToCntx[userId].user.isBusy;
+    };
+    this.isUserOnGame = function (userId) {
+        if (userToCntx[userId] == undefined)return undefined;
+        return userToCntx[userId].user.onGame;
+    };
+
     /**
      * Возвращает кол-во онлайн пользователей.
      * @returns {number} кол-во онлайн пользователей.
@@ -251,6 +265,11 @@ LogicUser = function () {
             Logs.log("CREATE user context. uid:" + user.id + ", cid:" + cntx.connectionId, Logs.LEVEL_DETAIL);
             userToCntx[user.id] = {
                 conns: {},
+                user: {
+                    isBusy: false,
+                    onGame: 0,
+                    id: user.id
+                },
                 connsCount: 0
             };
             userToCntxCount++;
@@ -258,6 +277,7 @@ LogicUser = function () {
         Logs.log("ADD user conn", Logs.LEVEL_DETAIL);
         cntx.userId = user.id;
         cntx.isAuthorized = true;
+        cntx.user = userToCntx[user.id].user;
         userToCntx[user.id].conns[cntx.connectionId] = cntx;
         userToCntx[user.id].connsCount++;
     };

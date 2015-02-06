@@ -10,6 +10,7 @@ SAPIUserState = function () {
             return;
         }
         Profiler.start(Profiler.ID_SAPIUSERSTATE_IS_BUSY);
+        cntx.user.isBusy = true;
         LogicUser.sendToAll(CAPIUserState.isBusy, cntx.userId);
         Profiler.stop(Profiler.ID_SAPIUSERSTATE_IS_BUSY);
     };
@@ -24,6 +25,7 @@ SAPIUserState = function () {
             return;
         }
         Profiler.start(Profiler.ID_SAPIUSERSTATE_IS_NO_BUSY);
+        cntx.user.isBusy = false;
         LogicUser.sendToAll(CAPIUserState.isNoBusy, cntx.userId);
         Profiler.stop(Profiler.ID_SAPIUSERSTATE_IS_NO_BUSY);
     };
@@ -44,6 +46,7 @@ SAPIUserState = function () {
             return;
         }
         Profiler.start(Profiler.ID_SAPIUSERSTATE_ON_GAME);
+        cntx.user.onGame = gameId;
         LogicUser.sendToAll(CAPIUserState.onGame, cntx.userId, gameId);
         Profiler.stop(Profiler.ID_SAPIUSERSTATE_ON_GAME);
     };

@@ -28,7 +28,7 @@ PageRating = function PageRating() {
         /* Список рейтинга. */
         element = GUI.createElement('ElementRatingList', {
             x: 100,
-            y: 100,
+            y: 186 - 7,
             width: 500,
             rowSpacing: 0,
             rowsCount: 5
@@ -45,6 +45,39 @@ PageRating = function PageRating() {
             srcHover: '/images/buttons/ratingMenuHover.png',
             srcActive: '/images/buttons/ratingMenuActive.png',
             onClick: LogicPageRating.onMenuButtonClick
+        });
+        self.elements.push(element);
+        /* Текст заголовка. */
+        element = GUI.createElement('ElementImage', {
+            x: 112,
+            y: 142 - 7,
+            width: 100,
+            height: 40,
+            src: '/images/rating/headerPhoto.png'
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementImage', {
+            x: 230,
+            y: 142 - 7,
+            width: 150,
+            height: 40,
+            src: '/images/rating/headerNameSurname.png'
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementImage', {
+            x: 525,
+            y: 142 - 7,
+            width: 70,
+            height: 40,
+            src: '/images/rating/headerScore.png'
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementImage', {
+            x: 600,
+            y: 142 - 7,
+            width: 90,
+            height: 40,
+            src: '/images/rating/headerPositionByScore.png'
         });
         self.elements.push(element);
     };

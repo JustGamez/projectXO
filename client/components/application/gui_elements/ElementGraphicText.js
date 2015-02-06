@@ -101,25 +101,26 @@ ElementGraphicText = function () {
     };
 
     var refreshText = function () {
-        var textHTML, symbol_url, charCode;
+        var textHTML, symbol_url, charCode, existsSymbols;
+        existsSymbols = '1234567890абвгдеёжзийклмнопрстуфхцчшщьыъэюя.!- АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
         textHTML = '';
         for (var i in self.text) {
             var symbol = self.text[i];
             charCode = self.text.charCodeAt(i);
             /* feed line symbol: 0xAh, 10d, \n */
             if (charCode == 10) {
-                if (GUIDom.hidePictures) {
-                    textHTML += "\r\n";
-                } else {
-                    textHTML += "<br>";
-                }
+                textHTML += "<br>";
                 continue;
             }
             if (GUIDom.hidePictures) {
                 textHTML += symbol;
             } else {
-                symbol_url = "/images/font/" + charCode + ".png";
-                textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                if (existsSymbols.indexOf(symbol) == -1) {
+                    textHTML += "<b style='font-size:21px;color:rgba(68,62,0,0.7);'>" + symbol + "</b>";
+                } else {
+                    symbol_url = "/images/font/" + charCode + ".png";
+                    textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                }
             }
         }
         dom.innerHTML = textHTML;

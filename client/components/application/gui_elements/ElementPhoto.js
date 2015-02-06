@@ -103,14 +103,14 @@ ElementPhoto = function () {
      * Стандартная 50 на 50 фотография.
      * @type {number}
      */
-    var photoWidth = 50;
+    this.photoWidth = 50;
 
     /**
      * Высота фотографии.
      * Стандартная 50 на 50 фотография.
      * @type {number}
      */
-    var photoHeight = 50;
+    this.photoHeight = 50;
 
     /**
      * Ширина области активности вокруг фотографии.
@@ -212,21 +212,22 @@ ElementPhoto = function () {
         domBorder.x = 5;
         domBorder.y = 5;
         domBorder.border = borderWidth + 'px solid #ebb';
-        domBorder.width = frameWidth * 2 + photoWidth;
-        domBorder.height = frameWidth * 2 + photoHeight;
+        domBorder.width = frameWidth * 2 + self.photoWidth;
+        domBorder.height = frameWidth * 2 + self.photoHeight;
         /* Рамка фотографии */
         domFrame = GUI.createDom(domBorder);
         domFrame.border = frameWidth + 'px solid #eee';
         domFrame.x = 0;
         domFrame.y = 0;
-        domFrame.width = photoWidth;
-        domFrame.height = photoHeight;
+        domFrame.width = self.photoWidth;
+        domFrame.height = self.photoHeight;
         /* Фотография */
         domPhoto = GUI.createDom(domFrame);
         domPhoto.x = 0;
         domPhoto.y = 0;
-        domPhoto.height = photoHeight;
-        domPhoto.width = photoWidth;
+        domPhoto.height = self.photoHeight;
+        domPhoto.width = self.photoWidth;
+        domPhoto.backgroundSize = self.photoWidth;
         /* Индикатор онлайн пользователя */
         domOnlineIndicator = GUI.createDom(domRegion);
         domOnlineIndicator.x = 12;

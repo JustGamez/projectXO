@@ -21,7 +21,7 @@ CAPIInvites = function () {
             SAPIUserState.onGame(gameId);
             LogicGame.setCurrentGameId(gameId);
             SAPIUserState.isBusy();
-            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_XO_GAME]);
+            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         } else {
             SAPIUserState.onGame(0);
             SAPIInvites.closeGame(gameId);

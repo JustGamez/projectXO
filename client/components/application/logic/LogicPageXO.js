@@ -13,7 +13,7 @@ LogicPageXO = function () {
     this.onMenuButtonClick = function () {
         var game;
         SAPIUserState.isNoBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_MAIN]);
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
         game = LogicGame.getCurrentGame();
         if (game) {
             if (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN) {

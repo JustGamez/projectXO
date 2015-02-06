@@ -7,6 +7,7 @@
  * @property width {int}
  * @property height {int}
  * @property backgroundImage {url}
+ * @property backgroundSize {int}
  * @property innerHTML {string}
  * @property pointer {GUI.POINTER_*}
  * @property opacity {Number}
@@ -84,7 +85,6 @@ GUIDom = function () {
         if (GUIDom.pictureOpacities) {
             document.body.style.opacity = GUIDom.pictureOpacities;
             dom.style.border = '2px solid lightgrey';
-            //dom.style.backgroundColor = 'black';
         }
         /* hidden mode..:finish */
         /* Добавим дом к родителю. */
@@ -186,6 +186,9 @@ GUIDom = function () {
             dom.style.backgroundImage = 'url(' + url + ')';
         }
     };
+    var redrawBackgroundSize = function () {
+        dom.style.backgroundSize = self.backgroundSize + 'px';
+    };
     var redrawInnerHTML = function () {
         if (GUIDom.hidePictures) {
             if (GUIDom.makeTransparent) {
@@ -264,6 +267,7 @@ GUIDom = function () {
         width: redrawWidth,
         height: redrawHeight,
         backgroundImage: redrawBackgroundImage,
+        backgroundSize: redrawBackgroundSize,
         innerHTML: redrawInnerHTML,
         pointer: redrawPointer,
         opacity: redrawOpacity,

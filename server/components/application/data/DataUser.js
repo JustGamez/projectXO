@@ -40,6 +40,7 @@ DataUser = function () {
         });
     };
 
+    var waitForCreateByScoNet = [];
     /**
      * Создать пользователя по данным из социальной сети.
      * @param socNetTypeId id социальной сети SocNet.TYPE_*
@@ -47,6 +48,9 @@ DataUser = function () {
      * @param callback
      */
     this.createFromSocNet = function (socNetTypeId, socNetUserId, callback) {
+        /* Предотвращение двойной мгновенной регистрации. */
+        if (waitForCreateByScoNet[socNetUserId])return;
+        waitForCreateByScoNet[socNetUserId] = true;
         DB.insert(tableName, {
             firstName: '',
             lastName: '',
@@ -67,6 +71,7 @@ DataUser = function () {
                 score: 0
             };
             callback(user);
+            delete waitForCreateByScoNet[socNetUserId];
         });
     };
 
