@@ -77,13 +77,13 @@ ApiRouterMetrics.setup({
     CAPIUser: true,
     CAPIUserState: true
 });
-
-ApiRouterMetrics.printMetrics();
-Profiler.printReport();
 setInterval(function () {
         ApiRouterMetrics.printMetrics();
+    }, Config.ApiRouterMetric.reportTimeout
+);
+setInterval(function () {
         Profiler.printReport();
-    }, 10000
+    }, Config.Profiler.reportTimeout
 );
 
 /* ApiRouter */
@@ -120,4 +120,3 @@ sequencedInit(function (afterInitCallback) {
     Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
     afterInitCallback();
 });
-

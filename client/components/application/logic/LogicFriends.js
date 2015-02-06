@@ -2,7 +2,7 @@ LogicFriends = function () {
     var self = this;
 
     /**
-     * Массив id друзей.
+     * Массив id друзей. Массив ввида [userId: [ friendId: friendId, ... ], ... ]
      * @type {number []}
      */
     var friendIds = [];
@@ -23,7 +23,7 @@ LogicFriends = function () {
             return friendIds[userId];
         } else {
             this.loadFriendsById(userId);
-            return null;
+            return [];
         }
     };
 
@@ -48,10 +48,24 @@ LogicFriends = function () {
      */
     this.updateFriends = function (userId, friendList) {
         waitForLoadingUser[userId] = false;
-        friendIds[userId] = friendList;
+        friendIds[userId] = [];
+        for (var i in friendList) {
+            friendIds[userId][friendList[i]] = friendList[i];
+        }
         pageController.redraw();
         Logs.log("LogicUser.udpateFriends for userId=" + userId, Logs.LEVEL_DETAIL);
     };
+
+    /**
+     * Возвращает, явялются ли два пользоваетля друзьями.
+     * ВНИМАНИЕ: если поменять местами аргументы, результат может быть неверным, пока это работает так.
+     * @param whoseId {int}
+     * @param whoId {int}
+     * @returns {bool}
+     */
+    this.isFriend = function (whoseId, whoId) {
+        return (friendIds[whoseId] && friendIds[whoseId][whoId]) ? true : false;
+    }
 };
 
 /**

@@ -135,6 +135,20 @@ LogicUser = function () {
         self.updateUserInfo({id: userId, online: direction});
         pageController.redraw();
     };
+
+    /**
+     * Возвращает массив внутрениих id юзееров, которые онлайн.
+     */
+    this.getOnlineUserIds = function () {
+        var out;
+        out = [];
+        for (var i in users) {
+            if (users[i].id) {
+                out.push(users[i].id);
+            }
+        }
+        return out;
+    };
 };
 
 /**

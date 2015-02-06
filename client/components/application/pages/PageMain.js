@@ -185,12 +185,24 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var friends, ids, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, enableButtonInvite;
-        friends = [];
+        var usersList, ids, friendIds, onlineIds, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, enableButtonInvite;
+        usersList = [];
+        ids = [];
         currentUser = LogicUser.getCurrentUser();
         if (currentUser.id) {
-            ids = LogicFriends.getFriendsById(currentUser.id);
+            ids = ids.concat(LogicFriends.getFriendsById(currentUser.id));
+            ids = ids.concat(LogicUser.getOnlineUserIds());
         }
+        /* remove duplicates */
+        var tmp;
+        tmp = [];
+        for (var i in ids) {
+            if (ids[i] == currentUser.id) {
+                continue;
+            }
+            tmp[ids[i]] = ids[i];
+        }
+        ids = tmp;
         if (ids) {
             for (var i in ids) {
                 user = LogicUser.getUserById(ids[i]);
@@ -225,7 +237,8 @@ PageMain = function PageMain() {
                 if (LogicInvites.isInviteExists(currentUser.id, user.id) && !showButtonLetsPlay) {
                     showIndicatorWaiting = true;
                 }
-                friends.push({
+                usersList.push({
+                    isFriend: LogicFriends.isFriend(currentUser.id, user.id),
                     src: user.photo50,
                     title: user.firstName + " " + user.lastName,
                     online: user.online,
@@ -243,7 +256,23 @@ PageMain = function PageMain() {
                 });
             }
         }
-        self.elementFriendsType.update(friends);
+        /* Сортировка. */
+        /**
+         * Сортировтаь будем так:
+         * - друг;
+         * - онлайн;
+         */
+        usersList.sort(function (a, b) {
+            if (a.isFriend && !b.isFriend)return -1;
+            if (!a.isFriend && b.isFriend)return 1;
+            return 0;
+        });
+        usersList.sort(function (a, b) {
+            if (a.online && !b.online)return -1;
+            if (!a.online && b.online)return 1;
+            return 0;
+        });
+        self.elementFriendsType.update(usersList);
     };
 
     /**

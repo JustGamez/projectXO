@@ -24,7 +24,7 @@ window.onload = function () {
      * Настройка лога.
      */
     Logs.setup({
-        level: Logs.LEVEL_DETAIL
+        level: Logs.LEVEL_WARNING
     });
 
     /**
