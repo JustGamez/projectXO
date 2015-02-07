@@ -9,7 +9,7 @@ ActionsChat = function () {
     this.sendMessage = function (userId, text) {
         var timestamp;
         Profiler.start(Profiler.ID_SAPICHAT_SEND_MESSAGE);
-        timestamp = Math.floor(new Date() / 1000);
+        timestamp = Math.floor(new Date().getTime() / 1000);
         LogicChatCache.add(userId, text, timestamp, false);
         LogicUser.sendToAll(CAPIChat.getNewMessage, userId, text, timestamp);
         /* Сбросим кэш, если надо */

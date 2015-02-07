@@ -71,7 +71,7 @@ ElementRatingList = function () {
         for (var i = 0; i < self.rowsCount; i++) {
             row = {};
             row.photo = GUI.createElement('ElementPhoto', {
-                x: self.x + 1,
+                x: self.x + 30,
                 y: self.y + i * (self.rowSpacing + rowHeight),
                 photoWidth: 32,
                 photoHeight: 32

@@ -15,12 +15,18 @@ UrlCache = function () {
     /**
      * Вернуть кэшированные данные по ключу.
      * @param key {String}
-     * @return {String}
+     * @return {String|null}
      */
     this.get = function (key) {
         if (cache[key]) {
-            return cache[key];
+            if (cache[key].timestamp < (new Date().getTime())) {
+                var tmp = cache[key].data;
+                delete cache[key];
+                return tmp;
+            }
+            return cache[key].data;
         }
+        return null;
     };
 
     /**
@@ -29,7 +35,10 @@ UrlCache = function () {
      * @param data {String}
      */
     this.set = function (key, data) {
-        cache[key] = data;
+        cache[key] = {
+            data: data,
+            timestamp: new Date().getTime() + Config.UrlCache.lifeTime
+        };
     };
 };
 

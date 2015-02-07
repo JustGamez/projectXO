@@ -6,7 +6,7 @@ Config = {
     DB: {
         host: 'localhost',
         username: 'root',
-        password: '',
+        password: 'root',
         database: 'xo',
         charset: 'UTF8'
     },
@@ -28,6 +28,15 @@ Config = {
         messageLengthLimit: 128
     },
     Rating: {
-        TopLimitSize: 10
+        TopLimitSize: 5
+    },
+    ApiRouterMetric: {
+        reportTimeout: 1000 * 60 * 60
+    },
+    Profiler: {
+        reportTimeout: 1000 * 60 * 60
+    },
+    UrlCache: {
+        lifeTime: 1000 * 60 * 30
     }
 };
