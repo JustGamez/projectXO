@@ -11,13 +11,15 @@ LogicChatCache = function () {
      * @param userId {number}
      * @param text {string}
      * @param timestamp {number}
+     * @param inDataBase {bool}
      */
-    this.add = function (userId, text, timestamp) {
+    this.add = function (userId, text, timestamp, inDataBase) {
         var message;
         message = {
             userId: userId,
             text: text,
-            timestamp: timestamp
+            timestamp: timestamp,
+            inDataBase: inDataBase
         };
         cache.push(message);
     };
@@ -32,10 +34,16 @@ LogicChatCache = function () {
         var messages;
         messages = cache.slice(-count);
         messages.sort(function (a, b) {
+            if (a.id < b.id) return -1;
+            if (a.id > b.id) return +1;
+            return 0;
+        });
+        messages.sort(function (a, b) {
             if (a.timestamp < b.timestamp) return -1;
             if (a.timestamp > b.timestamp) return +1;
             return 0;
         });
+
         return messages;
     };
 
@@ -61,7 +69,7 @@ LogicChatCache = function () {
      * @param size {number} кол-во сообщний на конце, которые останутся.
      */
     this.sliceCache = function (size) {
-        cache = cache.slice(-size);
+        cache = cache.slice(size, cache.length);
     };
 };
 

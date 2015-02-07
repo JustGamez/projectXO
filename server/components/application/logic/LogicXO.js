@@ -595,7 +595,6 @@ LogicXO = function () {
         newGame = self.run(newGame);
         newGame.copyFromId = oldGame.id;
         DataGame.save(newGame, function (newGame) {
-            console.log(oldGame, newGame);
             LogicGameStore.save(newGame);
             callback(newGame);
         });

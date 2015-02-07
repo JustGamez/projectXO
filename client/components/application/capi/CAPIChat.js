@@ -8,7 +8,7 @@ CAPIChat = function () {
      * @param timestamp {Number} сообщение
      */
     this.getNewMessage = function (cntx, userId, text, timestamp) {
-        LogicChatCache.add(userId, text, timestamp);
+        LogicChatCache.add(userId, text, timestamp, false);
         pageController.redraw();
     };
 };

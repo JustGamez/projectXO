@@ -10,7 +10,7 @@ ActionsChat = function () {
         var timestamp;
         Profiler.start(Profiler.ID_SAPICHAT_SEND_MESSAGE);
         timestamp = Math.floor(new Date() / 1000);
-        LogicChatCache.add(userId, text, timestamp);
+        LogicChatCache.add(userId, text, timestamp, false);
         LogicUser.sendToAll(CAPIChat.getNewMessage, userId, text, timestamp);
         /* Сбросим кэш, если надо */
         var cacheSize;
@@ -32,7 +32,17 @@ ActionsChat = function () {
             retailSize = 0;
         }
         cacheSize = LogicChatCache.getCacheSize();
-        DataChat.saveList(LogicChatCache.getFirstMessages(cacheSize - retailSize));
+        /* Сохраним в БД кэш минус то что надо оставить. */
+        var tmp = LogicChatCache.getFirstMessages(cacheSize - retailSize);
+        var tmp2 = [];
+        for (var i in tmp) {
+            if (tmp[i].inDataBase) {
+                continue;
+            }
+            tmp2.push(tmp[i]);
+        }
+        DataChat.saveList(tmp2);
+        /* Удалим из кэша, то что мы слили в БД. */
         LogicChatCache.sliceCache(cacheSize - retailSize);
         Logs.log('Chat cache flushed.');
     };
@@ -54,7 +64,7 @@ ActionsChat = function () {
         DataChat.getLastMessages(Config.Chat.lastMessagesCount, function (list) {
             for (var i in list) {
                 message = list[i];
-                LogicChatCache.add(message.userId, message.text, message.timestamp);
+                LogicChatCache.add(message.userId, message.text, message.timestamp, true);
             }
             Logs.log('Load last chat messages. Count:' + list.length, Logs.LEVEL_NOTIFY);
             afterComplete();

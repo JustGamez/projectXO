@@ -19,7 +19,7 @@ DataChat = function () {
      */
     this.getLastMessages = function (limit, callback) {
         var query;
-        query = "SELECT * FROM " + tableName + " ORDER BY id DESC LIMIT 5";
+        query = "SELECT * FROM " + tableName + " ORDER BY id DESC LIMIT " + limit;
         DB.query(query, callback);
     };
 

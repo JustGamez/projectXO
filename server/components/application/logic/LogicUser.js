@@ -219,7 +219,6 @@ LogicUser = function () {
     };
 
     this.isUserBusy = function (userId) {
-        console.log(userToCntx[userId]);
         if (userToCntx[userId] == undefined)return undefined;
         return userToCntx[userId].user.isBusy;
     };
