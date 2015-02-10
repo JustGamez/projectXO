@@ -44,8 +44,8 @@ PageMain = function PageMain() {
         element = GUI.createElement("ElementFlag", {
             x: 132,
             y: 170,
-            height: 83,
             width: 142,
+            height: 83,
             srcRest: '/images/flags/vsRobotRest.png',
             srcHover: '/images/flags/vsRobotHover.png',
             srcActive: '/images/flags/vsRobotActive.png',

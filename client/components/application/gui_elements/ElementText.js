@@ -62,6 +62,8 @@ ElementText = function () {
         dom.y = this.y;
         dom.width = this.width;
         dom.height = this.height;
+        dom.color = "rgba(68,62,0,0.7)";
+        dom.fontSize = 21;
     };
 
     /**
@@ -110,11 +112,7 @@ ElementText = function () {
                 textHTML += "<br>";
                 continue;
             }
-            if (GUIDom.hidePictures) {
-                textHTML += symbol;
-            } else {
-                textHTML += "<b style='font-size:21px;color:rgba(68,62,0,0.7);'>" + symbol + "</b>";
-            }
+            textHTML += symbols;
         }
         dom.innerHTML = textHTML;
         dom.redraw();

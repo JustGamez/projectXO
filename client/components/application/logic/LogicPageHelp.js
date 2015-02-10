@@ -25,9 +25,9 @@ LogicPageHelp = function () {
 
     /**
      * id текущего, выбраного таба.
-     * @type {null}
+     * @type {int}
      */
-    var currentTabId = null;
+    var currentTabId;
 
     /**
      * Действия при нажатии кнопкаи `(X)`.
@@ -44,7 +44,42 @@ LogicPageHelp = function () {
      */
     this.onTabChanged = function (value, index) {
         currentTabId = value;
-        pageController.redraw();
+        /* @todo костыль конечно, но пока так. Так быстрей, ничего не поделаешь :).
+         * Должен же у нас быть хотя бы один костыль :)
+         * Во всяком случае это первый костыль :) проблема Саб-таба.
+         */
+        if (LogicUser.isAuthorized()) {
+            self.showPageAndTab();
+        }
+    };
+
+    /**
+     * Возвращает текущий id таба.
+     * @returns {int}
+     */
+    this.getCurrentTabId = function () {
+        return currentTabId;
+    };
+
+    /**
+     * Показать страницу основных элементов и страницу "таба".
+     * @todo Немного костыльно, но зато быстро.
+     */
+    this.showPageAndTab = function () {
+        switch (LogicPageHelp.getCurrentTabId()) {
+            case self.TAB_ID_MAIN_MENU:
+                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP, PageController.PAGE_ID_HELP_MAIN_MENU]);
+                break;
+            case self.TAB_ID_RATING:
+                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP, PageController.PAGE_ID_HELP_RATING]);
+                break;
+            case self.TAB_ID_RULES:
+                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP, PageController.PAGE_ID_HELP_RULES]);
+                break;
+            default:
+                Logs.log("Попытка отобразить не существующий таб хелпа.", Logs.LEVEL_FATAL_ERROR, LogicPageHelp.getCurrentTabId());
+                break;
+        }
     }
 };
 

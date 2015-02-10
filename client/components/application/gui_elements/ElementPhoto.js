@@ -30,7 +30,7 @@ ElementPhoto = function () {
      * Ссылка на картинку фотографии.
      * @type {string}
      */
-    var src = '/path/to/image.png';
+    this.src = '/path/to/image.png';
 
     /**
      * Загрушка, на случай, если фотографии нет.
@@ -193,7 +193,7 @@ ElementPhoto = function () {
      * Показывать ли онлайн индикатор.
      * @type {boolean}
      */
-    var showOnlineIndicator = true;
+    var showOnlineIndicator = false;
 
     /**
      * Создадим домы и настроем их.
@@ -315,11 +315,11 @@ ElementPhoto = function () {
         if (!showed) return;
         domRegion.title = title;
         /* Если, нет фотографии, то отображаем заглушку */
-        if (src == null || src == undefined || src == '') {
-            src = srcDummy;
+        if (self.src == null || self.src == undefined || self.src == '') {
+            self.src = srcDummy;
         }
-        domPhoto.backgroundImage = src;
-        domBorder.transform = 'rotate(' + getRealRandom(src) + 'deg)';
+        domPhoto.backgroundImage = self.src;
+        domBorder.transform = 'rotate(' + getRealRandom(self.src) + 'deg)';
         domRegion.redraw();
         domPhoto.redraw();
         domBorder.redraw();
@@ -376,7 +376,7 @@ ElementPhoto = function () {
      *   }}
      */
     this.update = function (params) {
-        src = params.src;
+        self.src = params.src;
         title = params.title;
         online = params.online;
         photoInfo = params.photoInfo;
@@ -418,6 +418,8 @@ ElementPhoto = function () {
      * И в процессе может меняться.
      */
     var onClickMediator = function () {
-        onClick.call(null, photoInfo);
+        if (onClick) {
+            onClick.call(null, photoInfo);
+        }
     }
 };

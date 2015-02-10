@@ -63,6 +63,9 @@ ElementGraphicText = function () {
         dom.y = this.y;
         dom.width = this.width;
         dom.height = this.height;
+        /* Но, это только для текста без картинки, т.к. у нас не все символы есть. Пока что. */
+        dom.color = "rgba(68,62,0,0.7)";
+        dom.fontSize = 21;
     };
 
     /**
@@ -116,7 +119,7 @@ ElementGraphicText = function () {
                 textHTML += symbol;
             } else {
                 if (existsSymbols.indexOf(symbol) == -1) {
-                    textHTML += "<b style='font-size:21px;color:rgba(68,62,0,0.7);'>" + symbol + "</b>";
+                    textHTML += symbol;
                 } else {
                     symbol_url = "/images/font/" + charCode + ".png";
                     textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";

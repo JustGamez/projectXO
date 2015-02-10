@@ -41,7 +41,7 @@ PageHelp = function PageHelp() {
                     width: 28,
                     height: 28,
                     srcRest: '/images/help/checkboxArrowRest.png',
-                    srcHove: '/images/help/checkboxArrowHover.png',
+                    srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
                     value: LogicPageHelp.TAB_ID_RULES,
                     title: ''
@@ -52,7 +52,7 @@ PageHelp = function PageHelp() {
                     width: 28,
                     height: 28,
                     srcRest: '/images/help/checkboxArrowRest.png',
-                    srcHove: '/images/help/checkboxArrowHover.png',
+                    srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
                     value: LogicPageHelp.TAB_ID_MAIN_MENU,
                     title: ''
@@ -64,7 +64,7 @@ PageHelp = function PageHelp() {
                     width: 28,
                     height: 28,
                     srcRest: '/images/help/checkboxArrowRest.png',
-                    srcHove: '/images/help/checkboxArrowHover.png',
+                    srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
                     value: LogicPageHelp.TAB_ID_RATING,
                     title: ''
@@ -100,46 +100,6 @@ PageHelp = function PageHelp() {
             text: 'Рейтинг'
         });
         self.elements.push(element);
-        initMainMenuTab();
-    };
-
-    var initMainMenuTab = function () {
-        var element, line;
-        var rowHeight = 90;
-        var offsetY = 85;
-        line = 0;
-        list = [];
-        list.push({name: 'ElementImage', x: 90, y: 74 + rowHeight * line + offsetY, src: '/images/radio/signRandomRest.png'});
-        list.push({name: 'ElementImage', x: 185, y: 63 + rowHeight * line + offsetY, src: '/images/radio/signXRest.png'});
-        list.push({name: 'ElementImage', x: 270, y: 62 + rowHeight * line + offsetY, src: '/images/radio/signORest.png'});
-        list.push({name: 'ElementText', x: 390, y: 93 + rowHeight * line + offsetY, src: '/images/radio/signORest.png', width: 200, height: 20, text: '&larr; выбор знака: любой, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;крестик или нолик.'});
-
-        line = 1;
-        list.push({name: 'ElementImage', x: 80, y: 60 + rowHeight * line + offsetY, src: '/images/radio/field3x3Rest.png'});
-        list.push({name: 'ElementImage', x: 180, y: 75 + rowHeight * line + offsetY, src: '/images/radio/field15x15Rest.png'});
-        list.push({name: 'ElementText', x: 390, y: 90 + rowHeight * line + offsetY, src: '/images/radio/signORest.png', width: 200, height: 20, text: '&larr; выбор поля: 3х3 или 15х15.'});
-
-        line = 2;
-        list.push({name: 'ElementImage', x: 116 + 145, y: 55 + rowHeight * line + offsetY, src: '/images/flags/vsRobotRest.png'});
-        list.push({name: 'ElementText', x: 390, y: 80 + rowHeight * line + offsetY, text: '&larr; играть с компьютером.'});
-
-        line = 3;
-        list.push({name: 'ElementImage', x: 110, y: 60 + rowHeight * line + offsetY, width: 50, height: 50, src: '/images/help/photoSomePeople1.png'});
-        list.push({name: 'ElementImage', x: 190, y: 60 + rowHeight * line + offsetY, width: 50, height: 50, src: '/images/help/photoSomePeople2.png'});
-        list.push({name: 'ElementImage', x: 268, y: 60 + rowHeight * line + offsetY, width: 50, height: 50, src: '/images/help/photoSomePeople3.png'});
-        list.push({name: 'ElementText', x: 360, y: 83 + rowHeight * line + offsetY, text: '&larr; отправить приглашение сыграть.'});
-
-        line = 4;
-        list.push({name: 'ElementImage', x: 110, y: 55 + rowHeight * line + offsetY, width: 50, height: 50, src: '/images/help/imageChatLabel.png', opacity: 0.75});
-        list.push({name: 'ElementText', x: 155, y: 68 + rowHeight * line + offsetY, width: 200, height: 20, text: '&larr; окно чата.'});
-        list.push({name: 'ElementImage', x: 110, y: 120 + rowHeight * line + offsetY, width: 50, height: 50, src: '/images/help/imageChatPrompt.png', opacity: 0.75});
-        list.push({name: 'ElementText', x: 155, y: 118 + rowHeight * line + offsetY, width: 200, height: 20, text: '&larr; поле для оптравки сообщений в чат.'});
-
-
-        for (var i in list) {
-            element = GUI.createElement(list[i].name, list[i]);
-            self.elements.push(element);
-        }
     };
 
     /**

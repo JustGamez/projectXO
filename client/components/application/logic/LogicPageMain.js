@@ -89,7 +89,7 @@ LogicPageMain = function () {
      */
     this.onButtonHelpClick = function () {
         SAPIUserState.isBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP]);
+        LogicPageHelp.showPageAndTab();
     }
 };
 
