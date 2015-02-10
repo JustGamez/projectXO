@@ -112,7 +112,7 @@ ElementText = function () {
                 textHTML += "<br>";
                 continue;
             }
-            textHTML += symbols;
+            textHTML += symbol;
         }
         dom.innerHTML = textHTML;
         dom.redraw();

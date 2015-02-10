@@ -19,17 +19,41 @@ PageHelpRating = function PageHelpRating() {
 
     this.init = function () {
         var element, line, list;
-        var rowHeight = 90;
-        var offsetY = 85;
+        var rowHeight = 70;
+        var offsetY = 150;
+
+        var text1;
+        text1 = '';
+        text1 += 'За победу в игре игрок получает очки.\r\n';
+        text1 += 'Рейтинговая позиция зависит от количества очков.\r\n';
+        text1 += 'При одинаковом количестве очков, выше в рейтинге будет тот,\r\n';
+        text1 += 'кому были начислены очки раньше.';
+
         line = 0;
         list = [];
-        //list.push({name: 'ElementImage', x: 90, y: 74 + rowHeight * line + offsetY, src: '/images/radio/signRandomRest.png'});
+        list.push({name: 'ElementText', x: 100, y: 40 + rowHeight * line + offsetY, text: text1});
+        /*
+         @todo
+         line = 2;
+         list.push({name:'ElementImage', x: 100 + 100, y : 35 + rowHeight * line + offsetY, src: '/images/buttons/rating{ByFriends}.png'});
+         list.push({name:'ElementText', x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr; рейтинг среди друзей.'});
+         */
+
+        /*
+         @todo
+         line = 3;
+         list.push({name:'ElementImage', x: 100 + 100, y : 35 + rowHeight * line + offsetY, src: '/images/buttons/rating{ByMyPosition}.png'});
+         list.push({name:'ElementText', x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr;позиция в общем рейтинге.'});
+         */
+
+        line = 3;
+        list.push({name: 'ElementImage', x: 100 + 100, y: 35 + rowHeight * line + offsetY, width: 140, height: 48, src: '/images/buttons/ratingRest.png'});
+        list.push({name: 'ElementText', x: 250 + 100, y: 52 + rowHeight * line + offsetY, text: '&larr;позиции лучших игроков.'});
 
         for (var i in list) {
             element = GUI.createElement(list[i].name, list[i]);
             self.elements.push(element);
         }
-
     };
 
     /**
