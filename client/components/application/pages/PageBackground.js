@@ -17,18 +17,6 @@ PageBackground = function PageBackground() {
      */
     this.elements = [];
 
-    /**
-     * Окно чата.
-     * @type {ElementChatWindow}
-     */
-    this.elementChatWindow = null;
-
-    /**
-     * Элемент ввода сообщения чата.
-     * @type {ElementChatInput}
-     */
-    this.elementChatInput = null;
-
     this.init = function () {
         var element;
         /* Задний фон */
@@ -40,26 +28,6 @@ PageBackground = function PageBackground() {
             src: '/images/table.png'
         });
         self.elements.push(element);
-        /* Окно чата. */
-        element = GUI.createElement('ElementChatWindow', {
-            x: 90,
-            y: 500,
-            width: 570,
-            height: 92
-        });
-        self.elements.push(element);
-        self.elementChatWindow = element;
-
-        /* Форма ввода сообщения в чате.*/
-        element = GUI.createElement('ElementChatInput', {
-            x: 90,
-            y: 607,
-            width: 584,
-            height: 20,
-            onSendByEnter: LogicPageBackground.onChatInputEnterMessage
-        });
-        self.elements.push(element);
-        self.elementChatInput = element;
     };
 
     /**
@@ -90,17 +58,14 @@ PageBackground = function PageBackground() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var messages;
-        /* Кол-во сообщений для отображения */
-        messages = LogicChatCache.getLastMessages(5);
-        self.elementChatWindow.updateMessages(messages);
+
     };
 
     /**
      * Обновляем онлайн индикатор и индикатор очков.
      */
     this.redraw = function () {
-        if (!showed)return;
+        if (!showed) return;
         self.preset();
         for (var i in self.elements) {
             self.elements[i].redraw();

@@ -54,21 +54,10 @@ WebSocketServer = function () {
     var robotCodePath = '../robotKrispi/';
 
     /**
-     * Путь откуда загружать картинки.
-     * @type {string}
+     * Кэш картинок.
+     * @type {{}}
      */
-    var imagesPath = null;
-
-    /**
-     * Настройка компонента.
-     * @param setup {Object}
-     */
-    this.setup = function (setup) {
-        reloadClientCodeEveryRequest = setup.reloadClientCodeEveryRequest;
-        port = setup.port;
-        clientCodePath = setup.clientCodePath;
-        imagesPath = setup.imagesPath;
-    };
+    var imagesCache = {};
 
     /**
      * Проверка перед запуском:
@@ -98,6 +87,12 @@ WebSocketServer = function () {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
     };
+
+    /**
+     * Путь откуда загружать картинки.
+     * @type {string}
+     */
+    var imagesPath = null;
 
     /**
      * Каллбэек будет вызываться при коннекте.
@@ -167,6 +162,11 @@ WebSocketServer = function () {
      * Инициируется прослушивание.
      */
     this.init = function (afterInitCallback) {
+        reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
+        port = Config.WebSocketServer.port;
+        clientCodePath = Config.WebSocketServer.clientCodePath;
+        imagesPath = Config.WebSocketServer.imagesPath;
+
         checkBeforeInit();
         // загрузка клиентского кода.
         loadClientCode();
@@ -355,6 +355,12 @@ WebSocketServer = function () {
             /* уберём GET параметры. */
             path = path.substr(0, path.indexOf('?'));
 
+            if (imagesCache[path]) {
+                response.writeHead(200, {'Content-Type': 'image/png'});
+                response.end(imagesCache[path]);
+                Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
+                return true;
+            }
             FS.readFile(imagesPath + path, function (err, data) {
                 if (err) {
                     Logs.log("Image not found:" + imagesPath + path, Logs.LEVEL_WARNING);
@@ -365,6 +371,7 @@ WebSocketServer = function () {
                     /* Logs.log("Image sended:" + imagesPath + path + "length:", Logs.LEVEL_DETAIL); */
                     response.writeHead(200, {'Content-Type': 'image/png'});
                     response.end(data);
+                    imagesCache[path] = data;
                     Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
                 }
             });

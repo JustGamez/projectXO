@@ -131,8 +131,12 @@ window.onload = function () {
     pageController.addPage(PageController.PAGE_ID_XO_GAME, new PageXOGame());
     PageController.PAGE_ID_RATING = 5;
     pageController.addPage(PageController.PAGE_ID_RATING, new PageRating());
+    PageController.PAGE_ID_HELP = 6;
+    pageController.addPage(PageController.PAGE_ID_HELP, new PageHelp());
+    PageController.PAGE_ID_CHAT = 7;
+    pageController.addPage(PageController.PAGE_ID_CHAT, new PageChat());
 
-    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
+    pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
 
     /* client specific code */
     SocNet.parseSocNetURL();

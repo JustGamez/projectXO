@@ -92,7 +92,7 @@ GUI = function () {
      * Создаёт элемент
      * @param name {string} имя элемента Element*
      * @param params {object} параметры присваиваемые при создании элемента.
-     * @param parentDom {GUIDom} необязательный параметр, родительский дом, который будет использован в пределах инициализации элемента.
+     * @param [parentDom] {GUIDom} необязательный параметр, родительский дом, который будет использован в пределах инициализации элемента.
      * @returns {__ElementName__}
      */
     this.createElement = function (name, params, parentDom) {

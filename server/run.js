@@ -6,7 +6,7 @@ require('./system/loader.js');
  * Настройка лога.
  */
 Logs.setup({
-    level: Logs.LEVEL_ERROR
+    level: Logs.LEVEL_DETAIL
 });
 
 /**
@@ -53,12 +53,6 @@ Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
 
 /*  WebSocketServer */
 webSocketServer = new WebSocketServer();
-webSocketServer.setup({
-    port: 80,
-    reloadClientCodeEveryRequest: true,
-    clientCodePath: '../client/',
-    imagesPath: '../images/'
-});
 
 ApiRouterMetrics.setup({
     SAPIUser: true,

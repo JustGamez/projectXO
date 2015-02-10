@@ -156,6 +156,19 @@ PageMain = function PageMain() {
             onClick: LogicPageMain.onAddFriendButtonClick
         });
         self.elements.push(element);
+        /* Кнопка `(?)` */
+        element = GUI.createElement('ElementButton', {
+                x: 686,
+                y: 64,
+                width: 36,
+                height: 37,
+                srcRest: '/images/help/buttons/helpRest.png',
+                srcHover: '/images/help/buttons/helpHover.png',
+                srcActive: '/images/help/buttons/helpActive.png',
+                onClick: LogicPageMain.onButtonHelpClick
+            }
+        );
+        self.elements.push(element);
     };
 
     /**
@@ -286,4 +299,3 @@ PageMain = function PageMain() {
         }
     };
 };
-

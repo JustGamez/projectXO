@@ -192,11 +192,7 @@ GUIDom = function () {
     };
     var redrawInnerHTML = function () {
         if (GUIDom.hidePictures) {
-            if (GUIDom.makeTransparent) {
-                dom.innerHTML = self.innerHTML;
-            } else {
-                dom.innerText = self.innerHTML;
-            }
+            dom.innerHTML = self.innerHTML;
         } else {
             dom.innerHTML = self.innerHTML;
         }
