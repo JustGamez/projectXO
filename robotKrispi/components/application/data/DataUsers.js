@@ -1,9 +1,9 @@
 DataUsers = function () {
     var self = this;
 
-    var appId = '4467180';
+    var appId = '4773365';
 
-    var secretKey = 'X0x2PuCZQbC5wwX0lB5R';
+    var secretKey = 'hHKCnlntrep2N1tkdQcW';
 
     this.getUserDataByUserNetId = function (socNetUserId) {
         return {

@@ -36,6 +36,24 @@ Profiler = function () {
     };
 
     this.printReport = function () {
+        output = self.getTextReport();
+        console.log(output);
+    };
+
+    this.saveToDB = function () {
+        var row, query, dateTime;
+        query = "INSERT INTO profiling ( `datetime`, `profileId`, `sumTime`, `count` ) VALUES ";
+        dateTime = Math.round(new Date().getTime() / 1000);
+        for (var id in data) {
+            row = data[id];
+            query += "(" + dateTime + "," + id + "," + row.sumTime + "," + row.count + "),";
+        }
+        query = query.substr(0, query.length - 1);
+        DB.query(query, function () {
+        });
+    };
+
+    this.getTextReport = function () {
         var output, row, rps;
         output = '';
         output += "id " + str_pad("title", maxTitleLength + 3) + "  sumTime    count   rps\r\n";
@@ -49,7 +67,7 @@ Profiler = function () {
             output += ' ';
             output += str_pad((row.count).toString(), 7);
             output += ' ';
-            rps = Math.round((row.count / (row.sumTime / 1000)) * 100) / 100;
+            rps = Math.round((row.count / (row.sumTime / 1000)) * 10000) / 10000;
             output += rps;
             output += "\r\n";
         }
@@ -57,8 +75,8 @@ Profiler = function () {
         output += "rss: " + Math.round(memoryUsage.rss / 1024 / 1024) + " Mb\r\n";
         output += "heapTotal: " + Math.round(memoryUsage.heapTotal / 1024 / 1024) + " Mb\r\n";
         output += "heapUsed: " + Math.round(memoryUsage.heapUsed / 1024 / 1024) + " Mb\r\n";
-        console.log(output);
-    };
+        return output;
+    }
 };
 
 /**

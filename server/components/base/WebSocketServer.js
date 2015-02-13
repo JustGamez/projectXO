@@ -2,7 +2,9 @@
  * Подключаем nodeJS модули.
  */
 var WEBSOCKET = require('websocket');
+var WS = require('ws');
 var HTTP = require('http');
+var HTTPS = require('https');
 var FS = require('fs');
 var PATH = require('path');
 
@@ -42,6 +44,12 @@ WebSocketServer = function () {
     var port = null;
 
     /**
+     * Порт для прослушки, ssl-ный.
+     * @type {int};
+     */
+    var portSSL = null;
+
+    /**
      * Путь откуда загружать клиентский код.
      * @type {string}
      */
@@ -76,6 +84,9 @@ WebSocketServer = function () {
         }
         if (typeof port != 'number') {
             Logs.log("port given by .setup, must be number", Logs.LEVEL_FATAL_ERROR, port);
+        }
+        if (typeof portSSL != 'number') {
+            Logs.log("portSSL given by .setup, must be number", Logs.LEVEL_FATAL_ERROR, portSSL);
         }
         if (typeof reloadClientCodeEveryRequest != 'boolean') {
             Logs.log("reloadClientCodeEveryRequest given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, reloadClientCodeEveryRequest);
@@ -152,6 +163,11 @@ WebSocketServer = function () {
     var http;
 
     /**
+     * Тут храниться HTTPS сервер, nodeJS-модуль
+     */
+    var https;
+
+    /**
      * Тут храниться WebSocket.server, nodeJS-модуль
      */
     var server;
@@ -164,22 +180,41 @@ WebSocketServer = function () {
     this.init = function (afterInitCallback) {
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
         port = Config.WebSocketServer.port;
+        portSSL = Config.WebSocketServer.portSSL;
         clientCodePath = Config.WebSocketServer.clientCodePath;
         imagesPath = Config.WebSocketServer.imagesPath;
 
         checkBeforeInit();
-        // загрузка клиентского кода.
+        /* загрузка клиентского кода. */
         loadClientCode();
-        // создадим сервер
-        http = HTTP.createServer(onHTTPRequest);
-        // запустим прослушивание
-        http.listen(port);
-        // создадим websocket
+
+        var isSSL;
+        isSSL = true;
+        if (!isSSL) {
+            /* создадим сервер */
+            http = HTTP.createServer(onHTTPRequest);
+            /* запустим прослушивание */
+            http.listen(port);
+            /* создадим websocket */
+        } else {
+            /* @todo path-s to Config file.*/
+            var options = {
+                key: FS.readFileSync('ssl/ssl.key'),
+                cert: FS.readFileSync('ssl/ssl.crt'),
+                passphrase: 'UnderGround88'
+            };
+            https = HTTPS.createServer(options, onHTTPRequest);
+            /* @todo to Config.WebSocketServer. */
+            https.listen(portSSL);
+            /* @todo crunch */
+            http = https;
+        }
         server = new WEBSOCKET.server({
             httpServer: http
         });
         server.on('request', onWebSocketRequest);
-        Logs.log("WebSocketServer running. port:" + port, Logs.LEVEL_NOTIFY);
+
+        Logs.log("WebSocketServer running. port:" + port + ' or may be ssl port:' + portSSL, Logs.LEVEL_NOTIFY);
         Logs.log("WebSocketServer inited.", Logs.LEVEL_NOTIFY);
         afterInitCallback();
     };
@@ -192,7 +227,7 @@ WebSocketServer = function () {
         /* Сформируем клинтский код. */
         clientCode = "";
         clientCode += "<HTML><HEAD><meta charset='utf-8' />";
-        clientCode += "<script src='http://vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
+        clientCode += "<script src='https://vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
         clientCode += getClientJSCode();
         clientCode += "</HEAD><BODY>";
         clientCode += getClientImageCode();
@@ -336,7 +371,7 @@ WebSocketServer = function () {
 
     /**
      * Обработчки запросов от HTTP сервера.
-     * при запросе ^/clientCode?*, вернёт клинтский код.
+     * при запросе ^/clientCode*, вернёт клинтский код.
      * при запросе ^/robotKrispiCode?*, вернёт код робота Криспи.
      * при запросе ^{imagesPrefix}*, вернёт соответствующую картинку из папки imagePath
      * при любом другом запросе вернёт 404 ошибку.
@@ -378,7 +413,7 @@ WebSocketServer = function () {
             return true;
         }
         /* Запрашивается клинетский код? */
-        if (request.url.indexOf('/clientCode?') == 0) {
+        if (request.url.indexOf('/clientCode') == 0) {
             Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
@@ -392,7 +427,7 @@ WebSocketServer = function () {
         /**
          * @todo create config varialbe, like a Configuration.robotKrispiEnabled or something like this.
          */
-        if (request.url.indexOf('/robotKrispiCode?') == 0) {
+        if (request.url.indexOf('/robotKrispiCode') == 0) {
             if (reloadRobotKrispiCodeEveryRequest) {
                 loadRobotKrispiCode();
             }
@@ -400,9 +435,15 @@ WebSocketServer = function () {
             response.end(robotKrispiCode);
             return true;
         }
+        if (request.url.indexOf('/status') == 0) {
+            var status = Profiler.getTextReport();
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end('<pre>' + status + '</pre>');
+            return true;
+        }
         /* Во всех других случаях ошибка 404(Not found) */
         response.writeHead(404, {'Content-Type': 'text/html'});
-        response.end('File not found.');
+        response.end('File `' + request.url + '`not found.');
         return true;
     };
 

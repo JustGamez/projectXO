@@ -42,13 +42,13 @@ LogicPageHelp = function () {
      * @param value {int}
      * @param index {int}
      */
-    this.onTabChanged = function (value, index) {
+    this.onTabChanged = function (value, index, elementInit) {
         currentTabId = value;
         /* @todo костыль конечно, но пока так. Так быстрей, ничего не поделаешь :).
          * Должен же у нас быть хотя бы один костыль :)
          * Во всяком случае это первый костыль :) проблема Саб-таба.
          */
-        if (LogicUser.isAuthorized()) {
+        if (!elementInit) {
             self.showPageAndTab();
         }
     };

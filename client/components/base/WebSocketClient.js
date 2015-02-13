@@ -96,7 +96,9 @@ WebSocketClient = function () {
      * Реализовать коннект.
      */
     var connect = function () {
-        uri = "ws://" + host + ":" + port + "/ws";
+        var uri;
+        uri = "wss://" + host + ":" + port + "/";
+        Logs.log("WebSocket URL=`" + uri + "`", Logs.LEVEL_DETAIL);
         socket = new WebSocket(uri);
         /* установим обработчики. */
         socket.onopen = onOpen;
@@ -130,7 +132,7 @@ WebSocketClient = function () {
         }
         Logs.log('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
         self.onDisconnect(connectionId);
-        tryReconnect();
+        setTimeout(tryReconnect, 10000);
     };
 
     var tryReconnect = function () {
@@ -138,7 +140,7 @@ WebSocketClient = function () {
             Logs.log('Try reconnect', Logs.LEVEL_NOTIFY);
             connect();
             /* Попытка реконнетка, через некоторое время */
-            setTimeout(tryReconnect, 8958);
+            setTimeout(tryReconnect, 10000);
         }
     };
 

@@ -14,8 +14,8 @@ window.onload = function () {
      * @type {Object}
      */
     Config = {
-        intensivityInterval: 10000,
-        onlinePassiveUsers: 50,
+        intensivityInterval: 1500,
+        onlinePassiveUsers: 10,
         ApiRouterMetricsReportnterval: 50000
     };
 
@@ -83,8 +83,8 @@ window.onload = function () {
         /* WebSocket Client */
         webSocketClient = new WebSocketClient();
         webSocketClient.setup({
-            host: '192.168.205.2',
-            port: 80
+            host: 'krestiki-noliki.net',
+            port: 443
         });
         /* ApiRouter */
         apiRouter = new ApiRouter();

@@ -1,5 +1,5 @@
 window.onload = function () {
-
+    Logs.log('OnLoad raized', Logs.LEVEL_NOTIFY);
     /* Эмуляция совместимости клиентского и серверного кода. */
     GLOBAL = window;
     process = {};
@@ -24,7 +24,7 @@ window.onload = function () {
      * Настройка лога.
      */
     Logs.setup({
-        level: Logs.LEVEL_WARNING
+        level: Logs.LEVEL_DETAIL
     });
 
     /**
@@ -75,8 +75,8 @@ window.onload = function () {
     /* WebSocket Client */
     webSocketClient = new WebSocketClient();
     webSocketClient.setup({
-        host: '192.168.205.2',
-        port: 80
+        host: 'krestiki-noliki.net',
+        port: 443
     });
 
     /* ApiRouterMetrics */

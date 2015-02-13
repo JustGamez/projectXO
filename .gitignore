@@ -2,3 +2,7 @@
 /server/node_modules
 /docs/~$*
 /server/Config.js
+run_0001.log
+/server/ssl/*
+/docs/create virtual machine
+xoserver_last.out

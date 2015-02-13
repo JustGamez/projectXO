@@ -332,7 +332,7 @@ KrispiCases = function () {
      */
     var rndId = function () {
         var id;
-        id = Math.round(Math.random() * 1500) + 1;
+        id = Math.round(Math.random() * 1500000) + 1;
         return id;
     };
 

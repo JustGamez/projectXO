@@ -6,7 +6,7 @@ require('./system/loader.js');
  * Настройка лога.
  */
 Logs.setup({
-    level: Logs.LEVEL_DETAIL
+    level: Logs.LEVEL_NOTIFY
 });
 
 /**
@@ -78,6 +78,10 @@ setInterval(function () {
 setInterval(function () {
         Profiler.printReport();
     }, Config.Profiler.reportTimeout
+);
+setInterval(function () {
+        Profiler.saveToDB();
+    }, Config.Profiler.saveToDBTimeout
 );
 
 /* ApiRouter */

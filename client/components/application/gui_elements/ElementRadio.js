@@ -52,7 +52,7 @@ ElementRadio = function () {
             }
         }
         self.redraw();
-        self.onChange.call(self, self.currentValue, self.currentIndex);
+        self.onChange.call(self, self.currentValue, self.currentIndex, true);
     };
 
     /**
