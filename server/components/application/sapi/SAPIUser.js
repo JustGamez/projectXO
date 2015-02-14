@@ -36,7 +36,7 @@ SAPIUser = function () {
             return;
         }
         if (!userId || typeof userId != 'number') {
-            Logs.log("SAPIUser.sendMeUserInfo: must have userId", Logs.LEVEL_WARNING);
+            Logs.log("SAPIUser.sendMeUserInfo: must have userId", Logs.LEVEL_WARNING, userId);
             return;
         }
         LogicUser.sendUserInfo(userId, cntx.userId);
@@ -69,7 +69,19 @@ SAPIUser = function () {
             return;
         }
         LogicUser.sendOnlineCount(cntx);
-    }
+    };
+
+    this.sendMeOnlineUserIds = function (cntx) {
+        var userIds;
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIUser.sendMeOnlineUserIds: must be authorized", Logs.LEVEL_WARNING);
+            return;
+        }
+        userIds = LogicUser.getOnlineUserIds();
+        for (var i in userIds) {
+            CAPIUser.updateOnlineCount(cntx.userId, LogicUser.getOnlineCount(), parseInt(userIds[i]), true);
+        }
+    };
 };
 /**
  * Статичный класс.

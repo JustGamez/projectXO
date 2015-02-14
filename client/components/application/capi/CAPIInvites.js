@@ -17,13 +17,20 @@ CAPIInvites = function () {
      * @param gameId {Number} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
-        if (!LogicGame.getCurrentGameId()) {
+        var newGame, currentGameId, xoPageShowedNow;
+        newGame = LogicGame.getGameById(gameId);
+        currentGameId = LogicGame.getCurrentGameId();
+        xoPageShowedNow = pageController.isShowedNow(PageController.PAGE_ID_XO_GAME);
+        if (
+            (!currentGameId)
+            ||
+            (currentGameId && xoPageShowedNow && (currentGameId == newGame.copyFromId || currentGameId == newGame.id) && LogicGame.getCurrentGame().status != LogicXO.STATUS_RUN)
+        ) {
+            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+            SAPIUserState.isBusy();
             SAPIUserState.onGame(gameId);
             LogicGame.setCurrentGameId(gameId);
-            SAPIUserState.isBusy();
-            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         } else {
-            SAPIUserState.onGame(0);
             SAPIInvites.closeGame(gameId);
         }
     };

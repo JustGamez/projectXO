@@ -12,6 +12,13 @@ DataUser = function () {
         score: null
     };
 
+    var fromDBToData = function (data) {
+        if (data.id) data.id = parseInt(data.id);
+        if (data.socNetTypeId) data.socNetTypeId = parseInt(data.socNetTypeId);
+        if (data.socNetUserId) data.socNetUserId = parseInt(data.socNetUserId);
+        return data;
+    };
+
     /**
      * Вернуть пользователя по данным из соцаильной сети
      * @param socNetTypeId тип социальнйо сети SocNet.TYPE_*
@@ -23,7 +30,7 @@ DataUser = function () {
             socNetTypeId: [socNetTypeId],
             socNetUserId: [socNetUserId]
         }, function (rows) {
-            callback(rows[0] || null);
+            callback(fromDBToData(rows[0]) || null);
         });
     };
 
@@ -36,7 +43,7 @@ DataUser = function () {
         DB.queryWhere(tableName, {
             id: [userId]
         }, function (rows) {
-            callback(rows[0] || null);
+            callback(fromDBToData(rows[0]) || null);
         });
     };
 
@@ -61,11 +68,11 @@ DataUser = function () {
             score: 0
         }, function (result) {
             var user = {
-                id: result.insertId,
+                id: parseInt(result.insertId),
                 firstName: '',
                 lastName: '',
-                socNetTypeId: socNetTypeId,
-                socNetUserId: socNetUserId,
+                socNetTypeId: parseInt(socNetTypeId),
+                socNetUserId: parseInt(socNetUserId),
                 createTimestamp: 1,
                 lastLoginTimestamp: 1,
                 score: 0

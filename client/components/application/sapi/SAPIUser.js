@@ -30,6 +30,13 @@ SAPIUser = function () {
      */
     this.sendMeOnlineCount = function () {
         apiRouter.executeRequest('SAPIUser', 'sendMeOnlineCount', arguments, [{connectionId: null}]);
+    };
+
+    /**
+     * Попросить отправить список userId онлайн юзеров.
+     */
+    this.sendMeOnlineUserIds = function () {
+        apiRouter.executeRequest('SAPIUser', 'sendMeOnlineUserIds', arguments, [{connectionId: null}]);
     }
 };
 

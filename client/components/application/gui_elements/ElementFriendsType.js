@@ -82,6 +82,7 @@ ElementFriendsType = function () {
                 y: self.y + 8,
                 width: 69,
                 height: 68,
+                title: 'Пригласить друзей.',
                 onClick: function () {
                     self.onClickDummy();
                 },

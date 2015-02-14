@@ -34,6 +34,8 @@ LogicUser = function () {
         var user = LogicUser.getUserById(userId);
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
+        LogicRating.getTopList();
+        SAPIUser.sendMeOnlineUserIds();
     };
 
     /**
@@ -128,11 +130,14 @@ LogicUser = function () {
 
     /**
      * Обновим данные о кол-во онлайн пользователей.
-     * @param count кол-во онлайн пользователей.
+     * @param count int кол-во онлайн пользователей.
+     * @param userId int
+     * @param direction boolean
      */
     this.updateOnlineCount = function (count, userId, direction) {
         onlineCount = count;
-        self.updateUserInfo({id: userId, online: direction});
+        /* Сбрасываем пользователя если он вошел\вышел. */
+        self.updateUserInfo({id: userId, online: direction, isBusy: false, onGame: 0});
         pageController.redraw();
     };
 
@@ -143,7 +148,7 @@ LogicUser = function () {
         var out;
         out = [];
         for (var i in users) {
-            if (users[i].id) {
+            if (users[i].id && users[i].online) {
                 out.push(users[i].id);
             }
         }

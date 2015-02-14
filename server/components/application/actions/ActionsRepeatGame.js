@@ -27,7 +27,11 @@ ActionsRepeatGame = function () {
                     CAPIGame.updateInfo(newGame.joinerUserId, newGame);
                 }
                 /* Game created notify. */
-                CAPIGame.gameCreated(newGame.creatorUserId, newGame.id);
+                if (newGame.isInvitation) {
+                    CAPIInvites.gameCreated(newGame.creatorUserId, newGame.id);
+                } else {
+                    CAPIGame.gameCreated(newGame.creatorUserId, newGame.id);
+                }
                 if (!newGame.vsRobot) {
                     CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
                 }

@@ -150,6 +150,7 @@ PageMain = function PageMain() {
             y: 355,
             width: 75,
             height: 80,
+            title: 'Пригласить друзей.',
             srcRest: '/images/buttons/addFriendRest.png',
             srcHover: '/images/buttons/addFriendHover.png',
             srcActive: '/images/buttons/addFriendActive.png',

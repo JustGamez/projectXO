@@ -209,6 +209,15 @@ LogicUser = function () {
         Profiler.stop(Profiler.ID_LOGIC_USER_SEND_TO_ALL);
     };
 
+    this.getOnlineUserIds = function () {
+        var list;
+        list = {};
+        for (var userId in userToCntx) {
+            list[userId] = parseInt(userId);
+        }
+        return list;
+    };
+
     /**
      * Является ли пользователь онлайн.
      * @param userId {int} id пользователя.

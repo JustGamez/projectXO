@@ -25,7 +25,7 @@ CAPIGame = function () {
         if (
             (!currentGameId && xoPageShowedNow)
             ||
-            (currentGameId && xoPageShowedNow && currentGameId == newGame.copyFromId && LogicGame.getCurrentGame().status != LogicXO.STATUS_RUN)
+            (currentGameId && xoPageShowedNow && (currentGameId == newGame.copyFromId || currentGameId == newGame.id) && LogicGame.getCurrentGame().status != LogicXO.STATUS_RUN)
         ) {
             SAPIUserState.onGame(gameId);
             LogicGame.setCurrentGameId(gameId);

@@ -132,7 +132,7 @@ WebSocketClient = function () {
         }
         Logs.log('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
         self.onDisconnect(connectionId);
-        setTimeout(tryReconnect, 10000);
+        setTimeout(tryReconnect, 1000);
     };
 
     var tryReconnect = function () {
@@ -140,7 +140,7 @@ WebSocketClient = function () {
             Logs.log('Try reconnect', Logs.LEVEL_NOTIFY);
             connect();
             /* Попытка реконнетка, через некоторое время */
-            setTimeout(tryReconnect, 10000);
+            setTimeout(tryReconnect, 30000);
         }
     };
 

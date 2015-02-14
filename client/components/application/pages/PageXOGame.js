@@ -111,7 +111,10 @@ PageXOGame = function PageXOGame() {
             srcRest: '/images/buttons/againRest.png',
             srcHover: '/images/buttons/againHover.png',
             srcActive: '/images/buttons/againActive.png',
-            onClick: LogicPageXO.onAgainButtonClick
+            onClick: function () {
+                self.elementButtonAgain.hide();
+                LogicPageXO.onAgainButtonClick();
+            }
         });
         self.elementButtonAgain = element;
         self.elements.push(element);
@@ -244,11 +247,29 @@ PageXOGame = function PageXOGame() {
             photoInfo: opponent
         });
         /* Кнопка "Еще" */
-        if (game && (game.status == LogicXO.STATUS_NOBODY_WIN || game.status == LogicXO.STATUS_SOMEBODY_WIN )) {
+        if (game && showAgainButtonForGame(game, user)) {
             self.elementButtonAgain.show();
         } else {
             self.elementButtonAgain.hide();
         }
+    };
+
+    var showAgainButtonForGame = function (game, user) {
+        var againShow, opponentUserId, opponent;
+        if (!game) return false;
+        if (!game.id) return false;
+        if (!LogicXO.isMember(game, user.id)) return false;
+        if (game.isRandom || game.isInvitation) {
+            opponentUserId = LogicXO.getOpponentUserId(game, user.id);
+            if (!opponentUserId) return false;
+            opponent = LogicUser.getUserById(opponentUserId);
+            if (!opponent) return false;
+            if (opponent.onGameId != game.id) return false;
+            if (!opponent.online) return false;
+        }
+        if (game.status == LogicXO.STATUS_WAIT)return false;
+        if (game.status == LogicXO.STATUS_RUN)return false;
+        return true;
     };
 
     /**

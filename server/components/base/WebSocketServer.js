@@ -441,6 +441,14 @@ WebSocketServer = function () {
             response.end('<pre>' + status + '</pre>');
             return true;
         }
+        if (request.url.indexOf('/shutdown') == 0) {
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end('<pre>' + "Shutdown executed!" + '</pre>');
+            setTimeout(function () {
+                process.exit();
+            }, 100);
+            return true;
+        }
         /* Во всех других случаях ошибка 404(Not found) */
         response.writeHead(404, {'Content-Type': 'text/html'});
         response.end('File `' + request.url + '`not found.');
