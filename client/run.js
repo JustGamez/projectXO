@@ -67,6 +67,9 @@ window.onload = function () {
     Profiler.ID_SAPIROBOT_CLOSE_GAME = Profiler.getNewId("ID_SAPIROBOT_CLOSE_GAME");
     /* LogicXO */
     Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
+    /* ActionsRepeatGame */
+    Profiler.ID_ACTIONS_REPEAT_GAME_COPY = Profiler.getNewId("ID_ACTIONS_REPEAT_GAME_COPY");
+
 
     /** init some cpomopnents */
     SocNet.initVK();

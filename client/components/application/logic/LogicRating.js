@@ -22,7 +22,7 @@ LogicRating = function () {
      */
     this.getTopList = function () {
         if (!ratingTopWaiting) {
-            LogicTimers.start('load', 1000, SAPIRating.sendMeTopList);
+            LogicTimers.start('load', 3000, SAPIRating.sendMeTopList);
             ratingTopWaiting = true;
         }
         return ratingTop;

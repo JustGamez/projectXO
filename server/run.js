@@ -6,7 +6,7 @@ require('./system/loader.js');
  * Настройка лога.
  */
 Logs.setup({
-    level: Logs.LEVEL_NOTIFY
+    level: Logs.LEVEL_DETAIL
 });
 
 /**
@@ -49,6 +49,8 @@ Profiler.ID_SAPIROBOT_CHECKWINNER = Profiler.getNewId("ID_SAPIROBOT_CHECKWINNER"
 Profiler.ID_SAPIROBOT_CLOSE_GAME = Profiler.getNewId("ID_SAPIROBOT_CLOSE_GAME");
 /* LogicXO */
 Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
+/* ActionsRepeatGame */
+Profiler.ID_ACTIONS_REPEAT_GAME_COPY = Profiler.getNewId("ID_ACTIONS_REPEAT_GAME_COPY");
 
 
 /*  WebSocketServer */

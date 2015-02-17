@@ -65,7 +65,7 @@ DB = function () {
     /**
      * Выполняет запрос к БД.
      * @param query {string} sql запрос
-     * @param callback
+     * @param callback (rows)
      */
     this.query = function (query, callback) {
         connection.query(query, function (err, rows) {

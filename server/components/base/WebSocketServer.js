@@ -2,11 +2,11 @@
  * Подключаем nodeJS модули.
  */
 var WEBSOCKET = require('websocket');
-var WS = require('ws');
 var HTTP = require('http');
 var HTTPS = require('https');
 var FS = require('fs');
 var PATH = require('path');
+var UGLIFYJS = require('uglify-js');
 
 /**
  * Компонент обслуживающий соединения на сервере.
@@ -189,7 +189,7 @@ WebSocketServer = function () {
         loadClientCode();
 
         var isSSL;
-        isSSL = true;
+        isSSL = false;
         if (!isSSL) {
             /* создадим сервер */
             http = HTTP.createServer(onHTTPRequest);
@@ -223,15 +223,24 @@ WebSocketServer = function () {
      * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
      */
     var loadClientCode = function () {
+        var clientJSCode;
         Logs.log("Load client code.");
+        clientJSCode = getClientJSCode();
         /* Сформируем клинтский код. */
         clientCode = "";
         clientCode += "<HTML><HEAD><meta charset='utf-8' />";
         clientCode += "<script src='https://vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
-        clientCode += getClientJSCode();
-        clientCode += "</HEAD><BODY>";
+        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js'></script>";
+        clientCode += "</HEAD><BODY style='margin:0px;'>";
         clientCode += getClientImageCode();
+        clientCode += "<div style='height:686px;'></div>";
+        clientCode += "<iframe src='/VK/commentsWidget' style='border:none; height: 788px; width:788px;'></iframe>";
         clientCode += "</BODY></HTML>";
+
+        var result = UGLIFYJS.minify(clientJSCode, {
+            fromString: true
+        });
+        FS.writeFile('/var/xo/js/VKClientCode.js', result.code);
     };
 
     /**
@@ -274,11 +283,11 @@ WebSocketServer = function () {
         var imageFiles, imageCode, path, timePostfix;
         imageFiles = getFileListRecursive(imagesPath);
         imageCode = "<script>";
-        imageCode += "window.images = {};";
+        imageCode += "images = {};";
         timePostfix = "?t=" + new Date().getHours();
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
-            imageCode += "\r\nwindow.images['" + path + "']='" + path + timePostfix + "';";
+            imageCode += "\r\nimages['" + path + "']='" + path + timePostfix + "';";
         }
         imageCode += "</script>";
         // добавим img тэги для предзагрузки.
@@ -323,14 +332,12 @@ WebSocketServer = function () {
                 path = path.replace(clientCodePath, '');
                 file_content = FS.readFileSync(path);
             }
-            clientCode += "\r\n<script type='text/javascript'>" +
-            "\r\n/* " + path + " */\r\n" +
-            file_content + "\r\n</script>";
+            // clientCode += "\r\n<script type='text/javascript'>" +
+            clientCode += "\r\n/* " + path + " */\r\n";
+            clientCode += file_content;
             name = PATH.basename(path, '.js');
             /* Добавим пути к файлам компонент, это нужно для отладки */
-            clientCode += '<script>' +
-            'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"' +
-            '};</script>';
+            clientCode += 'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"};\r\n';
         }
         return clientCode;
     };
@@ -371,7 +378,7 @@ WebSocketServer = function () {
 
     /**
      * Обработчки запросов от HTTP сервера.
-     * при запросе ^/clientCode*, вернёт клинтский код.
+     * при запросе ^/VK/clientCode*, вернёт клинтский код.
      * при запросе ^/robotKrispiCode?*, вернёт код робота Криспи.
      * при запросе ^{imagesPrefix}*, вернёт соответствующую картинку из папки imagePath
      * при любом другом запросе вернёт 404 ошибку.
@@ -382,38 +389,9 @@ WebSocketServer = function () {
     var onHTTPRequest = function (request, response) {
         var path;
         /* Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {url: request.url, method: request.method}); */
-        /* Запрашивается картинка? */
-        if (request.url.indexOf(imagesPrefix) == 0) {
-            Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
-            /* отрезаем imagesPrefix */
-            path = request.url.substr(imagesPrefix.length);
-            /* уберём GET параметры. */
-            path = path.substr(0, path.indexOf('?'));
 
-            if (imagesCache[path]) {
-                response.writeHead(200, {'Content-Type': 'image/png'});
-                response.end(imagesCache[path]);
-                Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
-                return true;
-            }
-            FS.readFile(imagesPath + path, function (err, data) {
-                if (err) {
-                    Logs.log("Image not found:" + imagesPath + path, Logs.LEVEL_WARNING);
-                    response.writeHead(404, {'Content-Type': 'text/html'});
-                    response.end('File not found.');
-                    Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
-                } else {
-                    /* Logs.log("Image sended:" + imagesPath + path + "length:", Logs.LEVEL_DETAIL); */
-                    response.writeHead(200, {'Content-Type': 'image/png'});
-                    response.end(data);
-                    imagesCache[path] = data;
-                    Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE);
-                }
-            });
-            return true;
-        }
         /* Запрашивается клинетский код? */
-        if (request.url.indexOf('/clientCode') == 0) {
+        if (request.url.indexOf('/VK/clientCode') == 0) {
             Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
@@ -421,6 +399,24 @@ WebSocketServer = function () {
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end(clientCode);
             Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
+            return true;
+        }
+        if (request.url.indexOf('/VK/commentsWidget') == 0) {
+            var VKCommentsWidgetCode = "" +
+                "<html>" +
+                "<head>" +
+                "<script type='text/javascript' src='//vk.com/js/api/openapi.js?116'></script>" +
+                "<script>VK.init({apiId: " + Config.SocNet.appId + ", onlyWidgets: true});</script>" +
+                "</head>" +
+                "<body style='margin:0px;'>" +
+                "<div id='vk_comments'></div>\
+            <script type='text/javascript'>\
+                VK.Widgets.Comments('vk_comments', {limit: 5, width: 788, height: 585, attach: '*'});\
+            </script>" +
+                "</body>" +
+                "</html>";
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end(VKCommentsWidgetCode);
             return true;
         }
         /* Запрашивается код робота Криспи. ? */
@@ -443,10 +439,16 @@ WebSocketServer = function () {
         }
         if (request.url.indexOf('/shutdown') == 0) {
             response.writeHead(200, {'Content-Type': 'text/html'});
-            response.end('<pre>' + "Shutdown executed!" + '</pre>');
+            response.end('<pre>' + "Shutdown executed!" + new Date().getTime() + '</pre>');
             setTimeout(function () {
                 process.exit();
             }, 100);
+            return true;
+        }
+        if (request.url.indexOf('/reloadClientCode') == 0) {
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end('<pre>' + "Reload Client Code executed!" + new Date().getTime() + '</pre>');
+            loadClientCode();
             return true;
         }
         /* Во всех других случаях ошибка 404(Not found) */

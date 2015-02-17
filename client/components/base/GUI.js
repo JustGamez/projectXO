@@ -85,6 +85,14 @@ GUI = function () {
         '-o-filter: sepia(80%);' +
         'filter: sepia(80%);' +
         '}';
+        style.innerHTML += '* {' +
+        '-webkit-touch-callout: none;' +
+        '-webkit-user-select: none;' +
+        '-khtml-user-select: none;' +
+        '-moz-user-select: none;' +
+        '-ms-user-select: none;' +
+        'user-select: none;' +
+        '}';
         document.getElementsByTagName('head')[0].appendChild(style);
     };
 
@@ -201,6 +209,7 @@ GUI = function () {
         return window.images[url];
     };
 };
+
 /**
  * Статичный "класс".
  * @type {GUI}

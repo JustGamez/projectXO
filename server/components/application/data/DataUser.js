@@ -13,6 +13,7 @@ DataUser = function () {
     };
 
     var fromDBToData = function (data) {
+        if (!data) return data;
         if (data.id) data.id = parseInt(data.id);
         if (data.socNetTypeId) data.socNetTypeId = parseInt(data.socNetTypeId);
         if (data.socNetUserId) data.socNetUserId = parseInt(data.socNetUserId);
@@ -63,8 +64,8 @@ DataUser = function () {
             lastName: '',
             socNetTypeId: socNetTypeId,
             socNetUserId: socNetUserId,
-            createTimestamp: 1,
-            lastLoginTimestamp: 1,
+            createTimestamp: new Date().getTime(),
+            lastLoginTimestamp: new Date().getTime(),
             score: 0
         }, function (result) {
             var user = {

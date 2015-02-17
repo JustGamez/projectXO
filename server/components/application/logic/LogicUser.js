@@ -42,7 +42,7 @@ LogicUser = function () {
             });
             return;
         }
-        if (!checkResult)return;
+        if (!checkResult) return;
         Profiler.start(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         /* get from db */
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {

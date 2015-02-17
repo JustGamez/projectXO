@@ -196,8 +196,8 @@ SocNet = function () {
      * @see WebSocketServer : var loadClientCode {Function}
      */
     this.initVK = function () {
-        var apiVersoin, onSuccess, onFail;
-        apiVersion = '5.5';
+        var apiVersoin, onSuccess, onFail, apiVersion;
+        apiVersion = '5.28';
         onSuccess = function () {
             Logs.log("VK client API inited.", Logs.LEVEL_NOTIFY);
         };

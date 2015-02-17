@@ -594,12 +594,10 @@ LogicXO = function () {
         newGame = self.chooseSigns(newGame);
         newGame = self.run(newGame);
         newGame.copyFromId = oldGame.id;
-        DataGame.save(newGame, function (newGame) {
-            LogicGameStore.save(newGame);
-            callback(newGame);
-        });
+        return newGame;
     };
 };
+
 /**
  * Статичный класс.
  * @type {LogicXO}

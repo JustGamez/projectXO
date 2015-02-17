@@ -56,14 +56,24 @@ DataRating = function () {
         });
     };
 
+    var cacheTopList;
+    var cacheTopListLastPoint = 0;
     /**
      * Вернуть рейтинг топ.
      * @param callback [Function]
      */
     this.getTopList = function (callback) {
         var query;
+        if (cacheTopList && (new Date().getTime() - cacheTopListLastPoint < 5000)) {
+            callback(cacheTopList);
+            return;
+        }
         query = "SELECT * FROM " + tableName + " ORDER BY position ASC LIMIT " + Config.Rating.TopLimitSize;
-        DB.query(query, callback);
+        DB.query(query, function (rows) {
+            cacheTopList = rows;
+            cacheTopListLastPoint = new Date().getTime();
+            callback(cacheTopList);
+        });
     };
 };
 

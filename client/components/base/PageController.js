@@ -23,20 +23,17 @@ PageController = function () {
      */
     this.addPage = function (id, page) {
         pages[id] = page;
-        if (!page.constructor.name) {
-            Logs.log("PageController.addPage. page must have constructor.name.", Logs.LEVEL_FATAL_ERROR, page);
-        }
         if (!page.init) {
-            Logs.log("PageController.addPage. page must have method init(). Page constructor:" + page.constructor.name, Logs.LEVEL_FATAL_ERROR);
+            Logs.log("PageController.addPage. page must have method init(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
         }
         if (!page.show) {
-            Logs.log("PageController.addPage. page must have method show(). Page constructor:" + page.constructor.name, Logs.LEVEL_FATAL_ERROR);
+            Logs.log("PageController.addPage. page must have method show(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
         }
         if (!page.hide) {
-            Logs.log("PageController.addPage. page must have method hide(). Page constructor:" + page.constructor.name, Logs.LEVEL_FATAL_ERROR);
+            Logs.log("PageController.addPage. page must have method hide(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
         }
         if (!page.redraw) {
-            Logs.log("PageController.addPage. page must have method redraw(). Page constructor:" + page.constructor.name, Logs.LEVEL_FATAL_ERROR);
+            Logs.log("PageController.addPage. page must have method redraw(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
         }
         page.init();
     };
