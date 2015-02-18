@@ -94,6 +94,7 @@ ElementRadio = function () {
             dom.y = option.y;
             dom.width = option.width;
             dom.height = option.height;
+            dom.title = option.title;
             {
                 if (self.currentIndex == option.index) {
                     src = option.srcActive;

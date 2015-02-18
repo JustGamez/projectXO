@@ -170,7 +170,7 @@ GUIDom = function () {
     var redrawBackgroundImage = function () {
         var url;
         /* абсолютный url, используем без изменений */
-        if (self.backgroundImage.indexOf('http://') != 0) {
+        if (self.backgroundImage.indexOf('https://') != 0 && self.backgroundImage.indexOf('http://') != 0) {
             url = GUI.getImageURL(self.backgroundImage);
         } else {
             url = self.backgroundImage;

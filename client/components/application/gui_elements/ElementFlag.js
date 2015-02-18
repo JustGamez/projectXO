@@ -36,6 +36,12 @@ ElementFlag = function () {
     this.height = 0;
 
     /**
+     * Хинт - подсказа при наведени мыши.
+     * @type {string}
+     */
+    this.title = '';
+
+    /**
      * Ссылка на картинку при наведении фокуса(мыши).
      * @type {string}
      */
@@ -154,6 +160,7 @@ ElementFlag = function () {
             if (!mouseStateFocused && mouseStateDown) src = self.srcActive;
         }
         dom.backgroundImage = src;
+        dom.title = self.title;
         dom.redraw();
     };
 

@@ -229,7 +229,7 @@ WebSocketServer = function () {
         /* Сформируем клинтский код. */
         clientCode = "";
         clientCode += "<HTML><HEAD><meta charset='utf-8' />";
-        clientCode += "<script src='https://vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
+        clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
         clientCode += "<script type='text/javascript' src='/js/VKClientCode.js'></script>";
         clientCode += "</HEAD><BODY style='margin:0px;'>";
         clientCode += getClientImageCode();

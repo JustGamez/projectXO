@@ -46,10 +46,11 @@ PageMain = function PageMain() {
             y: 170,
             width: 142,
             height: 83,
+            title: 'Игрыть с роботом.',
             srcRest: '/images/flags/vsRobotRest.png',
             srcHover: '/images/flags/vsRobotHover.png',
             srcActive: '/images/flags/vsRobotActive.png',
-            defaultState: false,
+            defaultState: true,
             onChange: LogicPageMain.onFlagVsRobotChange
         });
         self.elements.push(element);
@@ -94,6 +95,7 @@ PageMain = function PageMain() {
                     y: 90,
                     width: 148,
                     height: 70,
+                    title: 'Играть любым знаком.',
                     value: LogicXO.SIGN_ID_Empty
                 },
                 {
@@ -104,6 +106,7 @@ PageMain = function PageMain() {
                     y: 80,
                     width: 146,
                     height: 102,
+                    title: 'Играть крестиком.',
                     value: LogicXO.SIGN_ID_X
                 },
                 {
@@ -114,6 +117,7 @@ PageMain = function PageMain() {
                     y: 80,
                     width: 146,
                     height: 102,
+                    title: 'Играть ноликом.',
                     value: LogicXO.SIGN_ID_O
                 }
             ],

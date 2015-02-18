@@ -80,7 +80,7 @@ SocNet = function () {
      * @param callback
      */
     this.getUserInfo = function (socNetTypeId, socNetUserId, callback) {
-        executeMethod('users.get', {user_ids: socNetUserId, fields: 'photo_50,sex'}, function (source) {
+        executeMethod('users.get', {user_ids: socNetUserId, fields: 'photo_50,sex', https: 1}, function (source) {
                 var info;
                 info = {};
                 info.firstName = source[0].first_name;
