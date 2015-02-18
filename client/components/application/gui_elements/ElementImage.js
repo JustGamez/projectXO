@@ -42,6 +42,12 @@ ElementImage = function () {
     this.src = '/path/to/image.png';
 
     /**
+     * Прозрачность картинки.
+     * @type {null}
+     */
+    this.opacity = null;
+
+    /**
      * Дом картинки.
      * @type {GUIDom}
      */
@@ -84,5 +90,8 @@ ElementImage = function () {
     this.redraw = function () {
         if (!showed) return;
         dom.redraw();
+        if (self.opacity != null) {
+            dom.opacity = self.opacity;
+        }
     };
 };
