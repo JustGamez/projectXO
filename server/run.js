@@ -111,7 +111,7 @@ webSocketServer.onData = apiRouter.onData;
 
 /* set deinit callbacks */
 addDeInitCallback(ActionsChat.flushCache);
-addDeInitCallback(Statistic.flushCache());
+addDeInitCallback(Statistic.flushCache);
 
 /* init all components */
 sequencedInit(Logs.init);

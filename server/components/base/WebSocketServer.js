@@ -7,6 +7,7 @@ var HTTPS = require('https');
 var FS = require('fs');
 var PATH = require('path');
 var UGLIFYJS = require('uglify-js');
+var OS = require('os');
 
 /**
  * Компонент обслуживающий соединения на сервере.
@@ -228,19 +229,25 @@ WebSocketServer = function () {
         clientJSCode = getClientJSCode();
         /* Сформируем клинтский код. */
         clientCode = "";
-        clientCode += "<HTML><HEAD><meta charset='utf-8' />";
-        clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>";
-        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js'></script>";
-        clientCode += "</HEAD><BODY style='margin:0px;'>";
+        clientCode += "<HTML>\r\n";
+        clientCode += "<HEAD>\r\n";
+        clientCode += "<meta charset='utf-8' />\r\n";
+        clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
+        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js'></script>\r\n";
+        clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
         clientCode += getClientImageCode();
-        clientCode += "<div style='height:686px;'></div>";
-        clientCode += "<iframe src='/VK/commentsWidget' style='border:none; height: 788px; width:788px;'></iframe>";
+        clientCode += "<div style='height:686px;'></div>\r\n";
+        clientCode += "<iframe src='/VK/commentsWidget' style='border:none; height: 788px; width:788px;'></iframe>\r\n";
         clientCode += "</BODY></HTML>";
 
-        var result = UGLIFYJS.minify(clientJSCode, {
-            fromString: true
-        });
-        FS.writeFile('/var/xo/js/VKClientCode.js', result.code);
+        if (Config.WebSocketServer.compressJSClientCode) {
+            var result = UGLIFYJS.minify(clientJSCode, {
+                fromString: true
+            });
+            FS.writeFile('/var/xo/js/VKClientCode.js', result.code);
+        } else {
+            FS.writeFile('/var/xo/js/VKClientCode.js', clientJSCode);
+        }
     };
 
     /**
@@ -262,7 +269,15 @@ WebSocketServer = function () {
     var getClientJSCode = function () {
         var jsFiles;
         /* Загрузим список файлов клиентского кода. */
-        jsFiles = getFileListRecursive(clientCodePath);
+        jsFiles = [];
+        jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'system/'));
+        jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'components/'));
+        /* Include Config file. */
+        var hostname = OS.hostname();
+        var clientConfigPath = clientCodePath + 'Config.' + hostname + '.js';
+        Logs.log("Client config file: " + clientConfigPath, Logs.LEVEL_NOTIFY);
+        jsFiles.push(clientConfigPath);
+        jsFiles.push(clientCodePath + '/run.js');
         return clientCodePrepareCode(jsFiles);
     };
 

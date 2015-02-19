@@ -8,13 +8,20 @@
 /* Подключаем nodeJS модули. */
 var FS = require('fs');
 var PATH = require('path');
-require('./../Config.js');
+var OS = require('os');
+
 require('./functions.js');
+loadAllComponents(process.cwd() + '/components/');
+/* Include Config file. */
+var hostname = OS.hostname();
+var configPath = './../Config.' + hostname + '.js';
+Logs.log("Config file: " + configPath, Logs.LEVEL_NOTIFY);
+require(configPath);
 
 /**
  * Подключение всех компонент.
  */
-(function (path) {
+function loadAllComponents(path) {
 
     /**
      * Рекурсивное подключение всех файлов.
@@ -73,4 +80,4 @@ require('./functions.js');
     };
     log("Подключение компонент.");
     includeRecursive(path);
-})(process.cwd() + '/components/');
+};

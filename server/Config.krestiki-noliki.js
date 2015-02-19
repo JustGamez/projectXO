@@ -3,6 +3,9 @@
  * @type {Object}
  */
 Config = {
+    Logs: {
+        triggerLevel: 1
+    },
     DB: {
         host: 'localhost',
         username: 'root',
@@ -11,10 +14,11 @@ Config = {
         charset: 'UTF8'
     },
     SocNet: {
-        secretKey: 'X0x2PuCZQbC5wwX0lB5R'
+        secretKey: 'X0x2PuCZQbC5wwX0lB5R',
+        appId: 4467180
     },
     Chat: {
-        /**
+        /**v
          * Размер кэша, после заполнения, будет сливаться в БД.
          */
         cacheSize: 1000,
@@ -31,12 +35,25 @@ Config = {
         TopLimitSize: 5
     },
     ApiRouterMetric: {
-        reportTimeout: 1000 * 60 * 60
+        reportTimeout: 1000 * 60 * 60 // one hour
     },
     Profiler: {
-        reportTimeout: 1000 * 60 * 60
+        reportTimeout: 1000 * 60 * 60, // one hour
+        saveToDBTimeout: 1000 * 60 * 10 // ten minutes
     },
     UrlCache: {
         lifeTime: 1000 * 60 * 30
+    },
+    WebSocketServer: {
+        reloadClientCodeEveryRequest: false,
+        compressJSClientCode: false,
+        port: 3000,
+        portSSL: 443,
+        clientCodePath: '../client/',
+        imagesPath: '../images/'
+    },
+    Statistic: {
+        checkInterval: 1000,
+        cacheLimit: 1000
     }
 };

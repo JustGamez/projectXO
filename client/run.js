@@ -8,21 +8,6 @@ window.onload = function () {
         document.body.innerHTML = 'Всё поламалось!';
         throw new Error("Всё поламалось!");
     };
-
-    /**
-     * Конфигурация, вынести в отдельный файл.
-     * @type {Object}
-     */
-    Config = {
-        Invites: {
-            inviteTimeout: 12000,
-            letsPlaytimeout: 10000
-        },
-        Logs: {
-            triggerLevel: Logs.LEVEL_NOTIFY
-        }
-    };
-
     Logs.init(function () {
     });
 
@@ -76,9 +61,7 @@ window.onload = function () {
 
     /* WebSocket Client */
     webSocketClient = new WebSocketClient();
-    webSocketClient.setup({
-        host: 'krestiki-noliki.net',
-        port: 443
+    webSocketClient.init(function () {
     });
 
     /* ApiRouterMetrics */

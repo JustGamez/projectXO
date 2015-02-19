@@ -83,7 +83,7 @@ window.onload = function () {
         /* WebSocket Client */
         webSocketClient = new WebSocketClient();
         webSocketClient.setup({
-            host: 'krestiki-noliki.net',
+            host: 'krestiki-noliki',
             port: 443
         });
         /* ApiRouter */

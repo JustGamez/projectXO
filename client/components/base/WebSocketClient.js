@@ -12,20 +12,30 @@ WebSocketClient = function () {
     var host = null;
 
     /**
+     * Порт сервера.
+     * @type {int}
+     */
+    var port = null;
+
+    /**
+     * Протокол соединения.
+     * ws|wss
+     * @type {string}
+     */
+    var protocol = null;
+
+    /**
      * id соединиения.
      * Если вдруг у нас несколько соединений.
      * @type {null}
      */
     var connectionId = null;
 
-    /**
-     * Порт сервера.
-     * @type {int}
-     */
-    var port = null;
-    this.setup = function (setup) {
-        if (setup.port)port = setup.port;
-        if (setup.host)host = setup.host;
+    this.init = function (afterInitCallback) {
+        port = Config.WebSocketClient.port;
+        host = Config.WebSocketClient.host;
+        protocol = Config.WebSocketClient.protocol;
+        afterInitCallback();
     };
     this.onData = null;
     this.onConnect = null;
@@ -97,7 +107,7 @@ WebSocketClient = function () {
      */
     var connect = function () {
         var uri;
-        uri = "wss://" + host + ":" + port + "/";
+        uri = protocol + "://" + host + ":" + port + "/";
         Logs.log("WebSocket URL=`" + uri + "`", Logs.LEVEL_DETAIL);
         socket = new WebSocket(uri);
         /* установим обработчики. */

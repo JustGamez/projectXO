@@ -1,8 +1,11 @@
 .idea/*
 /server/node_modules
 /docs/~$*
-/server/Config.js
+/server/Config*
+/client/Config*
 run_0001.log
 /server/ssl/*
 /docs/create virtual machine
 xoserver_last.out
+run.log
+/js/VKClientCode.js
