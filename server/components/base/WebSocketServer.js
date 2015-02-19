@@ -423,7 +423,7 @@ WebSocketServer = function () {
         /**
          * @todo create config varialbe, like a Configuration.robotKrispiEnabled or something like this.
          */
-        if (request.url.indexOf('/robotKrispiCode') == 0) {
+        if (false && request.url.indexOf('/robotKrispiCode') == 0) {
             if (reloadRobotKrispiCodeEveryRequest) {
                 loadRobotKrispiCode();
             }
@@ -448,6 +448,13 @@ WebSocketServer = function () {
         if (request.url.indexOf('/reloadClientCode') == 0) {
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Reload Client Code executed!" + new Date().getTime() + '</pre>');
+            loadClientCode();
+            return true;
+        }
+        if (request.url.indexOf('/Statistic/flushCache') == 0) {
+            Statistic.flushCache();
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end('<pre>' + "Statistic Cache flushed!" + new Date().getTime() + '</pre>');
             loadClientCode();
             return true;
         }

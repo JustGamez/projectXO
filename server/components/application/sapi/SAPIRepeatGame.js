@@ -17,6 +17,7 @@ SAPIRepeatGame = function () {
             });
             return;
         }
+        Statistic.add(cntx.userId, Statistic.ID_GAME_REPEAT_GAME);
         ActionsRepeatGame.copyGame(gameId);
     };
 };

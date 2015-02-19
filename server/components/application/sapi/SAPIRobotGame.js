@@ -20,6 +20,7 @@ SAPIRobotGame = function () {
             return;
         }
         Profiler.start(Profiler.ID_SAPIROBOT_CREATE_GAME);
+        Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CREATE);
         ActionsRobotGame.createGame(cntx.userId, fieldTypeId, signId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.gameCreated(game.creatorUserId, game.id);
@@ -163,6 +164,7 @@ SAPIRobotGame = function () {
             Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
             return;
         }
+        Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CLOSE);
         game = LogicXO.close(game);
         LogicGameStore.delete(game.id);
         LogicRobot.removeState(game.id);

@@ -1,8 +1,11 @@
-#!/bin/bash
-# xoserver daemon
-# chkconfig: 345 20 80
-# description: xoserver daemon
-# processname: xoserver
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:	xoserver
+# Default-Start: 2 3 4 5
+# Default-Stop:  0 1 6
+# Short-Description: Start/stop xoServer.
+# Description: Xo Server init.
+### END INIT INFO
 
 DAEMON_PATH="/var/xo/server/"
 

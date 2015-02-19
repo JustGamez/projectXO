@@ -265,10 +265,11 @@ PageXOGame = function PageXOGame() {
             opponent = LogicUser.getUserById(opponentUserId);
             if (!opponent) return false;
             if (opponent.onGameId != game.id) return false;
+            if (opponent.onGameId == 0) return false;
             if (!opponent.online) return false;
         }
-        if (game.status == LogicXO.STATUS_WAIT)return false;
-        if (game.status == LogicXO.STATUS_RUN)return false;
+        if (game.status == LogicXO.STATUS_WAIT) return false;
+        if (game.status == LogicXO.STATUS_RUN) return false;
         return true;
     };
 

@@ -17,14 +17,13 @@ window.onload = function () {
         Invites: {
             inviteTimeout: 12000,
             letsPlaytimeout: 10000
+        },
+        Logs: {
+            triggerLevel: Logs.LEVEL_NOTIFY
         }
     };
 
-    /**
-     * Настройка лога.
-     */
-    Logs.setup({
-        level: Logs.LEVEL_DETAIL
+    Logs.init(function () {
     });
 
     /**

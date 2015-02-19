@@ -196,6 +196,25 @@ ElementPhoto = function () {
     var showOnlineIndicator = false;
 
     /**
+     * Кнопка "пригласить".
+     * @type {boolean}
+     */
+    var elementInviteButton = false;
+
+    /**
+     * Текст: "занят".
+     * @type {boolean}
+     */
+    var elementBussyText = false;
+
+    /**
+     * Текст "оффлайн".
+     * @type {boolean}
+     */
+    var elementOfflineText = false;
+
+
+    /**
      * Создадим домы и настроем их.
      */
     this.init = function () {

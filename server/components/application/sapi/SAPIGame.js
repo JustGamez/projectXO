@@ -19,6 +19,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.startRandomGame: must have signId", Logs.LEVEL_WARNING, signId);
             return;
         }
+        Statistic.add(cntx.userId, Statistic.ID_GAME_REQUEST_RANDOM_GAME);
         ActionsRandomGame.requestRandomGame(cntx.userId, fieldTypeId, signId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);
@@ -53,6 +54,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.closeRandomGame: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
+        Statistic.add(cntx.userId, Statistic.ID_GAME_CLOSE_RANDOM_GAME);
         ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
             LogicGameStore.delete(game.id);
             DataGame.save(game, function (game) {
@@ -92,6 +94,7 @@ SAPIGame = function () {
             return;
         }
         Profiler.start(Profiler.ID_SAPIGAME_DO_MOVE);
+        Statistic.add(cntx.userId, Statistic.ID_GAME_DO_MOVE);
         ActionsRandomGame.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
             /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
             if (game.status != LogicXO.STATUS_RUN) {

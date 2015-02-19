@@ -85,6 +85,7 @@ LogicUser = function () {
         sendOnlineCountToAll(user.id, true);
         Profiler.stop(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         CAPIUser.authorizeSuccess(user.id, user.id);
+        Statistic.add(user.id, Statistic.ID_USER_AUTHORIZATION_BY_VK );
     };
 
     /**
@@ -331,6 +332,7 @@ LogicUser = function () {
             });
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
+        Statistic.add(userId, Statistic.ID_USER_LOGOUT);
     };
 
     /**
@@ -363,6 +365,7 @@ LogicUser = function () {
      * @param userId
      */
     this.onWin = function (userId) {
+        Statistic.add(userId, Statistic.ID_USER_LOGOUT);
         DataUser.getById(userId, function (user) {
             if (user) {
                 LogicRating.onPositionScoreUp(user.id);

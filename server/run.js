@@ -3,13 +3,6 @@
 require('./system/loader.js');
 
 /**
- * Настройка лога.
- */
-Logs.setup({
-    level: Logs.LEVEL_DETAIL
-});
-
-/**
  * Id-ишники профайлера.
  * и таймер профайлера.
  */
@@ -51,6 +44,17 @@ Profiler.ID_SAPIROBOT_CLOSE_GAME = Profiler.getNewId("ID_SAPIROBOT_CLOSE_GAME");
 Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
 /* ActionsRepeatGame */
 Profiler.ID_ACTIONS_REPEAT_GAME_COPY = Profiler.getNewId("ID_ACTIONS_REPEAT_GAME_COPY");
+
+/* User statistics. */
+Statistic.ID_USER_AUTHORIZATION_BY_VK = Statistic.getNewId("ID_USER_AUTHORIZATION_BY_VK ");
+Statistic.ID_USER_LOGOUT = Statistic.getNewId("ID_USER_LOGOUT");
+Statistic.ID_GAME_DO_MOVE = Statistic.getNewId("ID_GAME_DO_MOVE");
+Statistic.ID_GAME_REQUEST_RANDOM_GAME = Statistic.getNewId("ID_GAME_REQUEST_RANDOM_GAME");
+Statistic.ID_GAME_CLOSE_RANDOM_GAME = Statistic.getNewId("ID_GAME_CLOSE_RANDOM_GAME");
+Statistic.ID_GAME_REPEAT_GAME = Statistic.getNewId("ID_GAME_REPEAT_GAME");
+Statistic.ID_GAME_ROBOT_CREATE = Statistic.getNewId("ID_GAME_ROBOT_CREATE");
+Statistic.ID_GAME_ROBOT_CLOSE = Statistic.getNewId("ID_GAME_ROBOT_CLOSE");
+Statistic.ID_RATING_GET_TOP = Statistic.getNewId("ID_RATING_GET_TOP");
 
 
 /*  WebSocketServer */
@@ -107,10 +111,13 @@ webSocketServer.onData = apiRouter.onData;
 
 /* set deinit callbacks */
 addDeInitCallback(ActionsChat.flushCache);
+addDeInitCallback(Statistic.flushCache());
 
 /* init all components */
+sequencedInit(Logs.init);
 sequencedInit(CommandLineController.init);
 sequencedInit(DB.init);
+sequencedInit(Statistic.init);
 sequencedInit(LogicUser.init);
 sequencedInit(ActionsChat.init);
 /* run all components */

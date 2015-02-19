@@ -11,10 +11,9 @@ Logs = function () {
      */
     var trigger_level = null;
 
-    this.setup = function (setup) {
-        if (setup.level) {
-            trigger_level = setup.level;
-        }
+    this.init = function (afterInitCallback) {
+        trigger_level = Config.Logs.triggerLevel;
+        afterInitCallback();
     };
 
     /**
