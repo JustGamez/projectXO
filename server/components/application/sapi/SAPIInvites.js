@@ -85,7 +85,7 @@ SAPIInvites = function ()   {
             Logs.log("SAPIInvites.closeGame: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        ActionsInvites.closeGame(cntx.userId, gameId, function (game) {
+        ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
             LogicGameStore.delete(game.id);
             DataGame.save(game, function (game) {
                 CAPIGame.updateInfo(game.creatorUserId, game);

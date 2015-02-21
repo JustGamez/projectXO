@@ -85,7 +85,7 @@ LogicUser = function () {
         sendOnlineCountToAll(user.id, true);
         Profiler.stop(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         CAPIUser.authorizeSuccess(user.id, user.id);
-        Statistic.add(user.id, Statistic.ID_USER_AUTHORIZATION_BY_VK );
+        Statistic.add(user.id, Statistic.ID_USER_AUTHORIZATION_BY_VK);
     };
 
     /**
@@ -327,9 +327,10 @@ LogicUser = function () {
         LogicWaitersStack.deleteByUserId(userId);
         for (var i in gameIds) {
             ActionsRandomGame.closeGame(userId, gameIds[i], function (game) {
-                CAPIGame.updateInfo(game.creatorUserId, game);
-                CAPIGame.updateInfo(game.joinerUserId, game);
-                //!!!!
+                LogicGameStore.delete(game.id);
+                DataGame.save(game, function (game) {
+                    CAPIGame.updateInfo(LogicXO.getOpponentUserId(game, userId), game);
+                });
             });
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);

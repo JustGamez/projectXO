@@ -83,20 +83,24 @@ ActionsRandomGame = function () {
             return;
         }
         if (!LogicXO.userCanCloseGame(game, userId)) {
-            Logs.log("ActionsRandomGame.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {
+            Logs.log("ActionsRandomGame.closeGame. User cannot close this game...", Logs.LEVEL_WARNING, {
                 game: game,
                 userId: userId
             });
             return;
         }
-        if (!game.isRandom) {
-            Logs.log("ActionsRandomGame.closeGame. User cannot close this game. Because is not random game.", Logs.LEVEL_WARNING, {
+        if (game.isRandom == 0 && game.isInvitation == 0 && game.vsRobot == 0) {
+            Logs.log("ActionsRandomGame.closeGame. User cannot close this game. Because is not random or invitation game.", Logs.LEVEL_WARNING, {
                 game: game,
                 userId: userId
             });
             return;
         }
         game = LogicXO.close(game);
+        if (game.vsRobot) {
+            LogicRobot.removeState(game.id);
+        }
+        Logs.log("Close game!", Logs.LEVEL_DETAIL, {userId: userId, gameId: gameId, game: game});
         callback(game);
     };
 

@@ -138,39 +138,14 @@ SAPIRobotGame = function () {
             return;
         }
         Profiler.start(Profiler.ID_SAPIROBOT_CLOSE_GAME);
-        game = LogicGameStore.load(gameId);
-        if (!game) {
-            Logs.log("ActionsRobotGame.closeGame. Game to Close not found in Store", Logs.LEVEL_WARNING, {
-                userId: cntx.userId,
-                gameId: gameId
+
+        ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
+            Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CLOSE);
+            LogicGameStore.delete(game.id);
+            DataGame.save(game, function (game) {
+                CAPIGame.updateInfo(game.creatorUserId, game);
+                Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
             });
-            Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
-            return;
-        }
-        /* 0 - это id робота, хотя самого роботоа не существует физически. */
-        if (!LogicXO.userCanCloseGame(game, 0)) {
-            Logs.log("ActionsRobotGame.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {
-                game: game,
-                userId: cntx.userId
-            });
-            Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
-            return;
-        }
-        if (!game.vsRobot) {
-            Logs.log("ActionsRobotGame.closeGame. User cannot close this game. Because is not random game.", Logs.LEVEL_WARNING, {
-                game: game,
-                userId: cntx.userId
-            });
-            Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
-            return;
-        }
-        Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CLOSE);
-        game = LogicXO.close(game);
-        LogicGameStore.delete(game.id);
-        LogicRobot.removeState(game.id);
-        DataGame.save(game, function (game) {
-            CAPIGame.updateInfo(game.creatorUserId, game);
-            Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
         });
     };
 };

@@ -24,31 +24,6 @@ ActionsInvites = function () {
     };
 
     /**
-     * Закроем игру.
-     * @param userId {Number} id пользователя.
-     * @param gameId {Number} id игры, которую закроем.
-     * @param callback {Function}
-     */
-    this.closeGame = function (userId, gameId, callback) {
-        var game;
-        game = LogicGameStore.load(gameId);
-        if (!game) {
-            Logs.log("ActionsInvites.closeGame. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
-            return;
-        }
-        if (!LogicXO.userCanCloseGame(game, userId)) {
-            Logs.log("ActionsInvites.closeGame. User cannot close this game", Logs.LEVEL_WARNING, {game: game, userId: userId});
-            return;
-        }
-        if (!game.isInvitation) {
-            Logs.log("ActionsInvites.closeGame. User cannot close this game. Because is not invitation game.", Logs.LEVEL_WARNING, {game: game, userId: userId});
-            return;
-        }
-        game = LogicXO.close(game);
-        callback(game);
-    };
-
-    /**
      * Сделать ход в игре.
      * @param userId {Number} id игрока.
      * @param gameId {Number} id игры.
