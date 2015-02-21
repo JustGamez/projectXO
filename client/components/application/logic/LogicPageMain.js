@@ -74,13 +74,16 @@ LogicPageMain = function () {
      */
     this.onRatingButtonClick = function () {
         SAPIUserState.isBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_RATING]);
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_RATING]);
     };
 
     /**
      * Действия при нажатии кнопки добавления друзей.
      */
     this.onAddFriendButtonClick = function () {
+        SAPIStatistic.openInviteFriendDialog();
+        //alert("Вообще то эта кнопка для приглашения ваших друзей, но... эта игра еще не опубликована, но мы рады что вы оказались пользователем этой игры, до её запуска!");
+        //return;
         SocNet.openInviteFriendDialog();
     };
 

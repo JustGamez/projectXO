@@ -28,10 +28,10 @@ PageRating = function PageRating() {
         /* Список рейтинга. */
         element = GUI.createElement('ElementRatingList', {
             x: 100,
-            y: 186 - 7,
+            y: 171,
             width: 500,
             rowSpacing: 0,
-            rowsCount: 5
+            rowsCount: 8
         });
         self.elements.push(element);
         elementRatingList = element;

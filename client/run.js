@@ -74,6 +74,7 @@ window.onload = function () {
         SAPIUserState: true,
         SAPIRating: true,
         SAPIRepeatGame: true,
+        SAPIStatistic: true,
 
         CAPIChat: true,
         CAPIGame: true,

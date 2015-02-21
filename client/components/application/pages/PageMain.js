@@ -42,11 +42,11 @@ PageMain = function PageMain() {
         self.elements.push(element);
         /* Выбор игры с роботом или без*/
         element = GUI.createElement("ElementFlag", {
-            x: 132,
-            y: 170,
+            x: 117,
+            y: 232,
             width: 142,
             height: 83,
-            title: 'Игрыть с роботом.',
+            title: 'Играть с роботом.',
             srcRest: '/images/flags/vsRobotRest.png',
             srcHover: '/images/flags/vsRobotHover.png',
             srcActive: '/images/flags/vsRobotActive.png',
@@ -72,8 +72,8 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/field3x3Rest.png',
                     srcHover: '/images/radio/field3x3Hover.png',
                     srcActive: '/images/radio/field3x3Active.png',
-                    x: 550,
-                    y: 185,
+                    x: 558,
+                    y: 159,
                     width: 123,
                     height: 86,
                     title: 'поле 3 на 3, \r\nпобеждает линия \r\nиз 3-ёх знаков.',
@@ -91,7 +91,7 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/signRandomRest.png',
                     srcHover: '/images/radio/signRandomHover.png',
                     srcActive: '/images/radio/signRandomActive.png',
-                    x: 120,
+                    x: 97,
                     y: 90,
                     width: 148,
                     height: 70,
@@ -102,7 +102,7 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/signXRest.png',
                     srcHover: '/images/radio/signXHover.png',
                     srcActive: '/images/radio/signXActive.png',
-                    x: 260,
+                    x: 212,
                     y: 80,
                     width: 146,
                     height: 102,
@@ -113,8 +113,8 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/signORest.png',
                     srcHover: '/images/radio/signOHover.png',
                     srcActive: '/images/radio/signOActive.png',
-                    x: 375,
-                    y: 80,
+                    x: 307,
+                    y: 78,
                     width: 146,
                     height: 102,
                     title: 'Играть ноликом.',
@@ -132,7 +132,7 @@ PageMain = function PageMain() {
             spacing: 79,
             columns: 5,
             friends: [],
-            onClickDummy: SocNet.openInviteFriendDialog
+            onClickDummy: LogicPageMain.onAddFriendButtonClick
         });
         self.elements.push(element);
         self.elementFriendsType = element;
@@ -203,7 +203,7 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var usersList, ids, friendIds, onlineIds, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, enableButtonInvite;
+        var usersList, ids, friendIds, onlineIds, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, enableButtonInvite, showBusyText, showOfflineText;
         usersList = [];
         ids = [];
         currentUser = LogicUser.getCurrentUser();
@@ -242,18 +242,25 @@ PageMain = function PageMain() {
                 showButtonInvite = true;
                 showButtonLetsPlay = false;
                 showIndicatorWaiting = false;
+                showBusyText = false;
+                showOfflineText = false;
                 /* шаг 2. Условия отключения кнопки приглашения. */
-                if (LogicInvites.haveInvite(user.id)) {
+                if (LogicInvites.haveInvite(user.id) || !user.online || user.isBusy || user.onGameId) {
                     showButtonInvite = false;
                 }
-                enableButtonInvite = user.online && !user.isBusy && !user.onGameId;
                 /* шаг 3. Условия включения "играем?" */
-                if (LogicInvites.isInviteExists(user.id, currentUser.id)) {
+                if (LogicInvites.isInviteExists(user.id, currentUser.id) && user.online) {
                     showButtonLetsPlay = true;
                 }
                 /* шаг 4. Условия включения "ждём..." */
-                if (LogicInvites.isInviteExists(currentUser.id, user.id) && !showButtonLetsPlay) {
+                if (LogicInvites.isInviteExists(currentUser.id, user.id) && !showButtonLetsPlay && user.online && !user.isBusy && !user.onGameId) {
                     showIndicatorWaiting = true;
+                }
+                if (!user.online) {
+                    showOfflineText = true;
+                }
+                if (user.online && (user.onGameId || user.isBusy)) {
+                    showBusyText = true;
                 }
                 usersList.push({
                     isFriend: LogicFriends.isFriend(currentUser.id, user.id),
@@ -261,10 +268,12 @@ PageMain = function PageMain() {
                     title: user.firstName + " " + user.lastName,
                     online: user.online,
                     showButtonInvite: showButtonInvite,
-                    enableButtonInvite: enableButtonInvite,
+                    enableButtonInvite: true,
                     showButtonLetsPlay: showButtonLetsPlay,
                     showIndicatorWaiting: showIndicatorWaiting,
-                    showOnlineIndicator: true,
+                    showOnlineIndicator: false,
+                    showBusyText: showBusyText,
+                    showOfflineText: showOfflineText,
                     onClick: function (photoInfo) {
                         window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
                     },

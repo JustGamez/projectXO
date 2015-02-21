@@ -329,6 +329,7 @@ LogicUser = function () {
             ActionsRandomGame.closeGame(userId, gameIds[i], function (game) {
                 CAPIGame.updateInfo(game.creatorUserId, game);
                 CAPIGame.updateInfo(game.joinerUserId, game);
+                //!!!!
             });
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);

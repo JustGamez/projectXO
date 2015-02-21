@@ -153,4 +153,15 @@ ElementRadio = function () {
             self.onChange.call(self, self.currentValue, self.currentIndex);
         }
     };
+
+    /**
+     * Эмитация клика, но через вызов метода.
+     * Передается index опции, т.е. порядоквый номер при инициализации.
+     * @param index порядоквый номер опции, при инициализации.
+     */
+    this.selectIndex = function (index) {
+        var context;
+        context = self.options[index];
+        onMouseClick.call(context);
+    };
 };

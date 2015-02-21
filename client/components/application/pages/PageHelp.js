@@ -17,6 +17,12 @@ PageHelp = function PageHelp() {
      */
     this.elements = [];
 
+    /**
+     *
+     * @type {ElementRadio}
+     */
+    var elementRadio = null;
+
     this.init = function () {
         var element;
         /* Тут создаются элементы страницы. */
@@ -74,14 +80,19 @@ PageHelp = function PageHelp() {
             currentIndex: LogicPageHelp.TAB_ID_MAIN_MENU,
             onChange: LogicPageHelp.onTabChanged
         });
+        elementRadio = element;
         self.elements.push(element);
         element = GUI.createElement('ElementText', {
             x: 120,
             y: 85,
             width: 100,
-            height: 20,
-            text: 'Правила игры.'
-            /* onClick: function(){ LogicPageHelp.onLabelClick( LogicPageHelp.TAB_ID_RULES)} */
+            height: 25,
+            text: 'Правила игры.',
+            pointer: GUI.POINTER_HAND,
+            onClick: function () {
+                /* Это индекс(порядковый номер) опции при создании ElementRadio. */
+                elementRadio.selectIndex(0);
+            }
         });
         self.elements.push(element);
         element = GUI.createElement('ElementText', {
@@ -89,7 +100,12 @@ PageHelp = function PageHelp() {
             y: 110,
             width: 200,
             height: 20,
-            text: 'Основное меню.'
+            text: 'Основное меню.',
+            pointer: GUI.POINTER_HAND,
+            onClick: function () {
+                /* Это индекс(порядковый номер) опции при создании ElementRadio. */
+                elementRadio.selectIndex(1);
+            }
         });
         self.elements.push(element);
         element = GUI.createElement('ElementText', {
@@ -97,7 +113,12 @@ PageHelp = function PageHelp() {
             y: 135,
             width: 100,
             height: 20,
-            text: 'Рейтинг'
+            text: 'Рейтинг',
+            pointer: GUI.POINTER_HAND,
+            onClick: function () {
+                /* Это индекс(порядковый номер) опции при создании ElementRadio. */
+                elementRadio.selectIndex(2);
+            }
         });
         self.elements.push(element);
     };

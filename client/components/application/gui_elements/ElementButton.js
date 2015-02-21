@@ -94,16 +94,16 @@ ElementButton = function () {
      */
     this.init = function () {
         dom = GUI.createDom();
-        dom.x = this.x;
-        dom.y = this.y;
-        dom.width = this.width;
-        dom.height = this.height;
-        dom.backgroundImage = this.srcRest;
+        dom.x = self.x;
+        dom.y = self.y;
+        dom.width = self.width;
+        dom.height = self.height;
+        dom.backgroundImage = self.srcRest;
         dom.pointer = GUI.POINTER_HAND;
-        GUI.bind(dom, GUI.EVENT_MOUSE_MOUSE_DOWN, onMouseDown, this);
-        GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onMouseClick, this);
-        GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
-        GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
+        GUI.bind(dom, GUI.EVENT_MOUSE_MOUSE_DOWN, onMouseDown, self);
+        GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onMouseClick, self);
+        GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, self);
+        GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, self);
     };
 
     /**
@@ -137,7 +137,7 @@ ElementButton = function () {
         if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
         dom.backgroundImage = src;
         if (self.title) dom.title = self.title;
-        dom.opacity = self.enabled ? 1.0 : 0.5;
+        dom.opacity = self.enabled ? undefined : 0.5;
         dom.redraw();
     };
 

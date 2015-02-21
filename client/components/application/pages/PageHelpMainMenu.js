@@ -38,9 +38,9 @@ PageHelpMainMenu = function PageHelpMainMenu() {
         list.push({name: 'ElementText', x: 390, y: 80 + rowHeight * line + offsetY, text: '&larr; играть с компьютером.'});
 
         line = 3;
-        list.push({name: 'ElementPhoto', x: 110, y: 60 + rowHeight * line + offsetY, width: 51, height: 50, src: '/images/help/photoSomePeople1.png'});
-        list.push({name: 'ElementPhoto', x: 190, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople2.png'});
-        list.push({name: 'ElementPhoto', x: 268, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople3.png'});
+        list.push({name: 'ElementPhoto', x: 110, y: 60 + rowHeight * line + offsetY, width: 51, height: 50, src: '/images/help/photoSomePeople1.png', pointer: GUI.POINTER_ARROW});
+        list.push({name: 'ElementPhoto', x: 190, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople2.png', pointer: GUI.POINTER_ARROW});
+        list.push({name: 'ElementPhoto', x: 268, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople3.png', pointer: GUI.POINTER_ARROW});
         list.push({name: 'ElementText', x: 360, y: 83 + rowHeight * line + offsetY, text: '&larr; отправить приглашение сыграть.'});
 
         line = 4;

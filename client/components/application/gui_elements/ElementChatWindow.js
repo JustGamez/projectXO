@@ -112,13 +112,13 @@ ElementChatWindow = function () {
                 text += " " + message.text;
                 text += "\r\n";
             } else {
-                text += "<b style='font-size:9pt;letter-spacing:-2px;font-weight:normal' >";
+                text += "<b style='font-size:9pt;letter-spacing:-2px;font-weight:normal;float:right;opacity:0.47;' >";
                 text += message.timeHours + ":" + message.timeMinutes + ":" + message.timeSeconds + " ";
                 text += "</b>";
-                text += "<b style='font-size:10pt;letter-spacing:-2px;font-weight:normal' >";
+                text += "<b style='font-size:10pt;letter-spacing:-2px;font-weight:normal;' title='" + user.firstName + " " + user.lastName + "' >";
                 text += user.firstName;
                 text += " " + user.lastName.charAt(0) + ".";
-                text += ": ";
+                text += " ";
                 text += "</b>";
                 text += " " + message.text;
                 text += "<br>";

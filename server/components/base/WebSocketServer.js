@@ -448,8 +448,9 @@ WebSocketServer = function () {
         }
         if (request.url.indexOf('/status') == 0) {
             var status = Profiler.getTextReport();
+            var status2 = ApiRouterMetrics.getMetrics() ;
             response.writeHead(200, {'Content-Type': 'text/html'});
-            response.end('<pre>' + status + '</pre>');
+            response.end('<pre>' + status + '</pre>' + '<pre>' + status2 + '</pre>');
             return true;
         }
         if (request.url.indexOf('/shutdown') == 0) {

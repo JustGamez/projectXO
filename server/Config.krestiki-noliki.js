@@ -4,7 +4,7 @@
  */
 Config = {
     Logs: {
-        triggerLevel: 1
+        triggerLevel: 1 // detail
     },
     DB: {
         host: 'localhost',
@@ -32,7 +32,7 @@ Config = {
         messageLengthLimit: 128
     },
     Rating: {
-        TopLimitSize: 5
+        TopLimitSize: 10
     },
     ApiRouterMetric: {
         reportTimeout: 1000 * 60 * 60 // one hour

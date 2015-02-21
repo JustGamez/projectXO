@@ -3,7 +3,7 @@ ApiRouterMetrics = {};
 ApiRouterMetrics.map = {};
 ApiRouterMetrics.timeBegin = null;
 
-ApiRouterMetrics.printMetrics = function () {
+ApiRouterMetrics.getMetrics = function () {
     var output, timeNow, timeElapsed, count, rps, countSumm;
     timeNow = new Date().getTime();
     timeElapsed = (timeNow - ApiRouterMetrics.timeBegin) / 1000;
@@ -24,6 +24,12 @@ ApiRouterMetrics.printMetrics = function () {
     }
     rps = Math.round((countSumm / timeElapsed) * 100) / 100;
     output += "summary: " + countSumm + "   " + rps + " rps.\r\n";
+    return output;
+};
+
+ApiRouterMetrics.printMetrics = function () {
+    var output;
+    output = ApiRouterMetrics.getMetrics();
     console.log(output);
 };
 

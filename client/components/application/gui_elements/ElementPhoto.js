@@ -96,7 +96,19 @@ ElementPhoto = function () {
      * Ширина рамки
      * @type {number}
      */
-    var frameWidth = 7;
+    this.frameWidth = 6;
+
+    /**
+     * Диапазон поворота фотографии.
+     * @type {number}
+     */
+    this.degreesDiapazon = 16;
+
+    /**
+     * Угол поворота фотографии, расчитывается во время перерисовки.
+     * @type {number}
+     */
+    var degress = 0;
 
     /**
      * Ширина фотографии.
@@ -196,23 +208,25 @@ ElementPhoto = function () {
     var showOnlineIndicator = false;
 
     /**
-     * Кнопка "пригласить".
-     * @type {boolean}
-     */
-    var elementInviteButton = false;
-
-    /**
      * Текст: "занят".
-     * @type {boolean}
+     * @type {GUIDom}
      */
-    var elementBussyText = false;
+    var elementBusyText = false;
 
     /**
      * Текст "оффлайн".
-     * @type {boolean}
+     * @type {GUIDom}
      */
     var elementOfflineText = false;
 
+    var showBusyText = false;
+    var showOfflineText = false;
+
+    /**
+     * Указатель мыши при наведении.
+     * @type {string}
+     */
+    this.pointer = GUI.POINTER_HAND;
 
     /**
      * Создадим домы и настроем их.
@@ -224,18 +238,18 @@ ElementPhoto = function () {
         domRegion.y = self.y;
         domRegion.width = regionWidth;
         domRegion.height = regionHeight;
-        domRegion.pointer = GUI.POINTER_HAND;
+        domRegion.pointer = self.pointer;
         GUI.bind(domRegion, GUI.EVENT_MOUSE_CLICK, onClickMediator, this);
         /* Бордюр рамки фотографии */
         domBorder = GUI.createDom(domRegion);
-        domBorder.x = 5;
+        domBorder.x = 8;
         domBorder.y = 5;
         domBorder.border = borderWidth + 'px solid #ebb';
-        domBorder.width = frameWidth * 2 + self.photoWidth;
-        domBorder.height = frameWidth * 2 + self.photoHeight;
+        domBorder.width = self.frameWidth * 2 + self.photoWidth;
+        domBorder.height = self.frameWidth * 2 + self.photoHeight;
         /* Рамка фотографии */
         domFrame = GUI.createDom(domBorder);
-        domFrame.border = frameWidth + 'px solid #eee';
+        domFrame.border = self.frameWidth + 'px solid #eee';
         domFrame.x = 0;
         domFrame.y = 0;
         domFrame.width = self.photoWidth;
@@ -256,10 +270,10 @@ ElementPhoto = function () {
         domOnlineIndicator.height = 14;
         /* Кнопка приглашения в игру */
         buttonInvite = GUI.createElement("ElementButton", {
-            x: 24,
+            x: 0,
             y: 77,
-            width: 32,
-            height: 16,
+            width: 80,
+            height: 17,
             srcRest: '/images/photo/buttonInviteRest.png',
             srcHover: '/images/photo/buttonInviteHover.png',
             srcActive: '/images/photo/buttonInviteActive.png',
@@ -271,7 +285,7 @@ ElementPhoto = function () {
         /* Кнопка "Играём?" */
         buttonLetsPlay = GUI.createElement("ElementButton", {
             x: -2,
-            y: 85,
+            y: 65,
             width: 90,
             height: 41,
             srcRest: '/images/photo/buttonLetsPlayRest.png',
@@ -284,12 +298,28 @@ ElementPhoto = function () {
         }, domRegion);
         /* Индикатор "Ждём..." */
         domIndicatorWaiting = GUI.createDom(domRegion);
-        domIndicatorWaiting.x = 0;
-        domIndicatorWaiting.y = 85;
+        domIndicatorWaiting.x = 3;
+        domIndicatorWaiting.y = 64;
         domIndicatorWaiting.width = 90;
         domIndicatorWaiting.height = 41;
         domIndicatorWaiting.backgroundImage = '/images/photo/indicatorWait.png';
         domIndicatorWaiting.title = 'Ожидание оппонента.';
+        /* Текст оффлайн. */
+        elementOfflineText = GUI.createDom(domRegion);
+        elementOfflineText.x = 8;
+        elementOfflineText.y = 73;
+        elementOfflineText.width = 62;
+        elementOfflineText.height = 15;
+        elementOfflineText.backgroundImage = '/images/photo/textOffline.png';
+        elementOfflineText.opacity = 0.21;
+        /* Текст занят. */
+        elementBusyText = GUI.createDom(domRegion);
+        elementBusyText.x = 15;
+        elementBusyText.y = 72;
+        elementBusyText.width = 49;
+        elementBusyText.height = 14;
+        elementBusyText.backgroundImage = '/images/photo/textBusy.png';
+        elementBusyText.opacity = 0.37;
     };
 
     /**
@@ -332,13 +362,14 @@ ElementPhoto = function () {
      */
     this.redraw = function () {
         if (!showed) return;
+        degress = getRealRandom(self.src);
         domRegion.title = title;
         /* Если, нет фотографии, то отображаем заглушку */
         if (self.src == null || self.src == undefined || self.src == '') {
             self.src = srcDummy;
         }
         domPhoto.backgroundImage = self.src;
-        domBorder.transform = 'rotate(' + getRealRandom(self.src) + 'deg)';
+        domRegion.transform = 'rotate(' + degress + 'deg)';
         domRegion.redraw();
         domPhoto.redraw();
         domBorder.redraw();
@@ -375,6 +406,16 @@ ElementPhoto = function () {
         } else {
             buttonLetsPlay.hide();
         }
+        if (showBusyText) {
+            elementBusyText.show();
+        } else {
+            elementBusyText.hide();
+        }
+        if (showOfflineText) {
+            elementOfflineText.show();
+        } else {
+            elementOfflineText.hide();
+        }
     };
 
     /**
@@ -407,6 +448,8 @@ ElementPhoto = function () {
         onButtonInviteClick = params.onButtonInviteClick;
         onButtonLetsPlayClick = params.onButtonLetsPlayClick;
         enableButtonInvite = params.enableButtonInvite;
+        showBusyText = params.showBusyText;
+        showOfflineText = params.showOfflineText;
     };
 
     /**
@@ -417,8 +460,7 @@ ElementPhoto = function () {
         /* random rotate photo */
         /* super real-random */
         /* считаем сумму всех кодов знаков из строки, умноженных на позицию знака(*256) */
-        var deg, number, date, superPosition, degreesDiapazon;
-        degreesDiapazon = 16;
+        var deg, number, date, superPosition;
         superPosition = 360;
         number = 0;
         for (var i in string) {
@@ -428,7 +470,7 @@ ElementPhoto = function () {
         number += date.getDay(); //TODO switch to getTime()
         /* super real-random */
         deg = (number % ( superPosition + 1)) - (( superPosition + 1) / 2);
-        deg = deg / superPosition * degreesDiapazon;
+        deg = deg / superPosition * self.degreesDiapazon;
         return deg;
     };
 

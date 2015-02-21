@@ -46,15 +46,26 @@ Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
 Profiler.ID_ACTIONS_REPEAT_GAME_COPY = Profiler.getNewId("ID_ACTIONS_REPEAT_GAME_COPY");
 
 /* User statistics. */
+/* 1 */
 Statistic.ID_USER_AUTHORIZATION_BY_VK = Statistic.getNewId("ID_USER_AUTHORIZATION_BY_VK ");
+/* 2 */
 Statistic.ID_USER_LOGOUT = Statistic.getNewId("ID_USER_LOGOUT");
+/* 3 */
 Statistic.ID_GAME_DO_MOVE = Statistic.getNewId("ID_GAME_DO_MOVE");
+/* 4 */
 Statistic.ID_GAME_REQUEST_RANDOM_GAME = Statistic.getNewId("ID_GAME_REQUEST_RANDOM_GAME");
+/* 5 */
 Statistic.ID_GAME_CLOSE_RANDOM_GAME = Statistic.getNewId("ID_GAME_CLOSE_RANDOM_GAME");
+/* 6 */
 Statistic.ID_GAME_REPEAT_GAME = Statistic.getNewId("ID_GAME_REPEAT_GAME");
+/* 7 */
 Statistic.ID_GAME_ROBOT_CREATE = Statistic.getNewId("ID_GAME_ROBOT_CREATE");
+/* 8 */
 Statistic.ID_GAME_ROBOT_CLOSE = Statistic.getNewId("ID_GAME_ROBOT_CLOSE");
+/* 9 */
 Statistic.ID_RATING_GET_TOP = Statistic.getNewId("ID_RATING_GET_TOP");
+/* 10 */
+Statistic.ID_CLIENT_OPEN_INVITE_FRIEND_DIALOG = Statistic.getNewId("ID_CLIENT_OPEN_INVITE_FRIEND_DIALOG");
 
 
 /*  WebSocketServer */
@@ -69,6 +80,7 @@ ApiRouterMetrics.setup({
     SAPIUserState: true,
     SAPIRating: true,
     SAPIRepeatGame: true,
+    SAPIStatistic: true,
 
     CAPIChat: true,
     CAPIGame: true,
@@ -100,7 +112,8 @@ apiRouter.setMap({
     SAPIInvites: SAPIInvites,
     SAPIUserState: SAPIUserState,
     SAPIRating: SAPIRating,
-    SAPIRepeatGame: SAPIRepeatGame
+    SAPIRepeatGame: SAPIRepeatGame,
+    SAPIStatistic: SAPIStatistic
 });
 
 /* links apiRouter and webSocketServer */

@@ -48,9 +48,15 @@ GUI = function () {
     this.EVENT_KEY_UP = 7;
 
     /**
+     * Указатель мыши: "Рука".
      * @type {string}
      */
     this.POINTER_HAND = 'hand';
+    /**
+     * Указатель мыши: "Стандатрная стрелка".
+     * @type {string}
+     */
+    this.POINTER_ARROW = 'default';
 
     this.eventNames = [];
     this.eventNames[this.EVENT_MOUSE_MOUSE_DOWN] = 'mousedown';
