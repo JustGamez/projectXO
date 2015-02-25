@@ -62,6 +62,35 @@ Statistic = function () {
         }
         return newId;
     };
+
+    this.getTitles = function () {
+        return data;
+    };
+
+    this.getStatus = function (callback) {
+        var query;
+        query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join  statistic on users.id NOT IN ( 1,2) AND users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 300";
+        // id, userId, timeStamp, statisticId
+        DB.query(query, function (rows) {
+            var html, row;
+            html = "";
+            html += "<html><head><meta charset='utf8' ></head><body>";
+            html += "<table>";
+            for (var i in rows) {
+                row = rows[i];
+                var time = new Date(row.timeStamp).getDay() + " " + new Date(row.timeStamp).getHours() + ":" + new Date(row.timeStamp).getMinutes() + ":" + new Date(row.timeStamp).getSeconds();
+                html += "<tr>";
+                html += "<td>" + row.firstName + " " + row.lastName + "</td>";
+                html += "<td>" + row.userId + "</td>";
+                html += "<td>" + time + "</td>";
+                html += "<td>" + data[row.statisticId].title + "</td>";
+                html += "</tr>";
+            }
+            html += "</table>";
+            html += "</body></html>";
+            callback(html);
+        });
+    };
 };
 
 /**

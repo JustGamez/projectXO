@@ -22,6 +22,7 @@ LogicPageMain = function () {
     /**
      * Действия при смене флага "С роботом".
      * @param value {boolean}
+     * @todo убрать этот функционал?
      */
     this.onFlagVsRobotChange = function (value) {
         LogicXOSettings.requestedVsRobot = value;
@@ -73,6 +74,7 @@ LogicPageMain = function () {
      * Откроем страницу рейтинга.
      */
     this.onRatingButtonClick = function () {
+        SAPIStatistic.onRatingButtonClick();
         SAPIUserState.isBusy();
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_RATING]);
     };
@@ -91,6 +93,7 @@ LogicPageMain = function () {
      * Действия при нажатии кнопки "(?)"
      */
     this.onButtonHelpClick = function () {
+        SAPIStatistic.clickHelp();
         SAPIUserState.isBusy();
         LogicPageHelp.showPageAndTab();
     }

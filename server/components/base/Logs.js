@@ -66,6 +66,10 @@ Logs = function () {
         return "00000".substr(0, 2 - sourceValue.toString().length) + sourceValue;
     };
 
+    this.setLevel = function (level) {
+        trigger_level = level;
+    };
+
     /* константы типов логов */
 
     /**

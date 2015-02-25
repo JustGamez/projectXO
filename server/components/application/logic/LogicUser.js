@@ -367,7 +367,7 @@ LogicUser = function () {
      * @param userId
      */
     this.onWin = function (userId) {
-        Statistic.add(userId, Statistic.ID_USER_LOGOUT);
+        Statistic.add(userId, Statistic.ID_USER_WIN);
         DataUser.getById(userId, function (user) {
             if (user) {
                 LogicRating.onPositionScoreUp(user.id);

@@ -20,9 +20,7 @@ ActionsRobotGame = function () {
             LogicRobot.initState(game);
             /* Если ход робота, то надо сделать ему ход */
             if (LogicXO.isHisTurn(game, 0)) {
-                self.raiseAIMove(game.id, function (game) {
-                    callback(game);
-                });
+                self.raiseAIMove(game.id);
             }
             callback(game);
         });
@@ -49,7 +47,10 @@ ActionsRobotGame = function () {
             return;
         }
         if (!game.vsRobot) {
-            Logs.log("ActionsRobotGame.doMove. User cannot do move, because is not random game.", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            Logs.log("ActionsRobotGame.doMove. User cannot do move, because is not random game.", Logs.LEVEL_WARNING, {
+                game: game,
+                userId: userId
+            });
             return;
         }
         oldStatus = game.status;

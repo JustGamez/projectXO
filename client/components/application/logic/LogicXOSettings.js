@@ -19,8 +19,9 @@ LogicXOSettings = function () {
     /**
      * Запрашиваемая игра с роботом\без робтоа.
      * @type {boolean}
+     * @todo убрать этот функционал?
      */
-    this.requestedVsRobot = null;
+    this.requestedVsRobot = true;
 };
 /**
  * Статичный класс.

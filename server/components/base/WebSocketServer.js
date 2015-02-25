@@ -233,12 +233,14 @@ WebSocketServer = function () {
         clientCode += "<HEAD>\r\n";
         clientCode += "<meta charset='utf-8' />\r\n";
         clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
-        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js'></script>\r\n";
+        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js?t=3'></script>\r\n";
         clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
         clientCode += getClientImageCode();
         clientCode += "<div style='height:686px;'></div>\r\n";
         clientCode += "<iframe src='/VK/commentsWidget' style='border:none; height: 788px; width:788px;'></iframe>\r\n";
         clientCode += "</BODY></HTML>";
+
+        FS.writeFile('/var/xo/js/VKClientCodeSource.js', clientJSCode);
 
         if (Config.WebSocketServer.compressJSClientCode) {
             var result = UGLIFYJS.minify(clientJSCode, {
@@ -448,7 +450,7 @@ WebSocketServer = function () {
         }
         if (request.url.indexOf('/status') == 0) {
             var status = Profiler.getTextReport();
-            var status2 = ApiRouterMetrics.getMetrics() ;
+            var status2 = ApiRouterMetrics.getMetrics();
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + status + '</pre>' + '<pre>' + status2 + '</pre>');
             return true;
@@ -472,6 +474,28 @@ WebSocketServer = function () {
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Statistic Cache flushed!" + new Date().getTime() + '</pre>');
             loadClientCode();
+            return true;
+        }
+        if (request.url.indexOf('/Statistic/showLast') == 0) {
+            Statistic.getStatus(function (text) {
+                response.writeHead(200, {'Content-Type': 'text/html'});
+                response.end('' + text + '');
+            });
+            return true;
+        }
+        if (request.url.indexOf('/Logs/setDetail') == 0) {
+            Logs.setLevel(Logs.LEVEL_DETAIL);
+            setTimeout(function () {
+                Logs.setLevel(Logs.LEVEL_NOTIFY);
+            }, 1000 * 60 * 10);
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end("set detail log level " + new Date().getTime());
+            return true;
+        }
+        if (request.url.indexOf('/Logs/setNotify') == 0) {
+            Logs.setLevel(Logs.LEVEL_NOTIFY);
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end("set notify log level " + new Date().getTime());
             return true;
         }
         /* Во всех других случаях ошибка 404(Not found) */

@@ -63,9 +63,13 @@ Statistic.ID_GAME_ROBOT_CREATE = Statistic.getNewId("ID_GAME_ROBOT_CREATE");
 /* 8 */
 Statistic.ID_GAME_ROBOT_CLOSE = Statistic.getNewId("ID_GAME_ROBOT_CLOSE");
 /* 9 */
-Statistic.ID_RATING_GET_TOP = Statistic.getNewId("ID_RATING_GET_TOP");
+Statistic.ID_ON_RATING_BUTTON_CLICK = Statistic.getNewId("ID_ON_RATING_BUTTON_CLICK");
 /* 10 */
 Statistic.ID_CLIENT_OPEN_INVITE_FRIEND_DIALOG = Statistic.getNewId("ID_CLIENT_OPEN_INVITE_FRIEND_DIALOG");
+/* 11 */
+Statistic.ID_USER_WIN = Statistic.getNewId("ID_USER_WIN");
+/* 12 */
+Statistic.ID_CLICK_HELP = Statistic.getNewId("ID_CLICK_HELP");
 
 
 /*  WebSocketServer */

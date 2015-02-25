@@ -135,6 +135,14 @@ LogicUser = function () {
      * @param direction boolean
      */
     this.updateOnlineCount = function (count, userId, direction) {
+        if (count > onlineCount) {
+            var currentUser = LogicUser.getCurrentUser();
+            if (currentUser && currentUser.id && currentUser.id == 1) {
+                var audio = new Audio('/sounds/ICQMessage.mp3');
+                audio.play();
+                //alert("Онлайн +1 !!!");
+            }
+        }
         onlineCount = count;
         /* Сбрасываем пользователя если он вошел\вышел. */
         self.updateUserInfo({id: userId, online: direction, isBusy: false, onGame: 0});

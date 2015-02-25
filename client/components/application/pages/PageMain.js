@@ -30,28 +30,15 @@ PageMain = function PageMain() {
         var element;
         /* Кнопка играть. */
         element = GUI.createElement('ElementButton', {
-            x: 269,
+            x: 259,
             y: 225,
             width: 225,
             height: 93,
+            title: 'Играть с роботом',
             srcRest: '/images/buttons/playRest.png',
             srcHover: '/images/buttons/playHover.png',
             srcActive: '/images/buttons/playActive.png',
             onClick: LogicPageMain.onPlayButtonClick
-        });
-        self.elements.push(element);
-        /* Выбор игры с роботом или без*/
-        element = GUI.createElement("ElementFlag", {
-            x: 117,
-            y: 232,
-            width: 142,
-            height: 83,
-            title: 'Играть с роботом.',
-            srcRest: '/images/flags/vsRobotRest.png',
-            srcHover: '/images/flags/vsRobotHover.png',
-            srcActive: '/images/flags/vsRobotActive.png',
-            defaultState: true,
-            onChange: LogicPageMain.onFlagVsRobotChange
         });
         self.elements.push(element);
         /* Выбор типа поля игры */
