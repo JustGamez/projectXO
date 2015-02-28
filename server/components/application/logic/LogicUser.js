@@ -364,10 +364,16 @@ LogicUser = function () {
 
     /**
      * Если выиграл. начислим очки.
-     * @param userId
+     * @param userId {int} внутрений id игрока.
+     * @param game {Object} объект игры.
      */
-    this.onWin = function (userId) {
-        Statistic.add(userId, Statistic.ID_USER_WIN);
+    this.onWin = function (userId, game) {
+        if(game.vsRobot) {
+            Statistic.add(userId, Statistic.ID_USER_WIN_VS_ROBOT);
+        }
+        if(game.isInvitation) {
+            Statistic.add(userId, Statistic.ID_USER_WIN_BY_INVITATION);
+        }
         DataUser.getById(userId, function (user) {
             if (user) {
                 LogicRating.onPositionScoreUp(user.id);

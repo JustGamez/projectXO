@@ -7,6 +7,10 @@ LogicRobot = function () {
      */
     var stateCache = [];
 
+    this.init = function (afterInitCallback) {
+        afterInitCallback();
+    };
+
     /**
      * Проинициализируем данные робота для игры.
      * @param game {Object}
@@ -84,6 +88,63 @@ LogicRobot = function () {
         }
     };
 
+    var generateAllLineForField = function (game, state) {
+        var allLines, lines;
+        allLines = [];
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
+            for (var y = 0; y < state.fieldSize; y++) {
+                for (var x = 0; x < state.fieldSize; x++) {
+                    if (game.field[y][x] != LogicXO.SIGN_ID_Empty) {
+                        allLines = allLines.concat(lines);
+                    }
+                }
+            }
+        }
+        else {
+            for (var y = 0; y < state.fieldSize; y++) {
+                for (var x = 0; x < state.fieldSize; x++) {
+                    allLines = allLines.concat(lines);
+                }
+            }
+        }
+        return allLines;
+    };
+
+    var generateAllLinesAtPoint = function (game, X, Y, state) {
+        var lines, line;
+        lines = [];
+        for (var i in LogicXO.lineIds) {
+            line = generateOneLine(game, X, Y, LogicXO.lineIds[i], true, state);
+            if (line.length == state.lineSize)lines.push(line);
+            line = generateOneLine(game, X, Y, LogicXO.lineIds[i], false, state);
+            if (line.length == state.lineSize)lines.push(line);
+        }
+        return lines;
+    };
+
+    var generateOneLine = function (game, X, Y, lineId, direction, state) {
+        var vector, line, x, y;
+        vector = LogicXO.getLineVector(lineId, direction);
+        line = {};
+        line.length = 0;
+        line.points = {};
+        line.points[LogicXO.SIGN_ID_Empty] = [];
+        line.points[LogicXO.SIGN_ID_X] = [];
+        line.points[LogicXO.SIGN_ID_O] = [];
+        x = X;
+        y = Y;
+        for (var i = 0; i < state.lineSize; i++) {
+            if (x < 0 || x >= state.fieldSize || y < 0 || y >= state.fieldSize) {
+                continue;
+            }
+            line.length++;
+            line.points[game.field[y][x]].push({x: x, y: y});
+            x += vector.x;
+            y += vector.y;
+        }
+        return line;
+    };
+
     /**
      * Генерирует координаты хода для робота.
      * Выбирает оптимальный ход аналитически.
@@ -91,7 +152,66 @@ LogicRobot = function () {
      */
     this.generateMovementCoords = function (game) {
         var state, max, target, line;
+
         state = stateCache[game.id];
+
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
+            var lines, oppositeSignId;
+            var robotSignId = game.turnId;
+            var playerSignId = LogicXO.getOppositeSignId(robotSignId);
+            lines = generateAllLineForField(game, state);
+            // ищем линии с длиной 2 нашего знака
+            for (var i in lines) {
+                if (lines[i].points[robotSignId].length == state.fieldSize - 1 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
+                    return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+                }
+            }
+            // ищем линии с длиной 2 у противоположного знака
+            for (var i in lines) {
+                if (lines[i].points[playerSignId].length == state.fieldSize - 1 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
+                    return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+                }
+            }
+            // ищем линии с длиной 1 нашего знака
+            for (var i in lines) {
+                if (lines[i].points[robotSignId].length == state.fieldSize - 2 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
+                    //return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+                }
+            }
+            // ищем линии с длиной 1 у противоположного знака
+            for (var i in lines) {
+                if (lines[i].points[playerSignId].length == state.fieldSize - 2 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
+                    //return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+                }
+            }
+            // если центр пуст, ставим туда
+            if (game.field[1][1] == LogicXO.SIGN_ID_Empty) {
+                return {x: 1, y: 1};
+            }
+            // возвращаем случайную пустую
+            emptyPoints = [];
+            for (var y = 0; y < state.fieldSize; y++) {
+                for (var x = 0; x < state.fieldSize; x++) {
+                    if (game.field[y][x] == LogicXO.SIGN_ID_Empty) {
+                        emptyPoints.push({x: x, y: y});
+                    }
+                }
+            }
+            randomIndex = Math.round(Math.random() * (emptyPoints.length - 1));
+            x = emptyPoints[randomIndex].x;
+            y = emptyPoints[randomIndex].y;
+            return {x: x, y: y};
+        }
+        if (!Profiler.ID_ID) {
+            Profiler.ID_ID = Profiler.getNewId("ID_ID");
+        }
+
+        var lines;
+        Profiler.start(Profiler.ID_ID);
+        lines = generateAllLineForField(game, state);
+        Profiler.stop(Profiler.ID_ID);
+
+
         /* 1 - ищем самые длинные линии, свои и противника, не заблокированные с обеих стороны. */
         /* ставим на ту линию, которая длиней. */
         /* поиск самой длиной линии */

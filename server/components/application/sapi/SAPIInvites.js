@@ -1,4 +1,4 @@
-SAPIInvites = function ()   {
+SAPIInvites = function () {
 
     /**
      * Отправка приглашения на сервер.
@@ -29,6 +29,7 @@ SAPIInvites = function ()   {
         }
         /* @todo проверить, что это друг */
         Profiler.start(Profiler.ID_SAPIINVITES_SEND);
+        Statistic.add(cntx.userId, Statistic.ID_INVITATION_SEND);
         CAPIInvites.receive(whomId, whoId, whomId);
         Profiler.stop(Profiler.ID_SAPIINVITES_SEND);
     };
@@ -128,7 +129,7 @@ SAPIInvites = function ()   {
             if (game.status != LogicXO.STATUS_RUN) {
                 /* Только что кто-то выиграл? */
                 if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
-                    LogicUser.onWin(game.winnerId);
+                    LogicUser.onWin(game.winnerId, game);
                 }
                 LogicGameStore.delete(game.id);
                 DataGame.save(game, function (game) {

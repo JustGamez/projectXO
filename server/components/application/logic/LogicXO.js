@@ -107,7 +107,7 @@ LogicXO = function () {
      */
     this.create = function (creatorUserId, creatorSignId, fieldTypeId, isRandom, isInvitation, vsRobot) {
         var field;
-        field = createField(fieldTypeId);
+        field = self.createField(fieldTypeId);
         return {
             creatorUserId: creatorUserId,
             joinerUserId: 0,
@@ -132,7 +132,7 @@ LogicXO = function () {
      * Создадим поле.
      * @param fieldTypeId тип поля.
      */
-    var createField = function (fieldTypeId) {
+    this.createField = function (fieldTypeId) {
         var fieldSize, field;
         fieldSize = self.getFieldSize(fieldTypeId);
         field = [];
@@ -361,7 +361,7 @@ LogicXO = function () {
 
     /**
      * Найти линию победы, если она конечно есть.
-     * @param game {Object}
+     * @param game {Object} minimum required: fieldTypeId, field
      */
     this.findWinLine = function (game) {
         Profiler.start(Profiler.LOGIC_XO_FIND_WIN_LINE);

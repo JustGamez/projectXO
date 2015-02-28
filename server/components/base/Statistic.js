@@ -42,7 +42,7 @@ Statistic = function () {
             }
             query = query.substr(0, query.length - 1);
             DB.query(query, function () {
-                Logs.log("Statistic cache flushed.", Logs.LEVEL_DETAIL);
+                Logs.log("Statistic cache flushed.rows:" + cache.length, Logs.LEVEL_DETAIL);
             });
             cache = [];
         }
@@ -69,7 +69,7 @@ Statistic = function () {
 
     this.getStatus = function (callback) {
         var query;
-        query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join  statistic on users.id NOT IN ( 1,2) AND users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 300";
+        query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join  statistic on users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 300";
         // id, userId, timeStamp, statisticId
         DB.query(query, function (rows) {
             var html, row;

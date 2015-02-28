@@ -473,10 +473,10 @@ WebSocketServer = function () {
             Statistic.flushCache();
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Statistic Cache flushed!" + new Date().getTime() + '</pre>');
-            loadClientCode();
             return true;
         }
         if (request.url.indexOf('/Statistic/showLast') == 0) {
+            Statistic.flushCache();
             Statistic.getStatus(function (text) {
                 response.writeHead(200, {'Content-Type': 'text/html'});
                 response.end('' + text + '');

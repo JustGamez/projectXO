@@ -18,6 +18,7 @@ SAPIChat = function () {
             Logs.log("SAPIChat.sendMessage length over limit.", Logs.LEVEL_WARNING, message);
             return;
         }
+        Statistic.add(cntx.userId, Statistic.ID_CHAT_SEND_MESSAGE);
         ActionsChat.sendMessage(cntx.userId, message);
     };
 
