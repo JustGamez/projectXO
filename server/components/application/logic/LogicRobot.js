@@ -95,6 +95,7 @@ LogicRobot = function () {
             for (var y = 0; y < state.fieldSize; y++) {
                 for (var x = 0; x < state.fieldSize; x++) {
                     if (game.field[y][x] != LogicXO.SIGN_ID_Empty) {
+                        lines = generateAllLinesAtPoint(game, x, y, state);
                         allLines = allLines.concat(lines);
                     }
                 }
@@ -103,6 +104,7 @@ LogicRobot = function () {
         else {
             for (var y = 0; y < state.fieldSize; y++) {
                 for (var x = 0; x < state.fieldSize; x++) {
+                    lines = generateAllLinesAtPoint(game, x, y, state);
                     allLines = allLines.concat(lines);
                 }
             }
