@@ -233,7 +233,7 @@ WebSocketServer = function () {
         clientCode += "<HEAD>\r\n";
         clientCode += "<meta charset='utf-8' />\r\n";
         clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
-        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js?t=3'></script>\r\n";
+        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
         clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
         clientCode += getClientImageCode();
         clientCode += "<div style='height:686px;'></div>\r\n";
