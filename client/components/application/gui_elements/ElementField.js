@@ -77,14 +77,20 @@ ElementField = function () {
     this.configure[LogicXO.FIELD_TYPE_3X3] = {
         srcField: '/images/fields/3x3Field.png',
         srcSignX: '/images/fields/3x3SignX.png',
+        srcSignXLastMove: '/images/fields/3x3SignX.png',
         srcSignO: '/images/fields/3x3SignO.png',
+        srcSignOLastMove: '/images/fields/3x3SignO.png',
         srcSignClear: '/images/fields/3x3SignClear.png',
         lines: {},
         fieldSize: 3,
         signWidth: 130,
         signHeight: 130,
         padding: 5,
-        signOffset: 5,
+        lineOffset: 5,
+        signOffsetX: 5,
+        signOffsetY: 5,
+        signImageWidth: 130,
+        signImageHeight: 130,
         winLineSize: 3
     };
     this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/3x3LineHorizontal.png';
@@ -96,14 +102,22 @@ ElementField = function () {
     this.configure[LogicXO.FIELD_TYPE_15X15] = {
         srcField: '/images/fields/15x15Field.png',
         srcSignX: '/images/fields/15x15SignX.png',
+        srcSignXLastMove: '/images/fields/15x15SignXLastMove.png',
         srcSignO: '/images/fields/15x15SignO.png',
+        srcSignOLastMove: '/images/fields/15x15SignOLastMove.png',
         srcSignClear: '/images/fields/15x15SignClear.png',
         lines: {},
         fieldSize: 15,
+        /*131 126*/
+        /*127 117*/
         signWidth: 26,
         signHeight: 26,
         padding: 0,
-        signOffset: 5,
+        lineOffset: 5,
+        signOffsetX: -1,
+        signOffsetY: -1,
+        signImageWidth: 42,
+        signImageHeight: 40,
         winLineSize: 5
     };
     this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/15x15LineHorizontal.png';
@@ -150,10 +164,10 @@ ElementField = function () {
             self.domList[typeId].domSigns[y] = [];
             for (var x = 0; x < self.configure[typeId].fieldSize; x++) {
                 dom = GUI.createDom();
-                dom.x = self.configure[typeId].signOffset + self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding);
-                dom.y = self.configure[typeId].signOffset + self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding);
-                dom.width = self.configure[typeId].signWidth;
-                dom.height = self.configure[typeId].signHeight;
+                dom.x = self.configure[typeId].signOffsetX + self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding);
+                dom.y = self.configure[typeId].signOffsetY + self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding);
+                dom.width = self.configure[typeId].signImageWidth;
+                dom.height = self.configure[typeId].signImageHeight;
                 dom.pointer = GUI.POINTER_HAND;
                 dom.backgroundImage = self.configure[typeId].srcSignClear;
                 GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onSignClick, {x: x, y: y});
@@ -207,7 +221,7 @@ ElementField = function () {
      * Перерисуем поле.
      */
     this.redraw = function () {
-        if (!showed)return;
+        if (!showed) return;
         self.domList[fieldTypeId].domField.redraw();
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
             for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
@@ -218,8 +232,8 @@ ElementField = function () {
             self.domList[fieldTypeId].domWinLine.hide();
         } else {
             self.domList[fieldTypeId].domWinLine.show();
-            self.domList[fieldTypeId].domWinLine.x = self.x + self.configure[fieldTypeId].signOffset + winLineX * (self.configure[fieldTypeId].signWidth + self.configure[fieldTypeId].padding);
-            self.domList[fieldTypeId].domWinLine.y = self.y + self.configure[fieldTypeId].signOffset + winLineY * (self.configure[fieldTypeId].signHeight + self.configure[fieldTypeId].padding);
+            self.domList[fieldTypeId].domWinLine.x = self.x + self.configure[fieldTypeId].lineOffset + winLineX * (self.configure[fieldTypeId].signWidth + self.configure[fieldTypeId].padding);
+            self.domList[fieldTypeId].domWinLine.y = self.y + self.configure[fieldTypeId].lineOffset + winLineY * (self.configure[fieldTypeId].signHeight + self.configure[fieldTypeId].padding);
             self.domList[fieldTypeId].domWinLine.backgroundImage = self.configure[fieldTypeId].lines[winLineId];
             switch (winLineId) {
                 case LogicXO.LINE_HORIZONTAL:
@@ -262,13 +276,21 @@ ElementField = function () {
      * @param y {Number} координаты y(от нуля)
      * @param signId {Number} id знака LogicXO.SIGN_ID_*
      */
-    this.setSign = function (x, y, signId) {
+    this.setSign = function (x, y, signId, isItLastMove) {
         switch (signId) {
             case LogicXO.SIGN_ID_X:
-                self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignX;
+                if (isItLastMove) {
+                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignXLastMove;
+                } else {
+                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignX;
+                }
                 break;
             case LogicXO.SIGN_ID_O:
-                self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignO;
+                if (isItLastMove) {
+                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignOLastMove;
+                } else {
+                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignO;
+                }
                 break;
             case LogicXO.SIGN_ID_Empty:
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;

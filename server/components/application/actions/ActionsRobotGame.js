@@ -56,6 +56,7 @@ ActionsRobotGame = function () {
         oldStatus = game.status;
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
+        game.lastMove = {x: x, y: y};
         if (checkWinner) {
             winLine = LogicXO.findWinLine(game);
             game = LogicXO.setOutcomeResults(game, winLine);
@@ -101,6 +102,7 @@ ActionsRobotGame = function () {
         /* Тут мы добавим\обновим линии робота на основании последнего хода. */
         game = LogicXO.setSign(game, AICoords.x, AICoords.y);
         game = LogicXO.switchTurn(game);
+        game.lastMove = {x: AICoords.x, y: AICoords.y};
         LogicGameStore.save(game);
         LogicRobot.updateGameState(game);
         CAPIGame.updateInfo(game.creatorUserId, game);

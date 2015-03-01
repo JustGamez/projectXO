@@ -149,7 +149,7 @@ PageXOGame = function PageXOGame() {
      */
     this.preset = function () {
         /* Перересовываем поле */
-        var game, fieldSize, user;
+        var game, fieldSize, user, isItLastMove, x, y;
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
         /* Установим тип поля и знаки */
@@ -162,8 +162,14 @@ PageXOGame = function PageXOGame() {
             self.elementField.clearField();
             for (var y = 0; y < fieldSize; y++) {
                 for (var x = 0; x < fieldSize; x++) {
-                    self.elementField.setSign(x, y, game.field[y][x]);
+                    self.elementField.setSign(x, y, game.field[y][x], false);
                 }
+            }
+
+            if (game.lastMove) {
+                x = game.lastMove.x;
+                y = game.lastMove.y;
+                self.elementField.setSign(x, y, game.field[y][x], true);
             }
         }
         /* Посмотрим есть ли у нас линия-победы */

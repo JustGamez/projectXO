@@ -134,6 +134,7 @@ ActionsRandomGame = function () {
         oldStatus = game.status;
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
+        game.lastMove = {x: x, y: y};
         if (checkWinner) {
             winLine = LogicXO.findWinLine(game);
             game = LogicXO.setOutcomeResults(game, winLine);

@@ -301,7 +301,7 @@ WebSocketServer = function () {
         imageFiles = getFileListRecursive(imagesPath);
         imageCode = "<script>";
         imageCode += "images = {};";
-        timePostfix = "?t=" + new Date().getHours();
+        timePostfix = "?t=" + new Date().getTime();
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
             imageCode += "\r\nimages['" + path + "']='" + path + timePostfix + "';";
