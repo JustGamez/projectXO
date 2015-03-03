@@ -62,7 +62,6 @@ ActionsRobotGame = function () {
             game = LogicXO.setOutcomeResults(game, winLine);
         }
         LogicGameStore.save(game);
-        LogicRobot.saveLastMove(game.id, x, y);
         callback(game, oldStatus);
     };
 
@@ -98,7 +97,6 @@ ActionsRobotGame = function () {
             Logs.log("ActionsRobotGame.raiseAIMove. Robot can not do move.x:" + AICoords.x + ", y:" + AICoords.y, Logs.LEVEL_WARNING, game);
             return;
         }
-        LogicRobot.saveLastMove(game.id, AICoords.x, AICoords.y);
         /* Тут мы добавим\обновим линии робота на основании последнего хода. */
         game = LogicXO.setSign(game, AICoords.x, AICoords.y);
         game = LogicXO.switchTurn(game);

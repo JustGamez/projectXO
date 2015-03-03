@@ -8,4 +8,5 @@ run_0001.log
 /docs/create virtual machine
 xoserver_last.out
 run.log
+/server/run*.log
 /js/VKClientCode.js

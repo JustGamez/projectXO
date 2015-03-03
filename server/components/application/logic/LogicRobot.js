@@ -13,6 +13,7 @@ LogicRobot = function () {
 
     /**
      * Проинициализируем данные робота для игры.
+     * ВНИМАНИЕ: Сюда игра должна попадать уже с установленными знаками.
      * @param game {Object}
      */
     this.initState = function (game) {
@@ -20,6 +21,8 @@ LogicRobot = function () {
         stateCache[game.id].lines = [];
         stateCache[game.id].fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
         stateCache[game.id].lineSize = LogicXO.getLineSize(game.fieldTypeId);
+        stateCache[game.id].robotSignId = game.XUserId == 0 ? LogicXO.SIGN_ID_X : LogicXO.SIGN_ID_O;
+        stateCache[game.id].playerSignId = game.XUserId == 0 ? LogicXO.SIGN_ID_O : LogicXO.SIGN_ID_X;
     };
 
     /**
@@ -28,9 +31,6 @@ LogicRobot = function () {
      * @param x {Number}
      * @param y {Number}
      */
-    this.saveLastMove = function (gameId, x, y) {
-        stateCache[gameId].lastMove = {x: x, y: y};
-    };
 
     /**
      * Формирует данные для AI.
@@ -39,7 +39,7 @@ LogicRobot = function () {
     this.updateGameState = function (game) {
         var newLine, newLines, state, x, y;
         state = stateCache[game.id];
-        if (state.lastMove == undefined)return;
+        if (game.lastMove == undefined) return;
         /* берем последний ход и ищем от него линии. */
         newLines = [];
         /**
@@ -54,8 +54,8 @@ LogicRobot = function () {
          */
         for (var offsetX = -1; offsetX <= 1; offsetX++) {
             for (var offsetY = -1; offsetY <= 1; offsetY++) {
-                x = state.lastMove.x + offsetX;
-                y = state.lastMove.y + offsetY;
+                x = game.lastMove.x + offsetX;
+                y = game.lastMove.y + offsetY;
                 /* Не будем выходить за пределы поля. */
                 if (LogicXO.notInField(x, y, state.fieldSize)) {
                     continue;
@@ -153,14 +153,14 @@ LogicRobot = function () {
      * @param game {Object}
      */
     this.generateMovementCoords = function (game) {
-        var state, max, target, line;
+        var state, max, target, line, robotSignId, playerSignId, lines;
 
         state = stateCache[game.id];
+        robotSignId = state.robotSignId;
+        playerSignId = state.playerSignId;
 
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
-            var lines, oppositeSignId;
-            var robotSignId = game.turnId;
-            var playerSignId = LogicXO.getOppositeSignId(robotSignId);
+
             lines = generateAllLineForField(game, state);
             // ищем линии с длиной 2 нашего знака
             for (var i in lines) {
@@ -212,6 +212,63 @@ LogicRobot = function () {
         Profiler.start(Profiler.ID_ID);
         lines = generateAllLineForField(game, state);
         Profiler.stop(Profiler.ID_ID);
+
+        /* Find 4 robot & 1 empty */
+        for (var i in  lines) {
+            if (lines[i].points[robotSignId].length == 4 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 1) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Find 4 opponent & 1 empty */
+        for (var i in  lines) {
+            if (lines[i].points[playerSignId].length == 4 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 1) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Find 3 opponent & 2 empty */
+        for (var i in  lines) {
+            if (lines[i].points[playerSignId].length == 3 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 2) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Find 3 robot & 2 empty */
+        for (var i in  lines) {
+            if (lines[i].points[robotSignId].length == 3 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 2) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Find 2 opponent & 3 empty */
+        for (var i in  lines) {
+            if (lines[i].points[playerSignId].length == 2 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 3) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Find 1 robot & 4 empty */
+        for (var i in  lines) {
+            if (lines[i].points[robotSignId].length == 1 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 4) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Find 1 opponent & 4 empty */
+        for (var i in  lines) {
+            if (lines[i].points[playerSignId].length == 1 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 4) {
+                return lines[i].points[LogicXO.SIGN_ID_Empty][0];
+            }
+        }
+        /* Set random position */
+        // возвращаем случайную пустую
+        emptyPoints = [];
+        for (var y = 0; y < state.fieldSize; y++) {
+            for (var x = 0; x < state.fieldSize; x++) {
+                if (game.field[y][x] == LogicXO.SIGN_ID_Empty) {
+                    emptyPoints.push({x: x, y: y});
+                }
+            }
+        }
+        randomIndex = Math.round(Math.random() * (emptyPoints.length - 1));
+        x = emptyPoints[randomIndex].x;
+        y = emptyPoints[randomIndex].y;
+        return {x: x, y: y};
 
 
         /* 1 - ищем самые длинные линии, свои и противника, не заблокированные с обеих стороны. */
