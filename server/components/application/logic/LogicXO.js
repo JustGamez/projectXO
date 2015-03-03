@@ -266,6 +266,7 @@ LogicXO = function () {
      * @param userId {Object}
      */
     this.isHisTurn = function (game, userId) {
+        if (game.status != LogicXO.STATUS_RUN) return false;
         if (userId == game.XUserId && game.turnId == LogicXO.SIGN_ID_X) return true;
         if (userId == game.OUserId && game.turnId == LogicXO.SIGN_ID_O) return true;
         return false;

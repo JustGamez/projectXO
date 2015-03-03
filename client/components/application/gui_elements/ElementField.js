@@ -73,6 +73,8 @@ ElementField = function () {
      */
     this.onClick = null;
 
+    var lastMove;
+
     /* Поле 3х3 */
     this.configure[LogicXO.FIELD_TYPE_3X3] = {
         srcField: '/images/fields/3x3Field.png',
@@ -114,10 +116,10 @@ ElementField = function () {
         signHeight: 26,
         padding: 0,
         lineOffset: 5,
-        signOffsetX: -1,
-        signOffsetY: -1,
-        signImageWidth: 42,
-        signImageHeight: 40,
+        signOffsetX: 5,
+        signOffsetY: 5,
+        signImageWidth: 26,
+        signImageHeight: 26,
         winLineSize: 5
     };
     this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/15x15LineHorizontal.png';
@@ -133,6 +135,12 @@ ElementField = function () {
      * @type {{}}
      */
     this.domList = {};
+
+    /**
+     * Абстрактные данные поля.
+     * @type {{}}
+     */
+    this.field = {};
 
     /**
      * Создает домы полей всех типов.
@@ -152,6 +160,7 @@ ElementField = function () {
     var initFieldByTypeId = function (typeId) {
         var dom;
         self.domList[typeId] = {};
+        self.field[typeId] = [];
         dom = GUI.createDom();
         dom.x = self.x;
         dom.y = self.y;
@@ -162,6 +171,7 @@ ElementField = function () {
         self.domList[typeId].domSigns = [];
         for (var y = 0; y < self.configure[typeId].fieldSize; y++) {
             self.domList[typeId].domSigns[y] = [];
+            self.field[typeId][y] = [];
             for (var x = 0; x < self.configure[typeId].fieldSize; x++) {
                 dom = GUI.createDom();
                 dom.x = self.configure[typeId].signOffsetX + self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding);
@@ -171,7 +181,10 @@ ElementField = function () {
                 dom.pointer = GUI.POINTER_HAND;
                 dom.backgroundImage = self.configure[typeId].srcSignClear;
                 GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onSignClick, {x: x, y: y});
+                GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, {dom: dom, x: x, y: y});
+                GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, {dom: dom, x: x, y: y});
                 self.domList[typeId].domSigns[y][x] = dom;
+                self.field[typeId][y][x] = LogicXO.SIGN_ID_Empty;
             }
         }
         dom = GUI.createDom();
@@ -270,23 +283,29 @@ ElementField = function () {
         self.show();
     };
 
+    this.setLastMove = function (x, y) {
+        lastMove = {x: x, y: y};
+    };
+
     /**
      * Установить знак.
      * @param x {Number} координаты x(от нуля)
      * @param y {Number} координаты y(от нуля)
      * @param signId {Number} id знака LogicXO.SIGN_ID_*
      */
-    this.setSign = function (x, y, signId, isItLastMove) {
+    this.setSign = function (x, y, signId) {
+        self.domList[fieldTypeId].domSigns[y][x].animateStop();
+        self.domList[fieldTypeId].domSigns[y][x].opacity = 1.0;
         switch (signId) {
             case LogicXO.SIGN_ID_X:
-                if (isItLastMove) {
+                if (lastMove && lastMove.x == x && lastMove.y == y) {
                     self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignXLastMove;
                 } else {
                     self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignX;
                 }
                 break;
             case LogicXO.SIGN_ID_O:
-                if (isItLastMove) {
+                if (lastMove && lastMove.x == x && lastMove.y == y) {
                     self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignOLastMove;
                 } else {
                     self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignO;
@@ -299,6 +318,7 @@ ElementField = function () {
                 Logs.log("Undefined signId:", Logs.LEVEL_FATAL_ERROR, signId);
                 break;
         }
+        self.field[fieldTypeId][y][x] = signId;
     };
 
     /**
@@ -308,8 +328,10 @@ ElementField = function () {
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
             for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
                 self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;
+                self.field[fieldTypeId][y][x] = LogicXO.SIGN_ID_Empty;
             }
         }
+        lastMove = null;
         winLineId = null;
         winLineX = 0;
         winLineY = 0;
@@ -334,5 +356,42 @@ ElementField = function () {
     var onSignClick = function () {
         /* this тут - это объект с полями x и y, этот контест должен быть присвоин во время биндингом эвента. */
         self.onClick.call(null, this.x, this.y);
+    };
+
+    /**
+     * При вхождении курсора в ячейку знака, анимируем "проявление", если надо.
+     */
+    var onMouseOver = function () {
+        var game, user;
+        if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
+            return;
+        }
+        game = LogicGame.getCurrentGame();
+        user = LogicUser.getCurrentUser();
+
+        if (LogicXO.isHisTurn(game, user.id)) {
+            if (game.turnId == LogicXO.SIGN_ID_X) {
+                this.dom.backgroundImage = self.configure[fieldTypeId].srcSignX;
+            } else {
+                this.dom.backgroundImage = self.configure[fieldTypeId].srcSignO;
+            }
+            if (fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
+                this.dom.animateOpacity(0.21, 0.18, 20);
+            }
+            if (fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
+                this.dom.animateOpacity(0.52, 0.21, 20);
+            }
+            this.dom.redraw();
+        }
+    };
+
+    /**
+     * При ухода курсора со знака, анимируем затимнение, если надо.
+     */
+    var onMouseOut = function () {
+        if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
+            return;
+        }
+        this.dom.animateOpacity(0.00, this.dom.opacity, 12);
     };
 };

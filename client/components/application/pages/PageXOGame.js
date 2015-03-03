@@ -160,16 +160,16 @@ PageXOGame = function PageXOGame() {
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
             self.elementField.switchToField(game.fieldTypeId);
             self.elementField.clearField();
-            for (var y = 0; y < fieldSize; y++) {
-                for (var x = 0; x < fieldSize; x++) {
-                    self.elementField.setSign(x, y, game.field[y][x], false);
-                }
-            }
 
-            if (game.lastMove) {
+            if (game.lastMove && game.status == LogicXO.STATUS_RUN) {
                 x = game.lastMove.x;
                 y = game.lastMove.y;
-                self.elementField.setSign(x, y, game.field[y][x], true);
+                self.elementField.setLastMove(x, y);
+            }
+            for (var y = 0; y < fieldSize; y++) {
+                for (var x = 0; x < fieldSize; x++) {
+                    self.elementField.setSign(x, y, game.field[y][x]);
+                }
             }
         }
         /* Посмотрим есть ли у нас линия-победы */

@@ -138,6 +138,103 @@ GUIDom = function () {
     };
 
     /**
+     * id текущей запущенной анимации.
+     * если null - анимация отключается.
+     * @type {null}
+     */
+    var animateNowId = null;
+
+    /**
+     * Аргументы переданные при запуске анимации.
+     * @type {Array}
+     */
+    var animateArguments = [];
+
+    /**
+     * тайм-аут для анимации.
+     * @type {null}
+     */
+    var animateTimeout = null;
+
+    var ANIMATE_NOW_OPACITY_UP = 1;
+    var ANIMATE_NOW_OPACITY_DOWN = 2;
+
+    /**
+     * Остановить текущую анимацию.
+     */
+    this.animateStop = function () {
+        animateNowId = null;
+    };
+    /**
+     * Анимация прозрачности.
+     * @param target {Number}
+     */
+    this.animateOpacity = function (target, from, timeout) {
+        var direction;
+
+        if (from !== undefined) {
+            self.opacity = from;
+        }
+        if (!self.opacity) {
+            self.opacity = 0;
+        }
+        from = self.opacity;
+
+        if (from < target) {
+            animateNowId = ANIMATE_NOW_OPACITY_UP;
+        } else {
+            animateNowId = ANIMATE_NOW_OPACITY_DOWN;
+        }
+        animateArguments = [];
+        animateArguments.push(target);
+        animateArguments.push(from);
+        /* animateStep */
+        animateArguments.push(Math.abs((target - from) / 24));
+        animateTimeout = timeout;
+
+        animateNow();
+    };
+
+    var animateNow = function () {
+        switch (animateNowId) {
+            case ANIMATE_NOW_OPACITY_UP:
+                animateOpacityUp.apply(this, animateArguments);
+                break;
+            case ANIMATE_NOW_OPACITY_DOWN:
+                animateOpacityDown.apply(this, animateArguments);
+                break;
+            default:
+                /* останавливаем анимацию. */
+                return;
+                break;
+        }
+
+        setTimeout(function () {
+            animateNow();
+            self.redraw();
+        }, animateTimeout);
+    };
+
+    var animateOpacityUp = function (target, from, step) {
+        console.log(target, from, step);
+        if (self.opacity < target) {
+            self.opacity += step;
+        } else {
+            self.opacity = target;
+            animateNowId = null;
+        }
+    };
+
+    var animateOpacityDown = function (target, from, step) {
+        if (self.opacity > target) {
+            self.opacity -= step;
+        } else {
+            self.opacity = target;
+            animateNowId = null;
+        }
+    };
+
+    /**
      * Прицепляем событие.
      * @param eventId
      * @param callback
@@ -299,7 +396,8 @@ GUIDom = function () {
         title: redrawTitle,
         isItsepia: redrawIsItSepia
     };
-};
+}
+;
 
 /**
  * Этот код определит нужно ли делать картинки невидимыми.
