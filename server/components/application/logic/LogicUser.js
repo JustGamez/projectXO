@@ -368,16 +368,28 @@ LogicUser = function () {
      * @param game {Object} объект игры.
      */
     this.onWin = function (userId, game) {
-        if(game.vsRobot) {
+        if (game.vsRobot) {
             Statistic.add(userId, Statistic.ID_USER_WIN_VS_ROBOT);
         }
-        if(game.isInvitation) {
+        if (game.isInvitation) {
             Statistic.add(userId, Statistic.ID_USER_WIN_BY_INVITATION);
         }
         DataUser.getById(userId, function (user) {
             if (user) {
                 LogicRating.onPositionScoreUp(user.id);
-                user.score++;
+
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
+                    user.score3x3vsRobot++;
+                }
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && !game.vsRobot) {
+                    user.score3x3vsPerson++;
+                }
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && game.vsRobot) {
+                    user.score15x15vsRobot++;
+                }
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
+                    user.score15x15vsPerson++;
+                }
                 DataUser.save(user, function (user) {
                     LogicUser.sendToAll(CAPIUser.updateUserInfo, user);
                 });

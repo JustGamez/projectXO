@@ -58,6 +58,15 @@ ElementRatingList = function () {
      */
     var rowsElements = [];
 
+    this.offsetPhoto = 0;
+    this.offsetName = 80;
+    this.offsetPosition = 250;
+    this.offsetScore15x15vsPerson = 300;
+    this.offsetScore3x3vsPerson = 350;
+    this.offsetScore15x15vsRobot = 400;
+    this.offsetScore3x3vsRobot = 450;
+    this.widthName = 200;
+
     /**
      * Создадим нужные нам элементы\домы.
      */
@@ -70,35 +79,74 @@ ElementRatingList = function () {
         rowHeight = 51;
         for (var i = 0; i < self.rowsCount; i++) {
             row = {};
+            /* Массив для всех элементов, что бы показать\скрыть всю строку */
+            row.all = [];
+            /* Фотография. */
             row.photo = GUI.createElement('ElementPhoto', {
-                x: self.x + 30,
+                x: self.x + self.offsetPhoto,
                 y: self.y + i * (self.rowSpacing + rowHeight),
                 photoWidth: 33,
                 photoHeight: 33,
                 frameWidth: 4,
                 degreesDiapazon: 8
             });
+            row.all.push(row.photo);
+            /* Фамилиля, имя. */
             row.name = GUI.createElement('ElementGraphicText', {
-                x: self.x + 131,
+                x: self.x + self.offsetName,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
-                width: 280,
-                height: 40,
+                width: self.widthName,
                 text: ' - '
             });
-            row.score = GUI.createElement('ElementGraphicText', {
-                x: self.x + 450,
-                y: self.y + i * (self.rowSpacing + rowHeight) + 25,
-                width: 50,
-                height: 40,
-                text: '-'
-            });
+            row.all.push(row.name);
+            /* Позиция в рейтинге. */
             row.position = GUI.createElement('ElementGraphicText', {
-                x: self.x + 530,
-                y: self.y + i * (self.rowSpacing + rowHeight) + 25,
+                x: self.x + self.offsetPosition,
+                y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: 50,
-                height: 40,
-                text: '-'
+                text: '-',
+                alignCenter: true
             });
+            row.all.push(row.position);
+            /* Очки 15х15 с игроком. */
+            row.score15x15vsPerson = GUI.createElement('ElementGraphicText', {
+                x: self.x + self.offsetScore15x15vsPerson,
+                y: self.y + i * (self.rowSpacing + rowHeight) + 10,
+                width: 40,
+                text: '-',
+                alignCenter: true
+            });
+            row.all.push(row.score15x15vsPerson);
+            /* Очки 3х3 с игроком. */
+            row.score3x3vsPerson = GUI.createElement('ElementGraphicText', {
+                x: self.x + self.offsetScore3x3vsPerson,
+                y: self.y + i * (self.rowSpacing + rowHeight) + 10,
+                width: 40,
+                opacity: 0.7,
+                text: '-',
+                alignCenter: true
+            });
+            row.all.push(row.score3x3vsPerson);
+            /* Очки 15х15 с роботом. */
+            row.score15x15vsRobot = GUI.createElement('ElementGraphicText', {
+                x: self.x + self.offsetScore15x15vsRobot,
+                y: self.y + i * (self.rowSpacing + rowHeight) + 10,
+                width: 40,
+                opacity: 0.7,
+                text: '-',
+                alignCenter: true
+            });
+            row.all.push(row.score15x15vsRobot);
+            /* Очки 3х3 с роботом. */
+            row.score3x3vsRobot = GUI.createElement('ElementGraphicText', {
+                x: self.x + self.offsetScore3x3vsRobot,
+                y: self.y + i * (self.rowSpacing + rowHeight) + 10,
+                width: 40,
+                opacity: 0.7,
+                text: '-',
+                alignCenter: true
+            });
+            row.all.push(row.score3x3vsRobot);
             rowsElements[i] = row;
         }
     };
@@ -120,10 +168,9 @@ ElementRatingList = function () {
         if (showed == false) return;
         showed = false;
         for (var i = 0; i < self.rowsCount; i++) {
-            rowsElements[i].photo.hide();
-            rowsElements[i].name.hide();
-            rowsElements[i].score.hide();
-            rowsElements[i].position.hide();
+            for (var j = 0, length = rowsElements[i].all.length; j < length; j++) {
+                rowsElements[i].all[j].hide();
+            }
         }
     };
 
@@ -139,22 +186,20 @@ ElementRatingList = function () {
             if (data) {
                 elements.photo.update(data.photoData);
                 elements.name.setText(data.name);
-                elements.score.setText(data.score);
                 elements.position.setText(data.position);
+                elements.score15x15vsPerson.setText(data.score15x15vsPerson);
+                elements.score3x3vsPerson.setText(data.score3x3vsPerson);
+                elements.score15x15vsRobot.setText(data.score15x15vsRobot);
+                elements.score3x3vsRobot.setText(data.score3x3vsRobot);
                 /* Перерисуем */
-                elements.photo.show();
-                elements.name.show();
-                elements.score.show();
-                elements.position.show();
-                elements.photo.redraw();
-                elements.name.redraw();
-                elements.score.redraw();
-                elements.position.redraw();
+                for (var j = 0, length = elements.all.length; j < length; j++) {
+                    elements.all[j].show();
+                    elements.all[j].redraw();
+                }
             } else {
-                elements.photo.hide();
-                elements.name.hide();
-                elements.score.hide();
-                elements.position.hide();
+                for (var j = 0, length = elements.all.length; j < length; j++) {
+                    elements.all[j].hide();
+                }
             }
         }
     };
@@ -167,8 +212,11 @@ ElementRatingList = function () {
      */
     this.update = function (users) {
         for (var i in users) {
-            users[i].score = typeof users[i].score == 'number' ? users[i].score.toString() : '-';
             users[i].position = typeof users[i].position == 'number' ? users[i].position.toString() : '-';
+            users[i].score15x15vsPerson = typeof users[i].score15x15vsPerson == 'number' ? users[i].score15x15vsPerson.toString() : '-';
+            users[i].score3x3vsPerson = typeof users[i].score3x3vsPerson == 'number' ? users[i].score3x3vsPerson.toString() : '-';
+            users[i].score15x15vsRobot = typeof users[i].score15x15vsRobot == 'number' ? users[i].score15x15vsRobot.toString() : '-';
+            users[i].score3x3vsRobot = typeof users[i].score3x3vsRobot == 'number' ? users[i].score3x3vsRobot.toString() : '-';
         }
         rowsData = users;
         /* Отсортируем по позициям. */

@@ -9,7 +9,10 @@ DataUser = function () {
         socNetTypeId: null,
         createTimestamp: null,
         lastLoginTimestamp: null,
-        score: null
+        score15x15vsPerson: null,
+        score3x3vsPerson: null,
+        score15x15vsRobot: null,
+        score3x3vsRobot: null
     };
 
     var fromDBToData = function (data) {
@@ -66,7 +69,10 @@ DataUser = function () {
             socNetUserId: socNetUserId,
             createTimestamp: new Date().getTime(),
             lastLoginTimestamp: new Date().getTime(),
-            score: 0
+            score15x15vsPerson: 0,
+            score3x3vsPerson: 0,
+            score15x15vsRobot: 0,
+            score3x3vsRobot: 0
         }, function (result) {
             var user = {
                 id: parseInt(result.insertId),
@@ -74,9 +80,12 @@ DataUser = function () {
                 lastName: '',
                 socNetTypeId: parseInt(socNetTypeId),
                 socNetUserId: parseInt(socNetUserId),
-                createTimestamp: 1,
-                lastLoginTimestamp: 1,
-                score: 0
+                createTimestamp: new Date().getTime(),
+                lastLoginTimestamp: new Date().getTime(),
+                score15x15vsPerson: 0,
+                score3x3vsPerson: 0,
+                score15x15vsRobot: 0,
+                score3x3vsRobot: 0
             };
             callback(user);
             delete waitForCreateByScoNet[socNetUserId];
@@ -109,7 +118,10 @@ DataUser = function () {
             socNetUserId: user.socNetUserId,
             createTimestamp: user.createTimestamp,
             lastLoginTimestamp: user.lastLoginTimestamp,
-            score: user.score,
+            score15x15vsPerson: user.score15x15vsPerson,
+            score3x3vsPerson: user.score3x3vsPerson,
+            score15x15vsRobot: user.score15x15vsRobot,
+            score3x3vsRobot: user.score3x3vsRobot,
             sex: user.sex,
             photo50: user.photo50
         };

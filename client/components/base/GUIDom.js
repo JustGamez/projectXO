@@ -29,6 +29,7 @@
  * @property transform {String}
  * @property title {String}
  * @property isItsepia {Bool}
+ * @property alignText {String}
  */
 GUIDom = function () {
     var self = this;
@@ -363,6 +364,11 @@ GUIDom = function () {
          */
         dom.className += 'sepia';
     };
+
+    var redrawAlignText = function () {
+        dom.style.textAlign = self.alignText;
+    };
+
     /**
      * Имена свойств и их методы обработки.
      * @type {{x: Function, y: Function, width: Function, height: Function, backgroundImage: *, innerHTML: Function, pointer: Function, opacity: Function, fontWeight: *, fontSize: *, fontFamily: Function, color: Function, textShadow: Function, borderRadius: Function, border: Function, borderTop: Function, borderRight: Function, borderBottom: Function, borderLeft: Function, padding: Function, boxShadow: Function, lineHeight: Function, background: Function, transform: Function, title: *}}
@@ -394,10 +400,10 @@ GUIDom = function () {
         background: redrawBackground,
         transform: redrawTransform,
         title: redrawTitle,
-        isItsepia: redrawIsItSepia
+        isItsepia: redrawIsItSepia,
+        alignText: redrawAlignText
     };
-}
-;
+};
 
 /**
  * Этот код определит нужно ли делать картинки невидимыми.

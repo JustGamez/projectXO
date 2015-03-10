@@ -4,7 +4,7 @@
  */
 Config = {
     Logs: {
-        triggerLevel: 1 // detail
+        triggerLevel: 1 // detail, see Logs.LEVEL_*
     },
     DB: {
         host: 'localhost',
@@ -18,7 +18,7 @@ Config = {
         appId: 4467180
     },
     Chat: {
-        /**v
+        /**
          * Размер кэша, после заполнения, будет сливаться в БД.
          */
         cacheSize: 1000,
@@ -45,7 +45,7 @@ Config = {
         lifeTime: 1000 * 60 * 30
     },
     WebSocketServer: {
-        reloadClientCodeEveryRequest: false,
+        reloadClientCodeEveryRequest: true,
         compressJSClientCode: false,
         port: 3000,
         portSSL: 443,

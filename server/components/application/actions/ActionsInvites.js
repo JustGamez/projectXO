@@ -44,12 +44,16 @@ ActionsInvites = function () {
             return;
         }
         if (!game.isInvitation) {
-            Logs.log("ActionsInvites.doMove. User cannot do move, because is not invitation.", Logs.LEVEL_WARNING, {game: game, userId: userId});
+            Logs.log("ActionsInvites.doMove. User cannot do move, because is not invitation.", Logs.LEVEL_WARNING, {
+                game: game,
+                userId: userId
+            });
             return;
         }
         oldStatus = game.status;
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
+        game.lastMove = {x: x, y: y};
         if (checkWinner) {
             winLine = LogicXO.findWinLine(game);
             game = LogicXO.setOutcomeResults(game, winLine);

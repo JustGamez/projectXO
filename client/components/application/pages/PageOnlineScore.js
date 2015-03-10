@@ -27,7 +27,7 @@ PageOnlineScore = function PageOnlineScore() {
      * Элемент-текст отображает количество очков игрока.
      * @type {ElementGraphicText}
      */
-    this.elementScoreIndicator = null;
+    this.elementPositionIndicator = null;
 
     this.init = function () {
         var element;
@@ -41,15 +41,15 @@ PageOnlineScore = function PageOnlineScore() {
         });
         self.elements.push(element);
         self.elementOnlineIndicator = element;
-        /* score indicator */
+        /* rating position */
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
             y: 455,
             width: 140,
-            text: 'очки: -'
+            text: 'рейтинг: -'
         });
         self.elements.push(element);
-        self.elementScoreIndicator = element;
+        self.elementPositionIndicator = element;
     };
 
     /**
@@ -80,12 +80,12 @@ PageOnlineScore = function PageOnlineScore() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var onlineCount, score;
+        var onlineCount, position;
         /* Возможны какие то обновления, до отрисовки. */
         onlineCount = LogicUser.getOnlineCount();
-        score = LogicUser.getCurrentUser().score;
+        position = LogicUser.getCurrentUser().position;
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
-        self.elementScoreIndicator.setText('очки: ' + (typeof score == 'number' ? score : '-'));
+        self.elementPositionIndicator.setText('рейтинг: ' + (typeof position == 'number' ? position : '-'));
     };
 
     /**

@@ -38,15 +38,28 @@ ElementGraphicText = function () {
 
     /**
      * Высота текста.
+     * По умолчанию 28. Это высота буквы.
      * @type {number}
      */
-    this.height = undefined;
+    this.height = 28;
 
     /**
      * Текст.
      * @type {string}
      */
     this.text = '';
+
+    /**
+     * Прозрачность текста.
+     * @type {number}
+     */
+    this.opacity = undefined;
+
+    /**
+     * Выравнивать по правой стороне.
+     * @type {boolean}
+     */
+    this.alignCenter = false;
 
     /**
      * Дом для текста.
@@ -63,6 +76,9 @@ ElementGraphicText = function () {
         dom.y = this.y;
         dom.width = this.width;
         dom.height = this.height;
+        if (self.alignCenter) {
+            dom.alignText = 'center';
+        }
         /* Но, это только для текста без картинки, т.к. у нас не все символы есть. Пока что. */
         dom.color = "rgba(68,62,0,0.7)";
         dom.fontSize = 21;
@@ -127,6 +143,7 @@ ElementGraphicText = function () {
             }
         }
         dom.innerHTML = textHTML;
+        dom.opacity = self.opacity;
         dom.redraw();
     };
 };

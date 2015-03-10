@@ -13,7 +13,10 @@ DataRating = function () {
      */
     var fields = {
         userId: 5,
-        score: null,
+        score15x15vsPerson: null,
+        score3x3vsPerson: null,
+        score15x15vsRobot: null,
+        score3x3vsRobot: null,
         position: null,
         updated: null
     };
@@ -29,11 +32,14 @@ DataRating = function () {
             updated = new Date().getTime();
             DB.insert(tableName, {
                 userId: userId,
-                score: 0,
+                score15x15vsPerson: 0,
+                score3x3vsPerson: 0,
+                score15x15vsRobot: 0,
+                score3x3vsRobot: 0,
                 position: lastPosition + 1,
                 updated: updated
             }, function () {
-                Logs.log("DataRating.addPosition. new position added.userId" + userId + ", score:0, position:" + lastPosition + ", updated:" + updated);
+                Logs.log("DataRating.addPosition. new position added.userId" + userId + ", score{*}:0, position:" + lastPosition + ", updated:" + updated);
             });
         });
     };

@@ -98,6 +98,7 @@ PageXOGame = function PageXOGame() {
             x: 578,
             y: 258,
             width: 157,
+            height: undefined,
             text: ''
         });
         self.elements.push(element);
