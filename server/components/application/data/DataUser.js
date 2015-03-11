@@ -129,6 +129,19 @@ DataUser = function () {
             callback(user);
         });
     };
+
+    /**
+     * Обновить данные о последнем выходе игрока.
+     * @param userId {int} внутрений id пользователя.
+     */
+    this.updateLastLogout = function (userId) {
+        if (!userId) {
+            Logs.log("DataUser.udpateLastLogout. Must be userId", Logs.LEVEL_WARNING, userId);
+            return;
+        }
+        DB.query("UPDATE users SET lastLogoutTimestamp = " + (new Date().getTime()) + " WHERE id = " + userId, function () {
+        });
+    };
 };
 
 /**

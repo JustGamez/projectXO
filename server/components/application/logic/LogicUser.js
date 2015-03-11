@@ -20,8 +20,7 @@ LogicUser = function () {
     this.SEX_MAN = 3;
 
     this.init = function (afterInitCallback) {
-        apiRouter.addOnDisconnectCallback(onDisconnect);
-        apiRouter.addOnFailedSendCallback(onFailedSend);
+        apiRouter.addOnDisconnectCallback(onDisconnectOrFailedSend);
         Logs.log("LogicUser inited.", Logs.LEVEL_NOTIFY);
         afterInitCallback();
     };
@@ -83,8 +82,8 @@ LogicUser = function () {
         /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
-        Profiler.stop(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         CAPIUser.authorizeSuccess(user.id, user.id);
+        Profiler.stop(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
         Statistic.add(user.id, Statistic.ID_USER_AUTHORIZATION_BY_VK);
     };
 
@@ -334,27 +333,17 @@ LogicUser = function () {
             });
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
+        DataUser.updateLastLogout(userId);
         Statistic.add(userId, Statistic.ID_USER_LOGOUT);
     };
 
     /**
      * это каллбек для определения что соедиение разорвано.
-     * @param cntx
-     */
-    var onDisconnect = function (cntx) {
-        if (cntx.userId) {
-            onLogout(cntx.userId);
-            userDeleteConn(cntx);
-            sendOnlineCountToAll(cntx.userId, false);
-        }
-    };
-
-    /**
-     * это калбек, на случай если мы пытаемся отправить данные отконектившемуся клиенту,
+     * и на случай если мы пытаемся отправить данные отконектившемуся клиенту,
      * мы попробуем удалить соединение из контекста пользователя.
      * @param cntx
      */
-    var onFailedSend = function (cntx) {
+    var onDisconnectOrFailedSend = function (cntx) {
         if (cntx && cntx.userId) {
             onLogout(cntx.userId);
             userDeleteConn(cntx);
