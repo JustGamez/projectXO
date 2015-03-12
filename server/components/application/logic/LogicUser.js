@@ -386,7 +386,7 @@ LogicUser = function () {
                 Logs.log("LogicUser.onWin. User not found: id=" + userId, Logs.LEVEL_WARNING);
             }
         });
-    }
+    };
 };
 
 /**

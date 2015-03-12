@@ -169,12 +169,18 @@ GUI = function () {
     /**
      * Создаёт дом, инициализирует его и возвращает на него ссылку.
      * @param parent {GUIDom} родитель, в который будет добавлен дом.
+     * @param params {Object} параметры присваиваемые дому, нпример: {x: 123, y: 345}.
      * @returns {GUIDom}
      */
-    this.createDom = function (parent) {
+    this.createDom = function (parent, params) {
         var dom;
         dom = new GUIDom(parent);
         dom.init(undefined, parent);
+        if (params) {
+            for (var name in params) {
+                dom[name] = params[name];
+            }
+        }
         return dom;
     };
 
@@ -208,11 +214,11 @@ GUI = function () {
      * @returns {*}
      */
     this.getImageURL = function (url) {
-        if (!window.images[url]) {
+        if (!window.imagesData[url]) {
             Logs.log("Image url not found for: " + url, Logs.LEVEL_ERROR);
             return '/images/notFound.png';
         }
-        return window.images[url];
+        return window.imagesData[url].path;
     };
 };
 

@@ -71,7 +71,8 @@ ElementFriendsType = function () {
         for (var i = 0; i < self.columns; i++) {
             photo = GUI.createElement('ElementPhoto', {
                 x: self.x + i * self.spacing,
-                y: self.y
+                y: self.y,
+                showCardInfo: true
             });
             photos[i] = photo;
         }
@@ -142,5 +143,5 @@ ElementFriendsType = function () {
     this.update = function (givenFriends) {
         self.friends = givenFriends;
         self.redraw();
-    }
+    };
 };

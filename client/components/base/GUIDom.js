@@ -30,9 +30,13 @@
  * @property title {String}
  * @property isItsepia {Bool}
  * @property alignText {String}
+ * @property zIndex {Int}
+ * @property fontWeight {String}
  */
 GUIDom = function () {
     var self = this;
+
+    this.__id = ++GUIDom.lastId;
 
     /**
      * Старые свойства.
@@ -267,6 +271,13 @@ GUIDom = function () {
     };
     var redrawBackgroundImage = function () {
         var url;
+        /* Если размер не задан, пробуем задать его автоматически. */
+        if (!self.width && !self.height && window.imagesData[self.backgroundImage]) {
+            self.width = window.imagesData[self.backgroundImage].w;
+            self.height = window.imagesData[self.backgroundImage].h;
+            props.height.call();
+            props.width.call();
+        }
         /* абсолютный url, используем без изменений */
         if (self.backgroundImage.indexOf('https://') != 0 && self.backgroundImage.indexOf('http://') != 0) {
             url = GUI.getImageURL(self.backgroundImage);
@@ -364,9 +375,11 @@ GUIDom = function () {
          */
         dom.className += 'sepia';
     };
-
     var redrawAlignText = function () {
         dom.style.textAlign = self.alignText;
+    };
+    var redrawZIndex = function () {
+        dom.style.zIndex = self.zIndex;
     };
 
     /**
@@ -401,7 +414,8 @@ GUIDom = function () {
         transform: redrawTransform,
         title: redrawTitle,
         isItsepia: redrawIsItSepia,
-        alignText: redrawAlignText
+        alignText: redrawAlignText,
+        zIndex: redrawZIndex
     };
 };
 
@@ -433,3 +447,9 @@ GUIDom = function () {
         GUIDom.pictureOpacities = urlParams.picture_opacities;
     }
 })();
+
+/**
+ * Уникальнгый id для каждогого дома, иногда нужна уникальность дома, для таймаутов например.
+ * @type {number}
+ */
+GUIDom.lastId = 0;

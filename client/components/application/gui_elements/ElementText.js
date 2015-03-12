@@ -60,6 +60,24 @@ ElementText = function () {
     this.pointer = GUI.POINTER_ARROW;
 
     /**
+     * Размер шрифта, по умолчанию 21.
+     * @type {number}
+     */
+    this.fontSize = 21;
+
+    /**
+     * Жирный ли шрифт?
+     * @type {boolean}
+     */
+    this.bold = false;
+
+    /**
+     * Выравнивать по правой стороне.
+     * @type {boolean}
+     */
+    this.alignCenter = false;
+
+    /**
      * Создадим дом и настроем его.
      */
     this.init = function () {
@@ -69,7 +87,7 @@ ElementText = function () {
         dom.width = this.width;
         dom.height = this.height;
         dom.color = "rgba(68,62,0,0.7)";
-        dom.fontSize = 21;
+        dom.fontSize = self.fontSize;
         GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onMouseClick, self);
     };
 
@@ -106,6 +124,11 @@ ElementText = function () {
     this.redraw = function () {
         if (!showed) return;
         refreshText();
+        dom.fontSize = self.fontSize;
+        if (self.bold) dom.fontWeight = 'bold';
+        if (self.alignCenter) {
+            dom.alignText = 'center';
+        }
     };
 
     var refreshText = function () {

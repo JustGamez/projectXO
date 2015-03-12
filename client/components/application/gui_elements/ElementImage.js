@@ -53,6 +53,8 @@ ElementImage = function () {
      */
     var dom = null;
 
+    this.title = undefined;
+
     /**
      * Создадим дом и настроем его.
      */
@@ -93,5 +95,6 @@ ElementImage = function () {
         if (self.opacity != null) {
             dom.opacity = self.opacity;
         }
+        dom.title = self.title;
     };
 };

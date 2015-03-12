@@ -24,13 +24,10 @@ PageRating = function PageRating() {
     var elementRatingList = null;
 
     var offsetPhoto = 0;
-    var offsetName = 80;
-    var offsetPosition = 350;
-    var offsetScore15x15vsPerson = 420;
-    var offsetScore3x3vsPerson = 470;
-    var offsetScore15x15vsRobot = 520;
-    var offsetScore3x3vsRobot = 570;
-    var widthName = 270;
+    var offsetName = 112;
+    var offsetPosition = 440;
+    var offsetScore15x15vsPerson = 530;
+    var widthName = 350;
 
     this.init = function () {
         var element;
@@ -46,9 +43,6 @@ PageRating = function PageRating() {
             offsetName: offsetName,
             offsetPosition: offsetPosition,
             offsetScore15x15vsPerson: offsetScore15x15vsPerson,
-            offsetScore3x3vsPerson: offsetScore3x3vsPerson,
-            offsetScore15x15vsRobot: offsetScore15x15vsRobot,
-            offsetScore3x3vsRobot: offsetScore3x3vsRobot,
             widthName: widthName
         });
         self.elements.push(element);
@@ -99,34 +93,8 @@ PageRating = function PageRating() {
             y: 142,
             width: 40,
             height: 28,
-            src: '/images/rating/headerScore15x15vsPerson.png'
-        });
-        self.elements.push(element);
-        /* Очки 3х3 с персонажом */
-        element = GUI.createElement('ElementImage', {
-            x: ratingListX + offsetScore3x3vsPerson,
-            y: 142,
-            width: 40,
-            height: 28,
-            src: '/images/rating/headerScore3x3vsPerson.png'
-        });
-        self.elements.push(element);
-        /* Очки 15х15 с роботом */
-        element = GUI.createElement('ElementImage', {
-            x: ratingListX + offsetScore15x15vsRobot,
-            y: 142,
-            width: 40,
-            height: 28,
-            src: '/images/rating/headerScore15x15vsRobot.png'
-        });
-        self.elements.push(element);
-        /* Очки 3х3 с роботом */
-        element = GUI.createElement('ElementImage', {
-            x: ratingListX + offsetScore3x3vsRobot,
-            y: 142,
-            width: 40,
-            height: 28,
-            src: '/images/rating/headerScore15x15vsRobot.png'
+            src: '/images/rating/headerScore15x15vsPerson.png',
+            title: 'Побед 15х15 с человеком.'
         });
         self.elements.push(element);
     };
@@ -174,13 +142,14 @@ PageRating = function PageRating() {
                     enableButtonInvite: false,
                     showButtonLetsPlay: false,
                     showIndicatorWaiting: false,
-                    showOnlineIndicator: false,
                     onClick: function (photoInfo) {
                         window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
                     },
                     onButtonInviteClick: null,
                     onButtonLetsPlayClick: null,
-                    photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
+                    photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId},
+                    userId: user.id,
+                    user: user
                 },
                 name: user.firstName + " " + user.lastName,
                 score15x15vsPerson: user.score15x15vsPerson,

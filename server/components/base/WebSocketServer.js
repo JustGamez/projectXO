@@ -8,6 +8,7 @@ var FS = require('fs');
 var PATH = require('path');
 var UGLIFYJS = require('uglify-js');
 var OS = require('os');
+var IMAGE_SIZE = require('image-size');
 
 /**
  * Компонент обслуживающий соединения на сервере.
@@ -61,12 +62,6 @@ WebSocketServer = function () {
      * @type {string}
      */
     var robotCodePath = '../robotKrispi/';
-
-    /**
-     * Кэш картинок.
-     * @type {{}}
-     */
-    var imagesCache = {};
 
     /**
      * Проверка перед запуском:
@@ -297,17 +292,18 @@ WebSocketServer = function () {
      * Вернем клинетские картинки.
      */
     var getClientImageCode = function () {
-        var imageFiles, imageCode, path, timePostfix;
+        var imageFiles, imageCode, path, timePostfix, demension;
         imageFiles = getFileListRecursive(imagesPath);
         imageCode = "<script>";
-        imageCode += "images = {};";
+        imageCode += "imagesData = {};";
         timePostfix = "?t=" + new Date().getTime();
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
-            imageCode += "\r\nimages['" + path + "']='" + path + timePostfix + "';";
+            demension = IMAGE_SIZE(imageFiles[i]);
+            imageCode += "\r\nimagesData['" + path + "']={path:'" + path + timePostfix + "' , w:" + demension.width + ", h:" + demension.height + "};";
         }
         imageCode += "</script>";
-        // добавим img тэги для предзагрузки.
+        /* добавим img тэги для предзагрузки. */
         imageCode += "<div style='display:none;'>";
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);

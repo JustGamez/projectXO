@@ -50,11 +50,7 @@ ElementPhoto = function () {
      */
     var onClick = null;
 
-    /**
-     * Состояние индикатора онлайн.
-     * @type {boolean}
-     */
-    var online = false;
+    this.showCardInfo = false;
 
     /**
      * Дом фотографии.
@@ -79,12 +75,6 @@ ElementPhoto = function () {
      * @type {GUIDom}
      */
     var domRegion = null;
-
-    /**
-     * Дом онлайн индикатора.
-     * @type {GUIDom}
-     */
-    var domOnlineIndicator = null;
 
     /**
      * Ширина бордюра рамки.
@@ -202,12 +192,6 @@ ElementPhoto = function () {
     var showIndicatorWaiting = false;
 
     /**
-     * Показывать ли онлайн индикатор.
-     * @type {boolean}
-     */
-    var showOnlineIndicator = false;
-
-    /**
      * Текст: "занят".
      * @type {GUIDom}
      */
@@ -229,6 +213,18 @@ ElementPhoto = function () {
     this.pointer = GUI.POINTER_HAND;
 
     /**
+     * Элемент: кард-инфо.
+     * @type {null}
+     */
+    var elementCardInfo = null;
+
+    /**
+     * внутрений id-игрока, нужно для: кард-инфо, ...
+     * @type {null}
+     */
+    var userId = null;
+
+    /**
      * Создадим домы и настроем их.
      */
     this.init = function () {
@@ -238,8 +234,6 @@ ElementPhoto = function () {
         domRegion.y = self.y;
         domRegion.width = regionWidth;
         domRegion.height = regionHeight;
-        domRegion.pointer = self.pointer;
-        GUI.bind(domRegion, GUI.EVENT_MOUSE_CLICK, onClickMediator, this);
         /* Бордюр рамки фотографии */
         domBorder = GUI.createDom(domRegion);
         domBorder.x = 8;
@@ -247,6 +241,7 @@ ElementPhoto = function () {
         domBorder.border = borderWidth + 'px solid #ebb';
         domBorder.width = self.frameWidth * 2 + self.photoWidth;
         domBorder.height = self.frameWidth * 2 + self.photoHeight;
+        domBorder.pointer = self.pointer;
         /* Рамка фотографии */
         domFrame = GUI.createDom(domBorder);
         domFrame.border = self.frameWidth + 'px solid #eee';
@@ -262,12 +257,6 @@ ElementPhoto = function () {
         domPhoto.width = self.photoWidth;
         domPhoto.backgroundSize = self.photoWidth;
         domPhoto.isItsepia = true;
-        /* Индикатор онлайн пользователя */
-        domOnlineIndicator = GUI.createDom(domRegion);
-        domOnlineIndicator.x = 12;
-        domOnlineIndicator.y = 77;
-        domOnlineIndicator.width = 15;
-        domOnlineIndicator.height = 14;
         /* Кнопка приглашения в игру */
         buttonInvite = GUI.createElement("ElementButton", {
             x: 0,
@@ -320,6 +309,14 @@ ElementPhoto = function () {
         elementBusyText.height = 14;
         elementBusyText.backgroundImage = '/images/photo/textBusy.png';
         elementBusyText.opacity = 0.37;
+        /* Кард-инфо. */
+        elementCardInfo = GUI.createElement("ElementCardInfo", {
+            x: self.x - 21,
+            y: self.y - 85
+        });
+        GUI.bind(domPhoto, GUI.EVENT_MOUSE_CLICK, onClickMediator, this);
+        GUI.bind(domPhoto, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
+        GUI.bind(domPhoto, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
     };
 
     /**
@@ -332,7 +329,6 @@ ElementPhoto = function () {
         domBorder.show();
         domFrame.show();
         domPhoto.show();
-        domOnlineIndicator.show();
         self.redraw();
         /**
          *  Элементы:
@@ -351,10 +347,10 @@ ElementPhoto = function () {
         domBorder.hide();
         domFrame.hide();
         domPhoto.hide();
-        domOnlineIndicator.hide();
         domIndicatorWaiting.hide();
         buttonInvite.hide();
         buttonLetsPlay.hide();
+        elementCardInfo.hide();
     };
 
     /**
@@ -363,7 +359,7 @@ ElementPhoto = function () {
     this.redraw = function () {
         if (!showed) return;
         degress = getRealRandom(self.src);
-        domRegion.title = title;
+        domBorder.title = title;
         /* Если, нет фотографии, то отображаем заглушку */
         if (self.src == null || self.src == undefined || self.src == '') {
             self.src = srcDummy;
@@ -374,19 +370,7 @@ ElementPhoto = function () {
         domPhoto.redraw();
         domBorder.redraw();
         domFrame.redraw();
-        if (showOnlineIndicator) {
-            if (online) {
-                domOnlineIndicator.backgroundImage = '/images/photo/iconOnline.png';
-                domOnlineIndicator.title = 'онлайн';
-            } else {
-                domOnlineIndicator.backgroundImage = '/images/photo/iconOffline.png';
-                domOnlineIndicator.title = 'оффлайн';
-            }
-            domOnlineIndicator.show();
-            domOnlineIndicator.redraw();
-        } else {
-            domOnlineIndicator.hide();
-        }
+        elementCardInfo.redraw();
         if (showIndicatorWaiting) {
             domIndicatorWaiting.show();
             domIndicatorWaiting.redraw();
@@ -423,7 +407,6 @@ ElementPhoto = function () {
      * @param params { {
      *       src: string,
      *       title: string,
-     *       online: boolean,
      *       photoInfo: object,
      *       showButtonInvite: boolean,
      *       showButtonLetsPlay: boolean,
@@ -432,18 +415,16 @@ ElementPhoto = function () {
      *       onButtonInviteClick: Function,
      *       onButtonLetsPlayClick: Function,
      *       enableButtonInvite: boolean,
-     *       showOnlineIndicator: boolean
      *   }}
      */
     this.update = function (params) {
+        userId = params.userId;
         self.src = params.src;
         title = params.title;
-        online = params.online;
         photoInfo = params.photoInfo;
         showButtonInvite = params.showButtonInvite;
         showButtonLetsPlay = params.showButtonLetsPlay;
         showIndicatorWaiting = params.showIndicatorWaiting;
-        showOnlineIndicator = params.showOnlineIndicator;
         onClick = params.onClick;
         onButtonInviteClick = params.onButtonInviteClick;
         onButtonLetsPlayClick = params.onButtonLetsPlayClick;
@@ -482,5 +463,26 @@ ElementPhoto = function () {
         if (onClick) {
             onClick.call(null, photoInfo);
         }
-    }
+    };
+
+    /**
+     * При наведении мыши, покажем кард инфо.
+     */
+    var onMouseOver = function () {
+        if (!self.showCardInfo) {
+            return false;
+        }
+        elementCardInfo.updateUserId(userId);
+        elementCardInfo.show();
+    };
+
+    /**
+     * При уходе фокуса мыши, прячем кард инфо.
+     */
+    var onMouseOut = function () {
+        if (!self.showCardInfo) {
+            return false;
+        }
+        elementCardInfo.hideStart();
+    };
 };

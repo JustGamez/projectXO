@@ -37,7 +37,20 @@ CAPIUser = function () {
      */
     this.updateOnlineCount = function (cntx, count, userId, direction) {
         LogicUser.updateOnlineCount(count, userId, direction);
-    }
+    };
+
+    /**
+     * @param cntx {Object} контекст соединения.
+     * @param userId {Int} внутрений id итрока.
+     * @param position {Int} позиция в рейтинге.
+     */
+    this.updateRatingPosition = function (cntx, userId, position) {
+        LogicUser.updateRatingPosition(userId, position);
+    };
+
+    this.ratingChanged = function (cntx) {
+        LogicUser.flushRatingPositionmCache();
+    };
 };
 
 /**

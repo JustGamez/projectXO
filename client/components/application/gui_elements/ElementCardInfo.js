@@ -1,126 +1,254 @@
 /**
- * Элемент Кард-инфо.
+ * Р­Р»РµРјРµРЅС‚ РљР°СЂРґ-РёРЅС„Рѕ.
  * @constructor
  */
 ElementCardInfo = function () {
     var self = this;
 
     /**
-     * Показывать ли элемент.
+     * Р—Р°РїРѕРјРёРЅР°РµРј РІРµ РєР°СЂРґ-РёРЅС„Рѕ, РЅР°Рј РЅР°РґРѕ Р±СѓРґРµС‚ РёС… РїСЂСЏС‚Р°С‚СЊ РІСЃРµ СЃСЂР°Р·Сѓ, РєСЂРѕРјРµ Р°РєС‚РёРІРЅРѕРіРѕ.
+     * Р”СЂСѓРіРёРјРё СЃР»РѕРІР°РјРё: РѕРґРЅРѕРІСЂРµРЅРјРµРЅРЅРѕ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕРґРёРЅ РєР°СЂРґ-РёРЅС„Рѕ.
+     */
+    ElementCardInfo.all.push(self);
+
+    /**
+     * РџРѕРєР°Р·С‹РІР°С‚СЊ Р»Рё СЌР»РµРјРµРЅС‚.
      * @type {boolean}
      */
     var showed = false;
 
     /**
-     * Координата X.
+     * РљРѕРѕСЂРґРёРЅР°С‚Р° X.
      * @type {number}
      */
     this.x = 0;
 
     /**
-     * Координата Y.
+     * РљРѕРѕСЂРґРёРЅР°С‚Р° Y.
      * @type {number}
      */
     this.y = 0;
 
     /**
-     * Ширина.
+     * РЁРёСЂРёРЅР°.
      * @type {number}
      */
     this.width = 0;
 
     /**
-     * Высота.
+     * Р’С‹СЃРѕС‚Р°.
      * @type {number}
      */
     this.height = 0;
 
     /**
-     * Основной фрейм карты.
+     * РћСЃРЅРѕРІРЅРѕР№ С„СЂРµР№Рј РєР°СЂС‚С‹.
      * @type {GUIDom}
      */
     var domFrame = null;
 
     /**
-     * Позиция в рейтинге.
+     * Р”РѕРј РѕРЅР»Р°Р№РЅ\РѕС„С„Р»Р°Р№РЅ.
+     * @type {GUIDom}
+     */
+    var domOnline = null;
+
+    /**
+     * РџРѕР·РёС†РёСЏ РІ СЂРµР№С‚РёРЅРіРµ.
      * @type {GUIDom}
      */
     var domPosition = null;
 
     /**
-     * Очки 15х15 с игроком.
+     * РћС‡РєРё 15С…15 СЃ РёРіСЂРѕРєРѕРј.
      * @type {GUIDom}
      */
     var dom15x15vsPerson = null;
 
     /**
-     * Очки 3х3 с игроком.
+     * РћС‡РєРё 3С…3 СЃ РёРіСЂРѕРєРѕРј.
      * @type {GUIDom}
      */
     var dom3x3vsPerson = null;
 
     /**
-     * Очки 15х15 с роботом.
+     * РћС‡РєРё 15С…15 СЃ СЂРѕР±РѕС‚РѕРј.
      * @type {GUIDom}
      */
     var dom15x15vsRobot = null;
 
     /**
-     * Очки 3х3 с роботом.
+     * РћС‡РєРё 3С…3 СЃ СЂРѕР±РѕС‚РѕРј.
      * @type {GUIDom}
      */
     var dom3x3vsRobot = null;
 
     /**
-     * Создадим нужные нам элементы\домы.
+     * Р РµР№С‚РёРЅРі.
+     * @type {null}
+     */
+    var textRating = null;
+    var text15x15vsPerson = null;
+    var text3x3vsPerson = null;
+    var text15x15vsRobot = null;
+    var text3x3vsRobot = null;
+
+    var userId = null;
+
+    /**
+     * Р’СЃРµ СЌР»РµРјРµРЅС‚С‹ Рё РґРѕРјС‹, РґР»СЏ Р°РІС‚РѕСЃРєСЂС‹С‚РёСЏ\РїРѕРєР°Р·С‹РІР°РЅРёСЏ.
+     * @type {Array}
+     */
+    var allElements = [];
+
+    /**
+     * РЎРѕР·РґР°РґРёРј РЅСѓР¶РЅС‹Рµ РЅР°Рј СЌР»РµРјРµРЅС‚С‹\РґРѕРјС‹.
      */
     this.init = function () {
 
-        /* Задний фон */
-        domFrame = System.createDom();
-        domFrame.backgroundImage = '/images/cardInfo/frame.png';
-        /* Позиция */
-
-        domPosition = System.createdom(domFrame);
-        domPosition.backgroundImage = '/images/cardInfo/textPosition.png';
-        /* очки 15х15vsPerson */
-        dom15x15vsPerson = System.createDom(domFrame);
-        dom15x15vsPerson.backgroundImage = '/images/cardInfo/text15x15vsPerson.png';
-        /* очки 3x3vsPerson */
-        dom3x3vsPerson = System.createDom(domFrame);
-        dom3x3vsPerson.backgroundImage = '/images/cardInfo/text3x3vsPerson.png';
-        /* очки 15x15vsRobot */
-        dom15x15vsRobot = System.createDom(domFrame);
-        dom15x15vsRobot.backgroundImage = '/images/cardInfo/text15x15vsRobot.png';
-        /* очки 3x3vsRobot */
-        dom3x3vsRobot = System.createDom(domFrame);
-        dom3x3vsRobot.backgroundImage = '/images/cardInfo/text3x3vsRobot.png';
+        /* Р—Р°РґРЅРёР№ С„РѕРЅ */
+        domFrame = GUI.createDom(undefined, {
+            backgroundImage: '/images/cardInfo/frame.png',
+            x: self.x,
+            y: self.y,
+            zIndex: 100000,
+            opacity: 0.92
+        });
+        allElements.push(domFrame);
+        var startY = 5;
+        var leftOffset = 5;
+        var stepY = 18;
+        var column2Offset = 74;
+        /* РћРЅР»Р°Р№РЅ\РѕС„С„Р»Р°Р№РЅ */
+        domOnline = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/textOffline.png', x: leftOffset, y: startY + stepY * 0});
+        allElements.push(domOnline);
+        /* РџРѕР·РёС†РёСЏ */
+        domPosition = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/textPosition.png', x: leftOffset, y: startY + stepY * 1, title: 'РџРѕР·РёС†РёСЏ РІ СЂРµР№С‚РёРЅРіРµ.'});
+        allElements.push(domPosition);
+        /* РѕС‡РєРё 15С…15vsPerson */
+        dom15x15vsPerson = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image15x15vsPerson.png', x: leftOffset, y: startY + stepY * 2, title: 'РџРѕР±РµРґ 15С…15 СЃ С‡РµР»РѕРІРµРєРѕРј.'});
+        allElements.push(dom15x15vsPerson);
+        /* РѕС‡РєРё 15x15vsRobot */
+        dom15x15vsRobot = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image15x15vsRobot.png', x: leftOffset, y: startY + stepY * 3, title: 'РџРѕР±РµРґ 15С…15 СЃ СЂРѕР±РѕС‚РѕРј.'});
+        allElements.push(dom15x15vsRobot);
+        /* РѕС‡РєРё 3x3vsPerson */
+        dom3x3vsPerson = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image3x3vsPerson.png', x: leftOffset, y: startY + stepY * 4, title: 'РџРѕР±РµРґ 3С…3 СЃ С‡РµР»РѕРІРµРєРѕРј.'});
+        allElements.push(dom3x3vsPerson);
+        /* РѕС‡РєРё 3x3vsRobot */
+        dom3x3vsRobot = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image3x3vsRobot.png', x: leftOffset, y: startY + stepY * 5, title: 'РџРѕР±РµРґ 3С…3 СЃ СЂРѕР±РѕС‚РѕРј.'});
+        allElements.push(dom3x3vsRobot);
+        /* РўРµРєСЃС‚ СЂРµР№С‚РёРЅРіР°. */
+        textRating = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 1, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        allElements.push(textRating);
+        /* РўРµРєСЃС‚ 15С…15vsPerson. */
+        text15x15vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 2, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        allElements.push(text15x15vsPerson);
+        /* РўРµРєСЃС‚ 15x15vsRobot. */
+        text15x15vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 3, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        allElements.push(text15x15vsRobot);
+        /* РўРµРєСЃС‚ 3x3vsPerson. */
+        text3x3vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 4, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        allElements.push(text3x3vsPerson);
+        /* РўРµРєСЃС‚ 3x3vsRobot. */
+        text3x3vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 5, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        allElements.push(text3x3vsRobot);
+        GUI.bind(domFrame, GUI.EVENT_MOUSE_OVER, function () {
+            LogicTimers.clear("CardInfo_" + domFrame.__id);
+        }, this);
+        GUI.bind(domFrame, GUI.EVENT_MOUSE_OUT, function () {
+            self.hideStart();
+        }, this);
     };
 
     /**
-     * Покажем элемент.
+     * РџРѕРєР°Р¶РµРј СЌР»РµРјРµРЅС‚.
      */
     this.show = function () {
+        LogicTimers.clear("CardInfo_" + domFrame.__id);
         if (showed == true) return;
         showed = true;
-        /* Показать элементы\домы. */
+        // hide all other before.
+        ElementCardInfo.all.forEach(function (e) {
+            if (e === self) {
+                return;
+            }
+            e.hide();
+        });
+
+        for (var i in allElements) {
+            allElements[i].show();
+        }
+
+        /* РџРѕРєР°Р·Р°С‚СЊ СЌР»РµРјРµРЅС‚С‹\РґРѕРјС‹. */
         self.redraw();
     };
 
     /**
-     * Спрячем элемент.
+     * РЎРїСЂСЏС‡РµРј СЌР»РµРјРµРЅС‚.
      */
     this.hide = function () {
         if (showed == false) return;
         showed = false;
-        /* Спрятать элементы\домы. */
+        /* РЎРїСЂСЏС‚Р°С‚СЊ СЌР»РµРјРµРЅС‚С‹\РґРѕРјС‹. */
+        for (var i in allElements) {
+            allElements[i].hide();
+        }
     };
 
     /**
-     * Перерисуем элемент.
+     * РџРµСЂРµСЂРёСЃСѓРµРј СЌР»РµРјРµРЅС‚.
      */
     this.redraw = function () {
+        var user, rating;
         if (!showed) return;
-        /* Перерисовка элементов\домов. */
+        /* РџРµСЂРµСЂРёСЃРѕРІРєР° СЌР»РµРјРµРЅС‚РѕРІ\РґРѕРјРѕРІ. */
+        user = LogicUser.getUserById(userId);
+
+        if (user.online) {
+            domOnline.backgroundImage = '/images/cardInfo/textOnline.png';
+        } else {
+            domOnline.backgroundImage = '/images/cardInfo/textOffline.png';
+        }
+        rating = LogicUser.getRatingPosition(userId);
+        if (rating !== undefined) {
+            textRating.setText(rating.toString());
+        } else {
+            textRating.setText('-');
+        }
+        if (user.score15x15vsPerson !== undefined) {
+            text15x15vsPerson.setText(user.score15x15vsPerson.toString());
+        } else {
+            text15x15vsPerson.setText('-');
+        }
+        if (user.score15x15vsRobot !== undefined) {
+            text15x15vsRobot.setText(user.score15x15vsRobot.toString());
+        } else {
+            text15x15vsRobot.setText('-')
+        }
+        if (user.score3x3vsPerson !== undefined) {
+            text3x3vsPerson.setText(user.score3x3vsPerson.toString());
+        } else {
+            text3x3vsPerson.setText('-');
+        }
+        if (user.score3x3vsRobot !== undefined) {
+            text3x3vsRobot.setText(user.score3x3vsRobot.toString());
+        } else {
+            text3x3vsRobot.setText('-');
+        }
+        for (var i in allElements) {
+            allElements[i].redraw();
+        }
     };
+
+    this.updateUserId = function (newUserId) {
+        userId = newUserId;
+    };
+
+    this.hideStart = function () {
+        LogicTimers.start("CardInfo_" + domFrame.__id, 1000, function () {
+            self.hide();
+        });
+    }
 };
+
+ElementCardInfo.all = [];

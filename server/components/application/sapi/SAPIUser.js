@@ -82,6 +82,29 @@ SAPIUser = function () {
             CAPIUser.updateOnlineCount(cntx.userId, LogicUser.getOnlineCount(), parseInt(userIds[i]), true);
         }
     };
+
+    /**
+     * Отсылает рейтинговую позитцитю запрашиваемого игрока.
+     * @param cntx {Object}
+     * @param userId {Int}
+     */
+    this.sendMeRatingPosition = function (cntx, userId) {
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIUser.sendMeRatingPosition: must be authorized", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!userId || typeof userId != 'number') {
+            Logs.log("SAPIUser.sendMeRatingPosition: userId must be", Logs.LEVEL_WARNING, userId);
+            return;
+        }
+        DB.query("SELECT * FROM rating WHERE userId = " + userId, function (rows) {
+            if (!rows || !rows[0]) {
+                Logs.log("no ratinmg for user:" + userId, Logs.LEVEL_WARNING);
+                return;
+            }
+            CAPIUser.updateRatingPosition(cntx.userId, userId, rows[0].position);
+        });
+    };
 };
 /**
  * Статичный класс.

@@ -1,3 +1,4 @@
 npm install mysql
 npm install MD5
 npm install websocket
+npm install image-size

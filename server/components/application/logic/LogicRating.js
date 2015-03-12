@@ -82,11 +82,12 @@ LogicRating = function () {
                 step_4(target, nearest);
             });
         };
-        /* Update score for target user. */
-        /* Update position for target user. */
+        /* Update score and position for target user. */
         var step_4 = function (target, nearest) {
             DB.query("UPDATE rating SET score = " + (target.score + 1) + ", position = " + nearest.position + " WHERE userId = " + userId, function () {
                 onFinishCallback();
+                /* Теперь соощим всем клиентам, что рейтинг обновитлся и те сбросят кэш позиций. */
+                LogicUser.sendToAll(CAPIUser.ratingChanged);
             });
         };
         /* Begin process here. */

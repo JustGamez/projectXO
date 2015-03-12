@@ -162,6 +162,26 @@ LogicUser = function () {
         }
         return out;
     };
+
+    var ratingPositions = [];
+
+    this.getRatingPosition = function (userId) {
+        if (ratingPositions[userId]) {
+            return ratingPositions[userId];
+        } else {
+            SAPIUser.sendMeRatingPosition(userId);
+        }
+    };
+
+    this.updateRatingPosition = function (userId, position) {
+        ratingPositions[userId] = position;
+        pageController.redraw();
+    };
+
+    this.flushRatingPositionmCache = function () {
+        ratingPositions = [];
+        pageController.redraw();
+    };
 };
 
 /**

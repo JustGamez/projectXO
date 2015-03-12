@@ -52,8 +52,10 @@ LogicTimers = function () {
      * @param key {String} ключ таймера.
      */
     this.clear = function (key) {
-        clearTimeout(timers[key].lastTimeoutId);
-        delete timers[key];
+        if (timers[key]) {
+            clearTimeout(timers[key].lastTimeoutId);
+            delete timers[key];
+        }
     }
 };
 

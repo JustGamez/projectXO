@@ -80,10 +80,13 @@ PageOnlineScore = function PageOnlineScore() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var onlineCount, position;
+        var onlineCount, position, user;
         /* Возможны какие то обновления, до отрисовки. */
         onlineCount = LogicUser.getOnlineCount();
-        position = LogicUser.getCurrentUser().position;
+        user = LogicUser.getCurrentUser();
+        if (user && user.id) {
+            position = LogicUser.getRatingPosition(user.id);
+        }
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
         self.elementPositionIndicator.setText('рейтинг: ' + (typeof position == 'number' ? position : '-'));
     };

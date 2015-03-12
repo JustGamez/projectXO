@@ -37,7 +37,21 @@ CAPIUser = function () {
      */
     this.updateOnlineCount = function (toUserId, count, userId, direction) {
         LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateOnlineCount', [count, userId, direction]);
-    }
+    };
+
+    /**
+     * Обновить кол-во онлайн пользователей.
+     * @param toUserId {Int} кому отправляем.
+     * @param userId {Int} внутрений id итрока.
+     * @param position {Int} позиция в рейтинге.
+     */
+    this.updateRatingPosition = function (toUserId, userId, position) {
+        LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateRatingPosition', [userId, position]);
+    };
+
+    this.ratingChanged = function (toUserId) {
+        LogicUser.sendToUser(toUserId, 'CAPIUser', 'ratingChanged', []);
+    };
 };
 
 /**

@@ -32,8 +32,6 @@ PageMain = function PageMain() {
         element = GUI.createElement('ElementButton', {
             x: 259,
             y: 225,
-            width: 225,
-            height: 93,
             title: 'Играть с роботом',
             srcRest: '/images/buttons/playRest.png',
             srcHover: '/images/buttons/playHover.png',
@@ -258,7 +256,6 @@ PageMain = function PageMain() {
                     enableButtonInvite: true,
                     showButtonLetsPlay: showButtonLetsPlay,
                     showIndicatorWaiting: showIndicatorWaiting,
-                    showOnlineIndicator: false,
                     showBusyText: showBusyText,
                     showOfflineText: showOfflineText,
                     onClick: function (photoInfo) {
@@ -266,16 +263,23 @@ PageMain = function PageMain() {
                     },
                     onButtonInviteClick: LogicPageMain.onInviteClick,
                     onButtonLetsPlayClick: LogicPageMain.onLetsPlayClick,
+                    userId: user.id,
+                    user: user,
                     photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
                 });
             }
         }
-        /* Сортировка. */
-        /**
+        /** Сортировка.
          * Сортировтаь будем так:
+         * - посл раз заходил.
          * - друг;
          * - онлайн;
          */
+        usersList.sort(function (a, b) {
+            if (a.user.lastLogoutTimestamp > b.user.lastLogoutTimestamp)return -1;
+            if (a.user.lastLogoutTimestamp < b.user.lastLogoutTimestamp)return 1;
+            return 0;
+        });
         usersList.sort(function (a, b) {
             if (a.isFriend && !b.isFriend)return -1;
             if (!a.isFriend && b.isFriend)return 1;

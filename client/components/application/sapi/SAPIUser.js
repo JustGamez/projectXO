@@ -37,7 +37,11 @@ SAPIUser = function () {
      */
     this.sendMeOnlineUserIds = function () {
         apiRouter.executeRequest('SAPIUser', 'sendMeOnlineUserIds', arguments, [{connectionId: null}]);
-    }
+    };
+
+    this.sendMeRatingPosition = function(userId){
+        apiRouter.executeRequest('SAPIUser', 'sendMeRatingPosition', arguments, [{connectionId: null}]);
+    };
 };
 
 /**

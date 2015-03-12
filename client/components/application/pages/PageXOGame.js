@@ -244,7 +244,6 @@ PageXOGame = function PageXOGame() {
             showButtonInvite: false,
             showButtonLetsPlay: false,
             showIndicatorWaiting: false,
-            showOnlineIndicator: false,
             onClick: function (photoInfo) {
                 window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
             },

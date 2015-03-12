@@ -2,6 +2,7 @@ ALTER TABLE users ADD COLUMN score15x15vsPerson INT(11) UNSIGNED NOT NULL DEFAUL
 ALTER TABLE users ADD COLUMN score3x3vsPerson INT(11) UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE users ADD COLUMN score15x15vsRobot INT(11) UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE users ADD COLUMN score3x3vsRobot INT(11) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN rating INT(11) UNSIGNED NOT NULL DEFAULT 0;
 
 -- recalculate score by field type and vsRobot or not. fieldTypeId: 1== 3x3, 2 == 15x15;
 UPDATE users SET score15x15vsPerson = (SELECT COUNT(*) FROM games where winnerId = users.id and fieldTypeId = 2 AND vsRobot = 0);

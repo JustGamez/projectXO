@@ -87,7 +87,7 @@ DataGame = function () {
         DB.query("SELECT MAX(id) as maxId FROM " + tableName, function (result) {
             callback(result[0].maxId ? result[0].maxId : 0);
         });
-    }
+    };
 };
 
 /**
