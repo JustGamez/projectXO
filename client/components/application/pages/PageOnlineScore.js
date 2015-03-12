@@ -29,13 +29,19 @@ PageOnlineScore = function PageOnlineScore() {
      */
     this.elementPositionIndicator = null;
 
+    /**
+     *
+     * @type {ElementText}
+     */
+    this.elementScore15x15vsPerson = null;
+
     this.init = function () {
         var element;
         /* Тут создаются элементы страницы. */
         /* online indicator */
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
-            y: 425,
+            y: 405,
             width: 140,
             text: 'онлайн: -'
         });
@@ -44,12 +50,27 @@ PageOnlineScore = function PageOnlineScore() {
         /* rating position */
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
-            y: 455,
+            y: 435,
             width: 140,
             text: 'рейтинг: -'
         });
         self.elements.push(element);
         self.elementPositionIndicator = element;
+        element = GUI.createElement("ElementImage", {
+            x: 570 - 5,
+            y: 470,
+            src: '/images/cardInfo/image15x15vsPerson.png',
+            title: 'Побед 15х15 с человеком.'
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementText', {
+            x: 570 + 58,
+            y: 470 - 3,
+            bold: true,
+            fontSize: 19
+        });
+        self.elementScore15x15vsPerson = element;
+        self.elements.push(element);
     };
 
     /**
@@ -80,15 +101,17 @@ PageOnlineScore = function PageOnlineScore() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var onlineCount, position, user;
+        var onlineCount, position, user, score15x15vsPerson;
         /* Возможны какие то обновления, до отрисовки. */
         onlineCount = LogicUser.getOnlineCount();
         user = LogicUser.getCurrentUser();
         if (user && user.id) {
             position = LogicUser.getRatingPosition(user.id);
+            score15x15vsPerson = user.score15x15vsPerson;
         }
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
         self.elementPositionIndicator.setText('рейтинг: ' + (typeof position == 'number' ? position : '-'));
+        self.elementScore15x15vsPerson.setText(typeof score15x15vsPerson == 'number' ? score15x15vsPerson : '-');
     };
 
     /**

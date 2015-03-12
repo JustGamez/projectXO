@@ -115,6 +115,9 @@ ElementText = function () {
      * @param text {string}
      */
     this.setText = function (text) {
+        if (typeof text != 'string') {
+            text = text.toString();
+        }
         self.text = text;
     };
 
