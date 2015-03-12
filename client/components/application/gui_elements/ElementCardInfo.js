@@ -93,7 +93,7 @@ ElementCardInfo = function () {
     var text15x15vsRobot = null;
     var text3x3vsRobot = null;
 
-    var userId = null;
+    var user = null;
 
     /**
      * Все элементы и домы, для автоскрытия\показывания.
@@ -199,17 +199,15 @@ ElementCardInfo = function () {
      * Перерисуем элемент.
      */
     this.redraw = function () {
-        var user, rating;
+        var rating;
         if (!showed) return;
         /* Перерисовка элементов\домов. */
-        user = LogicUser.getUserById(userId);
-
         if (user.online) {
             domOnline.backgroundImage = '/images/cardInfo/textOnline.png';
         } else {
             domOnline.backgroundImage = '/images/cardInfo/textOffline.png';
         }
-        rating = LogicUser.getRatingPosition(userId);
+        rating = LogicUser.getRatingPosition(user.id);
         if (rating !== undefined) {
             textRating.setText(rating.toString());
         } else {
@@ -240,8 +238,8 @@ ElementCardInfo = function () {
         }
     };
 
-    this.updateUserId = function (newUserId) {
-        userId = newUserId;
+    this.updateUser = function (givenUser) {
+        user = givenUser;
     };
 
     this.hideStart = function () {

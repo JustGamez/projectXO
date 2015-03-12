@@ -251,21 +251,18 @@ PageMain = function PageMain() {
                     isFriend: LogicFriends.isFriend(currentUser.id, user.id),
                     src: user.photo50,
                     title: user.firstName + " " + user.lastName,
-                    online: user.online,
                     showButtonInvite: showButtonInvite,
                     enableButtonInvite: true,
                     showButtonLetsPlay: showButtonLetsPlay,
                     showIndicatorWaiting: showIndicatorWaiting,
                     showBusyText: showBusyText,
                     showOfflineText: showOfflineText,
-                    onClick: function (photoInfo) {
-                        window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+                    onClick: function (user) {
+                        window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
                     },
                     onButtonInviteClick: LogicPageMain.onInviteClick,
                     onButtonLetsPlayClick: LogicPageMain.onLetsPlayClick,
-                    userId: user.id,
-                    user: user,
-                    photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId}
+                    user: user
                 });
             }
         }
@@ -286,8 +283,8 @@ PageMain = function PageMain() {
             return 0;
         });
         usersList.sort(function (a, b) {
-            if (a.online && !b.online)return -1;
-            if (!a.online && b.online)return 1;
+            if (a.user.online && !b.user.online)return -1;
+            if (!a.user.online && b.user.online)return 1;
             return 0;
         });
         self.elementFriendsType.update(usersList);

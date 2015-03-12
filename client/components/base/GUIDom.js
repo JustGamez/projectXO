@@ -221,7 +221,6 @@ GUIDom = function () {
     };
 
     var animateOpacityUp = function (target, from, step) {
-        console.log(target, from, step);
         if (self.opacity < target) {
             self.opacity += step;
         } else {

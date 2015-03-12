@@ -219,38 +219,34 @@ PageXOGame = function PageXOGame() {
         }
         self.elementGameStatus.setText(text);
         /* Фото оппонента. */
-        var opponent, photoSrc, opponentTitle, opponentUserId;
-        photoSrc = '/images/photo/camera_c.gif';
-        opponentTitle = '';
+        var opponent, opponentUserId;
         if (game) {
             if (game.vsRobot) {
-                photoSrc = '/images/photo/vsRobot.png';
-                opponentTitle = 'Игра с роботом.';
+                opponent = {
+                    onlinme: null,
+                    photo50: '/images/photo/vsRobot.png',
+                    firstName: 'Игра с роботом.',
+                    lastName: ''
+                };
             } else {
                 opponentUserId = LogicXO.getOpponentUserId(game, user.id);
                 if (opponentUserId) {
                     opponent = LogicUser.getUserById(opponentUserId);
-                    if (opponent) {
-                        opponentTitle = opponent.firstName + ' ' + opponent.lastName;
-                        photoSrc = opponent.photo50;
-                    }
                 }
             }
         }
         self.elementOpponentPhoto.update({
-            src: photoSrc,
-            title: opponentTitle,
-            online: null,
+            title: opponent ? opponent.firstName + ' ' + opponent.lastName : '',
             showButtonInvite: false,
             showButtonLetsPlay: false,
             showIndicatorWaiting: false,
-            onClick: function (photoInfo) {
-                window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
+            onClick: function (user) {
+                window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
             },
             onButtonInviteClick: false,
             onButtonLetsPlayClick: false,
             enableButtonInvite: false,
-            photoInfo: opponent
+            user: opponent
         });
         /* Кнопка "Еще" */
         if (game && showAgainButtonForGame(game, user)) {

@@ -127,13 +127,6 @@ ElementPhoto = function () {
     var regionHeight = 145;
 
     /**
-     * Пользовательская информация.
-     * Будет передаваться при клике.
-     * @type {{}}
-     */
-    var photoInfo = {};
-
-    /**
      * Далее идут переменные кнопки пригласить\играём? и индикатора ждём...
      */
 
@@ -219,10 +212,10 @@ ElementPhoto = function () {
     var elementCardInfo = null;
 
     /**
-     * внутрений id-игрока, нужно для: кард-инфо, ...
-     * @type {null}
+     * юзер-дата, нужно для: кард-инфо, ...
+     * @type {Object}
      */
-    var userId = null;
+    var user = null;
 
     /**
      * Создадим домы и настроем их.
@@ -268,7 +261,7 @@ ElementPhoto = function () {
             srcActive: '/images/photo/buttonInviteActive.png',
             title: 'Пригласить в игру.',
             onClick: function (mouseEvent, dom) {
-                onButtonInviteClick.call(null, photoInfo);
+                onButtonInviteClick.call(null, user);
             }
         }, domRegion);
         /* Кнопка "Играём?" */
@@ -282,7 +275,7 @@ ElementPhoto = function () {
             srcActive: '/images/photo/buttonLetsPlayActive.png',
             title: 'Согласиться и войти в игру.',
             onClick: function (mouseEvent, dom) {
-                onButtonLetsPlayClick.call(null, photoInfo);
+                onButtonLetsPlayClick.call(null, user);
             }
         }, domRegion);
         /* Индикатор "Ждём..." */
@@ -361,8 +354,10 @@ ElementPhoto = function () {
         degress = getRealRandom(self.src);
         domBorder.title = title;
         /* Если, нет фотографии, то отображаем заглушку */
-        if (self.src == null || self.src == undefined || self.src == '') {
+        if (!user || !user.photo50) {
             self.src = srcDummy;
+        } else {
+            self.src = user.photo50;
         }
         domPhoto.backgroundImage = self.src;
         domRegion.transform = 'rotate(' + degress + 'deg)';
@@ -407,7 +402,6 @@ ElementPhoto = function () {
      * @param params { {
      *       src: string,
      *       title: string,
-     *       photoInfo: object,
      *       showButtonInvite: boolean,
      *       showButtonLetsPlay: boolean,
      *       showIndicatorWaiting: boolean,
@@ -418,10 +412,8 @@ ElementPhoto = function () {
      *   }}
      */
     this.update = function (params) {
-        userId = params.userId;
-        self.src = params.src;
+        user = params.user;
         title = params.title;
-        photoInfo = params.photoInfo;
         showButtonInvite = params.showButtonInvite;
         showButtonLetsPlay = params.showButtonLetsPlay;
         showIndicatorWaiting = params.showIndicatorWaiting;
@@ -461,7 +453,7 @@ ElementPhoto = function () {
      */
     var onClickMediator = function () {
         if (onClick) {
-            onClick.call(null, photoInfo);
+            onClick.call(null, user);
         }
     };
 
@@ -472,7 +464,7 @@ ElementPhoto = function () {
         if (!self.showCardInfo) {
             return false;
         }
-        elementCardInfo.updateUserId(userId);
+        elementCardInfo.updateUser(user);
         elementCardInfo.show();
     };
 

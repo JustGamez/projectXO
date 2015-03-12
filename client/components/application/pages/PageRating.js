@@ -127,9 +127,7 @@ PageRating = function PageRating() {
             user = LogicUser.getUserById(rating.userId);
             usersList.push({
                 photoData: {
-                    src: user.photo50,
                     title: user.firstName + " " + user.lastName,
-                    online: user.online,
                     showButtonInvite: false,
                     enableButtonInvite: false,
                     showButtonLetsPlay: false,
@@ -139,8 +137,6 @@ PageRating = function PageRating() {
                     },
                     onButtonInviteClick: null,
                     onButtonLetsPlayClick: null,
-                    photoInfo: {id: user.id, socNetTypeId: user.socNetTypeId, socNetUserId: user.socNetUserId},
-                    userId: user.id,
                     user: user
                 },
                 name: user.firstName + " " + user.lastName,
