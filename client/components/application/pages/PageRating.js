@@ -64,8 +64,6 @@ PageRating = function PageRating() {
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetPhoto - 12,
             y: 142 - 7,
-            width: 100,
-            height: 40,
             src: '/images/rating/headerPhoto.png'
         });
         self.elements.push(element);
@@ -73,8 +71,6 @@ PageRating = function PageRating() {
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetName - 12 + widthName / 2 - 150 / 2,
             y: 142 - 7,
-            width: 150,
-            height: 28,
             src: '/images/rating/headerNameSurname.png'
         });
         self.elements.push(element);
@@ -82,8 +78,6 @@ PageRating = function PageRating() {
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetPosition - 18,
             y: 142 - 7,
-            width: 90,
-            height: 40,
             src: '/images/rating/headerPositionByScore.png'
         });
         self.elements.push(element);
@@ -91,8 +85,6 @@ PageRating = function PageRating() {
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetScore15x15vsPerson,
             y: 142,
-            width: 40,
-            height: 28,
             src: '/images/rating/headerScore15x15vsPerson.png',
             title: 'Побед 15х15 с человеком.'
         });

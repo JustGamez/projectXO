@@ -34,15 +34,15 @@ PageHelpRules = function PageHelpRules() {
         list.push({name: 'ElementText', x: 100, y: 15 + rowHeight * line + offsetY, text: text1});
         line = 1;
         list.push({name: 'ElementText', x: 100, y: 0 + rowHeight * line + offsetY, text: 'Для поля 3х3 нужно выстроить 3 знака в ряд, например:'});
-        list.push({name: 'ElementImage', x: 110, y: 40 + rowHeight * line + offsetY, src: '/images/help/screen3x3Vertical.png', width: 80, height: 80});
-        list.push({name: 'ElementImage', x: 220, y: 40 + rowHeight * line + offsetY, src: '/images/help/screen3x3Horizontal.png', width: 80, height: 80});
-        list.push({name: 'ElementImage', x: 330, y: 40 + rowHeight * line + offsetY, src: '/images/help/screen3x3Diagonal.png', width: 80, height: 80});
+        list.push({name: 'ElementImage', x: 110, y: 40 + rowHeight * line + offsetY, src: '/images/help/screen3x3Vertical.png'});
+        list.push({name: 'ElementImage', x: 220, y: 40 + rowHeight * line + offsetY, src: '/images/help/screen3x3Horizontal.png'});
+        list.push({name: 'ElementImage', x: 330, y: 40 + rowHeight * line + offsetY, src: '/images/help/screen3x3Diagonal.png'});
 
         line = 2;
         list.push({name: 'ElementText', x: 100, y: 0 + rowHeight * line + offsetY, text: 'Для поля 15х15 нужно выстроить 5 знаков в ряд, например:'});
-        list.push({name: 'ElementImage', x: 110, y: 40 + 3 + rowHeight * line + offsetY, src: '/images/help/screen15x15Vertical.png', width: 80, height: 77});
-        list.push({name: 'ElementImage', x: 220, y: 40 + 3 + rowHeight * line + offsetY, src: '/images/help/screen15x15Horizontal.png', width: 80, height: 77});
-        list.push({name: 'ElementImage', x: 330, y: 40 + 3 + rowHeight * line + offsetY, src: '/images/help/screen15x15Diagonal.png', width: 81, height: 78});
+        list.push({name: 'ElementImage', x: 110, y: 40 + 3 + rowHeight * line + offsetY, src: '/images/help/screen15x15Vertical.png'});
+        list.push({name: 'ElementImage', x: 220, y: 40 + 3 + rowHeight * line + offsetY, src: '/images/help/screen15x15Horizontal.png'});
+        list.push({name: 'ElementImage', x: 330, y: 40 + 3 + rowHeight * line + offsetY, src: '/images/help/screen15x15Diagonal.png'});
 
         for (var i in list) {
             element = GUI.createElement(list[i].name, list[i]);

@@ -23,8 +23,6 @@ PageBackground = function PageBackground() {
         element = GUI.createElement('ElementImage', {
             x: 0,
             y: 0,
-            width: 788,
-            height: 685,
             src: '/images/table.png'
         });
         self.elements.push(element);

@@ -47,7 +47,7 @@ PageHelpRating = function PageHelpRating() {
          */
 
         line = 3;
-        list.push({name: 'ElementImage', x: 100 + 100, y: 35 + rowHeight * line + offsetY, width: 140, height: 48, src: '/images/buttons/ratingRest.png'});
+        list.push({name: 'ElementImage', x: 100 + 100, y: 35 + rowHeight * line + offsetY, src: '/images/buttons/ratingRest.png'});
         list.push({name: 'ElementText', x: 250 + 100, y: 52 + rowHeight * line + offsetY, text: '&larr;позиции лучших игроков.'});
 
         for (var i in list) {

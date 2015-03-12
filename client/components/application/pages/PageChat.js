@@ -57,8 +57,6 @@ PageChat = function PageChat() {
         element = GUI.createElement("ElementImage", {
             x: 58,
             y: 507,
-            width: 38,
-            height: 54,
             opacity: 0.28,
             src: '/images/chat/chatLabel.png'
         });
@@ -67,8 +65,6 @@ PageChat = function PageChat() {
         element = GUI.createElement("ElementImage", {
             x: 61,
             y: 601,
-            width: 39,
-            height: 26,
             opacity: 0.28,
             src: '/images/chat/chatPrompt.png'
         });
