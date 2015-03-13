@@ -21,19 +21,25 @@ PageOnlineScore = function PageOnlineScore() {
      * Элемент-текст отображающий количество онлайн игроков.
      * @type {ElementGraphicText}
      */
-    this.elementOnlineIndicator = null;
+    this.elementOnlineIndicator;
 
     /**
      * Элемент-текст отображает количество очков игрока.
      * @type {ElementGraphicText}
      */
-    this.elementPositionIndicator = null;
+    this.elementPositionIndicator;
 
     /**
      *
      * @type {ElementText}
      */
-    this.elementScore15x15vsPerson = null;
+    this.elementScore15x15vsPerson;
+
+    /**
+     * кард-инфо юзера.
+     * @type {ElementCardInfo}
+     */
+    var elementCardInfo;
 
     this.init = function () {
         var element;
@@ -52,7 +58,8 @@ PageOnlineScore = function PageOnlineScore() {
             x: 570,
             y: 435,
             width: 140,
-            text: 'рейтинг: -'
+            text: 'рейтинг: -',
+            pointer: GUI.POINTER_HAND
         });
         self.elements.push(element);
         self.elementPositionIndicator = element;
@@ -71,6 +78,13 @@ PageOnlineScore = function PageOnlineScore() {
         });
         self.elementScore15x15vsPerson = element;
         self.elements.push(element);
+        element = GUI.createElement('ElementCardInfo', {
+            x: 445,
+            y: 320
+        });
+        GUI.bind(self.elementPositionIndicator.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
+        GUI.bind(self.elementPositionIndicator.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
+        elementCardInfo = element;
     };
 
     /**
@@ -95,6 +109,7 @@ PageOnlineScore = function PageOnlineScore() {
         for (var i in self.elements) {
             self.elements[i].hide();
         }
+        elementCardInfo.hide();
     };
 
     /**
@@ -112,6 +127,7 @@ PageOnlineScore = function PageOnlineScore() {
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
         self.elementPositionIndicator.setText('рейтинг: ' + (typeof position == 'number' ? position : '-'));
         self.elementScore15x15vsPerson.setText(typeof score15x15vsPerson == 'number' ? score15x15vsPerson : '-');
+        elementCardInfo.updateUser(LogicUser.getCurrentUser());
     };
 
     /**
@@ -123,5 +139,20 @@ PageOnlineScore = function PageOnlineScore() {
         for (var i in self.elements) {
             self.elements[i].redraw();
         }
+    };
+
+    /**
+     * При наведении мыши, покажем кард инфо.
+     */
+    var onMouseOver = function () {
+        elementCardInfo.updateUser(LogicUser.getCurrentUser());
+        elementCardInfo.show();
+    };
+
+    /**
+     * При уходе фокуса мыши, прячем кард инфо.
+     */
+    var onMouseOut = function () {
+        elementCardInfo.hideStart();
     };
 };

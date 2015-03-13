@@ -112,7 +112,7 @@ ElementCardInfo = function () {
             x: self.x,
             y: self.y,
             zIndex: 100000,
-            opacity: 0.92
+            opacity: 0.87
         });
         allElements.push(domFrame);
         var startY = 5;
@@ -243,7 +243,7 @@ ElementCardInfo = function () {
     };
 
     this.hideStart = function () {
-        LogicTimers.start("CardInfo_" + domFrame.__id, 1000, function () {
+        LogicTimers.start("CardInfo_" + domFrame.__id, Config.ElementCardInfo.hideTimeout, function () {
             self.hide();
         });
     }

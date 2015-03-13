@@ -19,7 +19,7 @@ PageHelpMainMenu = function PageHelpMainMenu() {
 
     this.init = function () {
         var element, line, list;
-        var rowHeight = 90;
+        var rowHeight = 115;
         var offsetY = 85;
         line = 0;
         list = [];
@@ -34,16 +34,12 @@ PageHelpMainMenu = function PageHelpMainMenu() {
         list.push({name: 'ElementText', x: 390, y: 90 + rowHeight * line + offsetY, text: '&larr; выбор поля: 3х3 или 15х15.'});
 
         line = 2;
-        list.push({name: 'ElementImage', x: 116 + 145, y: 55 + rowHeight * line + offsetY, src: '/images/flags/vsRobotRest.png'});
-        list.push({name: 'ElementText', x: 390, y: 80 + rowHeight * line + offsetY, text: '&larr; играть с компьютером.'});
-
-        line = 3;
         list.push({name: 'ElementPhoto', x: 110, y: 60 + rowHeight * line + offsetY, width: 51, height: 50, src: '/images/help/photoSomePeople1.png', pointer: GUI.POINTER_ARROW});
         list.push({name: 'ElementPhoto', x: 190, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople2.png', pointer: GUI.POINTER_ARROW});
         list.push({name: 'ElementPhoto', x: 268, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople3.png', pointer: GUI.POINTER_ARROW});
         list.push({name: 'ElementText', x: 360, y: 83 + rowHeight * line + offsetY, text: '&larr; отправить приглашение сыграть.'});
 
-        line = 4;
+        line = 3;
         list.push({name: 'ElementImage', x: 110, y: 55 + rowHeight * line + offsetY, src: '/images/help/imageChatLabel.png', opacity: 0.75});
         list.push({name: 'ElementText', x: 155, y: 68 + rowHeight * line + offsetY, width: 200, height: 20, text: '&larr; окно чата.'});
         list.push({name: 'ElementImage', x: 110, y: 120 + rowHeight * line + offsetY, src: '/images/help/imageChatPrompt.png', opacity: 0.75});

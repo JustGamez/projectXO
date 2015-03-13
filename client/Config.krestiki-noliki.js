@@ -12,5 +12,8 @@ Config = {
         host: 'ssl.krestiki-noliki',
         port: 80,
         protocol: 'ws'
+    },
+    ElementCardInfo:{
+        hideTimeout: 475
     }
 };

@@ -67,6 +67,10 @@ ElementGraphicText = function () {
      */
     var dom = null;
 
+    this.pointer = undefined;
+
+    this.dom = null;
+
     /**
      * Создадим дом и настроем его.
      */
@@ -82,6 +86,8 @@ ElementGraphicText = function () {
         /* Но, это только для текста без картинки, т.к. у нас не все символы есть. Пока что. */
         dom.color = "rgba(68,62,0,0.7)";
         dom.fontSize = 21;
+        dom.pointer = self.pointer;
+        self.dom = dom;
     };
 
     /**

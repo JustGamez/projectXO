@@ -52,6 +52,9 @@ ElementPhoto = function () {
 
     this.showCardInfo = false;
 
+    this.cardInfoOffsetX = 0;
+    this.cardInfoOffsetY = 0;
+
     /**
      * Дом фотографии.
      * @type {GUIDom}
@@ -304,8 +307,8 @@ ElementPhoto = function () {
         elementBusyText.opacity = 0.37;
         /* Кард-инфо. */
         elementCardInfo = GUI.createElement("ElementCardInfo", {
-            x: self.x - 21,
-            y: self.y - 85
+            x: self.x + self.cardInfoOffsetX,
+            y: self.y + self.cardInfoOffsetY
         });
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_CLICK, onClickMediator, this);
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
@@ -476,5 +479,13 @@ ElementPhoto = function () {
             return false;
         }
         elementCardInfo.hideStart();
+    };
+
+    this.raiseMouseOver = function () {
+        onMouseOver();
+    };
+
+    this.raiseMouseOut = function () {
+        onMouseOut();
     };
 };

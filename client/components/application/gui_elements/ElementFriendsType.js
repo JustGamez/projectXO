@@ -72,7 +72,9 @@ ElementFriendsType = function () {
             photo = GUI.createElement('ElementPhoto', {
                 x: self.x + i * self.spacing,
                 y: self.y,
-                showCardInfo: true
+                showCardInfo: true,
+                cardInfoOffsetX: -18,
+                cardInfoOffsetY: -127
             });
             photos[i] = photo;
         }

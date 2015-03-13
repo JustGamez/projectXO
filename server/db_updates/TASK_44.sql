@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `profiling`;
+-- DROP TABLE IF EXISTS `profiling`;
 
 CREATE TABLE `profiling` (
   `id`        INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,

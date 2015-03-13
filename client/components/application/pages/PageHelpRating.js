@@ -24,8 +24,8 @@ PageHelpRating = function PageHelpRating() {
 
         var text1;
         text1 = '';
-        text1 += 'За победу в игре игрок получает очки.\r\n';
-        text1 += 'Рейтинговая позиция зависит от количества очков.\r\n';
+        text1 += 'В рейтинговой позиции учитываются только очки, за победу\r\n';
+        text1 += 'на поле 15 на 15 в игре с человеком, не с роботом.\r\n';
         text1 += 'При одинаковом количестве очков, выше в рейтинге будет тот,\r\n';
         text1 += 'кому были начислены очки раньше.';
 
@@ -46,7 +46,7 @@ PageHelpRating = function PageHelpRating() {
          list.push({name:'ElementText', x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr;позиция в общем рейтинге.'});
          */
 
-        line = 3;
+        line = 2;
         list.push({name: 'ElementImage', x: 100 + 100, y: 35 + rowHeight * line + offsetY, src: '/images/buttons/ratingRest.png'});
         list.push({name: 'ElementText', x: 250 + 100, y: 52 + rowHeight * line + offsetY, text: '&larr;позиции лучших игроков.'});
 

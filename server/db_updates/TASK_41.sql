@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `rating`;
+-- DROP TABLE IF EXISTS `rating`;
 
 CREATE TABLE `rating` (
   `userId`   INT(11) UNSIGNED NOT NULL,

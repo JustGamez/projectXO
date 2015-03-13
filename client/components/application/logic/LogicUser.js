@@ -167,19 +167,27 @@ LogicUser = function () {
 
     this.getRatingPosition = function (userId) {
         if (ratingPositions[userId]) {
-            return ratingPositions[userId];
+            if (ratingPositions[userId].needReload) {
+                SAPIUser.sendMeRatingPosition(userId);
+            }
+            return ratingPositions[userId].position;
         } else {
             SAPIUser.sendMeRatingPosition(userId);
         }
     };
 
     this.updateRatingPosition = function (userId, position) {
-        ratingPositions[userId] = position;
+        ratingPositions[userId] = {
+            position: position,
+            needReload: false
+        };
         pageController.redraw();
     };
 
-    this.flushRatingPositionmCache = function () {
-        ratingPositions = [];
+    this.setRatingPositionsNeedReload = function () {
+        for (var userId in ratingPositions) {
+            ratingPositions[userId].needReload = true;
+        }
         pageController.redraw();
     };
 };

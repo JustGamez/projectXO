@@ -49,7 +49,7 @@ CAPIUser = function () {
     };
 
     this.ratingChanged = function (cntx) {
-        LogicUser.flushRatingPositionmCache();
+        LogicUser.setRatingPositionsNeedReload();
     };
 };
 

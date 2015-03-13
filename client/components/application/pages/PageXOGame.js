@@ -89,7 +89,10 @@ PageXOGame = function PageXOGame() {
         /* Фото оппонента. */
         element = GUI.createElement("ElementPhoto", {
             x: 585,
-            y: 163
+            y: 163,
+            showCardInfo: true,
+            cardInfoOffsetX: -111,
+            cardInfoOffsetY: -20
         });
         self.elements.push(element);
         self.elementOpponentPhoto = element;

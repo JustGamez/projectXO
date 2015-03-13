@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `chat_messages`;
+-- DROP TABLE IF EXISTS `chat_messages`;
 
 CREATE TABLE `chat_messages` (
     `id` INT(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,

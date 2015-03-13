@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `statistic`;
+-- DROP TABLE IF EXISTS `statistic`;
 
 CREATE TABLE `statistic` (
   `id`          INT(11) UNSIGNED        NOT NULL PRIMARY KEY AUTO_INCREMENT,

@@ -86,7 +86,9 @@ ElementRatingList = function () {
                 photoHeight: 33,
                 frameWidth: 4,
                 degreesDiapazon: 8,
-                showCardInfo: true
+                showCardInfo: true,
+                cardInfoOffsetX: 87,
+                cardInfoOffsetY: -32
             });
             row.all.push(row.photo);
             /* Фамилиля, имя. */
@@ -94,7 +96,8 @@ ElementRatingList = function () {
                 x: self.x + self.offsetName,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: self.widthName,
-                text: ' - '
+                text: ' - ',
+                pointer: GUI.POINTER_HAND
             });
             row.all.push(row.name);
             /* Позиция в рейтинге. */
@@ -103,7 +106,8 @@ ElementRatingList = function () {
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: 50,
                 text: '-',
-                alignCenter: true
+                alignCenter: true,
+                pointer: GUI.POINTER_HAND
             });
             row.all.push(row.position);
             /* Очки 15х15 с игроком. */
@@ -112,9 +116,16 @@ ElementRatingList = function () {
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: 40,
                 text: '-',
-                alignCenter: true
+                alignCenter: true,
+                pointer: GUI.POINTER_HAND
             });
             row.all.push(row.score15x15vsPerson);
+            GUI.bind(row.name.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
+            GUI.bind(row.name.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
+            GUI.bind(row.position.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
+            GUI.bind(row.position.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
+            GUI.bind(row.score15x15vsPerson.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
+            GUI.bind(row.score15x15vsPerson.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
             rowsElements[i] = row;
         }
     };
@@ -188,5 +199,19 @@ ElementRatingList = function () {
             return 0;
         });
         self.redraw();
+    };
+
+    /**
+     * При наведении мыши, покажем кард инфо.
+     */
+    var onMouseOver = function () {
+        this.photo.raiseMouseOver();
+    };
+
+    /**
+     * При уходе фокуса мыши, прячем кард инфо.
+     */
+    var onMouseOut = function () {
+        this.photo.raiseMouseOut();
     };
 };

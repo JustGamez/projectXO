@@ -365,8 +365,10 @@ LogicUser = function () {
         }
         DataUser.getById(userId, function (user) {
             if (user) {
-                LogicRating.onPositionScoreUp(user.id);
-
+                /* В рейтинге учитываются очки, только на поле 15х15 в игре с персонажем. */
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
+                    LogicRating.onPositionScoreUp(user.id);
+                }
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
                     user.score3x3vsRobot++;
                 }
