@@ -50,6 +50,7 @@ CAPIUser = function () {
 
     this.ratingChanged = function (cntx) {
         LogicUser.setRatingPositionsNeedReload();
+        LogicRating.onRatingUpdated();
     };
 };
 

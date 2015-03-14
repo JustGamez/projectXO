@@ -57,7 +57,7 @@ PageOnlineScore = function PageOnlineScore() {
         element = GUI.createElement('ElementGraphicText', {
             x: 570,
             y: 435,
-            width: 140,
+            width: 160,
             text: 'рейтинг: -',
             pointer: GUI.POINTER_HAND
         });
@@ -121,7 +121,7 @@ PageOnlineScore = function PageOnlineScore() {
         onlineCount = LogicUser.getOnlineCount();
         user = LogicUser.getCurrentUser();
         if (user && user.id) {
-            position = LogicUser.getRatingPosition(user.id);
+            position = LogicUser.getRatingPosition();
             score15x15vsPerson = user.score15x15vsPerson;
         }
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));

@@ -2,49 +2,6 @@
 
 require('./system/loader.js');
 
-/**
- * Id-ишники профайлера.
- * и таймер профайлера.
- */
-/* SAPIUser */
-Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK = Profiler.getNewId("ID_SAPIUSER_AUTHORIZATION_BY_VK");
-Profiler.ID_SAPIUSER_SEND_USER_INFO = Profiler.getNewId("ID_SAPIUSER_SEND_USER_INFO");
-Profiler.ID_SAPIUSER_UPDATE_USER_SOCNET_INFO = Profiler.getNewId("ID_SAPIUSER_UPDATE_USER_SOCNET_INFO");
-Profiler.ID_SAPIUSER_SEND_FRIENDS = Profiler.getNewId("ID_SAPIUSER_SEND_FRIENDS");
-Profiler.ID_SAPIUSER_SENDME_ONLINE_COUNT = Profiler.getNewId("ID_SAPIUSER_SENDME_ONLINE_COUNT");
-/* SAPIChat */
-Profiler.ID_SAPICHAT_GET_LAST_MESSAGES = Profiler.getNewId("ID_SAPICHAT_GET_LAST_MESSAGES");
-Profiler.ID_SAPICHAT_SEND_MESSAGE = Profiler.getNewId("ID_SAPICHAT_SEND_MESSAGE");
-/* SAPIUserState */
-Profiler.ID_SAPIUSERSTATE_IS_BUSY = Profiler.getNewId("ID_SAPIUSERSTATE_IS_BUSY");
-Profiler.ID_SAPIUSERSTATE_IS_NO_BUSY = Profiler.getNewId("ID_SAPIUSERSTATE_IS_NO_BUSY");
-Profiler.ID_SAPIUSERSTATE_ON_GAME = Profiler.getNewId("ID_SAPIUSERSTATE_ON_GAME");
-/* SAPIInvites */
-Profiler.ID_SAPIINVITES_SEND = Profiler.getNewId("ID_SAPIINVITES_SEND");
-/* LogicUser */
-Profiler.ID_LOGIC_USER_SEND_TO_ALL = Profiler.getNewId("ID_LOGIC_USER_SEND_TO_ALL");
-/* WebSocketServer */
-Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE = Profiler.getNewId("ID_WEBSOCKETSERVER_SEND_IMAGE");
-Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE = Profiler.getNewId("ID_WEBSOCKETSERVER_SEND_CLIENT_CODE");
-/* SAPIRating*/
-Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST = Profiler.getNewId("ID_SAPIRATING_SEND_ME_TOP_LIST");
-/* SAPIGame */
-Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME = Profiler.getNewId("ID_SAPIGAME_REQUEST_RANDOM_GAME");
-Profiler.ID_SAPIGAME_CANCEL_RANDOM_GAME = Profiler.getNewId("ID_SAPIGAME_CANCEL_RANDOM_GAME");
-Profiler.ID_SAPIGAME_DO_MOVE = Profiler.getNewId("ID_SAPIGAME_DO_MOVE");
-/* ActionsRandomGame */
-Profiler.ID_ACTIONSRANDOMGAME_CREATE_WAITER = Profiler.getNewId("ID_ACTIONSRANDOMGAME_CREATE_WAITER");
-Profiler.ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME = Profiler.getNewId("ID_ACTIONSRANDOMGAME_CREATE_RANDOM_GAME");
-/* SAPIRobot */
-Profiler.ID_SAPIROBOT_CREATE_GAME = Profiler.getNewId("ID_SAPIROBOT_CREATE_GAME");
-Profiler.ID_SAPIROBOT_DO_MOVE = Profiler.getNewId("ID_SAPIROBOT_DO_MOVE");
-Profiler.ID_SAPIROBOT_CHECKWINNER = Profiler.getNewId("ID_SAPIROBOT_CHECKWINNER");
-Profiler.ID_SAPIROBOT_CLOSE_GAME = Profiler.getNewId("ID_SAPIROBOT_CLOSE_GAME");
-/* LogicXO */
-Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.getNewId("LOGIC_XO_FIND_WIN_LINE");
-/* ActionsRepeatGame */
-Profiler.ID_ACTIONS_REPEAT_GAME_COPY = Profiler.getNewId("ID_ACTIONS_REPEAT_GAME_COPY");
-
 /* User statistics. */
 /* 1 */
 Statistic.ID_USER_AUTHORIZATION_BY_VK = Statistic.getNewId("авторизация через ВКонтакте ");
@@ -138,12 +95,14 @@ addDeInitCallback(Statistic.flushCache);
 
 /* init all components */
 sequencedInit(Logs.init);
-sequencedInit(LogicRobot.init);
+sequencedInit(Profiler.init);
 sequencedInit(CommandLineController.init);
 sequencedInit(DB.init);
 sequencedInit(Statistic.init);
 sequencedInit(LogicUser.init);
+sequencedInit(LogicRobot.init);
 sequencedInit(ActionsChat.init);
+sequencedInit(DataRating.init);
 /* run all components */
 sequencedInit(webSocketServer.init);
 

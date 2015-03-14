@@ -19,7 +19,9 @@ LogicRating = function () {
      * @param user {Object} инфо пользователя.
      */
     this.onUserCreated = function (user) {
-        DataRating.addPosition(user.id);
+        DataRating.addPosition(user.id, function (lastPosition) {
+            LogicUser.sendToAll(CAPIRating.updateLastPosition, lastPosition);
+        });
     };
 
     /**
@@ -57,6 +59,7 @@ LogicRating = function () {
      */
     var executeUpdatePosition = function (onFinishCallback) {
         var userId;
+        Profiler.start(Profiler.ID_RATING_UPDATE);
         userId = updatePositionUserIds.shift();
         Logs.log("Execute update position. userId= " + userId, Logs.LEVEL_DETAIL);
         /* Get target user from database. */
@@ -88,6 +91,7 @@ LogicRating = function () {
                 onFinishCallback();
                 /* Теперь соощим всем клиентам, что рейтинг обновитлся и те сбросят кэш позиций. */
                 LogicUser.sendToAll(CAPIUser.ratingChanged);
+                Profiler.stop(Profiler.ID_RATING_UPDATE);
             });
         };
         /* Begin process here. */

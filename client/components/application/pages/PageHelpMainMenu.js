@@ -40,9 +40,9 @@ PageHelpMainMenu = function PageHelpMainMenu() {
         list.push({name: 'ElementText', x: 360, y: 83 + rowHeight * line + offsetY, text: '&larr; отправить приглашение сыграть.'});
 
         line = 3;
-        list.push({name: 'ElementImage', x: 110, y: 55 + rowHeight * line + offsetY, src: '/images/help/imageChatLabel.png', opacity: 0.75});
+        list.push({name: 'ElementImage', x: 110, y: 55 + rowHeight * line + offsetY, src: '/images/chat/chatLabel.png', opacity: 0.75});
         list.push({name: 'ElementText', x: 155, y: 68 + rowHeight * line + offsetY, width: 200, height: 20, text: '&larr; окно чата.'});
-        list.push({name: 'ElementImage', x: 110, y: 120 + rowHeight * line + offsetY, src: '/images/help/imageChatPrompt.png', opacity: 0.75});
+        list.push({name: 'ElementImage', x: 110, y: 120 + rowHeight * line + offsetY, src: '/images/chat/chatPrompt.png', opacity: 0.75});
         list.push({name: 'ElementText', x: 155, y: 118 + rowHeight * line + offsetY, text: '&larr; поле для оптравки сообщений в чат.'});
 
         for (var i in list) {

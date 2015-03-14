@@ -34,8 +34,8 @@ LogicUser = function () {
         var user = LogicUser.getUserById(userId);
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
-        LogicRating.getTopList();
         SAPIUser.sendMeOnlineUserIds();
+        SAPIRating.sendMeLastPosition();
     };
 
     /**
@@ -166,6 +166,9 @@ LogicUser = function () {
     var ratingPositions = [];
 
     this.getRatingPosition = function (userId) {
+        if (!userId) {
+            userId = authorizedUserId;
+        }
         if (ratingPositions[userId]) {
             if (ratingPositions[userId].needReload) {
                 SAPIUser.sendMeRatingPosition(userId);

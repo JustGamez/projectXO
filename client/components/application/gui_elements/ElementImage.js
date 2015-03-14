@@ -60,8 +60,6 @@ ElementImage = function () {
      */
     this.init = function () {
         dom = GUI.createDom();
-        dom.x = self.x;
-        dom.y = self.y;
         dom.width = self.width;
         dom.height = self.height;
         dom.backgroundImage = self.src;
@@ -95,6 +93,8 @@ ElementImage = function () {
         if (self.opacity != null) {
             dom.opacity = self.opacity;
         }
+        dom.x = self.x;
+        dom.y = self.y;
         dom.title = self.title;
     };
 };

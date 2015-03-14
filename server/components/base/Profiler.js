@@ -76,7 +76,12 @@ Profiler = function () {
         output += "heapTotal: " + Math.round(memoryUsage.heapTotal / 1024 / 1024) + " Mb\r\n";
         output += "heapUsed: " + Math.round(memoryUsage.heapUsed / 1024 / 1024) + " Mb\r\n";
         return output;
-    }
+    };
+
+    this.init = function (afterInitCallback) {
+        require(ROOT_DIR + 'profilerIds.js');
+        afterInitCallback();
+    };
 };
 
 /**

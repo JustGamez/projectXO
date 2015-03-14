@@ -89,8 +89,6 @@ ActionsRobotGame = function () {
             Logs.log("ActionsRobotGame.raiseAIMove. Is not turn of robot.", Logs.LEVEL_WARNING, game);
             return;
         }
-        /* Тут будет проанализирован последний ход игрока и как добавятся\обновятся линии игрока. */
-        LogicRobot.updateGameState(game);
         /* Сюда будем ставить ход. */
         AICoords = LogicRobot.generateMovementCoords(game);
         if (!LogicXO.userCanDoMove(game, 0, AICoords.x, AICoords.y)) {
@@ -102,7 +100,6 @@ ActionsRobotGame = function () {
         game = LogicXO.switchTurn(game);
         game.lastMove = {x: AICoords.x, y: AICoords.y};
         LogicGameStore.save(game);
-        LogicRobot.updateGameState(game);
         CAPIGame.updateInfo(game.creatorUserId, game);
         CAPIGame.robotDoMove(game.creatorUserId, game.id);
     };

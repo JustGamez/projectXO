@@ -29,6 +29,12 @@ PageRating = function PageRating() {
     var offsetScore15x15vsPerson = 530;
     var widthName = 350;
 
+    /**
+     *
+     * @type {ElementImage}
+     */
+    var elementArrow = null;
+
     this.init = function () {
         var element;
         var ratingListX = 100;
@@ -53,9 +59,9 @@ PageRating = function PageRating() {
             y: 58,
             width: 162,
             height: 82,
-            srcRest: '/images/buttons/ratingMenuRest.png',
-            srcHover: '/images/buttons/ratingMenuHover.png',
-            srcActive: '/images/buttons/ratingMenuActive.png',
+            srcRest: '/images/buttons/menuRest.png',
+            srcHover: '/images/buttons/menuHover.png',
+            srcActive: '/images/buttons/menuActive.png',
             onClick: LogicPageRating.onMenuButtonClick
         });
         self.elements.push(element);
@@ -89,6 +95,49 @@ PageRating = function PageRating() {
             title: 'Побед 15х15 с человеком.'
         });
         self.elements.push(element);
+        element = GUI.createElement('ElementButton', {
+            x: 144,
+            y: 85,
+            srcRest: '/images/rating/buttonTop.png',
+            srcHover: '/images/rating/buttonTopHover.png',
+            srcActive: '/images/rating/buttonTopHover.png',
+            onClick: LogicPageRating.onTopButtonClick
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementButton', {
+            x: 144,
+            y: 115,
+            srcRest: '/images/rating/buttonMyPosition.png',
+            srcHover: '/images/rating/buttonMyPositionHover.png',
+            srcActive: '/images/rating/buttonMyPositionHover.png',
+            onClick: LogicPageRating.onMyPositionButtonClick
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementButton', {
+            x: 335,
+            y: 84,
+            srcRest: '/images/rating/buttonDownRest.png',
+            srcHover: '/images/rating/buttonDownHover.png',
+            srcActive: '/images/rating/buttonDownActive.png',
+            onClick: LogicPageRating.onDownButtonClick
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementButton', {
+            x: 377,
+            y: 84,
+            srcRest: '/images/rating/buttonUpRest.png',
+            srcHover: '/images/rating/buttonUpHover.png',
+            srcActive: '/images/rating/buttonUpActive.png',
+            onClick: LogicPageRating.onUpButtonClick
+        });
+        self.elements.push(element);
+        element = GUI.createElement('ElementImage', {
+            x: 114,
+            y: 115,
+            src: '/images/rating/arrow.png'
+        });
+        elementArrow = element;
+        self.elements.push(element);
     };
 
     /**
@@ -120,7 +169,7 @@ PageRating = function PageRating() {
      */
     this.preset = function () {
         var ratingList, rating, usersList, user;
-        ratingList = LogicRating.getTopList();
+        ratingList = LogicPageRating.getRatingList();
         usersList = [];
         for (var i in ratingList) {
             rating = ratingList[i];
@@ -156,6 +205,20 @@ PageRating = function PageRating() {
     this.redraw = function () {
         if (!showed) return;
         self.preset();
+        switch (LogicPageRating.showId) {
+            case LogicPageRating.SHOW_TOP:
+                elementArrow.y = 85;
+                elementArrow.show();
+                break;
+            case LogicPageRating.SHOW_MY_POSITION:
+                elementArrow.y = 115;
+                elementArrow.show();
+                break;
+            case LogicPageRating.SHOW_CUSTOM:
+                elementArrow.hide();
+                break;
+        }
+        elementArrow.redraw();
         for (var i in self.elements) {
             self.elements[i].redraw();
         }

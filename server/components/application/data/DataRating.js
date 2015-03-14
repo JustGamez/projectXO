@@ -7,26 +7,15 @@ DataRating = function () {
      */
     var tableName = 'rating';
 
-    /**
-     * Поля.
-     * @type {{userId: number, score: number, position: number, updated: number}}
-     */
-    var fields = {
-        userId: 5,
-        score15x15vsPerson: null,
-        score3x3vsPerson: null,
-        score15x15vsRobot: null,
-        score3x3vsRobot: null,
-        position: null,
-        updated: null
-    };
+    var lastPosition = null;
 
     /**
      * Добавит запись в таблице рейтинга.
      * Добавление произойдет в конец таблицы, с последней позицией, очков:0, дата последнего обновления текущая.
      * @param userId {int} внутрений id пользователя.
+     * @param callback {Function}
      */
-    this.addPosition = function (userId) {
+    this.addPosition = function (userId, callback) {
         self.getLastPosition(function (lastPosition) {
             var updated;
             updated = new Date().getTime();
@@ -37,8 +26,15 @@ DataRating = function () {
                 updated: updated
             }, function () {
                 Logs.log("DataRating.addPosition. new position added.userId" + userId + ", score{*}:0, position:" + lastPosition + ", updated:" + updated);
+                lastPosition = null;
+                self.flushLastPosition();
+                self.getLastPosition(callback);
             });
         });
+    };
+
+    this.flushLastPosition = function () {
+        lastPosition = null;
     };
 
     /**
@@ -46,37 +42,38 @@ DataRating = function () {
      * @param callback {Function}
      */
     this.getLastPosition = function (callback) {
+        if (lastPosition) {
+            callback(lastPosition);
+        } else {
+            self.updateLastPosition(function () {
+                callback(lastPosition);
+            });
+        }
+    };
+
+    this.updateLastPosition = function (callback) {
         var query;
         query = "SELECT MAX(position) as lastPosition FROM " + tableName;
         DB.query(query, function (rows) {
-            var lastPosition;
             if (!rows[0].lastPosition) {
                 lastPosition = 0;
             } else {
                 lastPosition = rows[0].lastPosition;
             }
-            callback(lastPosition);
+            callback();
         });
     };
 
-    var cacheTopList;
-    var cacheTopListLastPoint = 0;
-    /**
-     * Вернуть рейтинг топ.
-     * @param callback [Function]
-     */
-    this.getTopList = function (callback) {
+    this.getListByPositions = function (positionList, callback) {
         var query;
-        if (cacheTopList && (new Date().getTime() - cacheTopListLastPoint < 5000)) {
-            callback(cacheTopList);
-            return;
-        }
-        query = "SELECT * FROM " + tableName + " ORDER BY position ASC LIMIT " + Config.Rating.TopLimitSize;
+        query = "SELECT * FROM " + tableName + " WHERE position IN (" + positionList.join(',') + ")";
         DB.query(query, function (rows) {
-            cacheTopList = rows;
-            cacheTopListLastPoint = new Date().getTime();
-            callback(cacheTopList);
+            callback(rows);
         });
+    };
+
+    this.init = function (afterInitCallback) {
+        self.updateLastPosition(afterInitCallback);
     };
 };
 
