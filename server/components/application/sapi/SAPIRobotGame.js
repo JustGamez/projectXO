@@ -19,12 +19,12 @@ SAPIRobotGame = function () {
             Logs.log("SAPIRobotGame.startGame: must have signId", Logs.LEVEL_WARNING, signId);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIROBOT_CREATE_GAME);
+        var prid = Profiler.start(Profiler.ID_CREATE_ROBOT_GAME);
         Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CREATE);
         ActionsRobotGame.createGame(cntx.userId, fieldTypeId, signId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.gameCreated(game.creatorUserId, game.id);
-            Profiler.stop(Profiler.ID_SAPIROBOT_CREATE_GAME);
+            Profiler.stop(Profiler.ID_CREATE_ROBOT_GAME, prid);
         });
     };
 
@@ -57,10 +57,12 @@ SAPIRobotGame = function () {
             Logs.log("SAPIRobotGame.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIROBOT_DO_MOVE);
+        var prid = Profiler.start(Profiler.ID_ROBOT_DO_MOVE);
         Statistic.add(cntx.userId, Statistic.ID_GAME_DO_MOVE);
         ActionsRobotGame.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
-            /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
+            // on move update
+            CAPIGame.updateMove(cntx.userId, game.id, game.lastMove.x, game.lastMove.y);
+            /* Если не запущена, сливаем в БД, т.к. игра закончиалсь. */
             if (game.status != LogicXO.STATUS_RUN) {
                 /* Только что кто-то выиграл? */
                 if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
@@ -69,13 +71,13 @@ SAPIRobotGame = function () {
                 LogicGameStore.delete(game.id);
                 LogicRobot.removeState(game.id);
                 DataGame.save(game, function (game) {
+                    // is it on winm update
                     CAPIGame.updateInfo(game.creatorUserId, game);
                 });
             } else {
                 ActionsRobotGame.raiseAIMove(game.id)
             }
-            Profiler.stop(Profiler.ID_SAPIROBOT_DO_MOVE);
-            CAPIGame.updateInfo(game.creatorUserId, game);
+            Profiler.stop(Profiler.ID_ROBOT_DO_MOVE, prid);
         });
     };
 
@@ -94,17 +96,17 @@ SAPIRobotGame = function () {
             Logs.log("SAPIRobotGame.checkWinner: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIROBOT_CHECKWINNER);
+        var prid = Profiler.start(Profiler.ID_ROBOT_CHECKWINNER);
         game = LogicGameStore.load(gameId);
         if (!game || !game.id) {
             Logs.log("SAPIRobotGame.checkWinner: game does not exits.", Logs.LEVEL_WARNING, gameId);
-            Profiler.stop(Profiler.ID_SAPIROBOT_CHECKWINNER);
+            Profiler.stop(Profiler.ID_ROBOT_CHECKWINNER, prid);
             return;
         }
         oldStatus = game.status;
         winLine = LogicXO.findWinLine(game);
         game = LogicXO.setOutcomeResults(game, winLine);
-        /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
+        /* Если запущена, сливаем в БД, т.к. игра закончиалсь. */
         if (game.status != LogicXO.STATUS_RUN) {
             /* Только что кто-то выиграл? */
             if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
@@ -115,11 +117,12 @@ SAPIRobotGame = function () {
             LogicGameStore.delete(game.id);
             LogicRobot.removeState(game.id);
             DataGame.save(game, function (game) {
+                // @todo CAPIGame.winmData!
                 CAPIGame.updateInfo(game.creatorUserId, game);
-                Profiler.stop(Profiler.ID_SAPIROBOT_CHECKWINNER);
+                Profiler.stop(Profiler.ID_ROBOT_CHECKWINNER, prid);
             });
         } else {
-            Profiler.stop(Profiler.ID_SAPIROBOT_CHECKWINNER);
+            Profiler.stop(Profiler.ID_ROBOT_CHECKWINNER, prid);
         }
     };
 
@@ -138,14 +141,14 @@ SAPIRobotGame = function () {
             Logs.log("SAPIGame.closeGame: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIROBOT_CLOSE_GAME);
+        var prid = Profiler.start(Profiler.ID_ROBOT_CLOSE_GAME);
 
         ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
             Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CLOSE);
             LogicGameStore.delete(game.id);
             DataGame.save(game, function (game) {
                 CAPIGame.updateInfo(game.creatorUserId, game);
-                Profiler.stop(Profiler.ID_SAPIROBOT_CLOSE_GAME);
+                Profiler.stop(Profiler.ID_ROBOT_CLOSE_GAME, prid);
             });
         });
     };

@@ -30,7 +30,7 @@ CAPIGame = function () {
             SAPIUserState.onGame(gameId);
             LogicGame.setCurrentGameId(gameId);
         } else {
-            SAPIGame.closeRandomGame(gameId);
+            SAPIGame.closeGame(gameId);
         }
     };
 
@@ -57,6 +57,20 @@ CAPIGame = function () {
         if (checkWinner) {
             SAPIRobotGame.checkWinner(gameId);
         }
+    };
+
+    this.updateMove = function (cntx, gameId, x, y) {
+        var game;
+        game = LogicGame.getGameById(gameId);
+        if (!game) {
+            Logs.log("CAPIGAme.updateMove some error.", Logs.LEVEL_ERROR);
+            return;
+        }
+        game = LogicXO.switchTurn(game);
+        game = LogicXO.setSign(game, x, y);
+
+        Sounds.play('/sounds/turn.mp3');
+        pageController.redraw();
     };
 };
 

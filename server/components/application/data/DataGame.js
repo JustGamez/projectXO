@@ -28,7 +28,7 @@ DataGame = function () {
         DB.queryWhere(tableName, {
             id: [id]
         }, function (rows) {
-            rows[0].field = JSON.parse(rows[0].field);
+            rows[0].field = uncompressField(rows[0].field);
             callback(rows[0] || null);
         });
     };
@@ -66,7 +66,7 @@ DataGame = function () {
             XUserId: game.XUserId,
             OUserId: game.OUserId,
             turnId: game.turnId,
-            field: JSON.stringify(game.field),
+            field: compressField(game.field),
             status: game.status,
             winnerId: game.winnerId
         };
@@ -87,6 +87,14 @@ DataGame = function () {
         DB.query("SELECT MAX(id) as maxId FROM " + tableName, function (result) {
             callback(result[0].maxId ? result[0].maxId : 0);
         });
+    };
+
+    var compressField = function (field) {
+        return JSON.stringify(field);
+    };
+
+    var uncompressField = function (field) {
+        return JSON.parse(field);
     };
 };
 

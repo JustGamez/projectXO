@@ -76,10 +76,8 @@ PageXOGame = function PageXOGame() {
         this.elementField = element;
         /* Кнопка возврата на главную страницу. */
         element = GUI.createElement('ElementButton', {
-            x: 545,
-            y: 55,
-            width: 148,
-            height: 73,
+            x: 562,
+            y: 95,
             srcRest: '/images/buttons/menuRest.png',
             srcHover: '/images/buttons/menuHover.png',
             srcActive: '/images/buttons/menuActive.png',

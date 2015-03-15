@@ -38,16 +38,22 @@ DataUser = function () {
         });
     };
 
+    var cache = {};
     /**
      * Вернуть пользователя по id.
      * @param userId внутрений id пользовтаеля.
      * @param callback
      */
     this.getById = function (userId, callback) {
+        if (cache[userId]) {
+            callback(cache[userId]);
+            return;
+        }
         DB.queryWhere(tableName, {
             id: [userId]
         }, function (rows) {
-            callback(fromDBToData(rows[0]) || null);
+            cache[userId] = fromDBToData(rows[0]) || null;
+            callback(cache[userId]);
         });
     };
 
@@ -110,6 +116,9 @@ DataUser = function () {
      */
     this.save = function (user, callback) {
         var data;
+        if (cache[user.id]) {
+            cache[user.id] = null;
+        }
         data = {
             id: user.id,
             firstName: user.firstName,
@@ -123,7 +132,8 @@ DataUser = function () {
             score15x15vsRobot: user.score15x15vsRobot,
             score3x3vsRobot: user.score3x3vsRobot,
             sex: user.sex,
-            photo50: user.photo50
+            photo50: user.photo50,
+            socNetUpdated: user.socNetUpdated
         };
         DB.update(tableName, data, function (result) {
             callback(user);
@@ -138,6 +148,9 @@ DataUser = function () {
         if (!userId) {
             Logs.log("DataUser.udpateLastLogout. Must be userId", Logs.LEVEL_WARNING, userId);
             return;
+        }
+        if (cache[userId]) {
+            cache[userId] = null;
         }
         DB.query("UPDATE users SET lastLogoutTimestamp = " + (new Date().getTime()) + " WHERE id = " + userId, function () {
         });

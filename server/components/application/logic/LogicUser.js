@@ -21,6 +21,7 @@ LogicUser = function () {
 
     this.init = function (afterInitCallback) {
         apiRouter.addOnDisconnectCallback(onDisconnectOrFailedSend);
+        apiRouter.addOnFailedSendCallback(onDisconnectOrFailedSend);
         Logs.log("LogicUser inited.", Logs.LEVEL_NOTIFY);
         afterInitCallback();
     };
@@ -42,21 +43,21 @@ LogicUser = function () {
             return;
         }
         if (!checkResult) return;
-        Profiler.start(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
+        var prid = Profiler.start(Profiler.ID_AUTH_VK);
         /* get from db */
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
-            authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx);
+            authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx, prid);
         });
     };
 
-    var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx) {
+    var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx, prid) {
         /* if not exists create user */
         if (!user) {
             createUser(socNetTypeId, socNetUserId, function (user) {
-                authorizeSendSuccess(user, cntx);
+                authorizeSendSuccess(user, cntx, prid);
             })
         } else {
-            authorizeSendSuccess(user, cntx);
+            authorizeSendSuccess(user, cntx, prid);
         }
     };
 
@@ -78,13 +79,16 @@ LogicUser = function () {
      * @param user {Object} инфо пользователя.
      * @param cntx {Object} контекст соединения.
      */
-    var authorizeSendSuccess = function (user, cntx) {
+    var authorizeSendSuccess = function (user, cntx, prid) {
         /* тут мы запомним его connectionId раз и на всегда */
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
-        Profiler.stop(Profiler.ID_SAPIUSER_AUTHORIZATION_BY_VK);
+        Profiler.stop(Profiler.ID_AUTH_VK, prid);
         Statistic.add(user.id, Statistic.ID_USER_AUTHORIZATION_BY_VK);
+        refreshUserSocNetInfo(user, function (user) {
+
+        });
     };
 
     /**
@@ -93,22 +97,25 @@ LogicUser = function () {
      * @param userId {Number} данные о каком пользователе.
      */
     this.sendUserInfo = function (userId, toUserId) {
-        Profiler.start(Profiler.ID_SAPIUSER_SEND_USER_INFO);
+        var prid = Profiler.start(Profiler.ID_SEND_USER_INFO);
         DataUser.getById(userId, function (user) {
             if (user) {
                 user.online = self.isUserOnline(user.id);
                 user.isBusy = self.isUserBusy(user.id);
                 user.onGame = self.isUserOnGame(user.id);
                 CAPIUser.updateUserInfo(toUserId, user);
-                Profiler.stop(Profiler.ID_SAPIUSER_SEND_USER_INFO);
-                refreshUserSocNetInfo(user, function (user) {
-                    user.online = self.isUserOnline(user.id);
-                    user.isBusy = self.isUserBusy(user.id);
-                    user.onGame = self.isUserOnGame(user.id);
-                    CAPIUser.updateUserInfo(toUserId, user);
-                });
+                Profiler.stop(Profiler.ID_SEND_USER_INFO, prid);
+                if (user.socNetUpdated <= Math.round((new Date).getTime() / 1000) - Config.SocNet.refreshInfoTimeout) {
+                    refreshUserSocNetInfo(user, function (user) {
+                        user.online = self.isUserOnline(user.id);
+                        user.isBusy = self.isUserBusy(user.id);
+                        user.onGame = self.isUserOnGame(user.id);
+                        CAPIUser.updateUserInfo(toUserId, user);
+                    });
+                }
             } else {
                 Logs.log("LogicUser.sendUserInfo. User not found: id=" + userId, Logs.LEVEL_WARNING);
+                Profiler.stop(Profiler.ID_SEND_USER_INFO, prid);
             }
         });
     };
@@ -119,11 +126,12 @@ LogicUser = function () {
      * @param callback
      */
     var refreshUserSocNetInfo = function (user, callback) {
-        Profiler.start(Profiler.ID_SAPIUSER_UPDATE_USER_SOCNET_INFO);
+        var prid = Profiler.start(Profiler.ID_UPDATE_SOCNET_INFO);
         SocNet.getUserInfo(user.socNetTypeId, user.socNetUserId, function (info) {
             user.firstName = info.firstName;
             user.lastName = info.lastName;
             user.photo50 = info.photo50;
+            user.socNetUpdated = Math.round((new Date).getTime() / 1000);
             switch (info.sex) {
                 case SocNet.SEX_MAN:
                     user.sex = LogicUser.SEX_MAN;
@@ -136,7 +144,7 @@ LogicUser = function () {
             }
             DataUser.save(user, function (user) {
                 if (callback) {
-                    Profiler.stop(Profiler.ID_SAPIUSER_UPDATE_USER_SOCNET_INFO);
+                    Profiler.stop(Profiler.ID_UPDATE_SOCNET_INFO, prid);
                     callback(user);
                 }
             });
@@ -149,30 +157,31 @@ LogicUser = function () {
      * @param cntx {object} контекст соединения
      */
     this.sendFriends = function (userId, cntx) {
-        Profiler.start(Profiler.ID_SAPIUSER_SEND_FRIENDS);
+        var prid = Profiler.start(Profiler.ID_SEND_FRIENDS);
         DataUser.getById(userId, function (user) {
             if (user) {
                 SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
                     if (friends == undefined || friends.length == 0) {
                         CAPIUser.updateFriends(cntx.userId, userId, []);
-                        Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
+                        Profiler.stop(Profiler.ID_SEND_FRIENDS, prid);
                         return;
+                    } else {
+                        DataUser.getListWhere({
+                            socNetTypeId: [user.socNetTypeId],
+                            socNetUserId: [friends, DB.WHERE_IN]
+                        }, function (rows) {
+                            var ids = [];
+                            for (var i in rows) {
+                                ids.push(rows[i].id);
+                            }
+                            Profiler.stop(Profiler.ID_SEND_FRIENDS, prid);
+                            CAPIUser.updateFriends(cntx.userId, userId, ids);
+                        });
                     }
-                    DataUser.getListWhere({
-                        socNetTypeId: [user.socNetTypeId],
-                        socNetUserId: [friends, DB.WHERE_IN]
-                    }, function (rows) {
-                        var ids = [];
-                        for (var i in rows) {
-                            ids.push(rows[i].id);
-                        }
-                        Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
-                        CAPIUser.updateFriends(cntx.userId, userId, ids);
-                    });
                 });
             } else {
                 Logs.log("user not found: id=" + userId, Logs.LEVEL_WARNING);
-                Profiler.stop(Profiler.ID_SAPIUSER_SEND_FRIENDS);
+                Profiler.stop(Profiler.ID_SEND_FRIENDS, prid);
             }
         })
     };
@@ -202,11 +211,11 @@ LogicUser = function () {
      * @param arg8 {*} любой параметр, будет передан в CAPI-функцию 8-ым.
      */
     this.sendToAll = function (capiFunction, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) {
-        Profiler.start(Profiler.ID_LOGIC_USER_SEND_TO_ALL);
+        var prid = Profiler.start(Profiler.ID_LOGIC_SEND_TO_ALL);
         for (var userId in userToCntx) {
             capiFunction.call(null, userId, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
         }
-        Profiler.stop(Profiler.ID_LOGIC_USER_SEND_TO_ALL);
+        Profiler.stop(Profiler.ID_LOGIC_SEND_TO_ALL, prid);
     };
 
     this.getOnlineUserIds = function () {
@@ -246,9 +255,9 @@ LogicUser = function () {
 
     /** Отправляем кол-во онлайн пользователей */
     this.sendOnlineCount = function (cntx) {
-        Profiler.start(Profiler.ID_SAPIUSER_SENDME_ONLINE_COUNT);
+        var prid = Profiler.start(Profiler.ID_SENDME_ONLINE);
         CAPIUser.updateOnlineCount(cntx.userId, self.getOnlineCount());
-        Profiler.stop(Profiler.ID_SAPIUSER_SENDME_ONLINE_COUNT);
+        Profiler.stop(Profiler.ID_SENDME_ONLINE, prid);
     };
 
     /**

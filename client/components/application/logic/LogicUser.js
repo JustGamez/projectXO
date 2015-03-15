@@ -19,7 +19,7 @@ LogicUser = function () {
      */
     this.authorize = function () {
         var socNetUserId, authParams;
-        socNetUserId = SocNet.getSocNetUseId();
+        socNetUserId = SocNet.getSocNetUserId();
         authParams = SocNet.getAuthParams();
         SAPIUser.authorizeByVK(socNetUserId, authParams);
     };
@@ -138,9 +138,7 @@ LogicUser = function () {
         if (count > onlineCount) {
             var currentUser = LogicUser.getCurrentUser();
             if (currentUser && currentUser.id && currentUser.id == 1) {
-                var audio = new Audio('/sounds/ICQMessage.mp3');
-                audio.play();
-                //alert("Онлайн +1 !!!");
+                Sounds.play('/sounds/ICQMessage.mp3');
             }
         }
         onlineCount = count;

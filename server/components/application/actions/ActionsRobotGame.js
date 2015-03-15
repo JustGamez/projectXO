@@ -100,7 +100,8 @@ ActionsRobotGame = function () {
         game = LogicXO.switchTurn(game);
         game.lastMove = {x: AICoords.x, y: AICoords.y};
         LogicGameStore.save(game);
-        CAPIGame.updateInfo(game.creatorUserId, game);
+        // @todo CAPIGame.updateLastMove!
+        CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
         CAPIGame.robotDoMove(game.creatorUserId, game.id);
     };
 };

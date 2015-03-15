@@ -405,13 +405,13 @@ WebSocketServer = function () {
 
         /* Запрашивается клинетский код? */
         if (request.url.indexOf('/VK/clientCode') == 0) {
-            Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
+            var prid = Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
             }
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end(clientCode);
-            Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
+            Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE, prid);
             return true;
         }
         if (request.url.indexOf('/VK/commentsWidget') == 0) {

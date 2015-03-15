@@ -28,10 +28,10 @@ SAPIInvites = function () {
             return;
         }
         /* @todo проверить, что это друг */
-        Profiler.start(Profiler.ID_SAPIINVITES_SEND);
+        var prid = Profiler.start(Profiler.ID_SEND_INVITE);
         Statistic.add(cntx.userId, Statistic.ID_INVITATION_SEND);
         CAPIInvites.receive(whomId, whoId, whomId);
-        Profiler.stop(Profiler.ID_SAPIINVITES_SEND);
+        Profiler.stop(Profiler.ID_SEND_INVITE, prid);
     };
 
     /**
@@ -125,7 +125,9 @@ SAPIInvites = function () {
             return;
         }
         ActionsInvites.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
-            /* Если не ран, сливаем в БД, т.к. игра закончиалсь. */
+            CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
+            CAPIGame.updateMove(game.joinerUserId, game.id, game.lastMove.x, game.lastMove.y);
+            /* Если не запущена, сливаем в БД, т.к. игра закончиалсь. */
             if (game.status != LogicXO.STATUS_RUN) {
                 /* Только что кто-то выиграл? */
                 if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
@@ -133,12 +135,11 @@ SAPIInvites = function () {
                 }
                 LogicGameStore.delete(game.id);
                 DataGame.save(game, function (game) {
+                    // is it on win update
                     CAPIGame.updateInfo(game.creatorUserId, game);
                     CAPIGame.updateInfo(game.joinerUserId, game);
                 })
             }
-            CAPIGame.updateInfo(game.creatorUserId, game);
-            CAPIGame.updateInfo(game.joinerUserId, game);
         });
     };
 };

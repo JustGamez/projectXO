@@ -9,6 +9,7 @@ CREATE TABLE `users` (
   `createTimestamp`    INT(11) UNSIGNED NOT NULL,
   `lastLoginTimestamp` INT(11) UNSIGNED NOT NULL,
   `score`              INT(11) UNSIGNED NOT NULL,
+  `socNetUpdated`     INT(11) UNSIGNED NOT NULL,
   KEY `socNetUniqueKey` (`socNetUserId`, `socNetTypeId`)
 )
   ENGINE =InnoDB

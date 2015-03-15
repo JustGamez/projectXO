@@ -41,6 +41,8 @@ ElementFlag = function () {
      */
     this.title = '';
 
+    this.opacity = undefined;
+
     /**
      * Ссылка на картинку при наведении фокуса(мыши).
      * @type {string}
@@ -150,17 +152,18 @@ ElementFlag = function () {
         if (!showed) return;
         if (flagState == false) {
             src = self.srcRest;
-            if (mouseStateFocused)src = self.srcHover;
+            if (mouseStateFocused)src = self.srcActive;
             if (mouseStateFocused && mouseStateDown) src = self.srcActive;
             if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
         } else {
             src = self.srcActive;
-            if (mouseStateFocused)src = self.srcHover;
+            if (mouseStateFocused)src = self.srcRest;
             if (mouseStateFocused && mouseStateDown) src = self.srcRest;
             if (!mouseStateFocused && mouseStateDown) src = self.srcActive;
         }
         dom.backgroundImage = src;
         dom.title = self.title;
+        dom.opacity = self.opacity;
         dom.redraw();
     };
 

@@ -55,10 +55,8 @@ PageRating = function PageRating() {
         elementRatingList = element;
         /* Кнопка меню */
         element = GUI.createElement('ElementButton', {
-            x: 545,
-            y: 58,
-            width: 162,
-            height: 82,
+            x: 521,
+            y: 72,
             srcRest: '/images/buttons/menuRest.png',
             srcHover: '/images/buttons/menuHover.png',
             srcActive: '/images/buttons/menuActive.png',

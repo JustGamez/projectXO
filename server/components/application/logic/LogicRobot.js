@@ -27,6 +27,7 @@ LogicRobot = function () {
 
     var generateAllLineForField = function (game, state) {
         var allLines, lines;
+        var prid = Profiler.start(Profiler.ID_GENERATE_LINES);
         allLines = [];
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
             for (var y = 0; y < state.fieldSize; y++) {
@@ -46,6 +47,7 @@ LogicRobot = function () {
                 }
             }
         }
+        Profiler.stop(Profiler.ID_GENERATE_LINES, prid);
         return allLines;
     };
 

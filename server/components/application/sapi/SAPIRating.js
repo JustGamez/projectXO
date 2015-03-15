@@ -10,10 +10,10 @@ SAPIRating = function () {
             Logs.log("SAPIRating.sendMeTopList: must be authorized.", Logs.LEVEL_WARNING);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST);
+        var prid = Profiler.start(Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST);
         DataRating.getTopList(function (rows) {
             CAPIRating.updateTopList(cntx.userId, rows);
-            Profiler.stop(Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST);
+            Profiler.stop(Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST, prid);
         });
     };
 

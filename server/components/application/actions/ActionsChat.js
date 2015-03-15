@@ -7,19 +7,18 @@ ActionsChat = function () {
      * @param text {String} Сообщение пользователя.
      */
     this.sendMessage = function (userId, text) {
-        var timestamp;
-        Profiler.start(Profiler.ID_SAPICHAT_SEND_MESSAGE);
+        var timestamp, cacheSize;
+        var prid = Profiler.start(Profiler.ID_CHAT_SEND_MESSAGE);
         timestamp = Math.floor(new Date().getTime() / 1000);
         LogicChatCache.add(userId, text, timestamp, false);
         LogicUser.sendToAll(CAPIChat.getNewMessage, userId, text, timestamp);
         /* Сбросим кэш, если надо */
-        var cacheSize;
         cacheSize = LogicChatCache.getCacheSize();
         Logs.log("ActionsChat.sendMessage. CacheSize=" + cacheSize, Logs.LEVEL_DETAIL);
         if (cacheSize >= Config.Chat.cacheSize) {
             self.flushCache(Config.Chat.lastMessagesCount);
         }
-        Profiler.stop(Profiler.ID_SAPICHAT_SEND_MESSAGE);
+        Profiler.stop(Profiler.ID_CHAT_SEND_MESSAGE, prid);
     };
 
     /**

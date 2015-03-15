@@ -27,9 +27,9 @@ LogicRating = function () {
         var beginPosition2, finishPosition2;
         beginPosition2 = beginPosition - 8 * 3;
         finishPosition2 = finishPosition + 8 * 3;
-        if (beginPosition2 <= 0)beginPosition2 = 0;
+        if (beginPosition2 <= 0) beginPosition2 = 1;
         if (finishPosition2 >= self.getLastPosition()) finishPosition2 = self.getLastPosition();
-        for (var position = beginPosition2; position < finishPosition2; position++) {
+        for (var position = beginPosition2; position <= finishPosition2; position++) {
             if (!ratingByPosition[position] || ratingByPosition[position].needUpdate) {
                 needUpdateList.push(position);
             }

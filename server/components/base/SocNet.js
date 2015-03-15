@@ -55,7 +55,7 @@ SocNet = function () {
         };
     };
 
-    this.getSocNetUseId = function () {
+    this.getSocNetUserId = function () {
         return getParams.viewer_id;
     };
 

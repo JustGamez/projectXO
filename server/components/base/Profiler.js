@@ -5,15 +5,25 @@ Profiler = function () {
     var lastId = 0;
     var maxTitleLength = 0;
 
+    /**  Last profiler Id. */
+    var lastPrid = 0;
+
     this.start = function (id) {
-        data[id].lastStart.push(new Date().getTime());
-        data[id].deep++;
+        lastPrid++;
+        data[id].stamps[lastPrid] = new Date().getTime();
+        return lastPrid;
     };
 
-    this.stop = function (id) {
-        data[id].deep--;
-        data[id].sumTime += new Date().getTime() - data[id].lastStart.pop();
+    this.stop = function (id, prid) {
+        if (!prid) {
+            Logs.log("Profiler. stop", Logs.LEVEL_WARNING, prid);
+        }
+        if (!data[id].stamps[prid]) {
+            Logs.log("Profiler. stop no stamp for", Logs.LEVEL_WARNING, {prid: prid, id: id});
+        }
+        data[id].sumTime += new Date().getTime() - data[id].stamps[prid];
         data[id].count++;
+        delete data[id].stamps[prid];
     };
 
     this.getNewId = function (title) {
@@ -23,8 +33,7 @@ Profiler = function () {
         }
         newId = ++lastId;
         data[newId] = {
-            lastStart: [],
-            deep: 0,
+            stamps: {},
             sumTime: 0,
             count: 0,
             title: title

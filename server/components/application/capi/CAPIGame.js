@@ -26,6 +26,10 @@ CAPIGame = function () {
     this.robotDoMove = function (toUserId, gameId) {
         LogicUser.sendToUser(toUserId, 'CAPIGame', 'robotDoMove', [gameId]);
     };
+
+    this.updateMove = function (toUserId, gameId, x, y) {
+        LogicUser.sendToUser(toUserId, 'CAPIGame', 'updateMove', [gameId, x, y]);
+    };
 };
 
 /**

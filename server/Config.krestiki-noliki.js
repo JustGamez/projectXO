@@ -15,7 +15,8 @@ Config = {
     },
     SocNet: {
         secretKey: 'X0x2PuCZQbC5wwX0lB5R',
-        appId: 4467180
+        appId: 4467180,
+        refreshInfoTimeout: 60 * 30 * 24 // in seconds, 4 hour
     },
     Chat: {
         /**

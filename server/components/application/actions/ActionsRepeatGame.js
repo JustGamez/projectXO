@@ -6,10 +6,11 @@ ActionsRepeatGame = function () {
      * @param gameId {Number} id игры.
      */
     this.copyGame = function (gameId) {
-        Profiler.start(Profiler.ID_ACTIONS_REPEAT_GAME_COPY);
+        var prid = Profiler.start(Profiler.ID_REPEATE_GAME);
         DataGame.getById(gameId, function (oldGame) {
             if (!oldGame) {
                 Logs.log("ActionsRepratGame.copyGame. game not found.", Logs.LEVEL_WARNING, gameId);
+                Profiler.stop(Profiler.ID_REPEATE_GAME, prid);
                 return;
             }
             var newGame = LogicXO.copy(oldGame);
@@ -17,17 +18,15 @@ ActionsRepeatGame = function () {
 
                 LogicGameStore.save(newGame);
 
+                /* Update info. */
+                CAPIGame.updateInfo(newGame.creatorUserId, newGame);
                 if (newGame.vsRobot) {
                     LogicRobot.initState(newGame);
                     /* Если ход робота, то надо сделать ему ход */
                     if (LogicXO.isHisTurn(newGame, 0)) {
-                        ActionsRobotGame.raiseAIMove(newGame.id, function (newGame) {
-                            CAPIGame.updateInfo(newGame.creatorUserId, newGame);
-                        });
+                        ActionsRobotGame.raiseAIMove(newGame.id);
                     }
                 }
-                /* Update info. */
-                CAPIGame.updateInfo(newGame.creatorUserId, newGame);
                 if (!newGame.vsRobot) {
                     CAPIGame.updateInfo(newGame.joinerUserId, newGame);
                 }
@@ -38,9 +37,10 @@ ActionsRepeatGame = function () {
                     CAPIGame.gameCreated(newGame.creatorUserId, newGame.id);
                 }
                 if (!newGame.vsRobot) {
-                    CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
+                    // @todo rem,ove it.
+                    //CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
                 }
-                Profiler.stop(Profiler.ID_ACTIONS_REPEAT_GAME_COPY);
+                Profiler.stop(Profiler.ID_REPEATE_GAME, prid);
             });
         });
     }

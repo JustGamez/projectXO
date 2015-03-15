@@ -9,10 +9,10 @@ SAPIUserState = function () {
             Logs.log("SAPIUserState.isBusy: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIUSERSTATE_IS_BUSY);
+        var prid = Profiler.start(Profiler.ID_USER_IS_BUSY);
         cntx.user.isBusy = true;
         LogicUser.sendToAll(CAPIUserState.isBusy, cntx.userId);
-        Profiler.stop(Profiler.ID_SAPIUSERSTATE_IS_BUSY);
+        Profiler.stop(Profiler.ID_USER_IS_BUSY, prid);
     };
 
     /**
@@ -24,10 +24,10 @@ SAPIUserState = function () {
             Logs.log("SAPIUserState.isNoBusy: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIUSERSTATE_IS_NO_BUSY);
+        var prid = Profiler.start(Profiler.ID_USER_IS_NO_BUSY);
         cntx.user.isBusy = false;
         LogicUser.sendToAll(CAPIUserState.isNoBusy, cntx.userId);
-        Profiler.stop(Profiler.ID_SAPIUSERSTATE_IS_NO_BUSY);
+        Profiler.stop(Profiler.ID_USER_IS_NO_BUSY, prid);
     };
 
     /**
@@ -45,10 +45,10 @@ SAPIUserState = function () {
             Logs.log("SAPIUserState.onGame: must have gameId with type number", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        Profiler.start(Profiler.ID_SAPIUSERSTATE_ON_GAME);
+        var prid = Profiler.start(Profiler.ID_USER_ON_GAME);
         cntx.user.onGame = gameId;
         LogicUser.sendToAll(CAPIUserState.onGame, cntx.userId, gameId);
-        Profiler.stop(Profiler.ID_SAPIUSERSTATE_ON_GAME);
+        Profiler.stop(Profiler.ID_USER_ON_GAME, prid);
     };
 };
 /**
