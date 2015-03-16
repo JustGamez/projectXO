@@ -33,7 +33,6 @@ LogicPageHelp = function () {
      * Действия при нажатии кнопкаи `(X)`.
      */
     this.onButtonCloseClick = function () {
-        SAPIUserState.isNoBusy();
         pageController.showPages(pageIdBefore);
     };
 
@@ -44,7 +43,7 @@ LogicPageHelp = function () {
     this.onButtonHelpClick = function () {
         pageIdBefore = pageController.currentPageIds();
         SAPIStatistic.clickHelp();
-        SAPIUserState.isBusy();
+        LogicUser.setBusy(true);
         LogicPageHelp.showPageAndTab();
     };
 

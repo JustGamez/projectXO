@@ -1,5 +1,6 @@
 LogicUser = function () {
     var self = this;
+
     /**
      * Id пользователя под которым мы сидим.
      */
@@ -190,6 +191,19 @@ LogicUser = function () {
             ratingPositions[userId].needReload = true;
         }
         pageController.redraw();
+    };
+
+    this.setBusy = function (state) {
+        var user;
+        user = self.getById(authorizedUserId);
+        if (state == user.isBusy) {
+            return;
+        }
+        if (state) {
+            SAPIUserState.isBusy();
+        } else {
+            SAPIUserState.isNoBusy();
+        }
     };
 };
 

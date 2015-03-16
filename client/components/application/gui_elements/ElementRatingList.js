@@ -85,7 +85,7 @@ ElementRatingList = function () {
                 photoWidth: 33,
                 photoHeight: 33,
                 frameWidth: 4,
-                degreesDiapazon: 8,
+                degreesDiapazon: 7,
                 showCardInfo: true,
                 cardInfoOffsetX: 442,
                 cardInfoOffsetY: -32

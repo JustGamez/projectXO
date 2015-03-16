@@ -5,6 +5,7 @@
  * @constructor
  */
 LogicGame = function () {
+    var self = this;
 
     /**
      * Id текущей игры.
@@ -35,6 +36,7 @@ LogicGame = function () {
         Logs.log("setCurrentGame:" + gameId, Logs.LEVEL_DETAIL);
         if (currentGameId != gameId) {
             SAPIUserState.onGame(gameId);
+            LogicUser.setBusy(gameId ? true : false);
             currentGameId = gameId;
             pageController.redraw();
         }
@@ -65,7 +67,7 @@ LogicGame = function () {
      */
     this.getById = function (gameId) {
         return games[gameId];
-    }
+    };
 };
 
 /**

@@ -10,7 +10,7 @@ LogicPageMain = function () {
      * - запросим сервер встуть\создать случайную игру.
      */
     this.onPlayButtonClick = function () {
-        SAPIUserState.isBusy();
+        LogicUser.setBusy(true);
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         SAPIRobotGame.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
     };
@@ -51,7 +51,7 @@ LogicPageMain = function () {
      * @param photoInfo {Object}
      */
     this.onLetsPlayClick = function (photoInfo) {
-        SAPIUserState.isBusy();
+        LogicUser.setBusy(true);
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, photoInfo.id);
     };
@@ -62,7 +62,7 @@ LogicPageMain = function () {
      */
     this.onRatingButtonClick = function () {
         SAPIStatistic.onRatingButtonClick();
-        SAPIUserState.isBusy();
+        LogicUser.setBusy(true);
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_RATING]);
     };
 

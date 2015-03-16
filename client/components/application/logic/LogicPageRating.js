@@ -21,7 +21,7 @@ LogicPageRating = function () {
      * Не путать с кнопкой меню на главной странице.
      */
     this.onMenuButtonClick = function () {
-        SAPIUserState.isNoBusy();
+        LogicUser.setBusy(false);
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
     };
 
