@@ -15,10 +15,7 @@ ActionsRobotGame = function () {
         game = LogicXO.create(userId, signId, fieldTypeId, false, false, true);
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
-        DataGame.save(game, function (game) {
-            LogicRobot.initState(game);
-            callback(game);
-        });
+        DataGame.save(game, callback);
     };
 
     /**

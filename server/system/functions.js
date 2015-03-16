@@ -54,14 +54,32 @@ addDeInitCallback = function (callback) {
     deInitCallbacks.push(callback);
 };
 
+deInitBeforeShutdown = function (callback) {
+    var count;
+    count = 0;
+    log("Deinit callbacks is raised.");
+    for (var i in deInitCallbacks) {
+        deInitCallbacks[i].call(null, function () {
+            count++;
+        });
+    }
+    log("de inits completed.");
+    setTimeout(callback, 1235);
+};
+
 /**
  * При вызове process.exit(), выполниться каллбэки деинициализации.
  */
 process.on('exit', function () {
-    log("Deinit callbacks is raised.");
-    for (var i in deInitCallbacks) {
-        deInitCallbacks[i].call();
-    }
+    log("on Exit raized!");
+});
+
+/**
+ * Перехыватываем ошибки!
+ */
+process.on('uncaughtException', function (err) {
+    log('ERROR HAPPENDZ');
+    console.log(err.stack);
 });
 
 /**

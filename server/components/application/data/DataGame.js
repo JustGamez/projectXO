@@ -56,7 +56,7 @@ DataGame = function () {
             DB.insert(tableName, game, function (result) {
                 game.id = result.insertId;
                 cache[game.id] = game;
-                callback(cache[game.id]);
+                callback(game);
             }, fields, {field: compressField});
         } else {
             if (!cache[game.id]) {
@@ -67,14 +67,14 @@ DataGame = function () {
                 // Если статус запущено\ждём, то обновляем в кэше.
                 case LogicXO.STATUS_WAIT:
                 case LogicXO.STATUS_RUN:
-                    callback(cache[game.id]);
+                    callback(game);
                     break;
                 // Если статус закрыто\выиграл\ничья, то удаляем из кэша и обновляем в БД.
                 case LogicXO.STATUS_CLOSED:
                 case LogicXO.STATUS_SOMEBODY_WIN:
                 case LogicXO.STATUS_NOBODY_WIN:
                     DB.update(tableName, game, function (result) {
-                        callback(cache[game.id]);
+                        callback(game);
                         delete cache[game.id];
                     }, fields, {field: compressField});
                     break;
@@ -101,6 +101,16 @@ DataGame = function () {
             }
         });
         return out;
+    };
+
+    this.flushCache = function () {
+        Logs.log("Flush data game cache begin.");
+        cache.forEach(function (game) {
+            DB.update(tableName, game, function () {
+                delete cache[game.id];
+                Logs.log("Game flushed. id:" + game.id + " status:" + game.status);
+            }, fields, {field: compressField});
+        });
     };
 };
 

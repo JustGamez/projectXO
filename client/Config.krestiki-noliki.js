@@ -1,9 +1,9 @@
 Config = {
     Invites: {
         /* Столько будет держаться надпись: "Ждём..." при приглашении. */
-        inviteTimeout: 1000 * (60),
+        inviteTimeout: 1000 * (320),
         /* Столько будет держаться надпись: "Играем?" при приглашении. */
-        letsPlaytimeout: 1000 * (60 - 2)
+        letsPlaytimeout: 1000 * (320 - 2)
     },
     Logs: {
         triggerLevel: Logs.LEVEL_DETAIL

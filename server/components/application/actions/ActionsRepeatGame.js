@@ -19,8 +19,6 @@ ActionsRepeatGame = function () {
                 if (!newGame.vsRobot) {
                     CAPIGame.updateInfo(newGame.joinerUserId, newGame);
                     CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
-                } else {
-                    LogicRobot.initState(newGame);
                 }
             });
         });

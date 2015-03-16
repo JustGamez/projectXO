@@ -42,9 +42,6 @@ ActionsGame = function () {
                 return;
             }
             game = LogicXO.close(game);
-            if (game.vsRobot) {
-                LogicRobot.removeState(game.id);
-            }
             Logs.log("Close game!", Logs.LEVEL_DETAIL, {userId: userId, gameId: gameId, game: game});
             DataGame.save(game, function (game) {
                 callback(game);

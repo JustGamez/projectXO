@@ -61,9 +61,6 @@ SAPIGame = function () {
             if (oldStatus == LogicXO.STATUS_RUN && game.winnerId) {
                 LogicUser.onWin(game.winnerId, game);
             }
-            if (game.vsRobot) {
-                LogicRobot.removeState(game.id);
-            }
             DataGame.save(game, function (game) {
                 // @todo CAPIGame.winData
                 CAPIGame.updateInfo(game.creatorUserId, game);

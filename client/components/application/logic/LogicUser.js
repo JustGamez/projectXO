@@ -37,6 +37,7 @@ LogicUser = function () {
         SAPIChat.sendMeLastMessages();
         SAPIUser.sendMeOnlineUserIds();
         SAPIRating.sendMeLastPosition();
+        waitForLoadingUser = [];
     };
 
     /**

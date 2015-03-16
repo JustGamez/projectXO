@@ -23,9 +23,11 @@ ActionsChat = function () {
     /**
      * Сольём кэш чата.
      * @param retailSize {Number} сколько оставить в кэше.
+     * @param afterCompleteCallback {Function}
      */
-    this.flushCache = function (retailSize) {
+    this.flushCache = function (retailSize, afterCompleteCallback) {
         var cacheSize, tmp, tmp2;
+        log("FLush chat data begin.");
         if (!retailSize) {
             retailSize = 0;
         }
@@ -38,10 +40,14 @@ ActionsChat = function () {
                 tmp2.push(message);
             }
         });
-        DataChat.saveList(tmp2);
-        /* Удалим из кэша, то что мы слили в БД. */
-        LogicChatCache.sliceCache(cacheSize - retailSize);
-        Logs.log('Chat cache flushed.');
+        DataChat.saveList(tmp2, function () {
+            /* Удалим из кэша, то что мы слили в БД. */
+            LogicChatCache.sliceCache(cacheSize - retailSize);
+            Logs.log('Chat cache flushed. Count:' + tmp2.length);
+            if (afterCompleteCallback) {
+                afterCompleteCallback();
+            }
+        });
     };
 
     /**
@@ -64,6 +70,10 @@ ActionsChat = function () {
             Logs.log('Load last chat messages. Count:' + list.length, Logs.LEVEL_DETAIL);
             afterComplete();
         });
+    };
+
+    this.deInit = function (deInitCallback) {
+        self.flushCache(null, deInitCallback);
     };
 };
 

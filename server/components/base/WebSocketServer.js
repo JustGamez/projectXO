@@ -454,9 +454,9 @@ WebSocketServer = function () {
         if (request.url.indexOf('/shutdown') == 0) {
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Shutdown executed!" + new Date().getTime() + '</pre>');
-            setTimeout(function () {
+            deInitBeforeShutdown(function () {
                 process.exit();
-            }, 100);
+            });
             return true;
         }
         if (request.url.indexOf('/reloadClientCode') == 0) {

@@ -90,8 +90,9 @@ webSocketServer.onDisconnect = apiRouter.onDisconnect;
 webSocketServer.onData = apiRouter.onData;
 
 /* set deinit callbacks */
-addDeInitCallback(ActionsChat.flushCache);
+addDeInitCallback(ActionsChat.deInit);
 addDeInitCallback(Statistic.flushCache);
+addDeInitCallback(DataGame.flushCache);
 
 /* init all components */
 sequencedInit(Logs.init);

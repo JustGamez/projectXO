@@ -23,7 +23,7 @@ DataChat = function () {
         DB.query(query, callback);
     };
 
-    this.saveList = function (list) {
+    this.saveList = function (list, callback) {
         var query, message;
         query = "INSERT INTO " + tableName + " ";
         query += "(`userId`,`text`,`timestamp`) VALUES";
@@ -32,12 +32,12 @@ DataChat = function () {
             query += "(";
             query += DB.escape(message.userId) + ",";
             query += DB.escape(message.text) + ",";
-            query += DB.escape(message.timestamp) + "";
+            query += DB.escape(message.timestamp);
             query += "),";
         }
         /* Уберём последнию запятую */
         query = query.substr(0, query.length - 1);
-        DB.query(query, new Function());
+        DB.query(query, callback);
     };
 };
 

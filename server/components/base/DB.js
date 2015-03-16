@@ -70,7 +70,7 @@ DB = function () {
     this.query = function (query, callback) {
         connection.query(query, function (err, rows) {
             if (err) {
-                Logs.log("Query error:" + query, Logs.LEVEL_FATAL_ERROR, err);
+                Logs.log("Query error:" + query, Logs.LEVEL_ERROR, err);
             }
             callback(rows);
         });

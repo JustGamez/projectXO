@@ -1,28 +1,8 @@
 LogicRobot = function () {
     var self = this;
 
-    /**
-     * Состояние игр.
-     * @type {Array}
-     */
-    var stateCache = [];
-
     this.init = function (afterInitCallback) {
         afterInitCallback();
-    };
-
-    /**
-     * Проинициализируем данные робота для игры.
-     * ВНИМАНИЕ: Сюда игра должна попадать уже с установленными знаками.
-     * @param game {Object}
-     */
-    this.initState = function (game) {
-        stateCache[game.id] = {};
-        stateCache[game.id].lines = [];
-        stateCache[game.id].fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
-        stateCache[game.id].lineSize = LogicXO.getLineSize(game.fieldTypeId);
-        stateCache[game.id].robotSignId = game.XUserId == 0 ? LogicXO.SIGN_ID_X : LogicXO.SIGN_ID_O;
-        stateCache[game.id].playerSignId = game.XUserId == 0 ? LogicXO.SIGN_ID_O : LogicXO.SIGN_ID_X;
     };
 
     var generateAllLineForField = function (game, state) {
@@ -94,7 +74,13 @@ LogicRobot = function () {
     this.generateMovementCoords = function (game) {
         var state, max, target, line, robotSignId, playerSignId, lines, randomIndex, emptyPoints;
 
-        state = stateCache[game.id];
+        state = {
+            fieldSize: LogicXO.getFieldSize(game.fieldTypeId),
+            robotSignId: game.XUserId == 0 ? LogicXO.SIGN_ID_X : LogicXO.SIGN_ID_O,
+            playerSignId: game.XUserId == 0 ? LogicXO.SIGN_ID_O : LogicXO.SIGN_ID_X,
+            lineSize: LogicXO.getLineSize(game.fieldTypeId)
+        };
+
         robotSignId = state.robotSignId;
         playerSignId = state.playerSignId;
 
@@ -203,15 +189,6 @@ LogicRobot = function () {
         y = emptyPoints[randomIndex].y;
         return {x: x, y: y};
     };
-
-    /**
-     * Удалить состояние игры, видимо игра закончена и более не нуждается
-     * в дополонительной информации для AI.
-     * @param gameId {Number}
-     */
-    this.removeState = function (gameId) {
-        delete stateCache[gameId];
-    }
 };
 
 /**
