@@ -38,11 +38,11 @@ CAPIGame = function () {
             Logs.log("CAPIGAme.updateMove some error.", Logs.LEVEL_ERROR);
             return;
         }
+        Sounds.play('/sounds/turn.mp3');
         /* Мы ставим это у себя. */
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
         LogicGame.update(game);
-        Sounds.play('/sounds/turn.mp3');
         if (game.vsRobot) {
             winLine = LogicXO.findWinLine(game);
             LogicXO.setOutcomeResults(game, winLine);

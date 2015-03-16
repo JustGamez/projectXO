@@ -47,6 +47,7 @@ LogicPageXO = function () {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
+        Sounds.play('/sounds/turn.mp3');
         /* Сообщим серверу. */
         SAPIGame.doMove(game.id, x, y);
         /* Обновим у нас. */
@@ -67,7 +68,6 @@ LogicPageXO = function () {
             /* send win line coords */
             SAPIGame.checkWinner(game.id);
         }
-        Sounds.play('/sounds/turn.mp3');
     };
 
     /**
