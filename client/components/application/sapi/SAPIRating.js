@@ -4,13 +4,6 @@
 SAPIRating = function () {
 
     /**
-     * Запросить отправку топ-рейтинга.
-     */
-    this.sendMeTopList = function () {
-        apiRouter.executeRequest('SAPIRating', 'sendMeTopList', arguments, [{connectionId: null}]);
-    };
-
-    /**
      * Запросить рейтинговые данные для указанных позиций.
      */
     this.sendMeRatingForPositions = function (positions) {

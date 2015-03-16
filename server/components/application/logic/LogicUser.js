@@ -105,7 +105,7 @@ LogicUser = function () {
                 user.onGame = self.isUserOnGame(user.id);
                 CAPIUser.updateUserInfo(toUserId, user);
                 Profiler.stop(Profiler.ID_SEND_USER_INFO, prid);
-                if (user.socNetUpdated <= Math.round((new Date).getTime() / 1000) - Config.SocNet.refreshInfoTimeout) {
+                if (user.socNetUpdated <= time() - Config.SocNet.refreshInfoTimeout) {
                     refreshUserSocNetInfo(user, function (user) {
                         user.online = self.isUserOnline(user.id);
                         user.isBusy = self.isUserBusy(user.id);
@@ -131,7 +131,7 @@ LogicUser = function () {
             user.firstName = info.firstName;
             user.lastName = info.lastName;
             user.photo50 = info.photo50;
-            user.socNetUpdated = Math.round((new Date).getTime() / 1000);
+            user.socNetUpdated = time();
             switch (info.sex) {
                 case SocNet.SEX_MAN:
                     user.sex = LogicUser.SEX_MAN;
@@ -331,14 +331,11 @@ LogicUser = function () {
      */
     var onLogout = function (userId) {
         var gameIds;
-        gameIds = LogicGameStore.getIdsForUserId(userId);
+        gameIds = DataGame.getCachedRunWaitGamesForUser(userId);
         LogicWaitersStack.deleteByUserId(userId);
         for (var i in gameIds) {
-            ActionsRandomGame.closeGame(userId, gameIds[i], function (game) {
-                LogicGameStore.delete(game.id);
-                DataGame.save(game, function (game) {
-                    CAPIGame.updateInfo(LogicXO.getOpponentUserId(game, userId), game);
-                });
+            ActionsGame.close(userId, gameIds[i], function (game) {
+                CAPIGame.updateInfo(LogicXO.getOpponentUserId(game, userId), game);
             });
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);

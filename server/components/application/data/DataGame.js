@@ -1,6 +1,7 @@
 DataGame = function () {
 
     var tableName = 'games';
+
     var fields = {
         id: null,
         creatorUserId: null,
@@ -14,10 +15,15 @@ DataGame = function () {
         XUserId: null,
         OUserId: null,
         turnId: null,
-        result_field: null,
+        field: null,
         status: null,
-        winnerId: null
+        winnerId: null,
+        copyFromId: null,
+        created: null,
+        finish: null
     };
+
+    var cache = [];
 
     /**
      * Вернуть игру по id.
@@ -25,25 +31,18 @@ DataGame = function () {
      * @param callback
      */
     this.getById = function (id, callback) {
-        DB.queryWhere(tableName, {
-            id: [id]
-        }, function (rows) {
-            rows[0].field = uncompressField(rows[0].field);
-            callback(rows[0] || null);
-        });
-    };
-
-    /**
-     * Возвращает список игр по параметрам.
-     * @param where {object} фильтр.
-     * @param callback
-     */
-    this.getListWhere = function (where, callback) {
-        DB.queryWhere(tableName, where, function (rows) {
-            for (var i in rows) {
-                rows[i].field = JSON.parse(rows[i].field);
+        if (cache[id]) {
+            callback(cache[id]);
+            return;
+        }
+        DB.queryWhere(tableName, {id: [id]}, function (rows) {
+            if (!rows[0]) {
+                Logs.log("DataGame.getById game not found", Logs.LEVEL_WARNING, gameId);
+                return;
             }
-            callback(rows);
+            rows[0].field = uncompressField(rows[0].field);
+            cache[id] = rows[0];
+            callback(cache[id]);
         });
     };
 
@@ -53,40 +52,37 @@ DataGame = function () {
      * @param callback {function}
      */
     this.save = function (game, callback) {
-        var data;
-        data = {
-            creatorUserId: game.creatorUserId,
-            joinerUserId: game.joinerUserId,
-            creatorSignId: game.creatorSignId,
-            joinerSignId: game.joinerSignId,
-            fieldTypeId: game.fieldTypeId,
-            isRandom: game.isRandom,
-            isInvitation: game.isInvitation,
-            vsRobot: game.vsRobot,
-            XUserId: game.XUserId,
-            OUserId: game.OUserId,
-            turnId: game.turnId,
-            field: compressField(game.field),
-            status: game.status,
-            winnerId: game.winnerId
-        };
-        if (game.id) {
-            data.id = game.id;
-            DB.update(tableName, data, function (result) {
-                callback(game);
-            });
-        } else {
-            DB.insert(tableName, data, function (result) {
+        if (!game.id) {
+            DB.insert(tableName, game, function (result) {
                 game.id = result.insertId;
-                callback(game);
-            });
+                cache[game.id] = game;
+                callback(cache[game.id]);
+            }, fields, {field: compressField});
+        } else {
+            if (!cache[game.id]) {
+                Logs.log("DataGame.save", "game does not exists in cache. strange...", Logs.LEVEL_WARNING, game);
+            }
+            cache[game.id] = game;
+            switch (game.status) {
+                // Если статус запущено\ждём, то обновляем в кэше.
+                case LogicXO.STATUS_WAIT:
+                case LogicXO.STATUS_RUN:
+                    callback(cache[game.id]);
+                    break;
+                // Если статус закрыто\выиграл\ничья, то удаляем из кэша и обновляем в БД.
+                case LogicXO.STATUS_CLOSED:
+                case LogicXO.STATUS_SOMEBODY_WIN:
+                case LogicXO.STATUS_NOBODY_WIN:
+                    DB.update(tableName, game, function (result) {
+                        callback(cache[game.id]);
+                        delete cache[game.id];
+                    }, fields, {field: compressField});
+                    break;
+                default:
+                    Logs.log("DataGame.save. unknown games status", Logs.LEVEL_WARNING, game);
+                    break;
+            }
         }
-    };
-
-    this.getLastId = function (callback) {
-        DB.query("SELECT MAX(id) as maxId FROM " + tableName, function (result) {
-            callback(result[0].maxId ? result[0].maxId : 0);
-        });
     };
 
     var compressField = function (field) {
@@ -95,6 +91,16 @@ DataGame = function () {
 
     var uncompressField = function (field) {
         return JSON.parse(field);
+    };
+
+    this.getCachedRunWaitGamesForUser = function (userId) {
+        var out = [];
+        cache.forEach(function (game) {
+            if (LogicXO.isMember(game, userId)) {
+                out.push(game.id);
+            }
+        });
+        return out;
     };
 };
 

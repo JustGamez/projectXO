@@ -25,27 +25,12 @@ PageHelp = function PageHelp() {
 
     this.init = function () {
         var element;
-        /* Тут создаются элементы страницы. */
-        /* Кнопка `(?)` */
-        element = GUI.createElement('ElementButton', {
-            x: 686,
-            y: 64,
-            width: 48,
-            height: 42,
-            srcRest: '/images/help/buttons/closeRest.png',
-            srcHover: '/images/help/buttons/closeHover.png',
-            srcActive: '/images/help/buttons/closeActive.png',
-            onClick: LogicPageHelp.onButtonCloseClick
-        });
-        self.elements.push(element);
         /* Чекбоксы выбора под-страницы хелпа. */
         element = GUI.createElement('ElementRadio', {
             options: [
                 {
                     x: 95,
                     y: 83,
-                    width: 28,
-                    height: 28,
                     srcRest: '/images/help/checkboxArrowRest.png',
                     srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
@@ -55,8 +40,6 @@ PageHelp = function PageHelp() {
                 {
                     x: 95,
                     y: 108,
-                    width: 28,
-                    height: 28,
                     srcRest: '/images/help/checkboxArrowRest.png',
                     srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
@@ -67,8 +50,6 @@ PageHelp = function PageHelp() {
                 {
                     x: 95,
                     y: 133,
-                    width: 28,
-                    height: 28,
                     srcRest: '/images/help/checkboxArrowRest.png',
                     srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',

@@ -28,7 +28,7 @@ Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST = Profiler.getNewId("ID_SAPIRATING_SEND_
 Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME = Profiler.getNewId("ID_SAPIGAME_REQUEST_RANDOM_GAME");
 Profiler.ID_SAPIGAME_CANCEL_RANDOM_GAME = Profiler.getNewId("ID_SAPIGAME_CANCEL_RANDOM_GAME");
 Profiler.ID_DO_MOVE = Profiler.getNewId("ID_DO_MOVE");
-/* ActionsRandomGame */
+/* ActionsGame */
 Profiler.ID_CREATE_WAITER = Profiler.getNewId("ID_CREATE_WAITER");
 Profiler.ID_CREATE_RANDOM_GAME = Profiler.getNewId("ID_CREATE_RANDOM_GAME");
 /* SAPIRobot */

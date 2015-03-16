@@ -6,41 +6,22 @@ ActionsRepeatGame = function () {
      * @param gameId {Number} id игры.
      */
     this.copyGame = function (gameId) {
-        var prid = Profiler.start(Profiler.ID_REPEATE_GAME);
+        var newGame;
         DataGame.getById(gameId, function (oldGame) {
             if (!oldGame) {
                 Logs.log("ActionsRepratGame.copyGame. game not found.", Logs.LEVEL_WARNING, gameId);
-                Profiler.stop(Profiler.ID_REPEATE_GAME, prid);
                 return;
             }
-            var newGame = LogicXO.copy(oldGame);
+            newGame = LogicXO.copy(oldGame);
             DataGame.save(newGame, function (newGame) {
-
-                LogicGameStore.save(newGame);
-
-                /* Update info. */
                 CAPIGame.updateInfo(newGame.creatorUserId, newGame);
-                if (newGame.vsRobot) {
-                    LogicRobot.initState(newGame);
-                    /* Если ход робота, то надо сделать ему ход */
-                    if (LogicXO.isHisTurn(newGame, 0)) {
-                        ActionsRobotGame.raiseAIMove(newGame.id);
-                    }
-                }
+                CAPIGame.gameCreated(newGame.creatorUserId, newGame.id);
                 if (!newGame.vsRobot) {
                     CAPIGame.updateInfo(newGame.joinerUserId, newGame);
-                }
-                /* Game created notify. */
-                if (newGame.isInvitation) {
-                    CAPIInvites.gameCreated(newGame.creatorUserId, newGame.id);
+                    CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
                 } else {
-                    CAPIGame.gameCreated(newGame.creatorUserId, newGame.id);
+                    LogicRobot.initState(newGame);
                 }
-                if (!newGame.vsRobot) {
-                    // @todo rem,ove it.
-                    //CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
-                }
-                Profiler.stop(Profiler.ID_REPEATE_GAME, prid);
             });
         });
     }

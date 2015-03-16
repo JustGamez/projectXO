@@ -44,7 +44,7 @@ LogicRating = function () {
         for (var i in list) {
             ratingByPosition[list[i].position] = list[i];
             ratingByPosition[list[i].position].needUpdate = false;
-            LogicUser.getUserById(list[i].userId);
+            LogicUser.getById(list[i].userId);
         }
         pageController.redraw();
     };

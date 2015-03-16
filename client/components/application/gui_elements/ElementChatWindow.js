@@ -97,7 +97,7 @@ ElementChatWindow = function () {
         text = '';
         for (var i in messages) {
             message = messages[i];
-            user = LogicUser.getUserById(message.userId);
+            user = LogicUser.getById(message.userId);
             if (!user.id) continue;
             if (GUIDom.hidePictures) {
                 dom.opacity = 0.09;

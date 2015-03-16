@@ -103,7 +103,7 @@ LogicXO = function () {
      * @param isRandom {boolean} true - если это случайная игра.
      * @param isInvitation {boolean} true - если игра по приглашению
      * @param vsRobot {boolean} true - если игра с роботом.
-     * @returns {{creatorUserId: (fields.id|*|id|user.id|LogicUser.getUserById.id|string), joinerUserId: number, creatorSignId: *, joinerSignId: number, fieldTypeId: *, isRandom: *, isInvitation: *, vsRobot: *, XUserId: number, OUserId: number, turnId: number, result_field: string, status: number, winnerId: number}}
+     * @returns {{creatorUserId: (fields.id|*|id|user.id|LogicUser.getUserById.id|string), joinerUserId: number, creatorSignId: *, joinerSignId: number, fieldTypeId: *, isRandom: *, isInvitation: *, vsRobot: *, XUserId: number, OUserId: number, turnId: number, status: number, winnerId: number}}
      */
     this.create = function (creatorUserId, creatorSignId, fieldTypeId, isRandom, isInvitation, vsRobot) {
         var field;
@@ -120,11 +120,12 @@ LogicXO = function () {
             XUserId: 0,
             OUserId: 0,
             turnId: LogicXO.SIGN_ID_X,
-            result_field: '',
             status: LogicXO.STATUS_WAIT,
             winnerId: 0,
             field: field,
-            copyFromId: 0
+            copyFromId: 0,
+            created: time(),
+            finish: 0
         };
     };
 
@@ -306,6 +307,7 @@ LogicXO = function () {
      */
     this.close = function (game) {
         game.status = LogicXO.STATUS_CLOSED;
+        game.finish = time();
         return game;
     };
 
@@ -339,6 +341,7 @@ LogicXO = function () {
      */
     this.setSign = function (game, x, y) {
         game.field[y][x] = game.turnId;
+        game.lastMove = {x: x, y: y};
         return game;
     };
 
@@ -525,9 +528,11 @@ LogicXO = function () {
         game.outcomeResults = winLine;
         if (winLine.noBodyWin) {
             game.status = LogicXO.STATUS_NOBODY_WIN;
+            game.finish = time();
         }
         if (winLine.someBodyWin) {
             game.status = LogicXO.STATUS_SOMEBODY_WIN;
+            game.finish = time();
             if (winLine.signId == LogicXO.SIGN_ID_X) {
                 game.winnerId = game.XUserId;
             }

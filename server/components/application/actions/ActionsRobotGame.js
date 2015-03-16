@@ -16,53 +16,9 @@ ActionsRobotGame = function () {
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
         DataGame.save(game, function (game) {
-            LogicGameStore.save(game);
             LogicRobot.initState(game);
-            /* Если ход робота, то надо сделать ему ход */
-            if (LogicXO.isHisTurn(game, 0)) {
-                self.raiseAIMove(game.id);
-            }
             callback(game);
         });
-    };
-
-    /**
-     * Сделать ход в игре, игроком.
-     * @param userId {Number} id игрока
-     * @param gameId {Number} id игры
-     * @param x {Number}
-     * @param y {Number}
-     * @param checkWinner {Boolean}
-     * @param callback {Function}
-     */
-    this.doMove = function (userId, gameId, x, y, checkWinner, callback) {
-        var game, user, winLine, oldStatus;
-        game = LogicGameStore.load(gameId);
-        if (!game) {
-            Logs.log("ActionsRobotGame.doMove. game not found", Logs.LEVEL_WARNING, arguments);
-            return;
-        }
-        if (!LogicXO.userCanDoMove(game, userId, x, y)) {
-            Logs.log("ActionsRobotGame.doMove. current user can't go right now", Logs.LEVEL_DETAIL);
-            return;
-        }
-        if (!game.vsRobot) {
-            Logs.log("ActionsRobotGame.doMove. User cannot do move, because is not random game.", Logs.LEVEL_WARNING, {
-                game: game,
-                userId: userId
-            });
-            return;
-        }
-        oldStatus = game.status;
-        game = LogicXO.setSign(game, x, y);
-        game = LogicXO.switchTurn(game);
-        game.lastMove = {x: x, y: y};
-        if (checkWinner) {
-            winLine = LogicXO.findWinLine(game);
-            game = LogicXO.setOutcomeResults(game, winLine);
-        }
-        LogicGameStore.save(game);
-        callback(game, oldStatus);
     };
 
     /**
@@ -70,44 +26,43 @@ ActionsRobotGame = function () {
      * @param gameId {Number}
      */
     this.raiseAIMove = function (gameId) {
-        var game, AICoords;
-        game = LogicGameStore.load(gameId);
-        if (!game) {
-            Logs.log("ActionsRobotGame.raiseAIMove. game does not exists.", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        if (!game.vsRobot) {
-            Logs.log("ActionsRobotGame.raiseAIMove. game is not vsRobot game.", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        if (game.status != LogicXO.STATUS_RUN) {
-            Logs.log("ActionsRobotGame.raiseAIMove. game is not running.", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        /* 0 is bot id, but bot is not exists */
-        if (!LogicXO.isHisTurn(game, 0)) {
-            Logs.log("ActionsRobotGame.raiseAIMove. Is not turn of robot.", Logs.LEVEL_WARNING, game);
-            return;
-        }
-        /* Сюда будем ставить ход. */
-        AICoords = LogicRobot.generateMovementCoords(game);
-        if (!LogicXO.userCanDoMove(game, 0, AICoords.x, AICoords.y)) {
-            Logs.log("ActionsRobotGame.raiseAIMove. Robot can not do move.x:" + AICoords.x + ", y:" + AICoords.y, Logs.LEVEL_WARNING, game);
-            return;
-        }
-        /* Тут мы добавим\обновим линии робота на основании последнего хода. */
-        game = LogicXO.setSign(game, AICoords.x, AICoords.y);
-        game = LogicXO.switchTurn(game);
-        game.lastMove = {x: AICoords.x, y: AICoords.y};
-        LogicGameStore.save(game);
-        // @todo CAPIGame.updateLastMove!
-        CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
-        CAPIGame.robotDoMove(game.creatorUserId, game.id);
+        var AICoords;
+        DataGame.getById(gameId, function (game) {
+            if (!game || !game.id) {
+                Logs.log("ActionsRobotGame.raiseAIMove. game does not exists.", Logs.LEVEL_WARNING, gameId);
+                return;
+            }
+            if (!game.vsRobot) {
+                Logs.log("ActionsRobotGame.raiseAIMove. game is not vsRobot game.", Logs.LEVEL_WARNING, gameId);
+                return;
+            }
+            if (game.status != LogicXO.STATUS_RUN) {
+                Logs.log("ActionsRobotGame.raiseAIMove. game is not running.", Logs.LEVEL_WARNING, gameId);
+                return;
+            }
+            /* 0 is a bot id, but bot is not exists */
+            if (!LogicXO.isHisTurn(game, 0)) {
+                Logs.log("ActionsRobotGame.raiseAIMove. Is not turn of robot.", Logs.LEVEL_WARNING, game);
+                return;
+            }
+            /* Сюда будем ставить ход. */
+            AICoords = LogicRobot.generateMovementCoords(game);
+            if (!LogicXO.userCanDoMove(game, 0, AICoords.x, AICoords.y)) {
+                Logs.log("ActionsRobotGame.raiseAIMove. Robot can not do move.x:" + AICoords.x + ", y:" + AICoords.y, Logs.LEVEL_WARNING, game);
+                return;
+            }
+            /* Тут мы добавим\обновим линии робота на основании последнего хода. */
+            game = LogicXO.setSign(game, AICoords.x, AICoords.y);
+            game = LogicXO.switchTurn(game);
+            DataGame.save(game, function (game) {
+                CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
+            });
+        });
     };
 };
 
 /**
  * Константный класс.
- * @type {ActionsRandomGame}
+ * @type {ActionsRobotGame}
  */
 ActionsRobotGame = new ActionsRobotGame();

@@ -87,7 +87,7 @@ ElementRatingList = function () {
                 frameWidth: 4,
                 degreesDiapazon: 8,
                 showCardInfo: true,
-                cardInfoOffsetX: 87,
+                cardInfoOffsetX: 442,
                 cardInfoOffsetY: -32
             });
             row.all.push(row.photo);

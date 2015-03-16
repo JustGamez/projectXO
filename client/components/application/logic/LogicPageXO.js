@@ -18,18 +18,13 @@ LogicPageXO = function () {
         if (game) {
             if (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN) {
                 if (game.vsRobot) {
-                    SAPIRobotGame.closeGame(game.id);
-                }
-                if (game.isRandom) {
-                    /* @todo вынести этот метод в SAPIRandomGame, наверное. */
-                    SAPIGame.closeRandomGame(game.id);
+                    SAPIRobotGame.close(game.id);
                 }
                 if (game.isInvitation) {
-                    SAPIInvites.closeGame(game.id);
+                    SAPIGame.close(game.id);
                 }
             }
-            SAPIUserState.onGame(0);
-            LogicGame.setCurrentGameId(null);
+            LogicGame.setCurrentGameId(0);
         } else {
             SAPIGame.cancelRandomGameRequests();
         }
@@ -52,21 +47,27 @@ LogicPageXO = function () {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
+        /* Сообщим серверу. */
+        SAPIGame.doMove(game.id, x, y);
+        /* Обновим у нас. */
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
+        /* Проверим, есть ли победитель. */
         winLine = LogicXO.findWinLine(game);
         game = LogicXO.setOutcomeResults(game, winLine);
-        LogicGame.updateInfo(game);
-        if (game.isRandom) {
-            /* @todo на саммом деле это doMoveOnRandomGame. т.е. надо вынести это в SAPIRandomGame, должно быть */
-            SAPIGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
-        }
+        LogicGame.update(game);
         if (game.vsRobot) {
-            SAPIRobotGame.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
+            if (!(game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin)) {
+                setTimeout(function () {
+                    SAPIRobotGame.raiseAIMove(game.id)
+                }, 350);
+            }
         }
-        if (game.isInvitation) {
-            SAPIInvites.doMove(game.id, x, y, game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin);
+        if (game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin) {
+            /* send win line coords */
+            SAPIGame.checkWinner(game.id);
         }
+        Sounds.play('/sounds/turn.mp3');
     };
 
     /**

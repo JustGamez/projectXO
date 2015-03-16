@@ -12,20 +12,7 @@ LogicPageMain = function () {
     this.onPlayButtonClick = function () {
         SAPIUserState.isBusy();
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
-        if (LogicXOSettings.requestedVsRobot) {
-            SAPIRobotGame.startGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
-        } else {
-            SAPIGame.requestRandomGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
-        }
-    };
-
-    /**
-     * Действия при смене флага "С роботом".
-     * @param value {boolean}
-     * @todo убрать этот функционал?
-     */
-    this.onFlagVsRobotChange = function (value) {
-        LogicXOSettings.requestedVsRobot = value;
+        SAPIRobotGame.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
     };
 
     /**
@@ -84,8 +71,6 @@ LogicPageMain = function () {
      */
     this.onAddFriendButtonClick = function () {
         SAPIStatistic.openInviteFriendDialog();
-        //alert("Вообще то эта кнопка для приглашения ваших друзей, но... эта игра еще не опубликована, но мы рады что вы оказались пользователем этой игры, до её запуска!");
-        //return;
         SocNet.openInviteFriendDialog();
     };
 

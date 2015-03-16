@@ -195,7 +195,7 @@ PageMain = function PageMain() {
         ids = tmp;
         if (ids) {
             for (var i in ids) {
-                user = LogicUser.getUserById(ids[i]);
+                user = LogicUser.getById(ids[i]);
                 if (!user) {
                     continue;
                 }

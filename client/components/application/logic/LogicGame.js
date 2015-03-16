@@ -22,7 +22,7 @@ LogicGame = function () {
      * Обновить данные об игре.
      * @param game {Object} объект игры.
      */
-    this.updateInfo = function (game) {
+    this.update = function (game) {
         games[game.id] = game;
         pageController.redraw();
     };
@@ -33,8 +33,11 @@ LogicGame = function () {
      */
     this.setCurrentGameId = function (gameId) {
         Logs.log("setCurrentGame:" + gameId, Logs.LEVEL_DETAIL);
-        currentGameId = gameId;
-        pageController.redraw();
+        if (currentGameId != gameId) {
+            SAPIUserState.onGame(gameId);
+            currentGameId = gameId;
+            pageController.redraw();
+        }
     };
 
     /**
@@ -60,7 +63,7 @@ LogicGame = function () {
      * @param gameId {int}
      * @returns {Object}
      */
-    this.getGameById = function (gameId) {
+    this.getById = function (gameId) {
         return games[gameId];
     }
 };

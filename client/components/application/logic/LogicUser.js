@@ -31,7 +31,7 @@ LogicUser = function () {
     this.authorizeSuccess = function (userId) {
         authorizedUserId = userId;
         Logs.log("Authorization success. userId:" + userId, Logs.LEVEL_NOTIFY);
-        var user = LogicUser.getUserById(userId);
+        var user = LogicUser.getById(userId);
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
         SAPIUser.sendMeOnlineUserIds();
@@ -51,32 +51,37 @@ LogicUser = function () {
      * @returns {null|Object}
      */
     this.getCurrentUser = function () {
-        return this.getUserById(authorizedUserId);
+        return this.getById(authorizedUserId);
     };
 
     /**
      * Получить данные пользователя по его id.
-     * @param userId
+     * @param id
      * @returns {null|Object}
      */
-    this.getUserById = function (userId) {
-        if (users[userId]) {
+    this.getById = function (id) {
+        if (users[id]) {
             /* Догрузим данные, это немного костыль... но время деньги :) */
-            if (!users[userId].socNetUserId) {
-                self.loadUserInfoById(userId);
+            if (!users[id].socNetUserId) {
+                self.loadUserInfoById(id);
             }
-            return users[userId];
+            return users[id];
         } else {
-            self.loadUserInfoById(userId);
+            self.loadUserInfoById(id);
             /* некоторая заглушка */
-            return {
-                id: null,
-                firstName: '-',
-                lastName: '-',
-                isBusy: false,
-                onGameId: 0
-            };
+            return getDummy;
         }
+    };
+
+    var getDummy = function () {
+        return {
+            id: null,
+            firstName: '-',
+            lastName: '-',
+            isBusy: false,
+            onGameId: 0,
+            online: false
+        };
     };
 
     /**
@@ -108,17 +113,10 @@ LogicUser = function () {
     this.updateUserInfo = function (user) {
         waitForLoadingUser[user.id] = false;
         if (users[user.id] == undefined) {
-            /* Заглушка */
-            users[user.id] = {
-                id: user.id,
-                firstName: '-',
-                lastName: '-',
-                isBusy: false,
-                onGameId: 0
-            };
+            users[user.id] = getDummy();
         }
-        for (var paramName in user) {
-            users[user.id][paramName] = user[paramName];
+        for (var field in user) {
+            users[user.id][field] = user[field];
         }
         pageController.redraw();
     };
@@ -153,11 +151,11 @@ LogicUser = function () {
     this.getOnlineUserIds = function () {
         var out;
         out = [];
-        for (var i in users) {
-            if (users[i].id && users[i].online) {
-                out.push(users[i].id);
+        users.forEach(function (user) {
+            if (user.online) {
+                out.push(user.id);
             }
-        }
+        });
         return out;
     };
 

@@ -4,9 +4,8 @@ ApiRouterMetrics.map = {};
 ApiRouterMetrics.timeBegin = null;
 
 ApiRouterMetrics.getMetrics = function () {
-    var output, timeNow, timeElapsed, count, rps, countSumm;
-    timeNow = new Date().getTime();
-    timeElapsed = (timeNow - ApiRouterMetrics.timeBegin) / 1000;
+    var output, timeElapsed, count, rps, countSumm;
+    timeElapsed = time() - ApiRouterMetrics.timeBegin;
     output = '';
     output += "___________________\r\n";
     output += "elapsed: " + timeElapsed + " sec.\r\n";
@@ -34,7 +33,7 @@ ApiRouterMetrics.printMetrics = function () {
 };
 
 ApiRouterMetrics.setup = function (map) {
-    ApiRouterMetrics.timeBegin = new Date().getTime();
+    ApiRouterMetrics.timeBegin = time();
     ApiRouterMetrics.map = {};
     var apiName, apiEnabled, APIObject;
     for (var i in map) {

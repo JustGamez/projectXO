@@ -67,79 +67,8 @@ SAPIInvites = function () {
         ActionsInvites.createGame(fieldTypeId, signId, cntx.userId, withUserId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);
-            CAPIInvites.gameCreated(game.creatorUserId, game.id);
-            CAPIInvites.gameCreated(game.joinerUserId, game.id);
-        });
-    };
-
-    /**
-     * Закроем игру.
-     * @param cntx {Object} контекст соединения.
-     * @param gameId {Number} id игры.
-     */
-    this.closeGame = function (cntx, gameId) {
-        if (!cntx.isAuthorized) {
-            Logs.log("SAPIInvites.closeGame: must be authorized", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIInvites.closeGame: must have gameId", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        ActionsRandomGame.closeGame(cntx.userId, gameId, function (game) {
-            LogicGameStore.delete(game.id);
-            DataGame.save(game, function (game) {
-                CAPIGame.updateInfo(game.creatorUserId, game);
-                CAPIGame.updateInfo(game.joinerUserId, game);
-            });
-        });
-    };
-
-    /**
-     * Сделать ход в игре.
-     * @param cntx {Object} контекст соединения.
-     * @param gameId {Number} id игры.
-     * @param x {Number}
-     * @param y {Number}
-     * @param checkWinner {Boolean}
-     */
-    this.doMove = function (cntx, gameId, x, y, checkWinner) {
-        if (!cntx.isAuthorized) {
-            Logs.log("SAPIInvites.doMove: must be authorized", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIInvites.doMove: must have gameId", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        if (x == undefined || typeof x != 'number') {
-            Logs.log("SAPIInvites.doMove: must have x with type number", Logs.LEVEL_WARNING, x);
-            return;
-        }
-        if (y == undefined || typeof y != 'number') {
-            Logs.log("SAPIInvites.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
-            return;
-        }
-        if (checkWinner == undefined || typeof checkWinner != 'boolean') {
-            Logs.log("SAPIInvites.doMove: must have checkWinner with type boolean", Logs.LEVEL_WARNING, [checkWinner, typeof checkWinner]);
-            return;
-        }
-        ActionsInvites.doMove(cntx.userId, gameId, x, y, checkWinner, function (game, oldStatus) {
-            CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
-            CAPIGame.updateMove(game.joinerUserId, game.id, game.lastMove.x, game.lastMove.y);
-            /* Если не запущена, сливаем в БД, т.к. игра закончиалсь. */
-            if (game.status != LogicXO.STATUS_RUN) {
-                /* Только что кто-то выиграл? */
-                if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN) {
-                    LogicUser.onWin(game.winnerId, game);
-                }
-                LogicGameStore.delete(game.id);
-                DataGame.save(game, function (game) {
-                    // is it on win update
-                    CAPIGame.updateInfo(game.creatorUserId, game);
-                    CAPIGame.updateInfo(game.joinerUserId, game);
-                })
-            }
+            CAPIGame.gameCreated(game.creatorUserId, game.id);
+            CAPIGame.gameCreated(game.joinerUserId, game.id);
         });
     };
 };

@@ -38,7 +38,7 @@ SAPIChat = function () {
             messages = list[i];
             CAPIChat.getNewMessage(cntx.userId, messages.userId, messages.text, messages.timestamp);
         }
-        Profiler.stop(Profiler.ID_GET_LAST_MESSAGES, prid) ;
+        Profiler.stop(Profiler.ID_GET_LAST_MESSAGES, prid);
     };
 };
 /**

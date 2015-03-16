@@ -18,15 +18,6 @@ CAPIGame = function () {
         LogicUser.sendToUser(toUserId, 'CAPIGame', 'gameCreated', [gameId]);
     };
 
-    /**
-     * Робот сделал ход.
-     * @param toUserId {Number} кому отправляем.
-     * @param gameId {Number} id игры, в которой бот сделал ход.
-     */
-    this.robotDoMove = function (toUserId, gameId) {
-        LogicUser.sendToUser(toUserId, 'CAPIGame', 'robotDoMove', [gameId]);
-    };
-
     this.updateMove = function (toUserId, gameId, x, y) {
         LogicUser.sendToUser(toUserId, 'CAPIGame', 'updateMove', [gameId, x, y]);
     };

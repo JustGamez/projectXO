@@ -11,10 +11,7 @@ SAPIRepeatGame = function () {
             return;
         }
         if (!cntx.isAuthorized) {
-            Logs.log("SAPIRepeatGame.repeat: user must be authorized", Logs.LEVEL_WARNING, {
-                userId: cntx.userId,
-                gameId: gameId
-            });
+            Logs.log("SAPIRepeatGame.repeat: user must be authorized", Logs.LEVEL_WARNING, {userId: cntx.userId, gameId: gameId});
             return;
         }
         Statistic.add(cntx.userId, Statistic.ID_GAME_REPEAT_GAME);

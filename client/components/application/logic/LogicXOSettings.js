@@ -15,13 +15,6 @@ LogicXOSettings = function () {
      * @type {Number} LogicXO.SIGN_ID_*
      */
     this.requestedSignId = null;
-
-    /**
-     * Запрашиваемая игра с роботом\без робтоа.
-     * @type {boolean}
-     * @todo убрать этот функционал?
-     */
-    this.requestedVsRobot = true;
 };
 /**
  * Статичный класс.

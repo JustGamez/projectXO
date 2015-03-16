@@ -223,16 +223,18 @@ PageXOGame = function PageXOGame() {
         var opponent, opponentUserId;
         if (game) {
             if (game.vsRobot) {
+                self.elementOpponentPhoto.showCardInfo = false;
                 opponent = {
-                    onlinme: null,
+                    online: null,
                     photo50: '/images/photo/vsRobot.png',
                     firstName: 'Игра с роботом.',
                     lastName: ''
                 };
             } else {
+                self.elementOpponentPhoto.showCardInfo = true;
                 opponentUserId = LogicXO.getOpponentUserId(game, user.id);
                 if (opponentUserId) {
-                    opponent = LogicUser.getUserById(opponentUserId);
+                    opponent = LogicUser.getById(opponentUserId);
                 }
             }
         }
@@ -242,7 +244,9 @@ PageXOGame = function PageXOGame() {
             showButtonLetsPlay: false,
             showIndicatorWaiting: false,
             onClick: function (user) {
-                window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
+                if (user.socNetUserId) {
+                    window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
+                }
             },
             onButtonInviteClick: false,
             onButtonLetsPlayClick: false,
@@ -265,7 +269,7 @@ PageXOGame = function PageXOGame() {
         if (game.isRandom || game.isInvitation) {
             opponentUserId = LogicXO.getOpponentUserId(game, user.id);
             if (!opponentUserId) return false;
-            opponent = LogicUser.getUserById(opponentUserId);
+            opponent = LogicUser.getById(opponentUserId);
             if (!opponent) return false;
             if (opponent.onGameId != game.id) return false;
             if (opponent.onGameId == 0) return false;

@@ -113,12 +113,19 @@ DB = function () {
      * @param values {object} объект значений { fieldName: value }.
      * @param callback {function}.
      */
-    this.insert = function (tableName, values, callback) {
+    this.insert = function (tableName, values, callback, fields, packFunctions) {
         var query, value, fieldsSQL, valuesSQL;
         query = fieldsSQL = valuesSQL = '';
         query += "INSERT INTO " + tableName;
-        for (var name in values) {
-            value = MYSQL.escape(values[name]);
+        if (!fields) {
+            fields = values;
+        }
+        for (var name in fields) {
+            value = values[name];
+            if (packFunctions && packFunctions[name]) {
+                value = packFunctions[name](value);
+            }
+            value = MYSQL.escape(value);
             fieldsSQL += "`" + name + "`,";
             valuesSQL += value + ",";
         }
@@ -132,12 +139,19 @@ DB = function () {
      * @param values {object} значения
      * @param callback {function}
      */
-    this.update = function (tableName, values, callback) {
+    this.update = function (tableName, values, callback, fields, packFunctions) {
         var query, value, setSQL, valuesSQL;
         query = setSQL = valuesSQL = '';
         query += "UPDATE `" + tableName + "` SET ";
-        for (var name in values) {
-            value = MYSQL.escape(values[name]);
+        if (!fields) {
+            fields = values;
+        }
+        for (var name in fields) {
+            value = values[name];
+            if (packFunctions && packFunctions[name]) {
+                value = packFunctions[name](value);
+            }
+            value = MYSQL.escape(value);
             setSQL += "`" + name + "` = " + value + ",";
         }
         query += setSQL.substr(0, setSQL.length - 1);

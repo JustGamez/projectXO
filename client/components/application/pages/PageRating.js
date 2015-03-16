@@ -171,7 +171,7 @@ PageRating = function PageRating() {
         usersList = [];
         for (var i in ratingList) {
             rating = ratingList[i];
-            user = LogicUser.getUserById(rating.userId);
+            user = LogicUser.getById(rating.userId);
             usersList.push({
                 photoData: {
                     title: user.firstName + " " + user.lastName,

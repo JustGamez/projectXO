@@ -104,3 +104,10 @@ str_pad = function (str, len, pad, dir) {
     }
     return str;
 };
+
+/**
+ * Возвращает время в секундах.
+ */
+time = function () {
+    return Math.floor((new Date()).getTime() / 1000);
+};

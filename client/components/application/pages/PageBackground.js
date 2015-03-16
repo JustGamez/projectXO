@@ -19,6 +19,10 @@ PageBackground = function PageBackground() {
 
     var elementSound;
 
+    var elementHelpIcon;
+
+    var onHelpPage = false;
+
     this.init = function () {
         var element;
         /* Задний фон */
@@ -29,8 +33,8 @@ PageBackground = function PageBackground() {
         });
         self.elements.push(element);
         element = GUI.createElement("ElementFlag", {
-            x: 665,
-            y: 55,
+            x: 660,
+            y: 60,
             srcRest: '/images/buttons/soundOff.png',
             srcHover: '/images/buttons/soundOff.png',
             srcActive: '/images/buttons/soundHover.png',
@@ -48,14 +52,29 @@ PageBackground = function PageBackground() {
         self.elements.push(element);
         /* Кнопка `(?)` */
         element = GUI.createElement('ElementButton', {
-                x: 700,
+                x: 693,
                 y: 54,
                 srcRest: '/images/help/buttons/helpRest.png',
                 srcHover: '/images/help/buttons/helpHover.png',
                 srcActive: '/images/help/buttons/helpActive.png',
-                onClick: LogicPageMain.onButtonHelpClick
+                onClick: function () {
+                    if (onHelpPage) {
+                        elementHelpIcon.srcRest = '/images/help/buttons/helpRest.png';
+                        elementHelpIcon.srcHover = '/images/help/buttons/helpHover.png';
+                        elementHelpIcon.srcActive = '/images/help/buttons/helpActive.png';
+                        LogicPageHelp.onButtonCloseClick();
+                        onHelpPage = false;
+                    } else {
+                        elementHelpIcon.srcRest = '/images/help/buttons/closeRest.png';
+                        elementHelpIcon.srcHover = '/images/help/buttons/closeHover.png';
+                        elementHelpIcon.srcActive = '/images/help/buttons/closeActive.png';
+                        LogicPageMain.onButtonHelpClick();
+                        onHelpPage = true;
+                    }
+                }
             }
         );
+        elementHelpIcon = element;
         self.elements.push(element);
     };
 

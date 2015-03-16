@@ -10,7 +10,7 @@ Profiler = function () {
 
     this.start = function (id) {
         lastPrid++;
-        data[id].stamps[lastPrid] = new Date().getTime();
+        data[id].stamps[lastPrid] = time();
         return lastPrid;
     };
 
@@ -21,7 +21,7 @@ Profiler = function () {
         if (!data[id].stamps[prid]) {
             Logs.log("Profiler. stop no stamp for", Logs.LEVEL_WARNING, {prid: prid, id: id});
         }
-        data[id].sumTime += new Date().getTime() - data[id].stamps[prid];
+        data[id].sumTime += time() - data[id].stamps[prid];
         data[id].count++;
         delete data[id].stamps[prid];
     };
@@ -50,12 +50,11 @@ Profiler = function () {
     };
 
     this.saveToDB = function () {
-        var row, query, dateTime;
+        var row, query;
         query = "INSERT INTO profiling ( `datetime`, `profileId`, `sumTime`, `count` ) VALUES ";
-        dateTime = Math.round(new Date().getTime() / 1000);
         for (var id in data) {
             row = data[id];
-            query += "(" + dateTime + "," + id + "," + row.sumTime + "," + row.count + "),";
+            query += "(" + time() + "," + id + "," + row.sumTime + "," + row.count + "),";
         }
         query = query.substr(0, query.length - 1);
         DB.query(query, function () {
@@ -72,11 +71,11 @@ Profiler = function () {
             output += ' ';
             output += str_pad(row.title, maxTitleLength + 3);
             output += ' ';
-            output += str_pad((row.sumTime / 1000).toString(), 10);
+            output += str_pad((row.sumTime).toString(), 10);
             output += ' ';
             output += str_pad((row.count).toString(), 7);
             output += ' ';
-            rps = Math.round((row.count / (row.sumTime / 1000)) * 10000) / 10000;
+            rps = (row.count / (row.sumTime) * 10000) / 10000;
             output += rps;
             output += "\r\n";
         }

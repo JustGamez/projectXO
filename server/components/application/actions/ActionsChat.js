@@ -9,12 +9,11 @@ ActionsChat = function () {
     this.sendMessage = function (userId, text) {
         var timestamp, cacheSize;
         var prid = Profiler.start(Profiler.ID_CHAT_SEND_MESSAGE);
-        timestamp = Math.floor(new Date().getTime() / 1000);
+        timestamp = time();
         LogicChatCache.add(userId, text, timestamp, false);
         LogicUser.sendToAll(CAPIChat.getNewMessage, userId, text, timestamp);
         /* Сбросим кэш, если надо */
         cacheSize = LogicChatCache.getCacheSize();
-        Logs.log("ActionsChat.sendMessage. CacheSize=" + cacheSize, Logs.LEVEL_DETAIL);
         if (cacheSize >= Config.Chat.cacheSize) {
             self.flushCache(Config.Chat.lastMessagesCount);
         }
@@ -26,20 +25,19 @@ ActionsChat = function () {
      * @param retailSize {Number} сколько оставить в кэше.
      */
     this.flushCache = function (retailSize) {
-        var cacheSize;
+        var cacheSize, tmp, tmp2;
         if (!retailSize) {
             retailSize = 0;
         }
         cacheSize = LogicChatCache.getCacheSize();
         /* Сохраним в БД кэш минус то что надо оставить. */
-        var tmp = LogicChatCache.getFirstMessages(cacheSize - retailSize);
-        var tmp2 = [];
-        for (var i in tmp) {
-            if (tmp[i].inDataBase) {
-                continue;
+        tmp = LogicChatCache.getFirstMessages(cacheSize - retailSize);
+        tmp2 = [];
+        tmp.forEach(function (message) {
+            if (!message.inDataBase) {
+                tmp2.push(message);
             }
-            tmp2.push(tmp[i]);
-        }
+        });
         DataChat.saveList(tmp2);
         /* Удалим из кэша, то что мы слили в БД. */
         LogicChatCache.sliceCache(cacheSize - retailSize);
@@ -59,13 +57,11 @@ ActionsChat = function () {
      * @param afterComplete
      */
     var loadLastMessages = function (afterComplete) {
-        var message;
         DataChat.getLastMessages(Config.Chat.lastMessagesCount, function (list) {
-            for (var i in list) {
-                message = list[i];
+            list.forEach(function (message) {
                 LogicChatCache.add(message.userId, message.text, message.timestamp, true);
-            }
-            Logs.log('Load last chat messages. Count:' + list.length, Logs.LEVEL_NOTIFY);
+            });
+            Logs.log('Load last chat messages. Count:' + list.length, Logs.LEVEL_DETAIL);
             afterComplete();
         });
     };

@@ -6,10 +6,7 @@ CAPIGame = function () {
      * @param game {Object} данные об игре.
      */
     this.updateInfo = function (cntx, game) {
-        var winLine;
-        winLine = LogicXO.findWinLine(game);
-        LogicXO.setOutcomeResults(game, winLine);
-        LogicGame.updateInfo(game);
+        LogicGame.update(game);
     };
 
     /**
@@ -18,59 +15,41 @@ CAPIGame = function () {
      * @param gameId {int} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
-        var newGame, currentGameId, xoPageShowedNow;
-        newGame = LogicGame.getGameById(gameId);
-        currentGameId = LogicGame.getCurrentGameId();
-        xoPageShowedNow = pageController.isShowedNow(PageController.PAGE_ID_XO_GAME);
-        if (
-            (!currentGameId && xoPageShowedNow)
-            ||
-            (currentGameId && xoPageShowedNow && (currentGameId == newGame.copyFromId || currentGameId == newGame.id) && LogicGame.getCurrentGame().status != LogicXO.STATUS_RUN)
-        ) {
-            SAPIUserState.onGame(gameId);
-            LogicGame.setCurrentGameId(gameId);
+        var current, created;
+        current = LogicGame.getCurrentGame();
+        created = LogicGame.getById(gameId);
+        if (current && !current.finish) {
+            SAPIGame.close(gameId);
         } else {
-            SAPIGame.closeGame(gameId);
-        }
-    };
-
-    /**
-     * Робот сделал ход.
-     * После хода робота, проверим есть ли победитель, ну или, либо ничья.
-     * @param cntx {Object} контекст соединения.
-     * @param gameId {Number} id игры, в которой бот сделал ход.
-     */
-    this.robotDoMove = function (cntx, gameId) {
-        var winLine, game, checkWinner;
-        game = LogicGame.getCurrentGame();
-        if (!game) {
-            Logs.log("CAPIGame.robotDoMove. game does not exists.", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        if (game.id != gameId) {
-            Logs.log("CAPIGame.robotDoMove. gameId mismatch requsted.", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        winLine = LogicXO.findWinLine(game);
-        LogicXO.setOutcomeResults(game, winLine);
-        checkWinner = game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin;
-        if (checkWinner) {
-            SAPIRobotGame.checkWinner(gameId);
+            LogicGame.setCurrentGameId(gameId);
+            if (created.vsRobot && LogicXO.isHisTurn(created, 0)) {
+                setTimeout(function () {
+                    SAPIRobotGame.raiseAIMove(created.id)
+                }, 750);
+            }
+            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         }
     };
 
     this.updateMove = function (cntx, gameId, x, y) {
-        var game;
-        game = LogicGame.getGameById(gameId);
+        var game, winLine;
+        game = LogicGame.getById(gameId);
         if (!game) {
             Logs.log("CAPIGAme.updateMove some error.", Logs.LEVEL_ERROR);
             return;
         }
-        game = LogicXO.switchTurn(game);
+        /* Мы ставим это у себя. */
         game = LogicXO.setSign(game, x, y);
-
+        game = LogicXO.switchTurn(game);
+        LogicGame.update(game);
         Sounds.play('/sounds/turn.mp3');
-        pageController.redraw();
+        if (game.vsRobot) {
+            winLine = LogicXO.findWinLine(game);
+            LogicXO.setOutcomeResults(game, winLine);
+            if (game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin) {
+                SAPIGame.checkWinner(gameId);
+            }
+        }
     };
 };
 
