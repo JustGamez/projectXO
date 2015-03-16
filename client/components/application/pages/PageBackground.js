@@ -68,7 +68,7 @@ PageBackground = function PageBackground() {
                         elementHelpIcon.srcRest = '/images/help/buttons/closeRest.png';
                         elementHelpIcon.srcHover = '/images/help/buttons/closeHover.png';
                         elementHelpIcon.srcActive = '/images/help/buttons/closeActive.png';
-                        LogicPageMain.onButtonHelpClick();
+                        LogicPageHelp.onButtonHelpClick();
                         onHelpPage = true;
                     }
                 }

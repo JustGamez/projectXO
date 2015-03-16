@@ -34,7 +34,18 @@ LogicPageHelp = function () {
      */
     this.onButtonCloseClick = function () {
         SAPIUserState.isNoBusy();
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
+        pageController.showPages(pageIdBefore);
+    };
+
+    var pageIdBefore = [];
+    /**
+     * Действия при нажатии кнопки "(?)"
+     */
+    this.onButtonHelpClick = function () {
+        pageIdBefore = pageController.currentPageIds();
+        SAPIStatistic.clickHelp();
+        SAPIUserState.isBusy();
+        LogicPageHelp.showPageAndTab();
     };
 
     /**

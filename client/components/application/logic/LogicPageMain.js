@@ -73,15 +73,6 @@ LogicPageMain = function () {
         SAPIStatistic.openInviteFriendDialog();
         SocNet.openInviteFriendDialog();
     };
-
-    /**
-     * Действия при нажатии кнопки "(?)"
-     */
-    this.onButtonHelpClick = function () {
-        SAPIStatistic.clickHelp();
-        SAPIUserState.isBusy();
-        LogicPageHelp.showPageAndTab();
-    }
 };
 
 /**

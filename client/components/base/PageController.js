@@ -83,4 +83,14 @@ PageController = function () {
         }
         return false;
     };
+
+    this.currentPageIds = function () {
+        var out = [];
+        currentShowedPageIds.forEach(function (isShowed, id) {
+            if (isShowed) {
+                out.push(id);
+            }
+        });
+        return out;
+    };
 };

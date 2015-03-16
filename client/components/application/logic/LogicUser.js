@@ -29,9 +29,10 @@ LogicUser = function () {
      * @param userId
      */
     this.authorizeSuccess = function (userId) {
+        var user;
         authorizedUserId = userId;
         Logs.log("Authorization success. userId:" + userId, Logs.LEVEL_NOTIFY);
-        var user = LogicUser.getById(userId);
+        user = LogicUser.getById(userId);
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
         SAPIUser.sendMeOnlineUserIds();
@@ -69,7 +70,7 @@ LogicUser = function () {
         } else {
             self.loadUserInfoById(id);
             /* некоторая заглушка */
-            return getDummy;
+            return getDummy();
         }
     };
 
@@ -112,7 +113,7 @@ LogicUser = function () {
      */
     this.updateUserInfo = function (user) {
         waitForLoadingUser[user.id] = false;
-        if (users[user.id] == undefined) {
+        if (!users[user.id]) {
             users[user.id] = getDummy();
         }
         for (var field in user) {

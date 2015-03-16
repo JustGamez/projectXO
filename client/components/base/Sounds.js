@@ -1,6 +1,8 @@
 Sounds = function () {
     var self = this;
 
+    var cache = {};
+
     this.enabled = true;
 
     this.on = function () {
@@ -15,8 +17,10 @@ Sounds = function () {
         if (!self.enabled) {
             return;
         }
-        var audio = new Audio(path);
-        audio.play();
+        if (!cache[path]) {
+            cache[path] = new Audio(path + "?t=" + time());
+        }
+        cache[path].play();
     };
 };
 
