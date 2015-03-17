@@ -237,11 +237,11 @@ LogicUser = function () {
     };
 
     this.isUserBusy = function (userId) {
-        if (userToCntx[userId] == undefined)return undefined;
+        if (userToCntx[userId] == undefined) return undefined;
         return userToCntx[userId].user.isBusy;
     };
     this.isUserOnGame = function (userId) {
-        if (userToCntx[userId] == undefined)return undefined;
+        if (userToCntx[userId] == undefined) return undefined;
         return userToCntx[userId].user.onGameId;
     };
 
@@ -371,6 +371,9 @@ LogicUser = function () {
         }
         DataUser.getById(userId, function (user) {
             if (user) {
+                user.online = self.isUserOnline(user.id);
+                user.isBusy = self.isUserBusy(user.id);
+                user.onGameId = self.isUserOnGame(user.id);
                 /* В рейтинге учитываются очки, только на поле 15х15 в игре с персонажем. */
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
                     LogicRating.onPositionScoreUp(user.id);

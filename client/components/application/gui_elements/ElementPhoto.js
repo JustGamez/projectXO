@@ -349,11 +349,14 @@ ElementPhoto = function () {
         currentUser = LogicUser.getCurrentUser();
         /* Если, нет фотографии, то отображаем заглушку */
         if (user) {
-            src = user.photo50;
             title = user.firstName + " " + user.lastName;
         } else {
-            src = srcDummy;
             title = '';
+        }
+        if (user && user.photo50) {
+            src = user.photo50;
+        } else {
+            src = srcDummy;
         }
         domRegion.x = self.x;
         domRegion.y = self.y;

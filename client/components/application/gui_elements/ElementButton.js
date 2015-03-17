@@ -94,8 +94,6 @@ ElementButton = function () {
      */
     this.init = function () {
         dom = GUI.createDom();
-        dom.x = self.x;
-        dom.y = self.y;
         dom.width = self.width;
         dom.height = self.height;
         dom.backgroundImage = self.srcRest;
@@ -138,6 +136,8 @@ ElementButton = function () {
         dom.backgroundImage = src;
         if (self.title) dom.title = self.title;
         dom.opacity = self.enabled ? undefined : 0.5;
+        dom.x = self.x;
+        dom.y = self.y;
         dom.redraw();
     };
 

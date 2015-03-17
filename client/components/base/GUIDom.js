@@ -32,6 +32,7 @@
  * @property alignText {String}
  * @property zIndex {Int}
  * @property fontWeight {String}
+ * @property overflow {String}
  */
 GUIDom = function () {
     var self = this;
@@ -380,6 +381,9 @@ GUIDom = function () {
     var redrawZIndex = function () {
         dom.style.zIndex = self.zIndex;
     };
+    var redrawOverflow = function () {
+        dom.style.overflow = self.overflow;
+    };
 
     /**
      * Имена свойств и их методы обработки.
@@ -414,7 +418,8 @@ GUIDom = function () {
         title: redrawTitle,
         isItsepia: redrawIsItSepia,
         alignText: redrawAlignText,
-        zIndex: redrawZIndex
+        zIndex: redrawZIndex,
+        overflow: redrawOverflow
     };
 };
 

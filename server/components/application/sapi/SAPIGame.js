@@ -93,9 +93,9 @@ SAPIGame = function () {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);
             var lookers = LogicGameLookers.get(game.id);
-            lookers.forEach(function (userId) {
+            for (var userId in lookers) {
                 CAPIGame.updateInfo(userId, game);
-            });
+            }
         });
     };
 };
