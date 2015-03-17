@@ -81,13 +81,12 @@ LogicUser = function () {
      */
     var authorizeSendSuccess = function (user, cntx, prid) {
         /* тут мы запомним его connectionId раз и на всегда */
+        Statistic.add(user.id, Statistic.ID_AUTHORIZE);
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
         Profiler.stop(Profiler.ID_AUTH_VK, prid);
-        Statistic.add(user.id, Statistic.ID_USER_AUTHORIZATION_BY_VK);
         refreshUserSocNetInfo(user, function (user) {
-
         });
     };
 
@@ -331,6 +330,7 @@ LogicUser = function () {
      */
     var onLogout = function (userId) {
         var gameIds;
+        Statistic.add(userId, Statistic.ID_LOGOUT);
         gameIds = DataGame.getCachedRunWaitGamesForUser(userId);
         LogicWaitersStack.deleteByUserId(userId);
         for (var i in gameIds) {
@@ -340,7 +340,6 @@ LogicUser = function () {
         }
         Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
         DataUser.updateLastLogout(userId);
-        Statistic.add(userId, Statistic.ID_USER_LOGOUT);
     };
 
     /**
@@ -364,10 +363,10 @@ LogicUser = function () {
      */
     this.onWin = function (userId, game) {
         if (game.vsRobot) {
-            Statistic.add(userId, Statistic.ID_USER_WIN_VS_ROBOT);
+            Statistic.add(userId, Statistic.ID_WIN_ROBOT);
         }
         if (game.isInvitation) {
-            Statistic.add(userId, Statistic.ID_USER_WIN_BY_INVITATION);
+            Statistic.add(userId, Statistic.ID_WIN_INVITATION);
         }
         DataUser.getById(userId, function (user) {
             if (user) {

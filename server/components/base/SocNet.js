@@ -15,6 +15,8 @@ SocNet = function () {
     var self = this;
     var getParams = {};
 
+    var accessToken = null;
+
     this.parseSocNetURL = function () {
         getParams = {
             viewer_id: getQueryVariable('viewer_id'),
@@ -163,14 +165,14 @@ SocNet = function () {
                     UrlCache.set(key, data);
                     callback(data);
                 } catch (e) {
-                    Logs.log("JSON.parse error", Logs.LEVEL_ERROR, data);
+                    Logs.log("JSON.parse error", Logs.LEVEL_WARNING, {data: data, url: url});
                 }
             });
         });
-        req.end();
         req.on('error', function (e) {
-            Logs.log("SocNet.executeMethod request error:", Logs.LEVEL_ERROR, e);
+            Logs.log("SocNet.executeMethod request error:", Logs.LEVEL_ERROR, {url: url, e: e});
         });
+        req.end();
     };
 
     /**
@@ -195,7 +197,7 @@ SocNet = function () {
      * Инициализация VK.
      * @see WebSocketServer : var loadClientCode {Function}
      */
-    this.initVK = function () {
+    this.VKInitClient = function () {
         var apiVersoin, onSuccess, onFail, apiVersion;
         apiVersion = '5.28';
         onSuccess = function () {
@@ -206,6 +208,51 @@ SocNet = function () {
             alert('Произошла ошибка доступа к вКонтакте, обратитесь к автору приложения.');
         };
         VK.init(onSuccess, onFail, apiVersion);
+    };
+
+    /**
+     * oAuth авторизация на вКонтакте.
+     * Выполнит запрос.
+     * https:// oauth.vk.com /access_token ? client_id = appId & client_secret = secretKey & v = 5.29 [ & grant_type = client_credentials ]
+     * @see http://vk.com/dev/auth_server
+     * @see http://vk.com/dev/oauth_gettoken
+     */
+    this.oAuthorization = function (callback) {
+        var url, options, req;
+
+        url = "/access_token?client_id=" + Config.SocNet.appId + "&client_secret=" + Config.SocNet.secretKey + "&v=5.28&grant_type=client_credentials";
+        host = 'oauth.vk.com';
+
+        options = {};
+        options.hostname = host;
+        options.port = 443;
+        options.path = url;
+        options.method = 'GET';
+        Logs.log("https request(oAuth): " + host + url, Logs.LEVEL_NOTIFY);
+        /* Далее выполняем запрос */
+        req = HTTPS.request(options, function (res) {
+            res.on('data', function (data) {
+                Logs.log("https answer(oAuth): " + data, Logs.LEVEL_NOTIFY);
+                try {
+                    data = JSON.parse(data.toString());
+                    if (data.error) {
+                        Logs.log("error (oAuth)", Logs.LEVEL_WARNING, data);
+                    }
+                    accessToken = data.access_token;
+                    callback();
+                } catch (e) {
+                    Logs.log("JSON.parse error(oAuth)", Logs.LEVEL_FATAL_ERROR, data);
+                }
+            });
+        });
+        req.on('error', function (e) {
+            Logs.log("SocNet.executeMethod request error:", Logs.LEVEL_ERROR, e);
+        });
+        req.end();
+    };
+
+    this.init = function (afterInitCallback) {
+        self.oAuthorization(afterInitCallback);
     }
 };
 /**

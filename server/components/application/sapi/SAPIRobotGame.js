@@ -41,8 +41,8 @@ SAPIRobotGame = function () {
             Logs.log("SAPIGame.close: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
+        Statistic.add(cntx.userId, Statistic.ID_CLOSE_GAME);
         ActionsGame.close(cntx.userId, gameId, function (game) {
-            Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CLOSE);
             CAPIGame.updateInfo(game.creatorUserId, game);
             var lookers = LogicGameLookers.get(game.id);
             for (var userId in lookers) {

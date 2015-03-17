@@ -4,35 +4,49 @@ require('./system/loader.js');
 
 /* User statistics. */
 /* 1 */
-Statistic.ID_USER_AUTHORIZATION_BY_VK = Statistic.getNewId("авторизация через ВКонтакте ");
+Statistic.ID_AUTHORIZE = Statistic.getNewId("авторизация через ВКонтакте ");
 /* 2 */
-Statistic.ID_USER_LOGOUT = Statistic.getNewId("покинул игру.");
+Statistic.ID_LOGOUT = Statistic.getNewId("покинул игру.");
 /* 3 */
-Statistic.ID_GAME_DO_MOVE = Statistic.getNewId("сделал ход");
-/* 4 */
-Statistic.ID_GAME_REQUEST_RANDOM_GAME = Statistic.getNewId("запрос случайной игры");
+Statistic.ID_DO_MOVE = Statistic.getNewId("сделал ход");
+/* 4  removed. */
+Statistic.ID_REQUEST_RANDOM_GAME = Statistic.getNewId("запрос случайной игры");
 /* 5 */
-Statistic.ID_GAME_CLOSE_RANDOM_GAME = Statistic.getNewId("закрыл случайную игру");
+Statistic.ID_CLOSE_GAME = Statistic.getNewId("закрыл игру");
 /* 6 */
-Statistic.ID_GAME_REPEAT_GAME = Statistic.getNewId("повтор игры");
+Statistic.ID_REPEAT_GAME = Statistic.getNewId("повтор игры");
 /* 7 */
 Statistic.ID_GAME_ROBOT_CREATE = Statistic.getNewId("создал игру с роботом");
-/* 8 */
+/* 8  removed */
 Statistic.ID_GAME_ROBOT_CLOSE = Statistic.getNewId("закрыл игру с роботом");
 /* 9 */
-Statistic.ID_ON_RATING_BUTTON_CLICK = Statistic.getNewId("нажал кнопку рейтинга");
+Statistic.ID_CLICK_RATING = Statistic.getNewId("нажал кнопку рейтинга");
 /* 10 */
-Statistic.ID_CLIENT_OPEN_INVITE_FRIEND_DIALOG = Statistic.getNewId("открыл диалог приглашения друзей");
+Statistic.ID_CLICK_INVITE_DIALOG = Statistic.getNewId("открыл диалог приглашения друзей");
 /* 11 */
-Statistic.ID_USER_WIN_VS_ROBOT = Statistic.getNewId("выиграл у робота");
+Statistic.ID_WIN_ROBOT = Statistic.getNewId("выиграл у робота");
 /* 12 */
 Statistic.ID_CLICK_HELP = Statistic.getNewId("нажал кнопку помощь");
 /* 13 */
-Statistic.ID_CHAT_SEND_MESSAGE = Statistic.getNewId("оптравил сообщеие в чате");
+Statistic.ID_CHAT_SEND_MESSAGE = Statistic.getNewId("оптравил сообщеие");
 /* 14 */
-Statistic.ID_USER_WIN_BY_INVITATION = Statistic.getNewId("выиграл в игре по приглашению");
+Statistic.ID_WIN_INVITATION = Statistic.getNewId("выиграл в игре по приглашению");
 /* 15 */
 Statistic.ID_INVITATION_SEND = Statistic.getNewId("оптравил приглашение");
+/* 16 */
+Statistic.ID_CREATE_GAME_INVATION = Statistic.getNewId("создал игру по приглашению");
+/* 17 */
+Statistic.ID_LOOK_GAME_START = Statistic.getNewId("начал просмотривать игру");
+/* 18 */
+Statistic.ID_LOOK_GAME_STOP = Statistic.getNewId("закрыл просмотр игры");
+/* 19 */
+Statistic.ID_CLICK_RATING_TOP = Statistic.getNewId("клик: рейтинг топ");
+/* 20 */
+Statistic.ID_CLICK_RATING_MY = Statistic.getNewId("клик: рейтинг мой");
+/* 21 */
+Statistic.ID_CLICK_RATING_UP = Statistic.getNewId("клик: рейтинг вверх");
+/* 22 */
+Statistic.ID_CLICK_RATING_DOWN = Statistic.getNewId("клик: рейтинг вниз");
 
 
 /*  WebSocketServer */
@@ -102,10 +116,12 @@ sequencedInit(Profiler.init);
 sequencedInit(CommandLineController.init);
 sequencedInit(DB.init);
 sequencedInit(Statistic.init);
+sequencedInit(SocNet.init);
 sequencedInit(LogicUser.init);
 sequencedInit(LogicRobot.init);
 sequencedInit(ActionsChat.init);
 sequencedInit(DataRating.init);
+
 /* run all components */
 sequencedInit(webSocketServer.init);
 

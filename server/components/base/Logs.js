@@ -46,11 +46,11 @@ Logs = function () {
         // превратим уровень лога из константы в человеко-читаемый текст.
         levelTitle = typeTitles[level];
         // соединим время, текст уровня лога и сообщение лога в одну строку
-        logText = dateFormated + ' ' + levelTitle + ' ' + message;
+        logText = dateFormated + ' [' + levelTitle + '] ' + message;
         // добавим к тексту лога детали, если они были переданы
         if (details) logText += ' ' + details;
         // выведем на экран
-        console.log(logText);
+        console.log(" > " + logText);
         // если это фатальная ошибка - завершим работу программы.
         if (level == Logs.LEVEL_FATAL_ERROR) {
             throw new Error("Vse polamalos'!");
@@ -100,10 +100,10 @@ Logs = function () {
     var typeTitles = {};
     /* человеко-читаемые типы логов. */
     typeTitles[this.LEVEL_DETAIL] = 'detail';
-    typeTitles[this.LEVEL_NOTIFY] = 'notify';
-    typeTitles[this.LEVEL_WARNING] = 'warning';
-    typeTitles[this.LEVEL_ERROR] = 'error';
-    typeTitles[this.LEVEL_FATAL_ERROR] = 'fatal error';
+    typeTitles[this.LEVEL_NOTIFY] = 'NOTIFY';
+    typeTitles[this.LEVEL_WARNING] = 'WARNING';
+    typeTitles[this.LEVEL_ERROR] = 'ERROR';
+    typeTitles[this.LEVEL_FATAL_ERROR] = 'FATAL ERROR';
 };
 /**
  * Статичный класс.

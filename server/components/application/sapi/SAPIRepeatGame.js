@@ -14,7 +14,7 @@ SAPIRepeatGame = function () {
             Logs.log("SAPIRepeatGame.repeat: user must be authorized", Logs.LEVEL_WARNING, {userId: cntx.userId, gameId: gameId});
             return;
         }
-        Statistic.add(cntx.userId, Statistic.ID_GAME_REPEAT_GAME);
+        Statistic.add(cntx.userId, Statistic.ID_REPEAT_GAME);
         ActionsRepeatGame.copyGame(gameId);
     };
 };

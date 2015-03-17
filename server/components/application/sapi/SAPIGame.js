@@ -24,7 +24,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
             return;
         }
-        Statistic.add(cntx.userId, Statistic.ID_GAME_DO_MOVE);
+        Statistic.add(cntx.userId, Statistic.ID_DO_MOVE);
         ActionsGame.doMove(cntx.userId, gameId, x, y, function (game) {
             if (game.isInvitation) {
                 CAPIGame.updateMove(LogicXO.getOpponentUserId(game, cntx.userId), game.id, game.lastMove.x, game.lastMove.y);
@@ -35,7 +35,6 @@ SAPIGame = function () {
             }
         });
     };
-
 
     /**
      * Проверим, есть ли победитель.
@@ -88,7 +87,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.close: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        Statistic.add(cntx.userId, Statistic.ID_GAME_CLOSE_RANDOM_GAME);
+        Statistic.add(cntx.userId, Statistic.ID_CLOSE_GAME);
         ActionsGame.close(cntx.userId, gameId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);

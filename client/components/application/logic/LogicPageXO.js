@@ -27,6 +27,7 @@ LogicPageXO = function () {
             }
             LogicGame.setCurrentGameId(0);
         } else if (lookingGameId) {
+            SAPIStatistic.clickLookGameStop();
             LogicGame.setLookingGameId(0);
             SAPIGameLooks.stop(lookingGameId)
         }

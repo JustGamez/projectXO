@@ -12,7 +12,7 @@ window.onload = function () {
     });
 
     /** init some cpomopnents */
-    SocNet.initVK();
+    SocNet.VKInitClient();
     GUI.init();
 
     /* WebSocket Client */

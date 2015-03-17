@@ -58,6 +58,7 @@ LogicPageMain = function () {
 
     this.onLookGameClick = function (user) {
         var game = LogicGame.getById(user.onGameId);
+        SAPIStatistic.clickLookGameStart();
         if (game && LogicXO.isMember(game, LogicUser.getCurrentUser().id)) {
             LogicGame.setCurrentGameId(game.id);
             pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);

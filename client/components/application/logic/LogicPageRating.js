@@ -26,22 +26,26 @@ LogicPageRating = function () {
     };
 
     this.onTopButtonClick = function () {
+        SAPIStatistic.clickRatingTop();
         self.showId = LogicPageRating.SHOW_TOP;
         pageController.redraw();
     };
 
     this.onMyPositionButtonClick = function () {
+        SAPIStatistic.clickRatingMy();
         self.showId = LogicPageRating.SHOW_MY_POSITION;
         pageController.redraw();
     };
 
     this.onUpButtonClick = function () {
+        SAPIStatistic.clickRatingUp();
         self.showId = LogicPageRating.SHOW_CUSTOM;
         self.ratingBegin -= self.ratingRows;
         pageController.redraw();
     };
 
     this.onDownButtonClick = function () {
+        SAPIStatistic.clickRatingDown();
         self.showId = LogicPageRating.SHOW_CUSTOM;
         self.ratingBegin += self.ratingRows;
         pageController.redraw();
