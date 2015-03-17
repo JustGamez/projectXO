@@ -91,45 +91,45 @@ PageXOGame = function PageXOGame() {
     };
 
     var textVariants = [
-            {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: true, text: gameStatusTextList.yourTurnX},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.opponentTurnX},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: true, text: gameStatusTextList.yourTurnO},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.opponentTurnO},
+        {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
+        {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: true, text: gameStatusTextList.yourTurnX},
+        {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.opponentTurnX},
+        {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: true, text: gameStatusTextList.yourTurnO},
+        {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.opponentTurnO},
 
-            {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.turnX},
-            {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.turnO},
+        {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.turnX},
+        {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.turnO},
 
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_UNKNOWN, text: gameStatusTextList.youWinSexUnknown},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_MAN, text: gameStatusTextList.youWinSexMan},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_WOMAN, text: gameStatusTextList.youWinSexWoman},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: false, text: gameStatusTextList.opponentWin},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_UNKNOWN, text: gameStatusTextList.youWinSexUnknown},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_MAN, text: gameStatusTextList.youWinSexMan},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_WOMAN, text: gameStatusTextList.youWinSexWoman},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: false, text: gameStatusTextList.opponentWin},
 
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
 
-            {status: LogicXO.STATUS_NOBODY_WIN, text: gameStatusTextList.nobodyWin},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
+        {status: LogicXO.STATUS_NOBODY_WIN, text: gameStatusTextList.nobodyWin},
+        {status: LogicXO.STATUS_NOBODY_WIN, isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
+        {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
+        {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
+        {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
 
-            {status: LogicXO.STATUS_CLOSED, text: gameStatusTextList.closed},
-            {status: LogicXO.STATUS_CLOSED, isLooking: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
+        {status: LogicXO.STATUS_CLOSED, text: gameStatusTextList.closed},
+        {status: LogicXO.STATUS_CLOSED, isLooking: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
+        {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
+        {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
+        {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
+        {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
 
-            /* Это должно быть внизу таблицы! */
-            {isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
-            {isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
-            {isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
-            {isLooking: true, vsRobot: false, bothLeave: true, text: gameStatusTextList.playersLeave}
-        ]
-        ;
+        /* Это должно быть внизу таблицы! */
+        {isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
+        {isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
+        {isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
+        {isLooking: true, vsRobot: false, bothLeave: true, text: gameStatusTextList.playersLeave},
+        {isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave}
+    ];
 
     /**
      * Собствено проинициализируем нашу страницу.

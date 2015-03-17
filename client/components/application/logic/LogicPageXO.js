@@ -16,7 +16,7 @@ LogicPageXO = function () {
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
         game = LogicGame.getCurrentGame();
         lookingGameId = LogicGame.getLookingGameId();
-        if (game) {
+        if (game && !lookingGameId) {
             if (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN) {
                 if (game.vsRobot) {
                     SAPIRobotGame.close(game.id);
