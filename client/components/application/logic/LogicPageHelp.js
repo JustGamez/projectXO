@@ -34,6 +34,9 @@ LogicPageHelp = function () {
      */
     this.onButtonCloseClick = function () {
         pageController.showPages(pageIdBefore);
+        if (pageController.isShowedNow(PageController.PAGE_ID_MAIN)) {
+            LogicUser.setBusy(false);
+        }
     };
 
     var pageIdBefore = [];

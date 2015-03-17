@@ -64,47 +64,72 @@ PageXOGame = function PageXOGame() {
      */
     var gameStatusTextList = {
         waiting: 'ждём...',
+
         yourTurnX: 'ход: Х \nтвой ход',
         yourTurnO: 'ход: О \nтвой ход',
         opponentTurnX: 'ход: Х \nоппонент',
         opponentTurnO: 'ход: О \nоппонент',
-        nobodyWin: 'ничья.',
+        turnX: 'ход: Х',
+        turnO: 'ход: О',
+
         youWinSexUnknown: 'вы выиграли!',
         youWinSexMan: 'ты выиграл!',
         youWinSexWoman: 'ты выиграла!',
         opponentWin: 'оппонент \nвыиграл!',
+        XWin: 'крестики \nвыиграли',
+        OWin: 'нолики \nвыиграли',
+
+        closed: 'игра \nокончена',
+
         opponentLeave: 'оппонент \nпокинул игру',
         playerXLeave: 'крестик \nпокинул игру',
         playerOLeave: 'нолик \nпокинул игру',
         playersLeave: 'игроки \nпокинули игру',
-        playerLeave: 'игрок \nпокинули игру',
+        playerLeave: 'игрок \nпокинул игру',
 
-        turnX: 'ход: Х',
-        turnO: 'ход: О',
-        closed: 'игрок \nпокинул игру',
-        someBodyWin: 'игра \nокончена'
+        nobodyWin: 'ничья.'
     };
 
     var textVariants = [
-        {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
-        {status: LogicXO.STATUS_RUN, isOurTurn: true, turnId: LogicXO.SIGN_ID_X, text: gameStatusTextList.yourTurnX},
-        {status: LogicXO.STATUS_RUN, isOurTurn: true, turnId: LogicXO.SIGN_ID_O, text: gameStatusTextList.yourTurnO},
-        {status: LogicXO.STATUS_RUN, isOurTurn: false, turnId: LogicXO.SIGN_ID_X, text: gameStatusTextList.opponentTurnX},
-        {status: LogicXO.STATUS_RUN, isOurTurn: false, turnId: LogicXO.SIGN_ID_O, text: gameStatusTextList.opponentTurnO},
-        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: true, sex: SocNet.SEX_UNKNOWN, text: gameStatusTextList.youWinSexUnknown},
-        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: true, sex: SocNet.SEX_MAN, text: gameStatusTextList.youWinSexMan},
-        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: true, sex: SocNet.SEX_WOMAN, text: gameStatusTextList.youWinSexWoman},
-        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: false, text: gameStatusTextList.opponentWin},
-        {status: LogicXO.STATUS_CLOSED, isLooking: false, text: gameStatusTextList.opponentLeave},
-        {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: true, text: gameStatusTextList.playerLeave},
-        {status: LogicXO.STATUS_CLOSED, isLooking: true, XLeave: true, OLeave: false, vsRobot: false, text: gameStatusTextList.playerXLeave},
-        {status: LogicXO.STATUS_CLOSED, isLooking: true, XLeave: false, OLeave: true, vsRobot: false, text: gameStatusTextList.playerOLeave},
-        {status: LogicXO.STATUS_CLOSED, isLooking: true, XLeave: true, OLeave: true, vsRobot: false, text: gameStatusTextList.playersLeave},
-        {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_X, text: gameStatusTextList.turnX},
-        {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_O, text: gameStatusTextList.turnO},
-        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, text: gameStatusTextList.someBodyWin},
-        {status: LogicXO.STATUS_NOBODY_WIN, text: gameStatusTextList.nobodyWin}
-    ];
+            {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
+            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: true, text: gameStatusTextList.yourTurnX},
+            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.opponentTurnX},
+            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: true, text: gameStatusTextList.yourTurnO},
+            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.opponentTurnO},
+
+            {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.turnX},
+            {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.turnO},
+
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_UNKNOWN, text: gameStatusTextList.youWinSexUnknown},
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_MAN, text: gameStatusTextList.youWinSexMan},
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_WOMAN, text: gameStatusTextList.youWinSexWoman},
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: false, text: gameStatusTextList.opponentWin},
+
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
+            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
+
+            {status: LogicXO.STATUS_NOBODY_WIN, text: gameStatusTextList.nobodyWin},
+            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
+            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
+            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
+            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
+
+            {status: LogicXO.STATUS_CLOSED, text: gameStatusTextList.closed},
+            {status: LogicXO.STATUS_CLOSED, isLooking: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
+            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
+            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
+            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
+            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
+
+            /* Это должно быть внизу таблицы! */
+            {isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
+            {isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
+            {isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
+            {isLooking: true, vsRobot: false, bothLeave: true, text: gameStatusTextList.playersLeave}
+        ]
+        ;
 
     /**
      * Собствено проинициализируем нашу страницу.
@@ -259,21 +284,33 @@ PageXOGame = function PageXOGame() {
         /* Перересовываем статус игры */
         var text = gameStatusTextList.waiting;
         if (game) {
-            var isOurTurn, isOurWin, bothNotInGame, XLeave, OLeave;
+            var isOurTurn, isOurWin, winSignId, XLeave, OLeave, bothLeave, opponentLeave;
             isOurTurn = LogicXO.isHisTurn(game, user.id);
             isOurWin = game.winnerId == user.id;
+            winSignId = null;
+            if (game.status == LogicXO.STATUS_SOMEBODY_WIN && game.XUserId == game.winnerId) {
+                winSignId = LogicXO.SIGN_ID_X;
+            }
+            if (game.status == LogicXO.STATUS_SOMEBODY_WIN && game.OUserId == game.winnerId) {
+                winSignId = LogicXO.SIGN_ID_O;
+            }
             XLeave = LogicUser.getById(game.XUserId).onGameId != game.id;
             OLeave = LogicUser.getById(game.OUserId).onGameId != game.id;
+            opponentLeave = LogicUser.getById(LogicXO.getOpponentUserId(game, user.id)).onGameId != game.id;
+            bothLeave = XLeave && OLeave;
             textVariants.forEach(function (variant) {
                 if (variant.status != undefined && variant.status != game.status) return;
-                if (variant.isOurTurn != undefined && variant.isOurTurn != isOurTurn) return;
                 if (variant.turnId != undefined && variant.turnId != game.turnId) return;
+                if (variant.isOurTurn != undefined && variant.isOurTurn != isOurTurn) return;
                 if (variant.sex != undefined && variant.sex != user.sex) return;
                 if (variant.isOurWin != undefined && variant.isOurWin != isOurWin) return;
                 if (variant.isLooking != undefined && variant.isLooking != justLooking) return;
                 if (variant.XLeave != undefined && variant.XLeave != XLeave) return;
                 if (variant.OLeave != undefined && variant.OLeave != OLeave) return;
                 if (variant.vsRobot != undefined && variant.vsRobot != game.vsRobot) return;
+                if (variant.winSignId != undefined && variant.winSignId != winSignId) return;
+                if (variant.bothLeave != undefined && variant.bothLeave != bothLeave) return;
+                if (variant.opponentLeave != undefined && variant.opponentLeave != opponentLeave) return;
                 text = variant.text;
             });
         }
@@ -367,4 +404,5 @@ PageXOGame = function PageXOGame() {
             self.elements[i].redraw();
         }
     };
-};
+}
+;

@@ -34,9 +34,9 @@ PageHelpMainMenu = function PageHelpMainMenu() {
         list.push({name: 'ElementText', x: 390, y: 90 + rowHeight * line + offsetY, text: '&larr; выбор поля: 3х3 или 15х15.'});
 
         line = 2;
-        list.push({name: 'ElementPhoto', x: 110, y: 60 + rowHeight * line + offsetY, width: 51, height: 50, src: '/images/help/photoSomePeople1.png', pointer: GUI.POINTER_ARROW});
-        list.push({name: 'ElementPhoto', x: 190, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople2.png', pointer: GUI.POINTER_ARROW});
-        list.push({name: 'ElementPhoto', x: 268, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, src: '/images/help/photoSomePeople3.png', pointer: GUI.POINTER_ARROW});
+        list.push({name: 'ElementPhoto', x: 110, y: 60 + rowHeight * line + offsetY, width: 51, height: 50, user: {photo50: '/images/help/photoSomePeople1.png'}, pointer: GUI.POINTER_ARROW});
+        list.push({name: 'ElementPhoto', x: 190, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, user: {photo50: '/images/help/photoSomePeople2.png'}, pointer: GUI.POINTER_ARROW});
+        list.push({name: 'ElementPhoto', x: 268, y: 60 + rowHeight * line + offsetY, width: 51, height: 51, user: {photo50: '/images/help/photoSomePeople3.png'}, pointer: GUI.POINTER_ARROW});
         list.push({name: 'ElementText', x: 360, y: 83 + rowHeight * line + offsetY, text: '&larr; отправить приглашение сыграть.'});
 
         line = 3;

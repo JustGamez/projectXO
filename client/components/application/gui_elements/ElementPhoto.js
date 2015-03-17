@@ -211,6 +211,10 @@ ElementPhoto = function () {
      * Создадим домы и настроем их.
      */
     this.init = function () {
+        /* @todo do user is self.user */
+        if (self.user) {
+            user = self.user;
+        }
         /* Границы фотографии */
         domRegion = GUI.createDom();
         domRegion.width = regionWidth;

@@ -544,21 +544,6 @@ LogicXO = function () {
     };
 
     /**
-     * Проверяет находятся ли координаты вне поля.
-     * @param fieldSize {Number}
-     * @param x {Number}
-     * @param y {Number}
-     * @returns {boolean}
-     */
-    this.notInField = function (x, y, fieldSize) {
-        if (x < 0) return true;
-        if (x >= fieldSize) return true;
-        if (y < 0) return true;
-        if (y >= fieldSize) return true;
-        return false;
-    };
-
-    /**
      * Вернёт противоположный знак.
      * @param signId {Number} LogicXO.SIGN_ID_*
      */
