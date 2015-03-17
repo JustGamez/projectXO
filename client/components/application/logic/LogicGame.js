@@ -68,6 +68,15 @@ LogicGame = function () {
     this.getById = function (gameId) {
         return games[gameId];
     };
+
+    var lookingGameId;
+    this.setLookingGameId = function (id) {
+        lookingGameId = id;
+    };
+
+    this.getLookingGameId = function () {
+        return lookingGameId;
+    };
 };
 
 /**

@@ -20,6 +20,11 @@ ActionsRepeatGame = function () {
                     CAPIGame.updateInfo(newGame.joinerUserId, newGame);
                     CAPIGame.gameCreated(newGame.joinerUserId, newGame.id);
                 }
+                var lookers = LogicGameLookers.get(oldGame.id);
+                for (var userId in lookers) {
+                    CAPIGame.updateInfo(userId, newGame);
+                    CAPIGame.gameCreated(userId, newGame.id);
+                }
             });
         });
     }

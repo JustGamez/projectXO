@@ -53,6 +53,10 @@ ActionsRobotGame = function () {
             game = LogicXO.switchTurn(game);
             DataGame.save(game, function (game) {
                 CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
+                var lookers = LogicGameLookers.get(game.id);
+                for (var userId in lookers) {
+                    CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
+                }
             });
         });
     };

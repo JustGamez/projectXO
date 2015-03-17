@@ -31,6 +31,7 @@ window.onload = function () {
         SAPIRating: true,
         SAPIRepeatGame: true,
         SAPIStatistic: true,
+        SAPIGameLooks: true,
 
         CAPIChat: true,
         CAPIGame: true,

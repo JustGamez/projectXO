@@ -19,12 +19,10 @@ SAPIRobotGame = function () {
             Logs.log("SAPIRobotGame.createGame: must have signId", Logs.LEVEL_WARNING, signId);
             return;
         }
-        var prid = Profiler.start(Profiler.ID_CREATE_ROBOT_GAME);
         Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CREATE);
         ActionsRobotGame.createGame(cntx.userId, fieldTypeId, signId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.gameCreated(game.creatorUserId, game.id);
-            Profiler.stop(Profiler.ID_CREATE_ROBOT_GAME, prid);
         });
     };
 
@@ -43,12 +41,13 @@ SAPIRobotGame = function () {
             Logs.log("SAPIGame.close: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        var prid = Profiler.start(Profiler.ID_ROBOT_CLOSE_GAME);
-
         ActionsGame.close(cntx.userId, gameId, function (game) {
             Statistic.add(cntx.userId, Statistic.ID_GAME_ROBOT_CLOSE);
             CAPIGame.updateInfo(game.creatorUserId, game);
-            Profiler.stop(Profiler.ID_ROBOT_CLOSE_GAME, prid);
+            var lookers = LogicGameLookers.get(game.id);
+            for (var userId in lookers) {
+                CAPIGame.updateInfo(userId, game);
+            }
         });
     };
 

@@ -39,6 +39,9 @@ LogicUser = function () {
         SAPIUser.sendMeOnlineUserIds();
         SAPIRating.sendMeLastPosition();
         waitForLoadingUser = [];
+        if (LogicGame.getLookingGameId()) {
+            SAPIGameLooks.start(LogicGame.getLookingGameId());
+        }
     };
 
     /**
@@ -83,7 +86,8 @@ LogicUser = function () {
             lastName: '-',
             isBusy: false,
             onGameId: 0,
-            online: false
+            online: false,
+            score15x15vsPerson: '-'
         };
     };
 
@@ -144,7 +148,7 @@ LogicUser = function () {
         }
         onlineCount = count;
         /* Сбрасываем пользователя если он вошел\вышел. */
-        self.updateUserInfo({id: userId, online: direction, isBusy: false, onGame: 0});
+        self.updateUserInfo({id: userId, online: direction, isBusy: false, onGameId: 0});
         pageController.redraw();
     };
 

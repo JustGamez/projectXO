@@ -46,10 +46,8 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/field15x15Rest.png',
                     srcHover: '/images/radio/field15x15Hover.png',
                     srcActive: '/images/radio/field15x15Active.png',
-                    x: 550,
+                    x: 554,
                     y: 100,
-                    width: 156,
-                    height: 85,
                     title: 'поле 15 на 15, \r\nпобеждает линия \r\nиз 5-ти знаков.',
                     value: LogicXO.FIELD_TYPE_15X15
                 },
@@ -59,8 +57,6 @@ PageMain = function PageMain() {
                     srcActive: '/images/radio/field3x3Active.png',
                     x: 558,
                     y: 159,
-                    width: 123,
-                    height: 86,
                     title: 'поле 3 на 3, \r\nпобеждает линия \r\nиз 3-ёх знаков.',
                     value: LogicXO.FIELD_TYPE_3X3
                 }
@@ -175,7 +171,7 @@ PageMain = function PageMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var usersList, ids, friendIds, onlineIds, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, enableButtonInvite, showBusyText, showOfflineText;
+        var usersList, ids, friendIds, onlineIds, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, showBusyText, showOfflineText;
         usersList = [];
         ids = [];
         currentUser = LogicUser.getCurrentUser();
@@ -199,57 +195,13 @@ PageMain = function PageMain() {
                 if (!user) {
                     continue;
                 }
-                /**
-                 * установить случаи отображения:
-                 * - инвайт да;
-                 * - инвайт нет, если есть приглшание;
-                 * - инвайт нет, если отправлено приглашение;
-                 * - "играем?" нет;
-                 * - "играем?" да, если есть приглашение;
-                 * - "ждём..." нет;
-                 * - "ждём..." да, если отправлено приглашение;
-                 */
-                /* шаг 1. Значения по умолчанию */
-                enableButtonInvite = true;
-                showButtonInvite = true;
-                showButtonLetsPlay = false;
-                showIndicatorWaiting = false;
-                showBusyText = false;
-                showOfflineText = false;
-                /* шаг 2. Условия отключения кнопки приглашения. */
-                if (LogicInvites.haveInvite(user.id) || !user.online || user.isBusy || user.onGameId) {
-                    showButtonInvite = false;
-                }
-                /* шаг 3. Условия включения "играем?" */
-                if (LogicInvites.isInviteExists(user.id, currentUser.id) && user.online) {
-                    showButtonLetsPlay = true;
-                }
-                /* шаг 4. Условия включения "ждём..." */
-                if (LogicInvites.isInviteExists(currentUser.id, user.id) && !showButtonLetsPlay && user.online && !user.isBusy && !user.onGameId) {
-                    showIndicatorWaiting = true;
-                }
-                if (!user.online) {
-                    showOfflineText = true;
-                }
-                if (user.online && (user.onGameId || user.isBusy)) {
-                    showBusyText = true;
-                }
                 usersList.push({
-                    isFriend: LogicFriends.isFriend(currentUser.id, user.id),
-                    src: user.photo50,
-                    title: user.firstName + " " + user.lastName,
-                    showButtonInvite: showButtonInvite,
-                    enableButtonInvite: true,
-                    showButtonLetsPlay: showButtonLetsPlay,
-                    showIndicatorWaiting: showIndicatorWaiting,
-                    showBusyText: showBusyText,
-                    showOfflineText: showOfflineText,
-                    onClick: function (user) {
-                        window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
-                    },
+                    user: user,
+                    showState: true,
                     onButtonInviteClick: LogicPageMain.onInviteClick,
                     onButtonLetsPlayClick: LogicPageMain.onLetsPlayClick,
-                    user: user
+                    onButtonLookGameClick: LogicPageMain.onLookGameClick,
+                    isFriend: LogicFriends.isFriend(currentUser.id, user.id)
                 });
             }
         }

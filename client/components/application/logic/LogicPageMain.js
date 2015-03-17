@@ -35,12 +35,12 @@ LogicPageMain = function () {
 
     /**
      * Действия при нажатии на френд-ленте "пригласить в игру".
-     * @param photoInfo {Object}
+     * @param user {Object}
      */
-    this.onInviteClick = function (photoInfo) {
+    this.onInviteClick = function (user) {
         var whoId, whomId;
         whoId = LogicUser.getCurrentUser().id;
-        whomId = photoInfo.id;
+        whomId = user.id;
         SAPIInvites.send(whoId, whomId);
         LogicInvites.save(whoId, whomId);
         LogicTimers.start('invite_' + whomId, Config.Invites.inviteTimeout, LogicInvites.clearInviteByPare, [whoId, whomId]);
@@ -48,12 +48,24 @@ LogicPageMain = function () {
 
     /**
      * Действия при нажатии на френд-ленте "играем?".
-     * @param photoInfo {Object}
+     * @param user {Object}
      */
-    this.onLetsPlayClick = function (photoInfo) {
+    this.onLetsPlayClick = function (user) {
         LogicUser.setBusy(true);
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
-        SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, photoInfo.id);
+        SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, user.id);
+    };
+
+    this.onLookGameClick = function (user) {
+        var game = LogicGame.getById(user.onGameId);
+        if (game && LogicXO.isMember(game, LogicUser.getCurrentUser().id)) {
+            LogicGame.setCurrentGameId(game.id);
+            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+        } else {
+            SAPIGameLooks.start(user.onGameId);
+            LogicUser.setBusy(true);
+            LogicGame.setLookingGameId(user.onGameId);
+        }
     };
 
     /**

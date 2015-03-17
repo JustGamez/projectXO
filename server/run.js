@@ -48,6 +48,7 @@ ApiRouterMetrics.setup({
     SAPIRating: true,
     SAPIRepeatGame: true,
     SAPIStatistic: true,
+    SAPIGameLooks: true,
 
     CAPIChat: true,
     CAPIGame: true,
@@ -80,7 +81,8 @@ apiRouter.setMap({
     SAPIUserState: SAPIUserState,
     SAPIRating: SAPIRating,
     SAPIRepeatGame: SAPIRepeatGame,
-    SAPIStatistic: SAPIStatistic
+    SAPIStatistic: SAPIStatistic,
+    SAPIGameLooks: SAPIGameLooks
 });
 
 /* links apiRouter and webSocketServer */

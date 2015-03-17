@@ -86,7 +86,7 @@ SocNet = function () {
                 info.firstName = source[0].first_name;
                 info.lastName = source[0].last_name;
                 info.photo50 = source[0].photo_50;
-                switch (source.sex) {
+                switch (source[0].sex) {
                     case 1:
                         info.sex = SocNet.SEX_WOMAN;
                         break;

@@ -30,7 +30,7 @@ ElementPhoto = function () {
      * Ссылка на картинку фотографии.
      * @type {string}
      */
-    this.src = '/path/to/image.png';
+    var src = '/path/to/image.png';
 
     /**
      * Загрушка, на случай, если фотографии нет.
@@ -127,7 +127,7 @@ ElementPhoto = function () {
      * Высота области активности вокруг фотографии.
      * @type {number}
      */
-    var regionHeight = 145;
+    var regionHeight = 105;
 
     /**
      * Далее идут переменные кнопки пригласить\играём? и индикатора ждём...
@@ -138,6 +138,12 @@ ElementPhoto = function () {
      * @type {ElementButton}
      */
     var buttonInvite = null;
+    /**
+
+     * Кнопка просмотра игры.
+     * @type {ElementButton}
+     */
+    var buttonLookGame = null;
 
     /**
      * Калбэк при нажатии кнопки пригласить в игру.
@@ -146,10 +152,10 @@ ElementPhoto = function () {
     var onButtonInviteClick = null;
 
     /**
-     * Активна ли кнопка приглашения в игру.
-     * @type {boolean}
+     * Калбэк при нажатии кнопки "играет<o>"
+     * @type {Function}
      */
-    var enableButtonInvite = false;
+    var onButtonLookGameClick = null;
 
     /**
      * Кнопка "Играём?".
@@ -169,23 +175,7 @@ ElementPhoto = function () {
      */
     var domIndicatorWaiting = null;
 
-    /**
-     * Показывать ли кнопку пригласить.
-     * @type {boolean}
-     */
-    var showButtonInvite = false;
-
-    /**
-     * Показывать ли кнопку "Играем?".
-     * @type {boolean}
-     */
-    var showButtonLetsPlay = false;
-
-    /**
-     * Показывать ли индикатор "Ждём...".
-     * @type {boolean}
-     */
-    var showIndicatorWaiting = false;
+    var showState = false;
 
     /**
      * Текст: "занят".
@@ -199,9 +189,6 @@ ElementPhoto = function () {
      */
     var elementOfflineText = false;
 
-    var showBusyText = false;
-    var showOfflineText = false;
-
     /**
      * Указатель мыши при наведении.
      * @type {string}
@@ -210,7 +197,7 @@ ElementPhoto = function () {
 
     /**
      * Элемент: кард-инфо.
-     * @type {null}
+     * @type {ElementCardInfo}
      */
     var elementCardInfo = null;
 
@@ -226,8 +213,6 @@ ElementPhoto = function () {
     this.init = function () {
         /* Границы фотографии */
         domRegion = GUI.createDom();
-        domRegion.x = self.x;
-        domRegion.y = self.y;
         domRegion.width = regionWidth;
         domRegion.height = regionHeight;
         /* Бордюр рамки фотографии */
@@ -257,8 +242,6 @@ ElementPhoto = function () {
         buttonInvite = GUI.createElement("ElementButton", {
             x: 0,
             y: 77,
-            width: 80,
-            height: 17,
             srcRest: '/images/photo/buttonInviteRest.png',
             srcHover: '/images/photo/buttonInviteHover.png',
             srcActive: '/images/photo/buttonInviteActive.png',
@@ -271,14 +254,24 @@ ElementPhoto = function () {
         buttonLetsPlay = GUI.createElement("ElementButton", {
             x: -2,
             y: 65,
-            width: 90,
-            height: 41,
             srcRest: '/images/photo/buttonLetsPlayRest.png',
             srcHover: '/images/photo/buttonLetsPlayHover.png',
             srcActive: '/images/photo/buttonLetsPlayActive.png',
             title: 'Согласиться и войти в игру.',
             onClick: function (mouseEvent, dom) {
                 onButtonLetsPlayClick.call(null, user);
+            }
+        }, domRegion);
+        /* Кнопка "играет <o>" */
+        buttonLookGame = GUI.createElement("ElementButton", {
+            x: 7,
+            y: 74,
+            srcRest: '/images/photo/buttonInGame.png',
+            srcHover: '/images/photo/buttonInGame.png',
+            srcActive: '/images/photo/buttonInGame.png',
+            title: 'Посмотреть игру.',
+            onClick: function (mouseEvent, dom) {
+                onButtonLookGameClick.call(null, user);
             }
         }, domRegion);
         /* Индикатор "Ждём..." */
@@ -306,11 +299,8 @@ ElementPhoto = function () {
         elementBusyText.backgroundImage = '/images/photo/textBusy.png';
         elementBusyText.opacity = 0.37;
         /* Кард-инфо. */
-        elementCardInfo = GUI.createElement("ElementCardInfo", {
-            x: self.x + self.cardInfoOffsetX,
-            y: self.y + self.cardInfoOffsetY
-        });
-        GUI.bind(domPhoto, GUI.EVENT_MOUSE_CLICK, onClickMediator, this);
+        elementCardInfo = GUI.createElement("ElementCardInfo", {});
+        GUI.bind(domPhoto, GUI.EVENT_MOUSE_CLICK, onClickPhoto, this);
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
     };
@@ -353,47 +343,80 @@ ElementPhoto = function () {
      * Перерисуем фотографию.
      */
     this.redraw = function () {
+        var currentUser;
         if (!showed) return;
-        degress = getRealRandom(self.src);
-        domBorder.title = title;
+        degress = getRealRandom(src);
+        currentUser = LogicUser.getCurrentUser();
         /* Если, нет фотографии, то отображаем заглушку */
-        if (!user || !user.photo50) {
-            self.src = srcDummy;
+        if (user) {
+            src = user.photo50;
+            title = user.firstName + " " + user.lastName;
         } else {
-            self.src = user.photo50;
+            src = srcDummy;
+            title = '';
         }
-        domPhoto.backgroundImage = self.src;
+        domRegion.x = self.x;
+        domRegion.y = self.y;
         domRegion.transform = 'rotate(' + degress + 'deg)';
+        domBorder.title = title;
+        domPhoto.backgroundImage = src;
+        elementCardInfo.x = self.x + self.cardInfoOffsetX;
+        elementCardInfo.y = self.y + self.cardInfoOffsetY;
         domRegion.redraw();
         domPhoto.redraw();
         domBorder.redraw();
         domFrame.redraw();
         elementCardInfo.redraw();
-        if (showIndicatorWaiting) {
-            domIndicatorWaiting.show();
-            domIndicatorWaiting.redraw();
+
+        var state;
+        if (showState) {
+            state = ElementPhoto.STATE_ONLINE;
+            if (LogicInvites.isInviteExists(currentUser.id, user.id)) {
+                state = ElementPhoto.STATE_WAIT;
+            }
+            if (LogicInvites.isInviteExists(user.id, currentUser.id)) {
+                state = ElementPhoto.STATE_LETS_PLAY;
+            }
+            if (user.isBusy) {
+                state = ElementPhoto.STATE_BUSY;
+            }
+            if (user.onGameId) {
+                state = ElementPhoto.STATE_PLAY;
+            }
+            if (!user.online) {
+                state = ElementPhoto.STATE_OFFLINE;
+            }
         } else {
-            domIndicatorWaiting.hide();
+            state = ElementPhoto.STATE_HIDEN;
         }
-        if (showButtonInvite) {
-            buttonInvite.enabled = enableButtonInvite;
+        /* redraw indicatoraz */
+        // @todo just change src
+        if (state == ElementPhoto.STATE_ONLINE) {
             buttonInvite.show();
-            buttonInvite.redraw();
         } else {
             buttonInvite.hide();
         }
-        if (showButtonLetsPlay) {
-            buttonLetsPlay.show();
-            buttonLetsPlay.redraw();
+        if (state == ElementPhoto.STATE_PLAY) {
+            buttonLookGame.show();
         } else {
-            buttonLetsPlay.hide();
+            buttonLookGame.hide();
         }
-        if (showBusyText) {
+        if (state == ElementPhoto.STATE_BUSY) {
             elementBusyText.show();
         } else {
             elementBusyText.hide();
         }
-        if (showOfflineText) {
+        if (state == ElementPhoto.STATE_WAIT) {
+            domIndicatorWaiting.show();
+        } else {
+            domIndicatorWaiting.hide();
+        }
+        if (state == ElementPhoto.STATE_LETS_PLAY) {
+            buttonLetsPlay.show();
+        } else {
+            buttonLetsPlay.hide();
+        }
+        if (state == ElementPhoto.STATE_OFFLINE) {
             elementOfflineText.show();
         } else {
             elementOfflineText.hide();
@@ -404,28 +427,16 @@ ElementPhoto = function () {
      * Обновление данных фотографии.
      * @param params { {
      *       src: string,
-     *       title: string,
-     *       showButtonInvite: boolean,
-     *       showButtonLetsPlay: boolean,
-     *       showIndicatorWaiting: boolean,
-     *       onClick: Function,
      *       onButtonInviteClick: Function,
      *       onButtonLetsPlayClick: Function,
-     *       enableButtonInvite: boolean,
      *   }}
      */
     this.update = function (params) {
         user = params.user;
-        title = params.title;
-        showButtonInvite = params.showButtonInvite;
-        showButtonLetsPlay = params.showButtonLetsPlay;
-        showIndicatorWaiting = params.showIndicatorWaiting;
-        onClick = params.onClick;
         onButtonInviteClick = params.onButtonInviteClick;
         onButtonLetsPlayClick = params.onButtonLetsPlayClick;
-        enableButtonInvite = params.enableButtonInvite;
-        showBusyText = params.showBusyText;
-        showOfflineText = params.showOfflineText;
+        onButtonLookGameClick = params.onButtonLookGameClick;
+        showState = params.showState;
     };
 
     /**
@@ -454,9 +465,9 @@ ElementPhoto = function () {
      * Посредник кэллбэка, т.к. кэллбак присваивается один раз.
      * И в процессе может меняться.
      */
-    var onClickMediator = function () {
-        if (onClick) {
-            onClick.call(null, user);
+    var onClickPhoto = function () {
+        if (user.socNetUserId) {
+            window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
         }
     };
 
@@ -489,3 +500,12 @@ ElementPhoto = function () {
         onMouseOut();
     };
 };
+
+/* Пользователь поидеи находиться в одном из состояний. */
+ElementPhoto.STATE_ONLINE = 1;
+ElementPhoto.STATE_PLAY = 2;
+ElementPhoto.STATE_BUSY = 3;
+ElementPhoto.STATE_WAIT = 4;
+ElementPhoto.STATE_LETS_PLAY = 5;
+ElementPhoto.STATE_OFFLINE = 6;
+ElementPhoto.STATE_HIDEN = 7;

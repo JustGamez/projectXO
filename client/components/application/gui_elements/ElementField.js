@@ -48,6 +48,8 @@ ElementField = function () {
      */
     var fieldTypeId = null;
 
+    var currentConfigure = null;
+
     /**
      * Текущая победная линия,
      * если не установлено - то линия не отображается.
@@ -91,8 +93,6 @@ ElementField = function () {
         lineOffset: 5,
         signOffsetX: 5,
         signOffsetY: 5,
-        signImageWidth: 130,
-        signImageHeight: 130,
         winLineSize: 3
     };
     this.configure[LogicXO.FIELD_TYPE_3X3].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/3x3LineHorizontal.png';
@@ -118,8 +118,6 @@ ElementField = function () {
         lineOffset: 5,
         signOffsetX: 5,
         signOffsetY: 5,
-        signImageWidth: 26,
-        signImageHeight: 26,
         winLineSize: 5
     };
     this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_HORIZONTAL] = '/images/fields/15x15LineHorizontal.png';
@@ -158,28 +156,25 @@ ElementField = function () {
      * @param typeId
      */
     var initFieldByTypeId = function (typeId) {
-        var dom;
+        var dom, cfg;
+        cfg = self.configure[typeId];
         self.domList[typeId] = {};
         self.field[typeId] = [];
         dom = GUI.createDom();
         dom.x = self.x;
         dom.y = self.y;
-        dom.width = self.width;
-        dom.height = self.height;
-        dom.backgroundImage = self.configure[typeId].srcField;
+        dom.backgroundImage = cfg.srcField;
         self.domList[typeId].domField = dom;
         self.domList[typeId].domSigns = [];
-        for (var y = 0; y < self.configure[typeId].fieldSize; y++) {
+        for (var y = 0; y < cfg.fieldSize; y++) {
             self.domList[typeId].domSigns[y] = [];
             self.field[typeId][y] = [];
-            for (var x = 0; x < self.configure[typeId].fieldSize; x++) {
+            for (var x = 0; x < cfg.fieldSize; x++) {
                 dom = GUI.createDom();
-                dom.x = self.configure[typeId].signOffsetX + self.x + x * (self.configure[typeId].signWidth + self.configure[typeId].padding);
-                dom.y = self.configure[typeId].signOffsetY + self.y + y * (self.configure[typeId].signHeight + self.configure[typeId].padding);
-                dom.width = self.configure[typeId].signImageWidth;
-                dom.height = self.configure[typeId].signImageHeight;
+                dom.x = cfg.signOffsetX + self.x + x * (cfg.signWidth + self.configure[typeId].padding);
+                dom.y = cfg.signOffsetY + self.y + y * (cfg.signHeight + self.configure[typeId].padding);
                 dom.pointer = GUI.POINTER_HAND;
-                dom.backgroundImage = self.configure[typeId].srcSignClear;
+                dom.backgroundImage = cfg.srcSignClear;
                 GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onSignClick, {x: x, y: y});
                 GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, {dom: dom, x: x, y: y});
                 GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, {dom: dom, x: x, y: y});
@@ -190,8 +185,6 @@ ElementField = function () {
         dom = GUI.createDom();
         dom.x = self.x;
         dom.y = self.y;
-        dom.width = self.width;
-        dom.height = self.height;
         self.domList[typeId].domWinLine = dom;
     };
 
@@ -203,6 +196,14 @@ ElementField = function () {
             return;
         }
         showed = true;
+        showByFieldTypeId(fieldTypeId);
+        self.redraw();
+    };
+
+    var showByFieldTypeId = function (fieldTypeId) {
+        if (!fieldTypeId) {
+            return;
+        }
         self.domList[fieldTypeId].domField.show();
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
             for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
@@ -221,6 +222,13 @@ ElementField = function () {
             return;
         }
         showed = false;
+        hideByFieldTypeId(fieldTypeId);
+    };
+
+    var hideByFieldTypeId = function (fieldTypeId) {
+        if (!fieldTypeId) {
+            return;
+        }
         self.domList[fieldTypeId].domField.hide();
         for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
             for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
@@ -229,45 +237,46 @@ ElementField = function () {
         }
         self.domList[fieldTypeId].domWinLine.hide();
     };
-
     /**
      * Перерисуем поле.
      */
     this.redraw = function () {
+        var domList;
         if (!showed) return;
-        self.domList[fieldTypeId].domField.redraw();
-        for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
-            for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
-                self.domList[fieldTypeId].domSigns[y][x].redraw();
+        domList = self.domList[fieldTypeId];
+        domList.domField.redraw();
+        for (var y = 0; y < currentConfigure.fieldSize; y++) {
+            for (var x = 0; x < currentConfigure.fieldSize; x++) {
+                domList.domSigns[y][x].redraw();
             }
         }
         if (!winLineId) {
-            self.domList[fieldTypeId].domWinLine.hide();
+            domList.domWinLine.hide();
         } else {
-            self.domList[fieldTypeId].domWinLine.show();
-            self.domList[fieldTypeId].domWinLine.x = self.x + self.configure[fieldTypeId].lineOffset + winLineX * (self.configure[fieldTypeId].signWidth + self.configure[fieldTypeId].padding);
-            self.domList[fieldTypeId].domWinLine.y = self.y + self.configure[fieldTypeId].lineOffset + winLineY * (self.configure[fieldTypeId].signHeight + self.configure[fieldTypeId].padding);
-            self.domList[fieldTypeId].domWinLine.backgroundImage = self.configure[fieldTypeId].lines[winLineId];
+            domList.domWinLine.show();
+            domList.domWinLine.x = self.x + currentConfigure.lineOffset + winLineX * (currentConfigure.signWidth + currentConfigure.padding);
+            domList.domWinLine.y = self.y + currentConfigure.lineOffset + winLineY * (currentConfigure.signHeight + currentConfigure.padding);
+            domList.domWinLine.backgroundImage = currentConfigure.lines[winLineId];
             switch (winLineId) {
                 case LogicXO.LINE_HORIZONTAL:
-                    self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth * self.configure[fieldTypeId].winLineSize;
-                    self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight;
+                    domList.domWinLine.width = currentConfigure.signWidth * currentConfigure.winLineSize;
+                    domList.domWinLine.height = currentConfigure.signHeight;
                     break;
                 case LogicXO.LINE_VERTICAL:
-                    self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth;
-                    self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight * self.configure[fieldTypeId].winLineSize;
+                    domList.domWinLine.width = currentConfigure.signWidth;
+                    domList.domWinLine.height = currentConfigure.signHeight * currentConfigure.winLineSize;
                     break;
                 case LogicXO.LINE_LEFT_UP:
-                    self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth * self.configure[fieldTypeId].winLineSize;
-                    self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight * self.configure[fieldTypeId].winLineSize;
+                    domList.domWinLine.width = currentConfigure.signWidth * currentConfigure.winLineSize;
+                    domList.domWinLine.height = currentConfigure.signHeight * currentConfigure.winLineSize;
                     break;
                 case LogicXO.LINE_LEFT_DOWN:
-                    self.domList[fieldTypeId].domWinLine.width = self.configure[fieldTypeId].signWidth * self.configure[fieldTypeId].winLineSize;
-                    self.domList[fieldTypeId].domWinLine.height = self.configure[fieldTypeId].signHeight * self.configure[fieldTypeId].winLineSize;
+                    domList.domWinLine.width = currentConfigure.signWidth * currentConfigure.winLineSize;
+                    domList.domWinLine.height = currentConfigure.signHeight * currentConfigure.winLineSize;
                     break;
             }
         }
-        self.domList[fieldTypeId].domWinLine.redraw();
+        domList.domWinLine.redraw();
     };
 
     /**
@@ -278,13 +287,15 @@ ElementField = function () {
         if (fieldTypeId == typeId) {
             return;
         }
-        self.hide();
+        /* Тут еще старый fieldId. */
+        hideByFieldTypeId(fieldTypeId);
         fieldTypeId = typeId;
-        self.show();
+        currentConfigure = self.configure[fieldTypeId];
+        showByFieldTypeId(fieldTypeId);
     };
 
-    this.setLastMove = function (x, y) {
-        lastMove = {x: x, y: y};
+    this.setLastMove = function (coords) {
+        lastMove = {x: coords.x, y: coords.y};
     };
 
     /**
@@ -294,30 +305,20 @@ ElementField = function () {
      * @param signId {Number} id знака LogicXO.SIGN_ID_*
      */
     this.setSign = function (x, y, signId) {
-        self.domList[fieldTypeId].domSigns[y][x].animateStop();
-        self.domList[fieldTypeId].domSigns[y][x].opacity = 1.0;
-        switch (signId) {
-            case LogicXO.SIGN_ID_X:
-                if (lastMove && lastMove.x == x && lastMove.y == y) {
-                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignXLastMove;
-                } else {
-                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignX;
-                }
-                break;
-            case LogicXO.SIGN_ID_O:
-                if (lastMove && lastMove.x == x && lastMove.y == y) {
-                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignOLastMove;
-                } else {
-                    self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignO;
-                }
-                break;
-            case LogicXO.SIGN_ID_Empty:
-                self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;
-                break;
-            default:
-                Logs.log("Undefined signId:", Logs.LEVEL_FATAL_ERROR, signId);
-                break;
+        var src, domSign, isItLast;
+        domSign = self.domList[fieldTypeId].domSigns[y][x];
+        isItLast = lastMove && lastMove.x == x && lastMove.y == y;
+        if (signId == LogicXO.SIGN_ID_X && isItLast) src = currentConfigure.srcSignXLastMove;
+        if (signId == LogicXO.SIGN_ID_X && !isItLast) src = currentConfigure.srcSignX;
+        if (signId == LogicXO.SIGN_ID_O && isItLast) src = currentConfigure.srcSignOLastMove;
+        if (signId == LogicXO.SIGN_ID_O && !isItLast) src = currentConfigure.srcSignO;
+        if (signId == LogicXO.SIGN_ID_Empty) src = currentConfigure.srcSignClear;
+        if (!src) {
+            Logs.log("Undefined signId:", Logs.LEVEL_FATAL_ERROR, signId);
         }
+        domSign.backgroundImage = src;
+        domSign.animateStop();
+        domSign.opacity = 1.0;
         self.field[fieldTypeId][y][x] = signId;
     };
 
@@ -325,9 +326,9 @@ ElementField = function () {
      * Очистить поле.
      */
     this.clearField = function () {
-        for (var y = 0; y < self.configure[fieldTypeId].fieldSize; y++) {
-            for (var x = 0; x < self.configure[fieldTypeId].fieldSize; x++) {
-                self.domList[fieldTypeId].domSigns[y][x].backgroundImage = self.configure[fieldTypeId].srcSignClear;
+        for (var y = 0; y < currentConfigure.fieldSize; y++) {
+            for (var x = 0; x < currentConfigure.fieldSize; x++) {
+                self.domList[fieldTypeId].domSigns[y][x].backgroundImage = currentConfigure.srcSignClear;
                 self.field[fieldTypeId][y][x] = LogicXO.SIGN_ID_Empty;
             }
         }
@@ -368,12 +369,11 @@ ElementField = function () {
         }
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
-
         if (LogicXO.isHisTurn(game, user.id)) {
             if (game.turnId == LogicXO.SIGN_ID_X) {
-                this.dom.backgroundImage = self.configure[fieldTypeId].srcSignX;
+                this.dom.backgroundImage = currentConfigure.srcSignX;
             } else {
-                this.dom.backgroundImage = self.configure[fieldTypeId].srcSignO;
+                this.dom.backgroundImage = currentConfigure.srcSignO;
             }
             if (fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
                 this.dom.animateOpacity(0.21, 0.18, 20);

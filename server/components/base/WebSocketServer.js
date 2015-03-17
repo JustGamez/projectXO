@@ -300,7 +300,7 @@ WebSocketServer = function () {
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
             demension = IMAGE_SIZE(imageFiles[i]);
-            imageCode += "\r\nimagesData['" + path + "']={path:'" + path + timePostfix + "' , w:" + demension.width + ", h:" + demension.height + "};";
+            imageCode += "\r\nimagesData['" + path + "']={path:'" + path + timePostfix + "',w:" + demension.width + ",h:" + demension.height + "};";
         }
         imageCode += "</script>";
         /* добавим img тэги для предзагрузки. */
@@ -405,13 +405,11 @@ WebSocketServer = function () {
 
         /* Запрашивается клинетский код? */
         if (request.url.indexOf('/VK/clientCode') == 0) {
-            var prid = Profiler.start(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE);
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
             }
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end(clientCode);
-            Profiler.stop(Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE, prid);
             return true;
         }
         if (request.url.indexOf('/VK/commentsWidget') == 0) {

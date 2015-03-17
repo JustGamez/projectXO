@@ -56,8 +56,8 @@ PageChat = function PageChat() {
         /* Лейбл чата. */
         element = GUI.createElement("ElementImage", {
             x: 58,
-            y: 507,
-            opacity: 0.28,
+            y: 491,
+            opacity: 0.25,
             src: '/images/chat/chatLabel.png'
         });
         self.elements.push(element);
@@ -65,7 +65,7 @@ PageChat = function PageChat() {
         element = GUI.createElement("ElementImage", {
             x: 61,
             y: 601,
-            opacity: 0.28,
+            opacity: 0.25,
             src: '/images/chat/chatPrompt.png'
         });
         self.elements.push(element);

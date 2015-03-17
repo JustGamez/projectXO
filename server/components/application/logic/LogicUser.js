@@ -102,14 +102,14 @@ LogicUser = function () {
             if (user) {
                 user.online = self.isUserOnline(user.id);
                 user.isBusy = self.isUserBusy(user.id);
-                user.onGame = self.isUserOnGame(user.id);
+                user.onGameId = self.isUserOnGame(user.id);
                 CAPIUser.updateUserInfo(toUserId, user);
                 Profiler.stop(Profiler.ID_SEND_USER_INFO, prid);
                 if (user.socNetUpdated <= time() - Config.SocNet.refreshInfoTimeout) {
                     refreshUserSocNetInfo(user, function (user) {
                         user.online = self.isUserOnline(user.id);
                         user.isBusy = self.isUserBusy(user.id);
-                        user.onGame = self.isUserOnGame(user.id);
+                        user.onGameId = self.isUserOnGame(user.id);
                         CAPIUser.updateUserInfo(toUserId, user);
                     });
                 }
@@ -242,7 +242,7 @@ LogicUser = function () {
     };
     this.isUserOnGame = function (userId) {
         if (userToCntx[userId] == undefined)return undefined;
-        return userToCntx[userId].user.onGame;
+        return userToCntx[userId].user.onGameId;
     };
 
     /**
@@ -284,7 +284,7 @@ LogicUser = function () {
                 conns: {},
                 user: {
                     isBusy: false,
-                    onGame: 0,
+                    onGameId: 0,
                     id: user.id
                 },
                 connsCount: 0

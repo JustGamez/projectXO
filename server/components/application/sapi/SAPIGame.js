@@ -24,13 +24,15 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
             return;
         }
-        var prid = Profiler.start(Profiler.ID_DO_MOVE);
         Statistic.add(cntx.userId, Statistic.ID_GAME_DO_MOVE);
         ActionsGame.doMove(cntx.userId, gameId, x, y, function (game) {
             if (game.isInvitation) {
                 CAPIGame.updateMove(LogicXO.getOpponentUserId(game, cntx.userId), game.id, game.lastMove.x, game.lastMove.y);
             }
-            Profiler.stop(Profiler.ID_DO_MOVE, prid);
+            var lookers = LogicGameLookers.get(game.id);
+            for (var userId in lookers) {
+                CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
+            }
         });
     };
 
@@ -90,6 +92,10 @@ SAPIGame = function () {
         ActionsGame.close(cntx.userId, gameId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
             CAPIGame.updateInfo(game.joinerUserId, game);
+            var lookers = LogicGameLookers.get(game.id);
+            lookers.forEach(function (userId) {
+                CAPIGame.updateInfo(userId, game);
+            });
         });
     };
 };

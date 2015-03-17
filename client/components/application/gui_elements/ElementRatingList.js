@@ -50,7 +50,7 @@ ElementRatingList = function () {
      * Тут будем хранит массив пользователей.
      * @type {{}[]}
      */
-    var rowsData = [];
+    var rowsData;
 
     /**
      * Массив элементов строк рейтинга.
@@ -163,10 +163,10 @@ ElementRatingList = function () {
             data = rowsData[i];
             elements = rowsElements[i];
             if (data) {
-                elements.photo.update(data.photoData);
-                elements.name.setText(data.name);
+                elements.photo.update(data);
+                elements.name.setText(data.user.firstName + " " + data.user.lastName);
                 elements.position.setText(data.position);
-                elements.score15x15vsPerson.setText(data.score15x15vsPerson);
+                elements.score15x15vsPerson.setText(data.user.score15x15vsPerson);
                 /* Перерисуем */
                 for (var j = 0, length = elements.all.length; j < length; j++) {
                     elements.all[j].show();
@@ -188,8 +188,7 @@ ElementRatingList = function () {
      */
     this.update = function (users) {
         for (var i in users) {
-            users[i].position = typeof users[i].position == 'number' ? users[i].position.toString() : '-';
-            users[i].score15x15vsPerson = typeof users[i].score15x15vsPerson == 'number' ? users[i].score15x15vsPerson.toString() : '-';
+            users[i].position = users[i].position ? users[i].position : '-';
         }
         rowsData = users;
         /* Отсортируем по позициям. */

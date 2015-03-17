@@ -21,25 +21,42 @@ PageXOGame = function PageXOGame() {
      * Игровое поле.
      * @type {ElementField}
      */
-    this.elementField = null;
+    var elementField = null;
 
     /**
      * Статус игры, кто ходит, выиграл проиграл и т.д.
      * @type {ElementGraphicText}
      */
-    this.elementGameStatus = null;
+    var elementGameStatus = null;
 
     /**
      * Элемент фото оппонента.
      * @type {ElementPhoto}
      */
-    this.elementOpponentPhoto = null;
+    var elementPhoto = null;
+
+    /**
+     * Элемент фото второго оппонента. Если мы наблюдаем.
+     * @type {ElementPhoto}
+     */
+    var elementPhoto2 = null;
 
     /**
      * Элемент, кнопка играть "Ещё".
      * @type {ElementButton}
      */
-    this.elementButtonAgain = null;
+    var elementButtonAgain = null;
+
+    /**
+     * @type {GUIDom}
+     */
+    var domSignX;
+
+    /**
+     *
+     * @type {GUIDom}
+     */
+    var domSignO;
 
     /**
      * Тексты для статусов игры.
@@ -51,13 +68,35 @@ PageXOGame = function PageXOGame() {
         yourTurnO: 'ход: О\nтвой ход',
         opponentTurnX: 'ход: Х\nоппонент',
         opponentTurnO: 'ход: О\nоппонент',
-        closed: 'оппонент \nпокинул игру',
         nobodyWin: 'ничья.',
-        youWinSexMan: 'вы выиграли!',
-        youWinSexWoman: 'вы выиграли!',
-        opponentWinSexMan: 'оппонент \nвыиграл!',
-        opponentWinSexWoman: 'оппонент \nвыиграл!'
+        youWinSexUnknown: 'вы выиграли!',
+        youWinSexMan: 'ты выиграл!',
+        youWinSexWoman: 'ты выиграла!',
+        opponentWin: 'оппонент \nвыиграл!',
+        opponentLeave: 'оппонент \nпокинул игру',
+
+        turnX: 'ход: Х',
+        turnO: 'ход: О',
+        closed: 'игра\nокончена',
+        someBodyWin: 'игра\nокончена'
     };
+
+    var textVariants = [
+        {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
+        {status: LogicXO.STATUS_RUN, isOurTurn: true, turnId: LogicXO.SIGN_ID_X, text: gameStatusTextList.yourTurnX},
+        {status: LogicXO.STATUS_RUN, isOurTurn: true, turnId: LogicXO.SIGN_ID_O, text: gameStatusTextList.yourTurnO},
+        {status: LogicXO.STATUS_RUN, isOurTurn: false, turnId: LogicXO.SIGN_ID_X, text: gameStatusTextList.opponentTurnX},
+        {status: LogicXO.STATUS_RUN, isOurTurn: false, turnId: LogicXO.SIGN_ID_O, text: gameStatusTextList.opponentTurnO},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: true, sex: SocNet.SEX_UNKNOWN, text: gameStatusTextList.youWinSexUnknown},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: true, sex: SocNet.SEX_MAN, text: gameStatusTextList.youWinSexMan},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: true, sex: SocNet.SEX_WOMAN, text: gameStatusTextList.youWinSexWoman},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isOurWin: false, text: gameStatusTextList.opponentWin},
+        {status: LogicXO.STATUS_CLOSED, text: gameStatusTextList.opponentLeave},
+        {status: LogicXO.STATUS_NOBODY_WIN, text: gameStatusTextList.nobodyWin},
+        {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_X, text: gameStatusTextList.turnX},
+        {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_O, text: gameStatusTextList.turnO},
+        {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, text: gameStatusTextList.someBodyWin}
+    ];
 
     /**
      * Собствено проинициализируем нашу страницу.
@@ -73,7 +112,7 @@ PageXOGame = function PageXOGame() {
             onClick: LogicPageXO.onFieldSignClick
         });
         this.elements.push(element);
-        this.elementField = element;
+        elementField = element;
         /* Кнопка возврата на главную страницу. */
         element = GUI.createElement('ElementButton', {
             x: 562,
@@ -87,23 +126,33 @@ PageXOGame = function PageXOGame() {
         /* Фото оппонента. */
         element = GUI.createElement("ElementPhoto", {
             x: 585,
-            y: 163,
+            y: 171,
             showCardInfo: true,
-            cardInfoOffsetX: -111,
+            cardInfoOffsetX: -115,
             cardInfoOffsetY: -20
         });
         self.elements.push(element);
-        self.elementOpponentPhoto = element;
+        elementPhoto = element;
+        /* Фото оппонента 2. */
+        element = GUI.createElement("ElementPhoto", {
+            x: 585,
+            y: 171,
+            showCardInfo: true,
+            cardInfoOffsetX: -188,
+            cardInfoOffsetY: -20
+        });
+        elementPhoto2 = element;
         /* Статус игры. */
         element = GUI.createElement('ElementGraphicText', {
-            x: 578,
+            x: 545, //with no alignCenter : 578
             y: 258,
             width: 157,
             height: undefined,
+            alignCenter: true,
             text: ''
         });
         self.elements.push(element);
-        self.elementGameStatus = element;
+        elementGameStatus = element;
         /* Кнопка играть "Еще". */
         element = GUI.createElement('ElementButton', {
             x: 535,
@@ -114,12 +163,20 @@ PageXOGame = function PageXOGame() {
             srcHover: '/images/buttons/againHover.png',
             srcActive: '/images/buttons/againActive.png',
             onClick: function () {
-                self.elementButtonAgain.hide();
+                elementButtonAgain.hide();
                 LogicPageXO.onAgainButtonClick();
             }
         });
-        self.elementButtonAgain = element;
+        elementButtonAgain = element;
         self.elements.push(element);
+        domSignX = GUI.createDom(undefined, {
+            backgroundImage: '/images/fields/15x15SignX.png',
+            opacity: 0.25
+        });
+        domSignO = GUI.createDom(undefined, {
+            backgroundImage: '/images/fields/15x15SignO.png',
+            opacity: 0.25
+        });
     };
 
     /**
@@ -144,121 +201,126 @@ PageXOGame = function PageXOGame() {
         for (var i in self.elements) {
             self.elements[i].hide();
         }
+        elementPhoto2.hide();
+        domSignO.hide();
+        domSignX.hide();
     };
 
     /**
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
+        var game, fieldSize, user, justLooking, opponent, user1, user2;
         /* Перересовываем поле */
-        var game, fieldSize, user, isItLastMove, x, y;
-        game = LogicGame.getCurrentGame();
+        justLooking = Boolean(LogicGame.getLookingGameId());
+        if (justLooking) {
+            game = LogicGame.getById(LogicGame.getLookingGameId());
+        } else {
+            game = LogicGame.getCurrentGame();
+        }
         user = LogicUser.getCurrentUser();
         /* Установим тип поля и знаки */
         if (!game) {
-            self.elementField.switchToField(LogicXOSettings.requestedFieldTypeId);
-            self.elementField.clearField();
+            elementField.switchToField(LogicXOSettings.requestedFieldTypeId);
+            elementField.clearField();
+            elementPhoto.x = 585;
+            elementPhoto2.hide();
+            domSignX.hide();
+            domSignO.hide();
         } else {
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
-            self.elementField.switchToField(game.fieldTypeId);
-            self.elementField.clearField();
+            elementField.switchToField(game.fieldTypeId);
+            elementField.clearField();
 
+            /* Подсветить последний шаг. */
             if (game.lastMove && game.status == LogicXO.STATUS_RUN) {
-                x = game.lastMove.x;
-                y = game.lastMove.y;
-                self.elementField.setLastMove(x, y);
+                elementField.setLastMove(game.lastMove);
             }
             for (var y = 0; y < fieldSize; y++) {
                 for (var x = 0; x < fieldSize; x++) {
-                    self.elementField.setSign(x, y, game.field[y][x]);
+                    elementField.setSign(x, y, game.field[y][x]);
                 }
             }
         }
         /* Посмотрим есть ли у нас линия-победы */
         if (game && game.outcomeResults) {
             if (game.outcomeResults.someBodyWin) {
-                self.elementField.setWinLine(game.outcomeResults.x, game.outcomeResults.y, game.outcomeResults.lineId);
+                elementField.setWinLine(game.outcomeResults.x, game.outcomeResults.y, game.outcomeResults.lineId);
             }
         }
         /* Перересовываем статус игры */
         var text = gameStatusTextList.waiting;
         if (game) {
-            if (game.status == LogicXO.STATUS_WAIT) {
-                text = gameStatusTextList.waiting;
-            }
-            if (game.status == LogicXO.STATUS_RUN) {
-                if (LogicXO.isHisTurn(game, user.id)) {
-                    if (game.turnId == LogicXO.SIGN_ID_X) {
-                        text = gameStatusTextList.yourTurnX;
-                    } else {
-                        text = gameStatusTextList.yourTurnO;
-                    }
-                } else {
-                    if (game.turnId == LogicXO.SIGN_ID_X) {
-                        text = gameStatusTextList.opponentTurnX;
-                    } else {
-                        text = gameStatusTextList.opponentTurnO;
-                    }
-                }
-            }
-            if (game.status == LogicXO.STATUS_CLOSED) {
-                text = gameStatusTextList.closed;
-            }
-            if (game.status == LogicXO.STATUS_SOMEBODY_WIN) {
-                if (game.winnerId == user.id) {
-                    text = gameStatusTextList.youWinSexMan;
-                } else {
-                    text = gameStatusTextList.opponentWinSexMan;
-                }
-            }
-            if (game.status == LogicXO.STATUS_NOBODY_WIN) {
-                text = gameStatusTextList.nobodyWin;
-            }
+            var isOurTurn, isOurWin;
+            isOurTurn = LogicXO.isHisTurn(game, user.id);
+            isOurWin = game.winnerId == user.id;
+            textVariants.forEach(function (variant) {
+                if (variant.status != undefined && variant.status != game.status) return;
+                if (variant.isOurTurn != undefined && variant.isOurTurn != isOurTurn) return;
+                if (variant.turnId != undefined && variant.turnId != game.turnId) return;
+                if (variant.sex != undefined && variant.sex != user.sex) return;
+                if (variant.isOurWin != undefined && variant.isOurWin != isOurWin) return;
+                if (variant.isLooking != undefined && variant.isLooking != justLooking) return;
+                text = variant.text;
+            });
         }
         else {
-            text = gameStatusTextList.waiting;
+            text = 'ждём...';
         }
-        self.elementGameStatus.setText(text);
+        elementGameStatus.setText(text);
+        elementGameStatus.y = 258;
         /* Фото оппонента. */
-        var opponent, opponentUserId;
-        if (game) {
-            if (game.vsRobot) {
-                self.elementOpponentPhoto.showCardInfo = false;
-                opponent = {
-                    online: null,
-                    photo50: '/images/photo/vsRobot.png',
-                    firstName: 'Игра с роботом.',
-                    lastName: ''
-                };
+        if (game && !justLooking) {
+            opponent = LogicXO.getOpponentUserId(game, user.id) ? LogicUser.getById(LogicXO.getOpponentUserId(game, user.id)) : getRobotDummy();
+            elementPhoto.update({user: opponent});
+            elementPhoto.degreesDiapazon = 12;
+            elementPhoto.showCardInfo = Boolean(opponent.id);
+            elementPhoto.x = 585;
+        } else if (game && justLooking) {
+            user1 = game.creatorUserId ? LogicUser.getById(game.creatorUserId) : getRobotDummy();
+            user2 = game.joinerUserId ? LogicUser.getById(game.joinerUserId) : getRobotDummy();
+            elementPhoto.update({user: user1});
+            elementPhoto.showCardInfo = Boolean(user1.id);
+            elementPhoto.x = 585 - 39;
+            elementPhoto.degreesDiapazon = 8;
+            elementPhoto2.degreesDiapazon = 8;
+            elementPhoto2.x = 585 + 39;
+            elementPhoto2.update({user: user2, showCardInfo: Boolean(user2.id)});
+            elementPhoto2.showCardInfo = Boolean(user2.id);
+            elementPhoto2.show();
+            elementPhoto2.redraw();
+            elementGameStatus.y = 278;
+            /* Крестик левый?*/
+            if (game.XUserId == user1.id) {
+                /*v.1 575, 649 , y = 242*/
+                /*v.2 524, 698 , y = 198*/
+                domSignX.x = 575;
+                domSignO.x = 649;
             } else {
-                self.elementOpponentPhoto.showCardInfo = true;
-                opponentUserId = LogicXO.getOpponentUserId(game, user.id);
-                if (opponentUserId) {
-                    opponent = LogicUser.getById(opponentUserId);
-                }
+                domSignX.x = 649;
+                domSignO.x = 575;
             }
+            domSignX.y = 247;
+            domSignO.y = 247;
+            domSignO.show();
+            domSignX.show();
         }
-        self.elementOpponentPhoto.update({
-            title: opponent ? opponent.firstName + ' ' + opponent.lastName : '',
-            showButtonInvite: false,
-            showButtonLetsPlay: false,
-            showIndicatorWaiting: false,
-            onClick: function (user) {
-                if (user.socNetUserId) {
-                    window.open(SocNet.getUserProfileUrl(user.socNetTypeId, user.socNetUserId), '_blank');
-                }
-            },
-            onButtonInviteClick: false,
-            onButtonLetsPlayClick: false,
-            enableButtonInvite: false,
-            user: opponent
-        });
         /* Кнопка "Еще" */
         if (game && showAgainButtonForGame(game, user)) {
-            self.elementButtonAgain.show();
+            elementButtonAgain.show();
         } else {
-            self.elementButtonAgain.hide();
+            elementButtonAgain.hide();
         }
+    };
+
+    var getRobotDummy = function () {
+        return {
+            id: 0,
+            online: true,
+            photo50: '/images/photo/vsRobot.png',
+            firstName: 'Игра с роботом.',
+            lastName: ''
+        };
     };
 
     var showAgainButtonForGame = function (game, user) {
@@ -266,7 +328,7 @@ PageXOGame = function PageXOGame() {
         if (!game) return false;
         if (!game.id) return false;
         if (!LogicXO.isMember(game, user.id)) return false;
-        if (game.isRandom || game.isInvitation) {
+        if (game.isInvitation) {
             opponentUserId = LogicXO.getOpponentUserId(game, user.id);
             if (!opponentUserId) return false;
             opponent = LogicUser.getById(opponentUserId);

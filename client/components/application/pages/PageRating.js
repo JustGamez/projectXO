@@ -173,24 +173,7 @@ PageRating = function PageRating() {
             rating = ratingList[i];
             user = LogicUser.getById(rating.userId);
             usersList.push({
-                photoData: {
-                    title: user.firstName + " " + user.lastName,
-                    showButtonInvite: false,
-                    enableButtonInvite: false,
-                    showButtonLetsPlay: false,
-                    showIndicatorWaiting: false,
-                    onClick: function (photoInfo) {
-                        window.open(SocNet.getUserProfileUrl(photoInfo.socNetTypeId, photoInfo.socNetUserId), '_blank');
-                    },
-                    onButtonInviteClick: null,
-                    onButtonLetsPlayClick: null,
-                    user: user
-                },
-                name: user.firstName + " " + user.lastName,
-                score15x15vsPerson: user.score15x15vsPerson,
-                score3x3vsPerson: user.score3x3vsPerson,
-                score15x15vsRobot: user.score15x15vsRobot,
-                score3x3vsRobot: user.score3x3vsRobot,
+                user: user,
                 position: rating.position
             });
         }

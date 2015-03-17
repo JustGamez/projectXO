@@ -35,7 +35,7 @@ Statistic = function () {
     this.flushCache = function () {
         var query, row;
         if (cache.length) {
-            query = "INSERT INTO statistic ( userId, timeStamp, statisticId ) VALUES ";
+            query = "INSERT INTO statistic (`userId`,`timeStamp`,`statisticId`) VALUES ";
             for (var i in cache) {
                 row = cache[i];
                 query += "(" + row.userId + "," + row.timeStamp + "," + row.statisticId + "),";
@@ -69,7 +69,7 @@ Statistic = function () {
 
     this.getStatus = function (callback) {
         var query;
-        query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join  statistic on users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 1000";
+        query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join statistic on users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 1000";
         // id, userId, timeStamp, statisticId
         DB.query(query, function (rows) {
             var html, row;

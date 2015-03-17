@@ -76,10 +76,8 @@ ElementGraphicText = function () {
      */
     this.init = function () {
         dom = GUI.createDom();
-        dom.x = this.x;
-        dom.y = this.y;
-        dom.width = this.width;
-        dom.height = this.height;
+        dom.width = self.width;
+        dom.height = self.height;
         if (self.alignCenter) {
             dom.alignText = 'center';
         }
@@ -114,7 +112,7 @@ ElementGraphicText = function () {
      * @param text {string}
      */
     this.setText = function (text) {
-        self.text = text;
+        self.text = text.toString();
     };
 
     /**
@@ -123,6 +121,8 @@ ElementGraphicText = function () {
     this.redraw = function () {
         if (!showed) return;
         refreshText();
+        dom.x = self.x;
+        dom.y = self.y;
     };
 
     var refreshText = function () {

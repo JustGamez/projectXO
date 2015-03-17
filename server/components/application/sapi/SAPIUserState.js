@@ -46,7 +46,7 @@ SAPIUserState = function () {
             return;
         }
         var prid = Profiler.start(Profiler.ID_USER_ON_GAME);
-        cntx.user.onGame = gameId;
+        cntx.user.onGameId = gameId;
         LogicUser.sendToAll(CAPIUserState.onGame, cntx.userId, gameId);
         Profiler.stop(Profiler.ID_USER_ON_GAME, prid);
     };

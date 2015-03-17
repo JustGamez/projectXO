@@ -109,8 +109,6 @@ ElementCardInfo = function () {
         /* Задний фон */
         domFrame = GUI.createDom(undefined, {
             backgroundImage: '/images/cardInfo/frame.png',
-            x: self.x,
-            y: self.y,
             zIndex: 100000,
             opacity: 0.87
         });
@@ -174,11 +172,9 @@ ElementCardInfo = function () {
             }
             e.hide();
         });
-
         for (var i in allElements) {
             allElements[i].show();
         }
-
         /* Показать элементы\домы. */
         self.redraw();
     };
@@ -202,6 +198,8 @@ ElementCardInfo = function () {
         var rating;
         if (!showed) return;
         /* Перерисовка элементов\домов. */
+        domFrame.x = self.x;
+        domFrame.y = self.y;
         if (user.online) {
             domOnline.backgroundImage = '/images/cardInfo/textOnline.png';
         } else {
