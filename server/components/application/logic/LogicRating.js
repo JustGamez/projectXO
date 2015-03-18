@@ -58,11 +58,13 @@ LogicRating = function () {
      * @param onFinishCallback {Function}
      */
     var executeUpdatePosition = function (onFinishCallback) {
-        var userId;
+        var userId, scoreData;
         var prid = Profiler.start(Profiler.ID_RATING_UPDATE);
+        // @todo userId, scoreTypeId
         userId = updatePositionUserIds.shift();
         Logs.log("Execute update position. userId= " + userId, Logs.LEVEL_DETAIL);
-        /* Get target user from database. */
+        // @todo is position == 1 skip now.
+        /* Get target user from database. Find target user with hist params.*/
         var step_1 = function (prid) {
             DB.query("SELECT * FROM rating WHERE userId = " + userId, function (rows) {
                 if (!rows[0]) {
@@ -73,19 +75,22 @@ LogicRating = function () {
                 step_2(rows[0], prid);
             });
         };
-        /* Get user with same score and lowest position. */
+        /* Get user with same score and lowest position. New position for user here. */
         var step_2 = function (target, prid) {
+//            DB.query("SELECT * FROM rating WHERE score1 >= " + target.score1 + " AND  score >= " + target.score2 + " ORDER BY position DESC LIMIT 1", function (rows) {
+
+//            });
             DB.query("SELECT * FROM rating WHERE score = " + target.score + " ORDER BY position ASC LIMIT 1", function (rows) {
                 step_3(target, rows[0], prid);
             });
         };
-        /* Update block users with same score and lower positions. */
+        /* Update block users with same score and lower positions. Move all down. */
         var step_3 = function (target, nearest, prid) {
             DB.query("UPDATE rating SET position = position + 1 WHERE score = " + nearest.score + " AND position < " + target.position, function () {
                 step_4(target, nearest, prid);
             });
         };
-        /* Update score and position for target user. */
+        /* Update score and position for target user. Move target user to new position. */
         var step_4 = function (target, nearest, prid) {
             DB.query("UPDATE rating SET score = " + (target.score + 1) + ", position = " + nearest.position + " WHERE userId = " + userId, function () {
                 onFinishCallback();

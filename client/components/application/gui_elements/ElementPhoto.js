@@ -152,7 +152,7 @@ ElementPhoto = function () {
     var onButtonInviteClick = null;
 
     /**
-     * Калбэк при нажатии кнопки "играет<o>"
+     * Калбэк при нажатии кнопки "в игре..."
      * @type {Function}
      */
     var onButtonLookGameClick = null;
@@ -199,7 +199,13 @@ ElementPhoto = function () {
      * Элемент: кард-инфо.
      * @type {ElementCardInfo}
      */
-    var elementCardInfo = null;
+    var elementCardInfo;
+
+    /** @type {GUIDom} */
+    var domInviteSign;
+
+    /** @type {GUIDom} */
+    var domInviteFieldType;
 
     /**
      * юзер-дата, нужно для: кард-инфо, ...
@@ -261,7 +267,7 @@ ElementPhoto = function () {
             srcRest: '/images/photo/buttonLetsPlayRest.png',
             srcHover: '/images/photo/buttonLetsPlayHover.png',
             srcActive: '/images/photo/buttonLetsPlayActive.png',
-            title: 'Согласиться и войти в игру.',
+            title: 'Принять приглашение.',
             onClick: function (mouseEvent, dom) {
                 onButtonLetsPlayClick.call(null, user);
             }
@@ -302,6 +308,9 @@ ElementPhoto = function () {
         elementBusyText.height = 14;
         elementBusyText.backgroundImage = '/images/photo/textBusy.png';
         elementBusyText.opacity = 0.37;
+        /* Обозначения приглашений. */
+        domInviteFieldType = GUI.createDom(domRegion, {x: 25, y: 93});
+        domInviteSign = GUI.createDom(domRegion, {x: 40, y: 93});
         /* Кард-инфо. */
         elementCardInfo = GUI.createElement("ElementCardInfo", {});
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_CLICK, onClickPhoto, this);
@@ -419,9 +428,24 @@ ElementPhoto = function () {
             domIndicatorWaiting.hide();
         }
         if (state == ElementPhoto.STATE_LETS_PLAY) {
+            var invite = LogicInvites.get(user.id, currentUser.id);
+            if (invite.fieldTypeId == LogicXO.FIELD_TYPE_3X3)domInviteFieldType.backgroundImage = '/images/photo/inviteField3x3.png';
+            if (invite.fieldTypeId == LogicXO.FIELD_TYPE_15X15)domInviteFieldType.backgroundImage = '/images/photo/inviteField15x15.png';
+            var signs = LogicXO.whoIsX(invite.signId, LogicXOSettings.requestedSignId, user.id, currentUser.id);
+            if (signs.XUserId == currentUser.id) {
+                domInviteSign.backgroundImage = '/images/photo/inviteSignX.png';
+            } else {
+                domInviteSign.backgroundImage = '/images/photo/inviteSignO.png';
+            }
+            domInviteFieldType.redraw();
+            domInviteSign.redraw();
             buttonLetsPlay.show();
+            domInviteFieldType.show();
+            domInviteSign.show();
         } else {
             buttonLetsPlay.hide();
+            domInviteSign.hide();
+            domInviteFieldType.hide();
         }
         if (state == ElementPhoto.STATE_OFFLINE) {
             elementOfflineText.show();

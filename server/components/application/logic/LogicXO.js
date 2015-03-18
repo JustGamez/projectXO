@@ -195,61 +195,68 @@ LogicXO = function () {
         return game;
     };
 
+
+    /**
+     * Как выбрать кто каким знаком играет.
+     * @type {*[]}
+     */
+    var chooseVariants = [
+        {joinerSignId: self.SIGN_ID_Empty, creatorSignId: self.SIGN_ID_Empty, X: 'creator'},
+        {joinerSignId: self.SIGN_ID_Empty, creatorSignId: self.SIGN_ID_X, X: 'creator'},
+        {joinerSignId: self.SIGN_ID_Empty, creatorSignId: self.SIGN_ID_O, X: 'joiner'},
+        {joinerSignId: self.SIGN_ID_X, creatorSignId: self.SIGN_ID_Empty, X: 'joiner'},
+        {joinerSignId: self.SIGN_ID_X, creatorSignId: self.SIGN_ID_X, X: 'creator'},
+        {joinerSignId: self.SIGN_ID_X, creatorSignId: self.SIGN_ID_O, X: 'joiner'},
+        {joinerSignId: self.SIGN_ID_O, creatorSignId: self.SIGN_ID_Empty, X: 'creator'},
+        {joinerSignId: self.SIGN_ID_O, creatorSignId: self.SIGN_ID_X, X: 'creator'},
+        {joinerSignId: self.SIGN_ID_O, creatorSignId: self.SIGN_ID_O, X: 'joiner'}
+    ];
+
     /**
      * Выставить знаки согласно параметрам игры.
      * @param game {Object}
      * @returns {*}
      */
     this.chooseSigns = function (game) {
-        /* Оба не имеют запрашиваемых знаков. */
-        if (game.creatorSignId == LogicXO.SIGN_ID_Empty && game.joinerSignId == LogicXO.SIGN_ID_Empty) {
-            if (Math.round(Math.random() * 2) > 1) {
-                game.XUserId = game.creatorUserId;
-                game.OUserId = game.joinerUserId;
-            } else {
-                game.XUserId = game.joinerUserId;
-                game.OUserId = game.creatorUserId;
-            }
-        }
-        /* Оба имеют запрашиваемых знаков. */
-        if (game.creatorSignId != LogicXO.SIGN_ID_Empty && game.joinerSignId != LogicXO.SIGN_ID_Empty) {
-            /* Тут немного хитро, мы пологаем что одинаковые знаки не придут к нам. */
-            if (game.creatorSignId == LogicXO.SIGN_ID_X) {
-                game.XUserId = game.creatorUserId;
-                game.OUserId = game.joinerUserId;
-            } else {
-                game.XUserId = game.joinerUserId;
-                game.OUserId = game.creatorUserId;
-            }
-        }
-        /* Только создатель имеет знак */
-        if (game.creatorSignId != LogicXO.SIGN_ID_Empty && game.joinerSignId == LogicXO.SIGN_ID_Empty) {
-            if (game.creatorSignId == LogicXO.SIGN_ID_X) {
-                game.XUserId = game.creatorUserId;
-                game.OUserId = game.joinerUserId;
-            } else {
-                game.XUserId = game.joinerUserId;
-                game.OUserId = game.creatorUserId;
-            }
-        }
-        /* Только приглашенный имеет знак */
-        if (game.creatorSignId == LogicXO.SIGN_ID_Empty && game.joinerSignId != LogicXO.SIGN_ID_Empty) {
-            if (game.joinerSignId == LogicXO.SIGN_ID_X) {
-                game.XUserId = game.joinerUserId;
-                game.OUserId = game.creatorUserId;
-            } else {
-                game.XUserId = game.creatorUserId;
-                game.OUserId = game.joinerUserId;
-            }
-        }
+        var signs;
+        signs = self.whoIsX(game.creatorSignId, game.joinerSignId, game.creatorUserId, game.joinerUserId);
+        game.XUserId = signs.XUserId;
+        game.OUserId = signs.OUserId;
         if (!game.vsRobot && (!game.XUserId || !game.OUserId)) {
-            Logs.log("Не удалось установить участников. Игра без робота.", Logs.LEVEL_FATAL_ERROR, game);
+            Logs.log("Сan't set signs. Without robot game.", Logs.LEVEL_FATAL_ERROR, game);
         }
         if (game.vsRobot && (!(game.XUserId > 0 && game.OUserId == 0) && !(game.XUserId == 0 && game.OUserId > 0))) {
-            Logs.log("Не удалось установить участников. Игра с роботом.", Logs.LEVEL_FATAL_ERROR, game);
+            Logs.log("Can't set signs. With robot game.", Logs.LEVEL_FATAL_ERROR, game);
         }
         return game;
     };
+
+    this.whoIsX = function (creatorSignId, joinerSignId, creatorUserId, joinerUserId) {
+        var XUserId, OUserId;
+        chooseVariants.forEach(function (variant) {
+            if (creatorSignId == variant.creatorSignId && joinerSignId == variant.joinerSignId) {
+                if (variant.X == 'creator') {
+                    XUserId = creatorUserId;
+                    OUserId = joinerUserId;
+                }
+                if (variant.X == 'joiner') {
+                    XUserId = joinerUserId;
+                    OUserId = creatorUserId;
+                }
+                if (variant.X == 'random') {
+                    if (Math.round(Math.random() * 2) > 1) {
+                        XUserId = creatorUserId;
+                        OUserId = joinerUserId;
+                    } else {
+                        XUserId = joinerUserId;
+                        OUserId = creatorUserId;
+                    }
+                }
+            }
+        });
+        return {XUserId: XUserId, OUserId: OUserId};
+    };
+
 
     /**
      * Запустить игру.

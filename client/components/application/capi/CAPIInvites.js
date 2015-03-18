@@ -5,10 +5,12 @@ CAPIInvites = function () {
      * @param cntx контекст соединения.
      * @param whoId {Number} внутрений id пользователя который пригласил.
      * @param whomId {Number} внутрений id пользователя которого пригласили.
+     * @param fieldTypeId {Number}
+     * @param signId {Number}
      */
-    this.receive = function (cntx, whoId, whomId) {
-        LogicInvites.save(whoId, whomId);
-        LogicTimers.start('letsplay_' + whoId, Config.Invites.letsPlaytimeout, LogicInvites.clearInviteByPare, [whoId, whomId]);
+    this.receive = function (cntx, whoId, whomId, fieldTypeId, signId) {
+        LogicInvites.save(whoId, whomId, fieldTypeId, signId);
+        LogicTimers.start('letsplay_' + whoId, Config.Invites.letsPlaytimeout, LogicInvites.clearInviteByPare, [whoId, whomId, fieldTypeId, signId]);
     };
 };
 

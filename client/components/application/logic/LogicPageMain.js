@@ -31,6 +31,7 @@ LogicPageMain = function () {
      */
     this.onRadioSignChange = function (value, index) {
         LogicXOSettings.requestedSignId = value;
+        pageController.redraw();
     };
 
     /**
@@ -41,8 +42,8 @@ LogicPageMain = function () {
         var whoId, whomId;
         whoId = LogicUser.getCurrentUser().id;
         whomId = user.id;
-        SAPIInvites.send(whoId, whomId);
-        LogicInvites.save(whoId, whomId);
+        SAPIInvites.send(whoId, whomId, LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
+        LogicInvites.save(whoId, whomId, LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
         LogicTimers.start('invite_' + whomId, Config.Invites.inviteTimeout, LogicInvites.clearInviteByPare, [whoId, whomId]);
     };
 
@@ -51,9 +52,11 @@ LogicPageMain = function () {
      * @param user {Object}
      */
     this.onLetsPlayClick = function (user) {
+        var invite, sign;
         LogicUser.setBusy(true);
         pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
-        SAPIInvites.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId, user.id);
+        invite = LogicInvites.get(user.id, LogicUser.getCurrentUser().id);
+        SAPIInvites.createGame(invite.fieldTypeId, invite.signId, LogicXOSettings.requestedSignId, invite.whoId);
     };
 
     this.onLookGameClick = function (user) {

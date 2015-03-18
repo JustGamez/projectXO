@@ -12,8 +12,8 @@ LogicInvites = function () {
      * @param whoId {Number} внутрений id пользователя который пригласил.
      * @param whomId {Number} внутрений id пользователя которого пригласили.
      */
-    this.save = function (whoId, whomId) {
-        invites.push({whoId: whoId, whomId: whomId});
+    this.save = function (whoId, whomId, fielTypeId, signId) {
+        invites.push({whoId: whoId, whomId: whomId, fieldTypeId: fielTypeId, signId: signId});
         pageController.redraw();
     };
 
@@ -45,6 +45,14 @@ LogicInvites = function () {
             }
         }
         return false;
+    };
+
+    this.get = function (whoId, whomId) {
+        for (var i in invites) {
+            if (invites[i].whoId == whoId && invites[i].whomId == whomId) {
+                return invites[i];
+            }
+        }
     };
 
     /**

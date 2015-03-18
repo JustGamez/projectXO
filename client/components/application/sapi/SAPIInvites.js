@@ -4,8 +4,10 @@ SAPIInvites = function () {
      * Отправка приглашения на сервер.
      * @param whoId {Number} внутрений id пользователя который пригласил.
      * @param whomId {Number} внутрений id пользователя которого пригласили.
+     * @param fieldTypeId {Number}
+     * @param signId {Number}
      */
-    this.send = function (whoId, whomId) {
+    this.send = function (whoId, whomId, fieldTypeId, signId) {
         apiRouter.executeRequest('SAPIInvites', 'send', arguments, [{connectionId: null}]);
     };
 

@@ -12,6 +12,7 @@ LogicChatCache = function () {
      * @type {string[]}
      */
     var censureVocabulary = [
+        'млять',
         'блядина',
         'ебина',
         'охуеть',
