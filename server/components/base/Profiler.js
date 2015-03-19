@@ -10,18 +10,18 @@ Profiler = function () {
 
     this.start = function (id) {
         lastPrid++;
-        data[id].stamps[lastPrid] = time();
+        data[id].stamps[lastPrid] = mtime();
         return lastPrid;
     };
 
     this.stop = function (id, prid) {
         if (!prid) {
-            Logs.log("Profiler. stop", Logs.LEVEL_WARNING, prid);
+            Logs.log("Profiler.stop().", Logs.LEVEL_WARNING, prid);
         }
         if (!data[id].stamps[prid]) {
-            Logs.log("Profiler. stop no stamp for", Logs.LEVEL_WARNING, {prid: prid, id: id});
+            Logs.log("Profiler.stop(). no stamp for", Logs.LEVEL_WARNING, {prid: prid, id: id});
         }
-        data[id].sumTime += time() - data[id].stamps[prid];
+        data[id].sumTime += mtime() - data[id].stamps[prid];
         data[id].count++;
         delete data[id].stamps[prid];
     };
@@ -71,11 +71,11 @@ Profiler = function () {
             output += ' ';
             output += str_pad(row.title, maxTitleLength + 3);
             output += ' ';
-            output += str_pad((row.sumTime).toString(), 10);
+            output += str_pad((row.sumTime / 1000).toString(), 10);
             output += ' ';
             output += str_pad((row.count).toString(), 7);
             output += ' ';
-            rps = (row.count / (row.sumTime) * 10000) / 10000;
+            rps = (row.count / (row.sumTime / 1000) * 10000) / 10000;
             output += rps;
             output += "\r\n";
         }

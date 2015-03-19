@@ -113,7 +113,6 @@ addDeInitCallback(DataGame.flushCache);
 /* init all components */
 sequencedInit(Logs.init);
 sequencedInit(Profiler.init);
-sequencedInit(CommandLineController.init);
 sequencedInit(DB.init);
 sequencedInit(Statistic.init);
 sequencedInit(SocNet.init);

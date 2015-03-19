@@ -40,6 +40,7 @@ ActionsChat = function () {
                 tmp2.push(message);
             }
         });
+        if (tmp2.length == 0)return;
         DataChat.saveList(tmp2, function () {
             /* Удалим из кэша, то что мы слили в БД. */
             LogicChatCache.sliceCache(cacheSize - retailSize);

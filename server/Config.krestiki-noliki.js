@@ -7,7 +7,7 @@ Config = {
         triggerLevel: 1 // detail, see Logs.LEVEL_*
     },
     DB: {
-        host: 'localhost',
+        host: '192.168.100.2',
         username: 'root',
         password: 'root',
         database: 'xo',

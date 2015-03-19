@@ -126,12 +126,12 @@ ElementCardInfo = function () {
         /* очки 15х15vsPerson */
         dom15x15vsPerson = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image15x15vsPerson.png', x: leftOffset, y: startY + stepY * 2, title: 'Побед 15х15 с человеком.'});
         allElements.push(dom15x15vsPerson);
-        /* очки 15x15vsRobot */
-        dom15x15vsRobot = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image15x15vsRobot.png', x: leftOffset, y: startY + stepY * 3, title: 'Побед 15х15 с роботом.'});
-        allElements.push(dom15x15vsRobot);
         /* очки 3x3vsPerson */
-        dom3x3vsPerson = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image3x3vsPerson.png', x: leftOffset, y: startY + stepY * 4, title: 'Побед 3х3 с человеком.'});
+        dom3x3vsPerson = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image3x3vsPerson.png', x: leftOffset, y: startY + stepY * 3, title: 'Побед 3х3 с человеком.'});
         allElements.push(dom3x3vsPerson);
+        /* очки 15x15vsRobot */
+        dom15x15vsRobot = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image15x15vsRobot.png', x: leftOffset, y: startY + stepY * 4, title: 'Побед 15х15 с роботом.'});
+        allElements.push(dom15x15vsRobot);
         /* очки 3x3vsRobot */
         dom3x3vsRobot = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image3x3vsRobot.png', x: leftOffset, y: startY + stepY * 5, title: 'Побед 3х3 с роботом.'});
         allElements.push(dom3x3vsRobot);
@@ -141,12 +141,12 @@ ElementCardInfo = function () {
         /* Текст 15х15vsPerson. */
         text15x15vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 2, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text15x15vsPerson);
-        /* Текст 15x15vsRobot. */
-        text15x15vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 3, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
-        allElements.push(text15x15vsRobot);
         /* Текст 3x3vsPerson. */
-        text3x3vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 4, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        text3x3vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 3, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text3x3vsPerson);
+        /* Текст 15x15vsRobot. */
+        text15x15vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 4, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        allElements.push(text15x15vsRobot);
         /* Текст 3x3vsRobot. */
         text3x3vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 5, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text3x3vsRobot);

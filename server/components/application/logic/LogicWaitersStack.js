@@ -1,3 +1,4 @@
+//@todo remove it fully!
 LogicWaitersStack = function () {
 
     var stack = [];

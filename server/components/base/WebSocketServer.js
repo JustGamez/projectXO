@@ -463,12 +463,6 @@ WebSocketServer = function () {
             loadClientCode();
             return true;
         }
-        if (request.url.indexOf('/Statistic/flushCache') == 0) {
-            Statistic.flushCache();
-            response.writeHead(200, {'Content-Type': 'text/html'});
-            response.end('<pre>' + "Statistic Cache flushed!" + new Date().getTime() + '</pre>');
-            return true;
-        }
         if (request.url.indexOf('/Statistic/showLast') == 0) {
             Statistic.flushCache();
             Statistic.getStatus(function (text) {

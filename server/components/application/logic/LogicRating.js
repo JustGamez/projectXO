@@ -28,9 +28,19 @@ LogicRating = function () {
      * Метод должен вызываться, когда пользователь получил одно очередное очко.
      * Метод должен обеспечить правильное позицию игрока в рейтинге.
      * @param userId {Number}
+     * @param score15x15vsPerson {Number}
+     * @param score3x3vsPerson {Number}
+     * @param score15x15vsRobot {Number}
+     * @param score3x3vsRobot {Number}
      */
-    this.onPositionScoreUp = function (userId) {
-        updatePositionUserIds.push(userId);
+    this.onPositionScoreUp = function (userId, score15x15vsPerson, score3x3vsPerson, score15x15vsRobot, score3x3vsRobot) {
+        updatePositionUserIds.push({
+            userId: userId,
+            _15x15PVP: score15x15vsPerson,
+            _3x3PVP: score3x3vsPerson,
+            _15x15PVB: score15x15vsRobot,
+            _3x3PVB: score3x3vsRobot
+        });
         tryUpdateNextPosition();
     };
 
@@ -58,17 +68,18 @@ LogicRating = function () {
      * @param onFinishCallback {Function}
      */
     var executeUpdatePosition = function (onFinishCallback) {
-        var userId, scoreData;
+        var userId, data;
         var prid = Profiler.start(Profiler.ID_RATING_UPDATE);
         // @todo userId, scoreTypeId
-        userId = updatePositionUserIds.shift();
-        Logs.log("Execute update position. userId= " + userId, Logs.LEVEL_DETAIL);
+        data = updatePositionUserIds.shift();
+        Logs.log("Execute update position. userId= " + data.userId, Logs.LEVEL_DETAIL);
         // @todo is position == 1 skip now.
         /* Get target user from database. Find target user with hist params.*/
         var step_1 = function (prid) {
-            DB.query("SELECT * FROM rating WHERE userId = " + userId, function (rows) {
+            DB.query("SELECT position FROM rating WHERE userId = " + data.userId, function (rows) {
                 if (!rows[0]) {
                     Logs.log("Position does not exists with userId = " + userId, Logs.LEVEL_ERROR);
+                    Profiler.stop(Profiler.ID_RATING_UPDATE, prid);
                     onFinishCallback();
                     return;
                 }
@@ -76,23 +87,41 @@ LogicRating = function () {
             });
         };
         /* Get user with same score and lowest position. New position for user here. */
-        var step_2 = function (target, prid) {
-//            DB.query("SELECT * FROM rating WHERE score1 >= " + target.score1 + " AND  score >= " + target.score2 + " ORDER BY position DESC LIMIT 1", function (rows) {
-
-//            });
-            DB.query("SELECT * FROM rating WHERE score = " + target.score + " ORDER BY position ASC LIMIT 1", function (rows) {
-                step_3(target, rows[0], prid);
+        var step_2 = function (before, prid) {
+            var query;
+            query = "SELECT * FROM rating" +
+            " WHERE " +
+            " " +
+            " score15x15vsPerson < " + data._15x15PVP + " OR" +
+            " (score15x15vsPerson = " + data._15x15PVP + " AND score3x3vsPerson < " + data._3x3PVP + ") OR" +
+            " (score15x15vsPerson = " + data._15x15PVP + " AND score3x3vsPerson = " + data._3x3PVP + " AND score15x15vsRobot < " + data._15x15PVB + ") OR" +
+            " (score15x15vsPerson = " + data._15x15PVP + " AND score3x3vsPerson = " + data._3x3PVP + " AND score15x15vsRobot = " + data._15x15PVB + " AND score3x3vsRobot < " + data._3x3PVB + ")" +
+            " " +
+            "ORDER BY position ASC" +
+            " LIMIT 1";
+            DB.query(query, function (rows) {
+                step_3(before, rows[0], prid);
             });
         };
         /* Update block users with same score and lower positions. Move all down. */
-        var step_3 = function (target, nearest, prid) {
-            DB.query("UPDATE rating SET position = position + 1 WHERE score = " + nearest.score + " AND position < " + target.position, function () {
-                step_4(target, nearest, prid);
+        var step_3 = function (before, nearest, prid) {
+            var query;
+            query = "UPDATE rating SET position = position + 1 WHERE position < " + before.position + " AND position >= " + nearest.position;
+            DB.query(query, function () {
+                step_4(before, nearest, prid);
             });
         };
         /* Update score and position for target user. Move target user to new position. */
-        var step_4 = function (target, nearest, prid) {
-            DB.query("UPDATE rating SET score = " + (target.score + 1) + ", position = " + nearest.position + " WHERE userId = " + userId, function () {
+        var step_4 = function (before, nearest, prid) {
+            var query;
+            query = "UPDATE rating SET" +
+            " score15x15vsPerson = " + data._15x15PVP +
+            ",score3x3vsPerson = " + data._3x3PVP +
+            ",score15x15vsRobot = " + data._15x15PVB +
+            ",score3x3vsRobot = " + data._3x3PVB +
+            ",position = " + nearest.position +
+            " WHERE userId = " + data.userId;
+            DB.query(query, function () {
                 onFinishCallback();
                 /* Теперь соощим всем клиентам, что рейтинг обновитлся и те сбросят кэш позиций. */
                 LogicUser.sendToAll(CAPIUser.ratingChanged);

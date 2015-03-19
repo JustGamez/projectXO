@@ -332,6 +332,7 @@ LogicUser = function () {
         var gameIds;
         Statistic.add(userId, Statistic.ID_LOGOUT);
         gameIds = DataGame.getCachedRunWaitGamesForUser(userId);
+        //@todo remove it fully (LogicWaitersStack)
         LogicWaitersStack.deleteByUserId(userId);
         for (var i in gameIds) {
             ActionsGame.close(userId, gameIds[i], function (game) {
@@ -374,9 +375,6 @@ LogicUser = function () {
                 user.isBusy = self.isUserBusy(user.id);
                 user.onGameId = self.isUserOnGame(user.id);
                 /* В рейтинге учитываются очки, только на поле 15х15 в игре с персонажем. */
-                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
-                    LogicRating.onPositionScoreUp(user.id);
-                }
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
                     user.score3x3vsRobot++;
                 }
@@ -389,6 +387,8 @@ LogicUser = function () {
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
                     user.score15x15vsPerson++;
                 }
+                /* Отправим новые данные на изменение рейтинга. */
+                LogicRating.onPositionScoreUp(user.id, user.score15x15vsPerson, user.score3x3vsPerson, user.score15x15vsRobot, user.score3x3vsRobot);
                 DataUser.save(user, function (user) {
                     LogicUser.sendToAll(CAPIUser.updateUserInfo, user);
                 });

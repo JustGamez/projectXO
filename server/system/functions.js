@@ -80,6 +80,7 @@ process.on('exit', function () {
 process.on('uncaughtException', function (err) {
     log('ERROR HAPPENDZ');
     console.log(err.stack);
+    process.exit();
 });
 
 /**
@@ -95,13 +96,19 @@ var STR_PAD_BOTH = 3;
 
 str_pad = function (str, len, pad, dir) {
 
-    if (typeof(len) == "undefined") { var len = 0; }
-    if (typeof(pad) == "undefined") { var pad = ' '; }
-    if (typeof(dir) == "undefined") { var dir = STR_PAD_RIGHT; }
+    if (typeof(len) == "undefined") {
+        var len = 0;
+    }
+    if (typeof(pad) == "undefined") {
+        var pad = ' ';
+    }
+    if (typeof(dir) == "undefined") {
+        var dir = STR_PAD_RIGHT;
+    }
 
     if (len + 1 >= str.length) {
 
-        switch (dir){
+        switch (dir) {
 
             case STR_PAD_LEFT:
                 str = Array(len + 1 - str.length).join(pad) + str;
@@ -110,7 +117,7 @@ str_pad = function (str, len, pad, dir) {
             case STR_PAD_BOTH:
                 var right = Math.ceil((padlen = len - str.length) / 2);
                 var left = padlen - right;
-                str = Array(left+1).join(pad) + str + Array(right+1).join(pad);
+                str = Array(left + 1).join(pad) + str + Array(right + 1).join(pad);
                 break;
 
             default:
@@ -128,4 +135,11 @@ str_pad = function (str, len, pad, dir) {
  */
 time = function () {
     return Math.floor((new Date()).getTime() / 1000);
+};
+
+/**
+ * Возвращает время в миллисекундах секундах.
+ */
+mtime = function () {
+    return new Date().getTime();
 };
