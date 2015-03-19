@@ -66,6 +66,9 @@ LogicUser = function () {
      * @returns {null|Object}
      */
     this.getById = function (id) {
+        if (id == 0) {
+            return robotDummy();
+        }
         if (users[id]) {
             /* Догрузим данные, это немного костыль... но время деньги :) */
             if (!users[id].socNetUserId) {
@@ -87,10 +90,19 @@ LogicUser = function () {
             isBusy: false,
             onGameId: 0,
             online: false,
-            score15x15vsPerson: '-'
+            score15x15vsPerson: '-',
+            score3x3vsPerson: '-',
+            score15x15vsRobot: '-',
+            score3x3vsRobot: '-'
         };
     };
 
+    var robotDummy = function () {
+        var robot = getDummy();
+        robot.id = 0;
+        robot.online = true;
+        return robot;
+    };
     /**
      * Запомним, чьи загрузки мы уже ждём, что бы не повторять лишних запросов.
      * @type {Array}

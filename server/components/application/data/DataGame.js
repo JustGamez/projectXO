@@ -41,8 +41,11 @@ DataGame = function () {
                 return;
             }
             rows[0].field = uncompressField(rows[0].field);
-            cache[id] = rows[0];
-            callback(cache[id]);
+            var game = rows[0];
+            if (game.status == LogicXO.STATUS_WAIT || game.status == LogicXO.STATUS_RUN) {
+                cache[id] = game;
+            }
+            callback(game);
         });
     };
 
