@@ -12,7 +12,9 @@ DataUser = function () {
         score15x15vsPerson: null,
         score3x3vsPerson: null,
         score15x15vsRobot: null,
-        score3x3vsRobot: null
+        score3x3vsRobot: null,
+        robotLevel3x3: null,
+        robotLevel15x15: null
     };
 
     var fromDBToData = function (data) {
@@ -78,7 +80,9 @@ DataUser = function () {
             score15x15vsPerson: 0,
             score3x3vsPerson: 0,
             score15x15vsRobot: 0,
-            score3x3vsRobot: 0
+            score3x3vsRobot: 0,
+            robotLevel3x3: 500,
+            robotLevel15x15: 500
         }, function (result) {
             var user = {
                 id: parseInt(result.insertId),
@@ -119,6 +123,10 @@ DataUser = function () {
         if (cache[user.id]) {
             cache[user.id] = null;
         }
+        if (user.robotLevel3x3 < 1) user.robotLevel3x3 = 1;
+        if (user.robotLevel3x3 > 10000) user.robotLevel3x3 = 10000;
+        if (user.robotLevel15x15 > 10000) user.robotLevel15x15 = 10000;
+        if (user.robotLevel15x15 < 1) user.robotLevel15x15 = 1;
         data = {
             id: user.id,
             firstName: user.firstName,
@@ -133,7 +141,9 @@ DataUser = function () {
             score3x3vsRobot: user.score3x3vsRobot,
             sex: user.sex,
             photo50: user.photo50,
-            socNetUpdated: user.socNetUpdated
+            socNetUpdated: user.socNetUpdated,
+            robotLevel3x3: user.robotLevel3x3,
+            robotLevel15x15: user.robotLevel15x15
         };
         DB.update(tableName, data, function (result) {
             callback(user);

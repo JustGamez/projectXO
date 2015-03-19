@@ -59,9 +59,11 @@ SAPIGame = function () {
             oldStatus = game.status;
             winLine = LogicXO.findWinLine(game);
             game = LogicXO.setOutcomeResults(game, winLine);
-            if (oldStatus == LogicXO.STATUS_RUN && game.winnerId) {
+            if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN && game.winnerId) {
                 LogicUser.onWin(game.winnerId, game);
             }
+            LogicUser.onGameFinish(game.creatorUserId, game);
+            if (!game.vsRobot)LogicUser.onGameFinish(game.joinerUserId, game);
             DataGame.save(game, function (game) {
                 // @todo CAPIGame.winData
                 CAPIGame.updateInfo(game.creatorUserId, game);

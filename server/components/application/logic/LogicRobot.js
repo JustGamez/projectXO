@@ -6,29 +6,36 @@ LogicRobot = function () {
     };
 
     var generateAllLineForField = function (game, state) {
-        var allLines, lines;
+        var allLines, lines, robotMovesCount;
+        robotMovesCount = 0;
         var prid = Profiler.start(Profiler.ID_GENERATE_LINES);
         allLines = [];
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
             for (var y = 0; y < state.fieldSize; y++) {
                 for (var x = 0; x < state.fieldSize; x++) {
                     if (game.field[y][x] != LogicXO.SIGN_ID_Empty) {
+                        if (game.field[y][x] == state.robotSignId) {
+                            robotMovesCount++;
+                        }
                         lines = generateAllLinesAtPoint(game, x, y, state);
                         allLines = allLines.concat(lines);
                     }
                 }
             }
         }
-        else {
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
             for (var y = 0; y < state.fieldSize; y++) {
                 for (var x = 0; x < state.fieldSize; x++) {
+                    if (game.field[y][x] == state.robotSignId) {
+                        robotMovesCount++;
+                    }
                     lines = generateAllLinesAtPoint(game, x, y, state);
                     allLines = allLines.concat(lines);
                 }
             }
         }
         Profiler.stop(Profiler.ID_GENERATE_LINES, prid);
-        return allLines;
+        return {lines: allLines, robotMovesCount: robotMovesCount};
     };
 
     var generateAllLinesAtPoint = function (game, X, Y, state) {
@@ -70,9 +77,10 @@ LogicRobot = function () {
      * Генерирует координаты хода для робота.
      * Выбирает оптимальный ход аналитически.
      * @param game {Object}
+     * @param user {Object}
      */
-    this.generateMovementCoords = function (game) {
-        var state, max, target, line, robotSignId, playerSignId, lines, randomIndex, emptyPoints;
+    this.generateMovementCoords = function (game, user) {
+        var state, max, target, line, robotSignId, playerSignId, lines, randomIndex, emptyPoints, tmp, robotMovesCount, robotLevel, isUserLikeStep;
 
         state = {
             fieldSize: LogicXO.getFieldSize(game.fieldTypeId),
@@ -84,9 +92,45 @@ LogicRobot = function () {
         robotSignId = state.robotSignId;
         playerSignId = state.playerSignId;
 
+        tmp = generateAllLineForField(game, state);
+        lines = tmp.lines;
+        robotMovesCount = tmp.robotMovesCount;
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
+            robotLevel = user.robotLevel3x3;
+        }
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
+            robotLevel = user.robotLevel15x15;
+        }
 
-            lines = generateAllLineForField(game, state);
+        /* вероятность заивист от уровня робота, от 1 до 1000 */
+        isUserLikeStep = !(Math.random() * 1000 <= robotLevel);
+
+        if (false) {
+            out = "                ";
+            out += "robotLevel:   " + robotLevel + " ";
+            out += "robotMovesCount:   " + robotMovesCount + " ";
+            out += "userLikeStep:      " + userLikeStep + " ";
+            out += "isUserLikeTurn:    " + (isUserLikeStep ? 'yes' : 'no') + " ";
+            console.log(out);
+        }
+        if (isUserLikeStep) {
+            if (lines.length) {
+                var emptyLines;
+                emptyLines = [];
+                lines.forEach(function (line) {
+                    if (line.points[LogicXO.SIGN_ID_Empty].length) {
+                        emptyLines.push(line.points[LogicXO.SIGN_ID_Empty]);
+                    }
+                });
+
+                randomIndex = Math.round(Math.random() * (emptyLines.length - 1));
+                return emptyLines[randomIndex][0];
+            } else {
+                return getRandomCoords(game, state);
+            }
+        }
+
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
             // ищем линии с длиной 2 нашего знака
             for (var i in lines) {
                 if (lines[i].points[robotSignId].length == state.fieldSize - 1 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
@@ -99,82 +143,66 @@ LogicRobot = function () {
                     return lines[i].points[LogicXO.SIGN_ID_Empty][0];
                 }
             }
-            // ищем линии с длиной 1 нашего знака
-            for (var i in lines) {
-                if (lines[i].points[robotSignId].length == state.fieldSize - 2 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
-                    //return lines[i].points[LogicXO.SIGN_ID_Empty][0];
-                }
-            }
-            // ищем линии с длиной 1 у противоположного знака
-            for (var i in lines) {
-                if (lines[i].points[playerSignId].length == state.fieldSize - 2 && lines[i].points[LogicXO.SIGN_ID_Empty].length > 0) {
-                    //return lines[i].points[LogicXO.SIGN_ID_Empty][0];
-                }
-            }
             // если центр пуст, ставим туда
             if (game.field[1][1] == LogicXO.SIGN_ID_Empty) {
                 return {x: 1, y: 1};
             }
-            // возвращаем случайную пустую
-            emptyPoints = [];
-            for (var y = 0; y < state.fieldSize; y++) {
-                for (var x = 0; x < state.fieldSize; x++) {
-                    if (game.field[y][x] == LogicXO.SIGN_ID_Empty) {
-                        emptyPoints.push({x: x, y: y});
-                    }
-                }
-            }
-            randomIndex = Math.round(Math.random() * (emptyPoints.length - 1));
-            x = emptyPoints[randomIndex].x;
-            y = emptyPoints[randomIndex].y;
-            return {x: x, y: y};
+            // случайный ход
+            return getRandomCoords(game, state);
         }
 
-        lines = generateAllLineForField(game, state);
+        /**
+         * Возьмём случайную линию и поставим в неё знак.
+         */
 
         /* Find 4 robot & 1 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[robotSignId].length == 4 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 1) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Find 4 opponent & 1 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[playerSignId].length == 4 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 1) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Find 3 opponent & 2 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[playerSignId].length == 3 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 2) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Find 3 robot & 2 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[robotSignId].length == 3 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 2) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Find 2 opponent & 3 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[playerSignId].length == 2 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 3) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Find 1 robot & 4 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[robotSignId].length == 1 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 4) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Find 1 opponent & 4 empty */
-        for (var i in  lines) {
+        for (var i in lines) {
             if (lines[i].points[playerSignId].length == 1 & lines[i].points[LogicXO.SIGN_ID_Empty].length == 4) {
                 return lines[i].points[LogicXO.SIGN_ID_Empty][0];
             }
         }
         /* Set random position */
+        return getRandomCoords(game, state);
+    };
+
+    var getRandomCoords = function (game, state) {
+        var emptyPoints, randomIndex;
         // возвращаем случайную пустую
         emptyPoints = [];
         for (var y = 0; y < state.fieldSize; y++) {

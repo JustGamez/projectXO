@@ -44,3 +44,5 @@ Profiler.ID_GENERATE_LINES = Profiler.getNewId("ID_GENERATE_LINES");
 /* Rating */
 Profiler.ID_RATING_UPDATE = Profiler.getNewId("ID_RATING_UPDATE");
 
+Profiler.ID_ROBOT_THINKING = Profiler.getNewId("ID_ROBOT_THINKING");
+

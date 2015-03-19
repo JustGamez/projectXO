@@ -358,6 +358,43 @@ LogicUser = function () {
     };
 
     /**
+     * Тут мы подразумевает, что пользователь закрыл игру так и не завершив её ничьей, либо победой.
+     * @param userId
+     * @param game
+     */
+    this.onGameClose = function (userId, game) {
+        if (game.vsRobot) {
+            DataUser.getById(userId, function (user) {
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
+                    user.robotLevel3x3 -= 100;
+                }
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
+                    user.robotLevel15x15 -= 100;
+                }
+                DataUser.save(user, function () {
+
+                });
+            });
+        }
+    };
+
+    this.onGameFinish = function (userId, game) {
+        if (game.vsRobot) {
+            DataUser.getById(userId, function (user) {
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
+                    user.robotLevel3x3 -= 12;
+                }
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
+                    user.robotLevel15x15 -= 12;
+                }
+                DataUser.save(user, function () {
+
+                });
+            });
+        }
+    };
+
+    /**
      * Если выиграл. начислим очки.
      * @param userId {int} внутрений id игрока.
      * @param game {Object} объект игры.
@@ -375,17 +412,19 @@ LogicUser = function () {
                 user.isBusy = self.isUserBusy(user.id);
                 user.onGameId = self.isUserOnGame(user.id);
                 /* В рейтинге учитываются очки, только на поле 15х15 в игре с персонажем. */
-                if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
-                    user.score3x3vsRobot++;
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
+                    user.score15x15vsPerson++;
                 }
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && !game.vsRobot) {
                     user.score3x3vsPerson++;
                 }
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && game.vsRobot) {
                     user.score15x15vsRobot++;
+                    user.robotLevel15x15 += 40;
                 }
-                if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
-                    user.score15x15vsPerson++;
+                if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
+                    user.score3x3vsRobot++;
+                    user.robotLevel3x3 += 50;
                 }
                 /* Отправим новые данные на изменение рейтинга. */
                 LogicRating.onPositionScoreUp(user.id, user.score15x15vsPerson, user.score3x3vsPerson, user.score15x15vsRobot, user.score3x3vsRobot);
