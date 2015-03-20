@@ -95,7 +95,7 @@ ElementPhoto = function () {
      * Диапазон поворота фотографии.
      * @type {number}
      */
-    this.degreesDiapazon = 16;
+    this.degreesDiapazon = 12;
 
     /**
      * Угол поворота фотографии, расчитывается во время перерисовки.
@@ -407,6 +407,7 @@ ElementPhoto = function () {
         }
         /* redraw indicatoraz */
         // @todo just change src
+        /* @todo button invite if online and not in robot game! that all!*/
         if (state == ElementPhoto.STATE_ONLINE) {
             buttonInvite.show();
         } else {

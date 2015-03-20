@@ -24,9 +24,10 @@ CAPIUserState = function () {
      * @param cntx {Object} контекст соединения.
      * @param userId {Number} внутрений id пользователя, который занят.
      * @param gameId {Number} id игры.
+     * @param vsRobot {boolean}
      */
-    this.onGame = function (cntx, userId, gameId) {
-        LogicUser.updateUserInfo({id: userId, onGameId: gameId});
+    this.onGame = function (cntx, userId, gameId, vsRobot) {
+        LogicUser.updateUserInfo({id: userId, onGameId: gameId, vsRobot: vsRobot});
     };
 };
 

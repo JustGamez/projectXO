@@ -23,9 +23,10 @@ CAPIUserState = function () {
      * @param toUserId {Number} кому отправляем.
      * @param userId {Number} внутрений id пользователя, который занят.
      * @param gameId {Number} id игры.
+     * @param vsRobot {boolean}
      */
-    this.onGame = function (toUserId, userId, gameId) {
-        LogicUser.sendToUser(toUserId, 'CAPIUserState', 'onGame', [userId, gameId]);
+    this.onGame = function (toUserId, userId, gameId, vsRobot) {
+        LogicUser.sendToUser(toUserId, 'CAPIUserState', 'onGame', [userId, gameId, vsRobot]);
     };
 };
 

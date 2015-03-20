@@ -35,8 +35,9 @@ SAPIUserState = function () {
      * если gameId = 0 - то он вышел из игры.
      * @param cntx {Object} контекст соединения.
      * @param gameId {Number} id игры.
+     * @param vsRobot {boolean}
      */
-    this.onGame = function (cntx, gameId) {
+    this.onGame = function (cntx, gameId, vsRobot) {
         if (!cntx.isAuthorized) {
             Logs.log("SAPIUserState.onGame: must be authorized", Logs.LEVEL_WARNING);
             return;
@@ -45,9 +46,13 @@ SAPIUserState = function () {
             Logs.log("SAPIUserState.onGame: must have gameId with type number", Logs.LEVEL_WARNING, gameId);
             return;
         }
+        if (typeof vsRobot != 'boolean') {
+            Logs.log("SAPIUserState.onGame: must have gameId with type number", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
         var prid = Profiler.start(Profiler.ID_USER_ON_GAME);
         cntx.user.onGameId = gameId;
-        LogicUser.sendToAll(CAPIUserState.onGame, cntx.userId, gameId);
+        LogicUser.sendToAll(CAPIUserState.onGame, cntx.userId, gameId, vsRobot);
         Profiler.stop(Profiler.ID_USER_ON_GAME, prid);
     };
 };

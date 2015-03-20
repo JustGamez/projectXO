@@ -234,6 +234,9 @@ PageXOGame = function PageXOGame() {
         for (var i in self.elements) {
             self.elements[i].hide();
         }
+        /* Сбросим фото */
+        elementPhoto.update({user: getRobotDummy()});
+        elementPhoto2.update({user: getRobotDummy()});
         elementPhoto2.hide();
         domSignO.hide();
         domSignX.hide();
@@ -404,5 +407,4 @@ PageXOGame = function PageXOGame() {
             self.elements[i].redraw();
         }
     };
-}
-;
+};

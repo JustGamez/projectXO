@@ -92,6 +92,8 @@ WebSocketClient = function () {
      */
     var socket = null;
 
+    var raiseConnectCount = 0;
+
     /**
      * Инициалиизация.
      * Создадим объект клиента
@@ -107,8 +109,9 @@ WebSocketClient = function () {
      */
     var connect = function () {
         var uri;
+        raiseConnectCount++;
         uri = protocol + "://" + host + ":" + port + "/";
-        Logs.log("WebSocket URL=`" + uri + "`", Logs.LEVEL_DETAIL);
+        Logs.log("WebSocket URL=`" + uri + "`" + "raiseConnectCount:" + raiseConnectCount, Logs.LEVEL_DETAIL);
         socket = new WebSocket(uri);
         /* установим обработчики. */
         socket.onopen = onOpen;
@@ -135,6 +138,7 @@ WebSocketClient = function () {
      */
     var onClose = function (event) {
         isConnected = false;
+        raiseConnectCount--;
         if (event.wasClean) {
             Logs.log("WebSocketClient: Соединение закрыто успешно.");
         } else {
@@ -142,15 +146,15 @@ WebSocketClient = function () {
         }
         Logs.log('WebSocketClient: Код: ' + event.code + ' причина: ' + event.reason);
         self.onDisconnect(connectionId);
-        setTimeout(tryReconnect, 1000);
+        setTimeout(tryReconnect, 500);
     };
 
     var tryReconnect = function () {
         if (isConnected == false) {
             Logs.log('Try reconnect', Logs.LEVEL_NOTIFY);
-            connect();
-            /* Попытка реконнетка, через некоторое время */
-            setTimeout(tryReconnect, 30000);
+            if (raiseConnectCount < 3) {
+                connect();
+            }
         }
     };
 
@@ -168,7 +172,7 @@ WebSocketClient = function () {
      * @param error
      */
     var onError = function (error) {
-        Logs.log("WebSocketClient: Ошибка " + error.message);
+        Logs.log("WebSocketClient: Ошибка ", Logs.LEVEL_NOTIFY, error.timeStamp);
     };
 
     /**

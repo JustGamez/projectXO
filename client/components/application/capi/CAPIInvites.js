@@ -11,6 +11,7 @@ CAPIInvites = function () {
     this.receive = function (cntx, whoId, whomId, fieldTypeId, signId) {
         LogicInvites.save(whoId, whomId, fieldTypeId, signId);
         LogicTimers.start('letsplay_' + whoId, Config.Invites.letsPlaytimeout, LogicInvites.clearInviteByPare, [whoId, whomId, fieldTypeId, signId]);
+        LogicPageBackground.showLetsPlayDialog();
     };
 };
 

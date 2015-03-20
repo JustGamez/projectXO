@@ -95,7 +95,9 @@ DataUser = function () {
                 score15x15vsPerson: 0,
                 score3x3vsPerson: 0,
                 score15x15vsRobot: 0,
-                score3x3vsRobot: 0
+                score3x3vsRobot: 0,
+                robotLevel3x3: 500,
+                robotLevel15x15: 500
             };
             callback(user);
             delete waitForCreateByScoNet[socNetUserId];

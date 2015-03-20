@@ -17,8 +17,9 @@ SAPIUserState = function () {
     /**
      * Сообщает, что пользователь в игре.
      * @param gameId {Number} id игры.
+     * @param vsRobot {Number} id игры.
      */
-    this.onGame = function (gameId) {
+    this.onGame = function (gameId, vsRobot) {
         apiRouter.executeRequest('SAPIUserState', 'onGame', arguments, [{connectionId: null}]);
     };
 };

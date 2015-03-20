@@ -16,7 +16,7 @@ Config = {
     SocNet: {
         secretKey: 'X0x2PuCZQbC5wwX0lB5R',
         appId: 4467180,
-        refreshInfoTimeout: 60 * 30 * 24 // in seconds, 4 hour
+        refreshInfoTimeout: 60 * 30 * 24 // in seconds, 24 hour
     },
     Chat: {
         /**
@@ -36,10 +36,10 @@ Config = {
         TopLimitSize: 10
     },
     ApiRouterMetric: {
-        reportTimeout: 1000 * 60 * 60 // one hour
+        reportTimeout: 1000 * 60 * 60 * 6 // six hours
     },
     Profiler: {
-        reportTimeout: 1000 * 60 * 60, // one hour
+        reportTimeout: 1000 * 60 * 60 * 6, // six hours
         saveToDBTimeout: 1000 * 60 * 10 // ten minutes
     },
     UrlCache: {

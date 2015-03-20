@@ -113,6 +113,9 @@ ElementChatWindow = function () {
                 text += "\r\n";
             } else {
                 text += "<b style='font-size:9pt;letter-spacing:-2px;font-weight:normal;float:right;opacity:0.47;' >";
+                if (LogicUser.getCurrentUser().id == 1) {
+                    text += "<b onclick='LogicPageBackground.onChatDelete(" + message.id + ")'> x </b>";
+                }
                 text += message.timeHours + ":" + message.timeMinutes + ":" + message.timeSeconds + " ";
                 text += "</b>";
                 text += "<b style='font-size:10pt;letter-spacing:-2px;font-weight:normal;' title='" + user.firstName + " " + user.lastName + "' >";

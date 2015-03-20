@@ -96,10 +96,18 @@ LogicRobot = function () {
         lines = tmp.lines;
         robotMovesCount = tmp.robotMovesCount;
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
-            robotLevel = user.robotLevel3x3;
+            if (user.score3x3vsRobot == 0) {
+                robotLevel = 1;
+            } else {
+                robotLevel = user.robotLevel3x3;
+            }
         }
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
-            robotLevel = user.robotLevel15x15;
+            if (user.score15x15vsRobot == 0) {
+                robotLevel = 1;
+            } else {
+                robotLevel = user.robotLevel15x15;
+            }
         }
 
         /* вероятность заивист от уровня робота, от 1 до 1000 */
