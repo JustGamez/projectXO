@@ -43,6 +43,10 @@ CAPIGame = function () {
                         SAPIRobotGame.raiseAIMove(created.id)
                     }, 750);
                 }
+                /* 0 - is it robot, but robot does not exist. */
+                if (LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id) > 0) {
+                    LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
+                }
                 pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
             }
         }

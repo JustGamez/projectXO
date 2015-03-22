@@ -51,7 +51,7 @@ GUI = function () {
      * Указатель мыши: "Рука".
      * @type {string}
      */
-    this.POINTER_HAND = 'hand';
+    this.POINTER_HAND = 'pointer';
     /**
      * Указатель мыши: "Стандатрная стрелка".
      * @type {string}
@@ -85,11 +85,11 @@ GUI = function () {
         style.innerHTML = '.sepia { ' +
         'filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'old-timey\'><feColorMatrix type=\'matrix\' values=\'0.14 0.45 0.05 0 0 0.12 0.39 0.04 0 0 0.08 0.28 0.03 0 0 0 0 0 1 0\'/></filter></svg>#old-timey");' +
         '-webkit-filter: sepia(0.5);' +
-        '-webkit-filter: sepia(95%) grayscale(50%);' +
-        '-moz-filter: sepia(80%);' +
-        '-ms-filter: sepia(80%);' +
-        '-o-filter: sepia(80%);' +
-        'filter: sepia(80%);' +
+        '-webkit-filter: sepia(85%) grayscale(50%);' +
+        '-moz-filter: sepia(70%);' +
+        '-ms-filter: sepia(70%);' +
+        '-o-filter: sepia(70%);' +
+        'filter: sepia(70%);' +
         '}';
         style.innerHTML += '* {' +
         '-webkit-touch-callout: none;' +

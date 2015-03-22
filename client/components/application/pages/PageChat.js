@@ -48,7 +48,7 @@ PageChat = function PageChat() {
             y: 607,
             width: 584,
             height: 20,
-            onSendByEnter: LogicPageBackground.onChatInputEnterMessage
+            onSendByEnter: LogicPageChat.onChatInputEnterMessage
         });
         self.elements.push(element);
         self.elementChatInput = element;
@@ -69,6 +69,42 @@ PageChat = function PageChat() {
             src: '/images/chat/chatPrompt.png'
         });
         self.elements.push(element);
+        element = GUI.createElement('ElementText', {
+            x: 100,
+            y: 484,
+            width: 100,
+            height: 20,
+            text: 'общий',
+            fontSize: 12,
+            bold: true,
+            opacity: 0.4,
+            pointer: GUI.POINTER_HAND,
+            alignCenter: true,
+            onClick: LogicPageChat.onChatLabelClick,
+        });
+        self.elements.push(element);
+        /* По умолчанию нулевый чат, т.е. общий. */
+        LogicPageChat.chats.push({button: element, withUserId: 0, enabled: true});
+        LogicPageChat.currentChat = LogicPageChat.chats[0];
+        element.chat = LogicPageChat.chats[0];
+        /* Кнопки чата. */
+        for (var i = 0; i < 4; i++) {
+            element = GUI.createElement('ElementText', {
+                x: 100 + (i + 1) * 100,
+                y: 484,
+                width: 100,
+                height: 20,
+                text: '-',
+                fontSize: 12,
+                bold: true,
+                opacity: 0.4,
+                pointer: GUI.POINTER_HAND,
+                onClick: LogicPageChat.onChatLabelClick,
+                withUserId: 0
+            });
+            LogicPageChat.chats.push({button: element, withUserId: 0, enabled: false});
+            element.chat = LogicPageChat.chats[i + 1];
+        }
     };
 
     /**
@@ -93,15 +129,38 @@ PageChat = function PageChat() {
         for (var i in self.elements) {
             self.elements[i].hide();
         }
+        LogicPageChat.chats.forEach(function (chat) {
+            chat.button.hide();
+        });
     };
 
     /**
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var messages;
+        var messages, user;
         /* Кол-во сообщений для отображения */
-        messages = LogicChatCache.getLastMessages(5);
+        LogicPageChat.chats.forEach(function (chat) {
+            if (chat.enabled) {
+                if (chat === LogicPageChat.currentChat) {
+                    chat.button.bold = true;
+                    chat.button.opacity = 0.5;
+                } else {
+                    chat.button.bold = false;
+                    chat.button.opacity = 0.4;
+                }
+                /* The chat.withUserId== 0 - is it common chat. */
+                if (chat.withUserId > 0) user = LogicUser.getById(chat.withUserId);
+                if (user) {
+                    chat.button.text = user.firstName + " " + user.lastName.charAt(0) + ".";
+                }
+                chat.button.show();
+                chat.button.redraw();
+            } else {
+                chat.button.hide();
+            }
+        });
+        messages = LogicChat.getMessages(0, 6, LogicPageChat.currentChat.withUserId);
         self.elementChatWindow.updateMessages(messages);
     };
 

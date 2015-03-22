@@ -26,7 +26,7 @@ ActionsRepeatGame = function () {
                     CAPIGame.updateInfo(userId, newGame);
                     CAPIGame.gameCreated(userId, newGame.id);
                 }
-                Profiler.stop(Profiler.ID_REPEATE_GAME);
+                Profiler.stop(Profiler.ID_REPEATE_GAME, prid);
             });
         });
     }

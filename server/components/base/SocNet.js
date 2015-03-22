@@ -241,7 +241,7 @@ SocNet = function () {
                     accessToken = data.access_token;
                     callback();
                 } catch (e) {
-                    Logs.log("JSON.parse error(oAuth)", Logs.LEVEL_FATAL_ERROR, data);
+                    Logs.log("JSON.parse error(oAuth)", Logs.LEVEL_WARNING, data);
                 }
             });
         });
@@ -252,8 +252,9 @@ SocNet = function () {
     };
 
     this.init = function (afterInitCallback) {
-        self.oAuthorization(afterInitCallback);
-    }
+        self.oAuthorization();
+        afterInitCallback();
+    };
 };
 /**
  * Статичный класс.

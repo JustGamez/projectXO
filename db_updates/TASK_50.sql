@@ -1,0 +1,1 @@
+ALTER TABLE chat_messages ADD COLUMN blocked TINYINT(1) NOT NULL DEFAULT 0;

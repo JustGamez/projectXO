@@ -43,12 +43,13 @@ SAPIUserState = function () {
             return;
         }
         if (typeof gameId != 'number') {
-            Logs.log("SAPIUserState.onGame: must have gameId with type number", Logs.LEVEL_WARNING, gameId);
+            Logs.log("SAPIUserState.onGame: must have gameId with type number", Logs.LEVEL_WARNING, {arguments: arguments, gameIdType: typeof gameId});
             return;
         }
         if (typeof vsRobot != 'boolean') {
-            Logs.log("SAPIUserState.onGame: must have gameId with type number", Logs.LEVEL_WARNING, gameId);
-            return;
+            //@todo back it.
+            Logs.log("SAPIUserState.onGame: must have vsRobot with type boolean", Logs.LEVEL_WARNING, {arguments: arguments, vsRobotType: typeof vsRobot});
+            //return;
         }
         var prid = Profiler.start(Profiler.ID_USER_ON_GAME);
         cntx.user.onGameId = gameId;

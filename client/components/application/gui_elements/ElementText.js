@@ -77,6 +77,10 @@ ElementText = function () {
      */
     this.alignCenter = false;
 
+    this.opacity = undefined;
+
+    this.textDecoration = undefined;
+
     /**
      * Создадим дом и настроем его.
      */
@@ -128,10 +132,13 @@ ElementText = function () {
         if (!showed) return;
         refreshText();
         dom.fontSize = self.fontSize;
-        if (self.bold) dom.fontWeight = 'bold';
+        dom.opacity = self.opacity;
+        dom.textDecoration = self.textDecoration;
+        if (self.bold) dom.fontWeight = 'bold'; else dom.fontWeight = 'normal';
         if (self.alignCenter) {
             dom.alignText = 'center';
         }
+        dom.redraw();
     };
 
     var refreshText = function () {
@@ -149,7 +156,6 @@ ElementText = function () {
         }
         dom.innerHTML = textHTML;
         dom.pointer = self.pointer;
-        dom.redraw();
     };
 
     /**
@@ -163,6 +169,6 @@ ElementText = function () {
         }
         /* Да, тут мы останавливаем дальнейшие течение клика. */
         mouseEvent.stopPropagation();
-        return self.onClick.call(null, mouseEvent, dom);
+        return self.onClick.call(this, mouseEvent, dom);
     };
 };

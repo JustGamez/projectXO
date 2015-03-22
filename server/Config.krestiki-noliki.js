@@ -26,7 +26,7 @@ Config = {
         /**
          * Кол-во сообщений, считающихся последними.
          */
-        lastMessagesCount: 5,
+        lastMessagesCount: 6,
         /**
          * Максимальная длина сообщения в чате.
          */
@@ -56,5 +56,8 @@ Config = {
     Statistic: {
         checkInterval: 1000,
         cacheLimit: 1000
+    },
+    admin: {
+        ids: [1, 2, 14]
     }
 };

@@ -106,7 +106,6 @@ webSocketServer.onDisconnect = apiRouter.onDisconnect;
 webSocketServer.onData = apiRouter.onData;
 
 /* set deinit callbacks */
-addDeInitCallback(ActionsChat.deInit);
 addDeInitCallback(Statistic.flushCache);
 addDeInitCallback(DataGame.flushCache);
 
@@ -118,7 +117,6 @@ sequencedInit(Statistic.init);
 sequencedInit(SocNet.init);
 sequencedInit(LogicUser.init);
 sequencedInit(LogicRobot.init);
-sequencedInit(ActionsChat.init);
 sequencedInit(DataRating.init);
 
 /* run all components */

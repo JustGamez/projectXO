@@ -187,10 +187,12 @@ LogicUser = function () {
         if (ratingPositions[userId]) {
             if (ratingPositions[userId].needReload) {
                 SAPIUser.sendMeRatingPosition(userId);
+                ratingPositions[userId].needReload = false;
             }
             return ratingPositions[userId].position;
         } else {
             SAPIUser.sendMeRatingPosition(userId);
+            ratingPositions[userId] = {needReload: false, position: undefined};
         }
     };
 

@@ -445,8 +445,10 @@ WebSocketServer = function () {
         if (request.url.indexOf('/status') == 0) {
             var status = Profiler.getTextReport();
             var status2 = ApiRouterMetrics.getMetrics();
+            var reloadJSScript = "" +
+                "<script>setTimeout(function(){window.location.href = window.location.href;},1000);</script>";
             response.writeHead(200, {'Content-Type': 'text/html'});
-            response.end('<pre>' + status + '</pre>' + '<pre>' + status2 + '</pre>');
+            response.end('<pre>' + status + '</pre>' + '<pre>' + status2 + '</pre>' + reloadJSScript);
             return true;
         }
         if (request.url.indexOf('/shutdown') == 0) {

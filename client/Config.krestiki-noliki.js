@@ -9,11 +9,12 @@ Config = {
         triggerLevel: Logs.LEVEL_DETAIL
     },
     WebSocketClient: {
-        host: 'ssl.krestiki-noliki',
-        port: 80,
-        protocol: 'ws'
+        host: 'ssl.krestiki-noliki'
     },
     ElementCardInfo:{
         hideTimeout: 475
+    },
+    admin: {
+        ids: [1, 2, 14]
     }
 };

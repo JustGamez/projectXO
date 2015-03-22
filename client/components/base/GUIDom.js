@@ -33,6 +33,7 @@
  * @property zIndex {Int}
  * @property fontWeight {String}
  * @property overflow {String}
+ * @property textDecoration {String}
  */
 GUIDom = function () {
     var self = this;
@@ -256,6 +257,10 @@ GUIDom = function () {
         }, false);
     };
 
+    this.setFocus = function(){
+      dom.focus();
+    };
+
     /* Далее идут методы перерисовки. */
     var redrawX = function () {
         dom.style.left = self.x + 'px';
@@ -384,6 +389,9 @@ GUIDom = function () {
     var redrawOverflow = function () {
         dom.style.overflow = self.overflow;
     };
+    var redrawTextDecoration = function () {
+        dom.style.textDecoration = self.textDecoration;
+    };
 
     /**
      * Имена свойств и их методы обработки.
@@ -419,7 +427,8 @@ GUIDom = function () {
         isItsepia: redrawIsItSepia,
         alignText: redrawAlignText,
         zIndex: redrawZIndex,
-        overflow: redrawOverflow
+        overflow: redrawOverflow,
+        textDecoration: redrawTextDecoration
     };
 };
 

@@ -1,14 +1,19 @@
 CAPIChat = function () {
 
-    /**
-     * Отправить клиенту новое сообщение.
-     * @param toUserId {Number} кому отправляем.
-     * @param userId {Number} внутрений id пользователя, создавшего сообщение.
-     * @param message {String} текст сообщение.
-     * @param timestamp {Number} UNIX-timestamp, когда было создано сообщение.
-     */
-    this.getNewMessage = function (toUserId, userId, message, timestamp) {
-        LogicUser.sendToUser(toUserId, 'CAPIChat', 'getNewMessage', [userId, message, timestamp]);
+    this.gotMessages = function (toUserId, messages) {
+        LogicUser.sendToUser(toUserId, 'CAPIChat', 'gotMessages', [messages]);
+    };
+
+    this.gotNewMessage = function (toUserId, messages) {
+        LogicUser.sendToUser(toUserId, 'CAPIChat', 'gotNewMessage', [messages]);
+    };
+
+    this.updateMessageId = function (toUserId, messages) {
+        LogicUser.sendToUser(toUserId, 'CAPIChat', 'updateMessageId', [messages]);
+    };
+
+    this.updateMessage = function (toUserId, message) {
+        LogicUser.sendToUser(toUserId, 'CAPIChat', 'updateMessage', [message]);
     };
 };
 

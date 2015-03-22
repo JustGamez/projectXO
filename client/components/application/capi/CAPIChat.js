@@ -1,16 +1,44 @@
 CAPIChat = function () {
 
-    /**
-     * Обновить данные о пользователи.
-     * @param cntx {Object} контекст соединения.
-     * @param userId {Number} сообщение
-     * @param text {String} сообщение
-     * @param timestamp {Number} сообщение
-     */
-    this.getNewMessage = function (cntx, userId, text, timestamp) {
-        text = LogicChatCache.censureIt(text);
-        LogicChatCache.add(userId, text, timestamp, false);
-        pageController.redraw();
+    this.gotNewMessage = function (cntx, message) {
+        message.text = LogicChat.censureIt(message.text);
+        LogicChat.addList([message]);
+        checkIsOpened(message);
+    };
+
+    var checkIsOpened = function (message) {
+        var dialogOpened;
+        /* @Todo */
+        return;
+        if (message.blocked) return;
+        if (message.userId != LogicUser.getCurrentUser().id) return;
+        dialogOpened = false;
+        LogicPageChat.chats.forEach(function (chat) {
+            if (chat.withUserId == message.withUserId) {
+                dialogOpened = true;
+            }
+        });
+        if (dialogOpened == false) {
+            LogicPageChat.openDialogWithUser(message.withUserId);
+        }
+    };
+
+    this.gotMessages = function (cntx, messages) {
+        messages.forEach(function (message, i) {
+            messages[i].text = LogicChat.censureIt(message.text);
+            checkIsOpened(message);
+        });
+        LogicChat.addList(messages);
+    };
+
+    this.updateMessageId = function (cntx, message) {
+        message.text = LogicChat.censureIt(message.text);
+        LogicChat.updateId(message);
+    };
+
+    this.updateMessage = function (cntx, message) {
+        message.text = LogicChat.censureIt(message.text);
+        LogicChat.update(message);
     };
 };
 

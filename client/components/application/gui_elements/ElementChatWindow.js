@@ -62,7 +62,7 @@ ElementChatWindow = function () {
         dom.borderBottom = '2px solid rgba(114, 67, 0, 0.2)';
         dom.padding = '4px 6px';
         dom.boxShadow = '-1px 1px 1px 1px rgba(168, 87, 0, 0.2)';
-        dom.lineHeight = 1.1;
+        dom.lineHeight = 0.945;
     };
 
     /**
@@ -95,6 +95,10 @@ ElementChatWindow = function () {
         dom.height = this.height;
         dom.width = this.width;
         text = '';
+        var isAdmin;
+        Config.admin.ids.forEach(function (id) {
+            if (LogicUser.getCurrentUser().id == id) isAdmin = true;
+        });
         for (var i in messages) {
             message = messages[i];
             user = LogicUser.getById(message.userId);
@@ -113,12 +117,12 @@ ElementChatWindow = function () {
                 text += "\r\n";
             } else {
                 text += "<b style='font-size:9pt;letter-spacing:-2px;font-weight:normal;float:right;opacity:0.47;' >";
-                if (LogicUser.getCurrentUser().id == 1) {
-                    text += "<b onclick='LogicPageBackground.onChatDelete(" + message.id + ")'> x </b>";
+                if (isAdmin) {
+                    text += "<b style='cursor:hand;' onclick='LogicPageChat.onChatDelete(" + message.id + ")'> x </b>";
                 }
                 text += message.timeHours + ":" + message.timeMinutes + ":" + message.timeSeconds + " ";
                 text += "</b>";
-                text += "<b style='font-size:10pt;letter-spacing:-2px;font-weight:normal;' title='" + user.firstName + " " + user.lastName + "' >";
+                text += "<b onclick='LogicPageChat.onNameClick(" + message.userId + ");' style='cursor:hand;font-size:13px;letter-spacing:-2px;font-weight:normal;opacity:0.78;' title='" + user.firstName + " " + user.lastName + "' >";
                 text += user.firstName;
                 text += " " + user.lastName.charAt(0) + ".";
                 text += " ";

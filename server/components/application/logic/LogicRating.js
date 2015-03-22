@@ -69,13 +69,14 @@ LogicRating = function () {
      */
     var executeUpdatePosition = function (onFinishCallback) {
         var userId, data;
-        var prid = Profiler.start(Profiler.ID_RATING_UPDATE);
+        var prid_all = Profiler.start(Profiler.ID_RATING_UPDATE);
         // @todo userId, scoreTypeId
         data = updatePositionUserIds.shift();
         Logs.log("Execute update position. userId= " + data.userId, Logs.LEVEL_DETAIL);
         // @todo is position == 1 skip now.
         /* Get target user from database. Find target user with hist params.*/
-        var step_1 = function (prid) {
+        var step_1 = function () {
+            var prid = Profiler.start(Profiler.ID_RATING_UPDATE_STEP_1);
             DB.query("SELECT position FROM rating WHERE userId = " + data.userId, function (rows) {
                 if (!rows[0]) {
                     Logs.log("Position does not exists with userId = " + userId, Logs.LEVEL_ERROR);
@@ -83,12 +84,14 @@ LogicRating = function () {
                     onFinishCallback();
                     return;
                 }
-                step_2(rows[0], prid);
+                Profiler.stop(Profiler.ID_RATING_UPDATE_STEP_1, prid);
+                step_2(rows[0]);
             });
         };
         /* Get user with same score and lowest position. New position for user here. */
-        var step_2 = function (before, prid) {
+        var step_2 = function (before) {
             var query;
+            var prid = Profiler.start(Profiler.ID_RATING_UPDATE_STEP_2);
             query = "SELECT * FROM rating" +
             " WHERE " +
             " " +
@@ -100,20 +103,24 @@ LogicRating = function () {
             "ORDER BY position ASC" +
             " LIMIT 1";
             DB.query(query, function (rows) {
-                step_3(before, rows[0], prid);
+                Profiler.stop(Profiler.ID_RATING_UPDATE_STEP_2, prid);
+                step_3(before, rows[0]);
             });
         };
         /* Update block users with same score and lower positions. Move all down. */
-        var step_3 = function (before, nearest, prid) {
+        var step_3 = function (before, nearest) {
             var query;
+            var prid = Profiler.start(Profiler.ID_RATING_UPDATE_STEP_3);
             query = "UPDATE rating SET position = position + 1 WHERE position < " + before.position + " AND position >= " + nearest.position;
             DB.query(query, function () {
-                step_4(before, nearest, prid);
+                Profiler.stop(Profiler.ID_RATING_UPDATE_STEP_3, prid);
+                step_4(before, nearest);
             });
         };
         /* Update score and position for target user. Move target user to new position. */
-        var step_4 = function (before, nearest, prid) {
+        var step_4 = function (before, nearest) {
             var query;
+            var prid = Profiler.start(Profiler.ID_RATING_UPDATE_STEP_4);
             query = "UPDATE rating SET" +
             " score15x15vsPerson = " + data._15x15PVP +
             ",score3x3vsPerson = " + data._3x3PVP +
@@ -122,14 +129,15 @@ LogicRating = function () {
             ",position = " + nearest.position +
             " WHERE userId = " + data.userId;
             DB.query(query, function () {
-                onFinishCallback();
                 /* Теперь соощим всем клиентам, что рейтинг обновитлся и те сбросят кэш позиций. */
                 LogicUser.sendToAll(CAPIUser.ratingChanged);
-                Profiler.stop(Profiler.ID_RATING_UPDATE, prid);
+                Profiler.stop(Profiler.ID_RATING_UPDATE_STEP_4, prid);
+                Profiler.stop(Profiler.ID_RATING_UPDATE, prid_all);
+                onFinishCallback();
             });
         };
         /* Begin process here. */
-        step_1(prid);
+        step_1();
     };
 };
 

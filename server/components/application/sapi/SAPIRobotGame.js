@@ -51,7 +51,7 @@ SAPIRobotGame = function () {
             for (var userId in lookers) {
                 CAPIGame.updateInfo(userId, game);
             }
-            Profiler.stop(Profiler.ID_ROBOT_CLOSE_GAME);
+            Profiler.stop(Profiler.ID_ROBOT_CLOSE_GAME, prid);
         });
     };
 
