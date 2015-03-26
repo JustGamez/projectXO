@@ -26,7 +26,7 @@ PageHelp = function PageHelp() {
     this.init = function () {
         var element;
         /* Чекбоксы выбора под-страницы хелпа. */
-        element = GUI.createElement('ElementRadio', {
+        element = GUI.createElement(ElementRadio, {
             options: [
                 {
                     x: 95,
@@ -63,7 +63,7 @@ PageHelp = function PageHelp() {
         });
         elementRadio = element;
         self.elements.push(element);
-        element = GUI.createElement('ElementText', {
+        element = GUI.createElement(ElementText, {
             x: 120,
             y: 95,
             width: 100,
@@ -76,7 +76,7 @@ PageHelp = function PageHelp() {
             }
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementText', {
+        element = GUI.createElement(ElementText, {
             x: 120,
             y: 120,
             width: 200,
@@ -89,7 +89,7 @@ PageHelp = function PageHelp() {
             }
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementText', {
+        element = GUI.createElement(ElementText, {
             x: 120,
             y: 145,
             width: 100,

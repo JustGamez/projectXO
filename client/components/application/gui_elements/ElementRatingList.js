@@ -79,7 +79,7 @@ ElementRatingList = function () {
             /* Массив для всех элементов, что бы показать\скрыть всю строку */
             row.all = [];
             /* Фотография. */
-            row.photo = GUI.createElement('ElementPhoto', {
+            row.photo = GUI.createElement(ElementPhoto, {
                 x: self.x + self.offsetPhoto,
                 y: self.y + i * (self.rowSpacing + rowHeight),
                 photoWidth: 33,
@@ -92,7 +92,7 @@ ElementRatingList = function () {
             });
             row.all.push(row.photo);
             /* Фамилиля, имя. */
-            row.name = GUI.createElement('ElementGraphicText', {
+            row.name = GUI.createElement(ElementGraphicText, {
                 x: self.x + self.offsetName,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: self.widthName,
@@ -101,7 +101,7 @@ ElementRatingList = function () {
             });
             row.all.push(row.name);
             /* Позиция в рейтинге. */
-            row.position = GUI.createElement('ElementGraphicText', {
+            row.position = GUI.createElement(ElementGraphicText, {
                 x: self.x + self.offsetPosition,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: 50,
@@ -111,7 +111,7 @@ ElementRatingList = function () {
             });
             row.all.push(row.position);
             /* Очки 15х15 с игроком. */
-            row.score15x15vsPerson = GUI.createElement('ElementGraphicText', {
+            row.score15x15vsPerson = GUI.createElement(ElementGraphicText, {
                 x: self.x + self.offsetScore15x15vsPerson,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
                 width: 40,

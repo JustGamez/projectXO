@@ -69,7 +69,7 @@ ElementFriendsType = function () {
         var photo, dummy;
         /* Создадим элементы фотографий */
         for (var i = 0; i < self.columns; i++) {
-            photo = GUI.createElement('ElementPhoto', {
+            photo = GUI.createElement(ElementPhoto, {
                 x: self.x + i * self.spacing,
                 y: self.y,
                 showCardInfo: true,
@@ -80,7 +80,7 @@ ElementFriendsType = function () {
         }
         /* Создадим заглушки */
         for (var i = 0; i < self.columns; i++) {
-            dummy = GUI.createElement('ElementButton', {
+            dummy = GUI.createElement(ElementButton, {
                 x: self.x + i * self.spacing,
                 y: self.y + 8,
                 width: 69,

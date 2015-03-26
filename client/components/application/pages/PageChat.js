@@ -33,7 +33,7 @@ PageChat = function PageChat() {
     this.init = function () {
         var element;
         /* Окно чата. */
-        element = GUI.createElement('ElementChatWindow', {
+        element = GUI.createElement(ElementChatWindow, {
             x: 90,
             y: 500,
             width: 570,
@@ -43,7 +43,7 @@ PageChat = function PageChat() {
         self.elementChatWindow = element;
 
         /* Форма ввода сообщения в чате.*/
-        element = GUI.createElement('ElementChatInput', {
+        element = GUI.createElement(ElementChatInput, {
             x: 90,
             y: 607,
             width: 584,
@@ -54,7 +54,7 @@ PageChat = function PageChat() {
         self.elementChatInput = element;
 
         /* Лейбл чата. */
-        element = GUI.createElement("ElementImage", {
+        element = GUI.createElement(ElementImage, {
             x: 58,
             y: 491,
             opacity: 0.25,
@@ -62,14 +62,14 @@ PageChat = function PageChat() {
         });
         self.elements.push(element);
         /* Промпт окно ввода сообщеий чата. */
-        element = GUI.createElement("ElementImage", {
+        element = GUI.createElement(ElementImage, {
             x: 61,
             y: 601,
             opacity: 0.25,
             src: '/images/chat/chatPrompt.png'
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementText', {
+        element = GUI.createElement(ElementText, {
             x: 100,
             y: 484,
             width: 100,
@@ -89,7 +89,7 @@ PageChat = function PageChat() {
         element.chat = LogicPageChat.chats[0];
         /* Кнопки чата. */
         for (var i = 0; i < 4; i++) {
-            element = GUI.createElement('ElementText', {
+            element = GUI.createElement(ElementText, {
                 x: 100 + (i + 1) * 100,
                 y: 484,
                 width: 100,

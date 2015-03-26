@@ -136,19 +136,19 @@ ElementCardInfo = function () {
         dom3x3vsRobot = GUI.createDom(domFrame, {backgroundImage: '/images/cardInfo/image3x3vsRobot.png', x: leftOffset, y: startY + stepY * 5, title: 'Побед 3х3 с роботом.'});
         allElements.push(dom3x3vsRobot);
         /* Текст рейтинга. */
-        textRating = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 1, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        textRating = GUI.createElement(ElementText, {x: leftOffset + column2Offset, y: startY + stepY * 1, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(textRating);
         /* Текст 15х15vsPerson. */
-        text15x15vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 2, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        text15x15vsPerson = GUI.createElement(ElementText, {x: leftOffset + column2Offset, y: startY + stepY * 2, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text15x15vsPerson);
         /* Текст 3x3vsPerson. */
-        text3x3vsPerson = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 3, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        text3x3vsPerson = GUI.createElement(ElementText, {x: leftOffset + column2Offset, y: startY + stepY * 3, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text3x3vsPerson);
         /* Текст 15x15vsRobot. */
-        text15x15vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 4, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        text15x15vsRobot = GUI.createElement(ElementText, {x: leftOffset + column2Offset, y: startY + stepY * 4, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text15x15vsRobot);
         /* Текст 3x3vsRobot. */
-        text3x3vsRobot = GUI.createElement("ElementText", {x: leftOffset + column2Offset, y: startY + stepY * 5, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
+        text3x3vsRobot = GUI.createElement(ElementText, {x: leftOffset + column2Offset, y: startY + stepY * 5, fontSize: 16, bold: true, alignCenter: true, width: 30}, domFrame);
         allElements.push(text3x3vsRobot);
         GUI.bind(domFrame, GUI.EVENT_MOUSE_OVER, function () {
             LogicTimers.clear("CardInfo_" + domFrame.__id);

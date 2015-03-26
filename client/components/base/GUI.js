@@ -111,10 +111,10 @@ GUI = function () {
      */
     this.createElement = function (name, params, parentDom) {
         var element;
-        if (!window[name]) {
+        if (!name) {
             Logs.log("GUI.createElement: не определен элемент:" + name, Logs.LEVEL_FATAL_ERROR);
         }
-        element = new window[name];
+        element = new name;
         if (!element.init || typeof element.init != 'function') {
             Logs.log("GUI.craeteElement: элемент должен иметь функцию init().", Logs.LEVEL_FATAL_ERROR, arguments);
         }

@@ -249,7 +249,7 @@ ElementPhoto = function () {
         domPhoto.backgroundSize = self.photoWidth;
         domPhoto.isItsepia = true;
         /* Кнопка приглашения в игру */
-        stateElInvite = GUI.createElement("ElementButton", {
+        stateElInvite = GUI.createElement(ElementButton, {
             x: 0,
             _y: 77,
             srcRest: '/images/photo/buttonInviteRest.png',
@@ -261,7 +261,7 @@ ElementPhoto = function () {
             }
         }, domRegion);
         /* Кнопка "Играём?" */
-        stateElLetsPlay = GUI.createElement("ElementButton", {
+        stateElLetsPlay = GUI.createElement(ElementButton, {
             x: -2,
             _y: 65,
             srcRest: '/images/photo/buttonLetsPlayRest.png',
@@ -273,7 +273,7 @@ ElementPhoto = function () {
             }
         }, domRegion);
         /* Кнопка "играет <o>" */
-        stateElLookGame = GUI.createElement("ElementButton", {
+        stateElLookGame = GUI.createElement(ElementButton, {
             x: 7,
             _y: 74,
             srcRest: '/images/photo/buttonInGame.png',
@@ -309,7 +309,7 @@ ElementPhoto = function () {
         stateElFieldType = GUI.createDom(domRegion, {x: 22, y: 93});
         stateElSignId = GUI.createDom(domRegion, {x: 42, y: 93});
         /* Кард-инфо. */
-        elementCardInfo = GUI.createElement("ElementCardInfo", {});
+        elementCardInfo = GUI.createElement(ElementCardInfo, {});
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_CLICK, onClickPhoto, this);
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
         GUI.bind(domPhoto, GUI.EVENT_MOUSE_OUT, onMouseOut, this);

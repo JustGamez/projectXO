@@ -29,7 +29,7 @@ PageMain = function PageMain() {
     this.init = function () {
         var element;
         /* Кнопка играть. */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 259,
             y: 225,
             title: 'Играть с роботом',
@@ -40,7 +40,7 @@ PageMain = function PageMain() {
         });
         self.elements.push(element);
         /* Выбор типа поля игры */
-        element = GUI.createElement("ElementRadio", {
+        element = GUI.createElement(ElementRadio, {
             options: [
                 {
                     srcRest: '/images/radio/field15x15Rest.png',
@@ -66,7 +66,7 @@ PageMain = function PageMain() {
         });
         self.elements.push(element);
         /* Выбор знака игры */
-        element = GUI.createElement("ElementRadio", {
+        element = GUI.createElement(ElementRadio, {
             options: [
                 {
                     srcRest: '/images/radio/signRandomRest.png',
@@ -107,7 +107,7 @@ PageMain = function PageMain() {
         });
         self.elements.push(element);
         /* Лента друзей */
-        element = GUI.createElement('ElementFriendsType', {
+        element = GUI.createElement(ElementFriendsType, {
             x: 138,
             y: 357,
             spacing: 79,
@@ -118,7 +118,7 @@ PageMain = function PageMain() {
         self.elements.push(element);
         self.elementFriendsType = element;
         /* Кнопка рейтинг. */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 560,
             y: 360,
             width: 140,
@@ -130,7 +130,7 @@ PageMain = function PageMain() {
         });
         self.elements.push(element);
         /* Кнопка, добавить друга. */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 70,
             y: 355,
             width: 75,

@@ -137,7 +137,7 @@ PageXOGame = function PageXOGame() {
     this.init = function () {
         var element;
         /* Игровое поле*/
-        element = GUI.createElement('ElementField', {
+        element = GUI.createElement(ElementField, {
             x: 102,
             y: 92,
             width: 400,
@@ -147,7 +147,7 @@ PageXOGame = function PageXOGame() {
         this.elements.push(element);
         elementField = element;
         /* Кнопка возврата на главную страницу. */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 562,
             y: 95,
             srcRest: '/images/buttons/menuRest.png',
@@ -157,7 +157,7 @@ PageXOGame = function PageXOGame() {
         });
         self.elements.push(element);
         /* Фото оппонента. */
-        element = GUI.createElement("ElementPhoto", {
+        element = GUI.createElement(ElementPhoto, {
             x: 585,
             y: 171,
             showCardInfo: true,
@@ -167,7 +167,7 @@ PageXOGame = function PageXOGame() {
         self.elements.push(element);
         elementPhoto = element;
         /* Фото оппонента 2. */
-        element = GUI.createElement("ElementPhoto", {
+        element = GUI.createElement(ElementPhoto, {
             x: 585,
             y: 171,
             showCardInfo: true,
@@ -176,7 +176,7 @@ PageXOGame = function PageXOGame() {
         });
         elementPhoto2 = element;
         /* Статус игры. */
-        element = GUI.createElement('ElementGraphicText', {
+        element = GUI.createElement(ElementGraphicText, {
             x: 545, //with no alignCenter : 578
             y: 258,
             width: 157,
@@ -187,7 +187,7 @@ PageXOGame = function PageXOGame() {
         self.elements.push(element);
         elementGameStatus = element;
         /* Кнопка играть "Еще". */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 535,
             y: 312,
             width: 175,

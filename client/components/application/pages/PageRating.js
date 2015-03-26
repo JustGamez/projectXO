@@ -40,7 +40,7 @@ PageRating = function PageRating() {
         var offsetY = 15;
         var ratingListX = 100;
         /* Список рейтинга. */
-        element = GUI.createElement('ElementRatingList', {
+        element = GUI.createElement(ElementRatingList, {
             x: ratingListX,
             y: 171 + offsetY,
             width: 500,
@@ -55,7 +55,7 @@ PageRating = function PageRating() {
         self.elements.push(element);
         elementRatingList = element;
         /* Кнопка меню */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 521,
             y: 75 + offsetY,
             srcRest: '/images/buttons/menuRest.png',
@@ -66,35 +66,35 @@ PageRating = function PageRating() {
         self.elements.push(element);
         /* Текст заголовка. */
         /* Надпись: "фото" */
-        element = GUI.createElement('ElementImage', {
+        element = GUI.createElement(ElementImage, {
             x: ratingListX + offsetPhoto - 12,
             y: 142 - 7 + offsetY,
             src: '/images/rating/headerPhoto.png'
         });
         self.elements.push(element);
         /* Надпись: "Имя, Фамилия" */
-        element = GUI.createElement('ElementImage', {
+        element = GUI.createElement(ElementImage, {
             x: ratingListX + offsetName - 12 + widthName / 2 - 150 / 2,
             y: 142 - 7 + offsetY,
             src: '/images/rating/headerNameSurname.png'
         });
         self.elements.push(element);
         /* Надпись: "Позиция." */
-        element = GUI.createElement('ElementImage', {
+        element = GUI.createElement(ElementImage, {
             x: ratingListX + offsetPosition - 18,
             y: 142 - 7 + offsetY,
             src: '/images/rating/headerPositionByScore.png'
         });
         self.elements.push(element);
         /* Очки 15х15 с персонажом */
-        element = GUI.createElement('ElementImage', {
+        element = GUI.createElement(ElementImage, {
             x: ratingListX + offsetScore15x15vsPerson,
             y: 142 + offsetY,
             src: '/images/rating/headerScore15x15vsPerson.png',
             title: 'Побед 15х15 с человеком.'
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 144,
             y: 85 + offsetY,
             srcRest: '/images/rating/buttonTop.png',
@@ -103,7 +103,7 @@ PageRating = function PageRating() {
             onClick: LogicPageRating.onTopButtonClick
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 144,
             y: 115 + offsetY,
             srcRest: '/images/rating/buttonMyPosition.png',
@@ -112,7 +112,7 @@ PageRating = function PageRating() {
             onClick: LogicPageRating.onMyPositionButtonClick
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 335,
             y: 84 + offsetY,
             srcRest: '/images/rating/buttonDownRest.png',
@@ -121,7 +121,7 @@ PageRating = function PageRating() {
             onClick: LogicPageRating.onDownButtonClick
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 377,
             y: 84 + offsetY,
             srcRest: '/images/rating/buttonUpRest.png',
@@ -130,7 +130,7 @@ PageRating = function PageRating() {
             onClick: LogicPageRating.onUpButtonClick
         });
         self.elements.push(element);
-        element = GUI.createElement('ElementImage', {
+        element = GUI.createElement(ElementImage, {
             x: 114,
             y: 115 + offsetY,
             src: '/images/rating/arrow.png'

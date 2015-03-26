@@ -37,24 +37,24 @@ PageHelpRating = function PageHelpRating() {
 
         line = 0;
         list = [];
-        list.push({name: 'ElementText', x: 100, y: 40 + rowHeight * line + offsetY, text: text1});
+        list.push({name: ElementText, x: 100, y: 40 + rowHeight * line + offsetY, text: text1});
         /*
          @todo
          line = 2;
-         list.push({name:'ElementImage', x: 100 + 100, y : 35 + rowHeight * line + offsetY, src: '/images/buttons/rating{ByFriends}.png'});
-         list.push({name:'ElementText', x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr; рейтинг среди друзей.'});
+         list.push({name:ElementImage, x: 100 + 100, y : 35 + rowHeight * line + offsetY, src: '/images/buttons/rating{ByFriends}.png'});
+         list.push({name:ElementText, x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr; рейтинг среди друзей.'});
          */
 
         /*
          @todo
          line = 3;
-         list.push({name:'ElementImage', x: 100 + 100, y : 35 + rowHeight * line + offsetY, src: '/images/buttons/rating{ByMyPosition}.png'});
-         list.push({name:'ElementText', x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr;позиция в общем рейтинге.'});
+         list.push({name:ElementImage, x: 100 + 100, y : 35 + rowHeight * line + offsetY, src: '/images/buttons/rating{ByMyPosition}.png'});
+         list.push({name:ElementText, x: 250 + 100, y : 52 + rowHeight * line + offsetY, text: '&larr;позиция в общем рейтинге.'});
          */
 
         line = 5;
-        list.push({name: 'ElementImage', x: 100 + 100, y: 35 + rowHeight * line + offsetY, src: '/images/buttons/ratingRest.png'});
-        list.push({name: 'ElementText', x: 250 + 100, y: 52 + rowHeight * line + offsetY, text: '&larr;позиции лучших игроков.'});
+        list.push({name: ElementImage, x: 100 + 100, y: 35 + rowHeight * line + offsetY, src: '/images/buttons/ratingRest.png'});
+        list.push({name: ElementText, x: 250 + 100, y: 52 + rowHeight * line + offsetY, text: '&larr;позиции лучших игроков.'});
 
         for (var i in list) {
             element = GUI.createElement(list[i].name, list[i]);

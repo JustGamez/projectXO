@@ -115,6 +115,9 @@ SocNet = function () {
         var generatedAuthKey;
         /*	auth_key = md5(app_id+'_'+viewer_id+'_'+app_secret); */
         generatedAuthKey = MD5(authParams.appId + '_' + socNetUserId + '_' + Config.SocNet.secretKey);
+        if (generatedAuthKey != authParams.authKey) {
+            Logs.log("auth key mismatch, generated:" + generatedAuthKey + " given:" + authParams.authKey);
+        }
         return generatedAuthKey == authParams.authKey;
     };
 

@@ -89,13 +89,11 @@ process.on('uncaughtException', function (err) {
  *  http://www.webtoolkit.info/
  *
  **/
-
 var STR_PAD_LEFT = 1;
 var STR_PAD_RIGHT = 2;
 var STR_PAD_BOTH = 3;
 
 str_pad = function (str, len, pad, dir) {
-
     if (typeof(len) == "undefined") {
         var len = 0;
     }
@@ -105,11 +103,9 @@ str_pad = function (str, len, pad, dir) {
     if (typeof(dir) == "undefined") {
         var dir = STR_PAD_RIGHT;
     }
-
     if (len + 1 >= str.length) {
 
         switch (dir) {
-
             case STR_PAD_LEFT:
                 str = Array(len + 1 - str.length).join(pad) + str;
                 break;
@@ -125,7 +121,6 @@ str_pad = function (str, len, pad, dir) {
                 break;
 
         } // switch
-
     }
     return str;
 };

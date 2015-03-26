@@ -36,13 +36,13 @@ PageBackground = function PageBackground() {
     this.init = function () {
         var element;
         /* Задний фон */
-        element = GUI.createElement('ElementImage', {
+        element = GUI.createElement(ElementImage, {
             x: 0,
             y: 0,
             src: '/images/table.png'
         });
         self.elements.push(element);
-        element = GUI.createElement("ElementFlag", {
+        element = GUI.createElement(ElementFlag, {
             x: 660,
             y: 60,
             srcRest: '/images/buttons/soundOff.png',
@@ -61,7 +61,7 @@ PageBackground = function PageBackground() {
         elementSound = element;
         self.elements.push(element);
         /* Кнопка `(?)` */
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
                 x: 693,
                 y: 54,
                 srcRest: '/images/help/buttons/helpRest.png',
@@ -86,7 +86,7 @@ PageBackground = function PageBackground() {
         );
         elementHelpIcon = element;
         self.elements.push(element);
-        element = GUI.createElement('ElementGraphicText', {
+        element = GUI.createElement(ElementGraphicText, {
             x: 65 + 115,
             y: 62,
             height: 30,
@@ -96,7 +96,7 @@ PageBackground = function PageBackground() {
             text: ''
         });
         elementInviteText = element;
-        element = GUI.createElement('ElementButton', {
+        element = GUI.createElement(ElementButton, {
             x: 85,
             y: 57,
             title: 'Принять приглашение.',
