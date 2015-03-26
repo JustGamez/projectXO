@@ -126,3 +126,6 @@ sequencedInit(function (afterInitCallback) {
     Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
     afterInitCallback();
 });
+
+//LogicImages.drawPost();
+

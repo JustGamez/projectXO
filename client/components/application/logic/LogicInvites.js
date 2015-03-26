@@ -26,7 +26,7 @@ LogicInvites = function () {
     this.haveInvite = function (userId) {
         for (var i in invites) {
             if (invites[i].whoId == userId || invites[i].whomId == userId) {
-                return true;
+                return invites[i];
             }
         }
         return false;
@@ -38,21 +38,13 @@ LogicInvites = function () {
      * @param whomId {Number} внутрений id пользователя которого пригласили.
      * @returns {boolean}
      */
-    this.isInviteExists = function (whoId, whomId) {
-        for (var i in invites) {
-            if (invites[i].whoId == whoId && invites[i].whomId == whomId) {
-                return true;
-            }
-        }
-        return false;
-    };
-
     this.get = function (whoId, whomId) {
         for (var i in invites) {
-            if (invites[i].whoId == whoId && invites[i].whomId == whomId) {
+            if ((invites[i].whoId == whoId || !whoId ) && (!whomId || invites[i].whomId == whomId)) {
                 return invites[i];
             }
         }
+        return false;
     };
 
     /**

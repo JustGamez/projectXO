@@ -138,13 +138,18 @@ PageChat = function PageChat() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var messages, user;
+        var messages, user, allDisabled;
         /* Кол-во сообщений для отображения */
-        LogicPageChat.chats.forEach(function (chat) {
+        allDisabled = true;
+        LogicPageChat.chats.forEach(function (chat, index) {
             if (chat.enabled) {
+                /* 0 индекс у общего чата. */
+                if (index > 0) {
+                    allDisabled = false;
+                }
                 if (chat === LogicPageChat.currentChat) {
                     chat.button.bold = true;
-                    chat.button.opacity = 0.5;
+                    chat.button.opacity = 0.6;
                 } else {
                     chat.button.bold = false;
                     chat.button.opacity = 0.4;
@@ -160,6 +165,11 @@ PageChat = function PageChat() {
                 chat.button.hide();
             }
         });
+        if (allDisabled) {
+            LogicPageChat.currentChat.button.hide();
+        } else {
+            LogicPageChat.currentChat.button.show();
+        }
         messages = LogicChat.getMessages(0, 6, LogicPageChat.currentChat.withUserId);
         self.elementChatWindow.updateMessages(messages);
     };

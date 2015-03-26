@@ -17,39 +17,69 @@ CAPIGame = function () {
 
     /**
      * Оповещение, что игра создана.
+     * Если создана игра, это может быть:
+     * - наша c человеком;
+     * - наша с роботом;
+     * - мы просматриваем;
+     * - копия игры с роботом;
+     * - копия игры с человеком.
      * @param cntx {Object} контекст соединения.
      * @param gameId {int} id игры.
      */
     this.gameCreated = function (cntx, gameId) {
-        var current, created, lookingId, looking;
-        current = LogicGame.getCurrentGame();
+        var current, created, looking;
         created = LogicGame.getById(gameId);
-        lookingId = LogicGame.getLookingGameId();
-        if (lookingId) {
-            looking = LogicGame.getById(lookingId);
-            if (looking.id == created.copyFromId) {
+        current = LogicGame.getCurrentGame();
+        looking = LogicGame.getLookingGameId() ? LogicGame.getById(LogicGame.getLookingGameId()) : false;
+
+        if (looking) {
+            if (created.id == looking.id) {
                 LogicGame.setLookingGameId(created.id);
+            }
+            if (created.copyFromId == looking.id) {
                 SAPIGameLooks.stop(looking.id);
                 SAPIGameLooks.start(created.id);
-                pageController.redraw();
+                LogicGame.setLookingGameId(created.id);
             }
-        } else {
-            if (current && !current.finish) {
-                SAPIGame.close(gameId);
-            } else {
-                LogicGame.setCurrentGameId(gameId);
-                if (created.vsRobot && LogicXO.isHisTurn(created, 0)) {
-                    setTimeout(function () {
-                        SAPIRobotGame.raiseAIMove(created.id)
-                    }, 750);
-                }
-                /* 0 - is it robot, but robot does not exist. */
-                if (LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id) > 0) {
-                    LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
-                }
-                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+            if (created.id != looking.id && created.copyFromId != looking.id) {
+                SAPIGameLooks.stop(looking.id);
+                LogicGame.setLookingGameId(0);
+                LogicGame.setCurrentGameId(created.id);
             }
         }
+
+        if (!looking && current && current.vsRobot) {
+            if (created.copyFromId == current.id) {
+                LogicGame.setCurrentGameId(created.id);
+            }
+            if (!created.vsRobot) {
+                SAPIGame.close(current.id);
+                LogicGame.setCurrentGameId(created.id);
+            }
+        }
+
+        if (!looking && current && !current.vsRobot) {
+            if (created.copyFromId == current.id) {
+                LogicGame.setCurrentGameId(created.id);
+            }
+        }
+
+        if (!looking && !current) {
+            LogicGame.setCurrentGameId(created.id);
+        }
+
+        if (LogicGame.getCurrentGameId() == created.id) {
+            if (created.vsRobot && LogicXO.isHisTurn(created, 0)) {
+                setTimeout(function () {
+                    SAPIRobotGame.raiseAIMove(created.id)
+                }, 750);
+            }
+            if (created.vsRobot == false) {
+                LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
+            }
+        }
+        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+        pageController.redraw();
     };
 
     this.updateMove = function (cntx, gameId, x, y) {

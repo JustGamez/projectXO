@@ -420,7 +420,7 @@ LogicUser = function () {
                 }
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && game.vsRobot) {
                     user.score15x15vsRobot++;
-                    user.robotLevel15x15 += 40;
+                    user.robotLevel15x15 += 50;
                 }
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
                     user.score3x3vsRobot++;

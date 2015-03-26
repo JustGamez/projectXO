@@ -23,6 +23,16 @@ PageBackground = function PageBackground() {
 
     var onHelpPage = false;
 
+    /**
+     * @type {ElementGraphicText}
+     */
+    var elementInviteText;
+
+    /**
+     * @type {ElementButton}
+     */
+    var elementInviteButton;
+
     this.init = function () {
         var element;
         /* Задний фон */
@@ -76,6 +86,36 @@ PageBackground = function PageBackground() {
         );
         elementHelpIcon = element;
         self.elements.push(element);
+        element = GUI.createElement('ElementGraphicText', {
+            x: 65 + 115,
+            y: 62,
+            height: 30,
+            width: 477,
+            scale: 0.8,
+            alignCenter: true,
+            text: ''
+        });
+        elementInviteText = element;
+        element = GUI.createElement('ElementButton', {
+            x: 85,
+            y: 57,
+            title: 'Принять приглашение.',
+            srcRest: '/images/inviteDialog/buttonPlayRest.png',
+            srcHover: '/images/inviteDialog/buttonPlayHover.png',
+            srcActive: '/images/inviteDialog/buttonPlayActive.png',
+            onClick: function () {
+                var invite, inviter, currentUser;
+                currentUser = LogicUser.getCurrentUser();
+                invite = LogicInvites.get(null, currentUser.id);
+                if (invite) {
+                    inviter = LogicUser.getById(invite.whoId);
+                }
+                if (inviter) {
+                    LogicPageMain.onLetsPlayClick(inviter);
+                }
+            }
+        });
+        elementInviteButton = element;
     };
 
     /**
@@ -106,10 +146,39 @@ PageBackground = function PageBackground() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
+        var invite, inviter, currentUser;
+        currentUser = LogicUser.getCurrentUser();
         if (Sounds.enabled) {
             elementSound.opacity = 1.0;
         } else {
             elementSound.opacity = 0.3;
+        }
+        if (LogicPageBackground.showInviteDialog) {
+            invite = LogicInvites.get(null, currentUser.id);
+            if (invite) {
+                inviter = LogicUser.getById(invite.whoId);
+            }
+            if (inviter && inviter.online) {
+                var text, signs;
+                signs = LogicXO.whoIsX(invite.signId, LogicXOSettings.requestedSignId, inviter.id, currentUser.id);
+                text = "Тебя пригласил ";
+                var name = inviter.lastName + " " + inviter.firstName[0];
+                name = name.length > 16 ? name.substr(0, 16 - 3) + '...' : name;
+                text += name + ". ";
+                text += "поле " + (inviter.fieldTypeId == LogicXO.FIELD_TYPE_3X3 ? '3х3' : '15х15');
+                text += " ваш знак " + ( signs.XUserId == currentUser.id ? 'х' : 'о' ) + ".";
+                elementInviteText.setText(text);
+                elementInviteButton.show();
+                elementInviteButton.redraw();
+                elementInviteText.show();
+                elementInviteText.redraw();
+            } else {
+                elementInviteButton.hide();
+                elementInviteText.hide();
+            }
+        } else {
+            elementInviteButton.hide();
+            elementInviteText.hide();
         }
     };
 

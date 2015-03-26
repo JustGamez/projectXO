@@ -71,6 +71,8 @@ ElementGraphicText = function () {
 
     this.dom = null;
 
+    this.scale = undefined;
+
     /**
      * Создадим дом и настроем его.
      */
@@ -144,7 +146,11 @@ ElementGraphicText = function () {
                     textHTML += symbol;
                 } else {
                     symbol_url = "/images/font/" + charCode + ".png";
-                    textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                    if (self.scale) {
+                        textHTML += "<img height = " + self.scale * 28 + " alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                    } else {
+                        textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                    }
                 }
             }
         }

@@ -37,11 +37,12 @@ PageRating = function PageRating() {
 
     this.init = function () {
         var element;
+        var offsetY = 15;
         var ratingListX = 100;
         /* Список рейтинга. */
         element = GUI.createElement('ElementRatingList', {
             x: ratingListX,
-            y: 171,
+            y: 171 + offsetY,
             width: 500,
             rowSpacing: 0,
             rowsCount: 8,
@@ -56,7 +57,7 @@ PageRating = function PageRating() {
         /* Кнопка меню */
         element = GUI.createElement('ElementButton', {
             x: 521,
-            y: 72,
+            y: 75 + offsetY,
             srcRest: '/images/buttons/menuRest.png',
             srcHover: '/images/buttons/menuHover.png',
             srcActive: '/images/buttons/menuActive.png',
@@ -67,35 +68,35 @@ PageRating = function PageRating() {
         /* Надпись: "фото" */
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetPhoto - 12,
-            y: 142 - 7,
+            y: 142 - 7 + offsetY,
             src: '/images/rating/headerPhoto.png'
         });
         self.elements.push(element);
         /* Надпись: "Имя, Фамилия" */
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetName - 12 + widthName / 2 - 150 / 2,
-            y: 142 - 7,
+            y: 142 - 7 + offsetY,
             src: '/images/rating/headerNameSurname.png'
         });
         self.elements.push(element);
         /* Надпись: "Позиция." */
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetPosition - 18,
-            y: 142 - 7,
+            y: 142 - 7 + offsetY,
             src: '/images/rating/headerPositionByScore.png'
         });
         self.elements.push(element);
         /* Очки 15х15 с персонажом */
         element = GUI.createElement('ElementImage', {
             x: ratingListX + offsetScore15x15vsPerson,
-            y: 142,
+            y: 142 + offsetY,
             src: '/images/rating/headerScore15x15vsPerson.png',
             title: 'Побед 15х15 с человеком.'
         });
         self.elements.push(element);
         element = GUI.createElement('ElementButton', {
             x: 144,
-            y: 85,
+            y: 85 + offsetY,
             srcRest: '/images/rating/buttonTop.png',
             srcHover: '/images/rating/buttonTopHover.png',
             srcActive: '/images/rating/buttonTopHover.png',
@@ -104,7 +105,7 @@ PageRating = function PageRating() {
         self.elements.push(element);
         element = GUI.createElement('ElementButton', {
             x: 144,
-            y: 115,
+            y: 115 + offsetY,
             srcRest: '/images/rating/buttonMyPosition.png',
             srcHover: '/images/rating/buttonMyPositionHover.png',
             srcActive: '/images/rating/buttonMyPositionHover.png',
@@ -113,7 +114,7 @@ PageRating = function PageRating() {
         self.elements.push(element);
         element = GUI.createElement('ElementButton', {
             x: 335,
-            y: 84,
+            y: 84 + offsetY,
             srcRest: '/images/rating/buttonDownRest.png',
             srcHover: '/images/rating/buttonDownHover.png',
             srcActive: '/images/rating/buttonDownActive.png',
@@ -122,7 +123,7 @@ PageRating = function PageRating() {
         self.elements.push(element);
         element = GUI.createElement('ElementButton', {
             x: 377,
-            y: 84,
+            y: 84 + offsetY,
             srcRest: '/images/rating/buttonUpRest.png',
             srcHover: '/images/rating/buttonUpHover.png',
             srcActive: '/images/rating/buttonUpActive.png',
@@ -131,7 +132,7 @@ PageRating = function PageRating() {
         self.elements.push(element);
         element = GUI.createElement('ElementImage', {
             x: 114,
-            y: 115,
+            y: 115 + offsetY,
             src: '/images/rating/arrow.png'
         });
         elementArrow = element;

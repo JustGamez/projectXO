@@ -7,7 +7,6 @@ CAPIUserState = function () {
      */
     this.isBusy = function (cntx, userId) {
         LogicUser.updateUserInfo({id: userId, isBusy: true});
-        LogicInvites.clearInvitesByUserId(userId);
     };
 
     /**
@@ -28,6 +27,9 @@ CAPIUserState = function () {
      */
     this.onGame = function (cntx, userId, gameId, vsRobot) {
         LogicUser.updateUserInfo({id: userId, onGameId: gameId, vsRobot: vsRobot});
+        if (gameId != 0 && !vsRobot) {
+            LogicInvites.clearInvitesByUserId(userId);
+        }
     };
 };
 

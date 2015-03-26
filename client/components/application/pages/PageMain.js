@@ -207,18 +207,25 @@ PageMain = function PageMain() {
         }
         /** Сортировка.
          * Сортировтаь будем так:
-         * - посл раз заходил.
+         * - последний раз заходил.
          * - друг;
+         * - в игре;
          * - онлайн;
          */
+
         usersList.sort(function (a, b) {
             if (a.user.lastLogoutTimestamp > b.user.lastLogoutTimestamp)return -1;
             if (a.user.lastLogoutTimestamp < b.user.lastLogoutTimestamp)return 1;
             return 0;
         });
         usersList.sort(function (a, b) {
-            if (a.isFriend && !b.isFriend)return -1;
-            if (!a.isFriend && b.isFriend)return 1;
+            if (a.user.isFriend && !b.user.isFriend)return -1;
+            if (!a.user.isFriend && b.user.isFriend)return 1;
+            return 0;
+        });
+        usersList.sort(function (a, b) {
+            if (!a.user.onGameId && b.user.onGameId)return -1;
+            if (a.user.onGameId && !b.user.onGameId)return 1;
             return 0;
         });
         usersList.sort(function (a, b) {

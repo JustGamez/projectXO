@@ -75,7 +75,7 @@ ElementChatInput = function () {
         dom.height = this.height;
         dom.bind(GUI.EVENT_KEY_DOWN, onKeyDown, this);
         dom.bind(GUI.EVENT_KEY_UP, onKeyUp, this);
-        dom.setFocus();
+        //dom.setFocus();
     };
 
     /**

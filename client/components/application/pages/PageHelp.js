@@ -30,7 +30,7 @@ PageHelp = function PageHelp() {
             options: [
                 {
                     x: 95,
-                    y: 83,
+                    y: 93,
                     srcRest: '/images/help/checkboxArrowRest.png',
                     srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
@@ -39,7 +39,7 @@ PageHelp = function PageHelp() {
                 },
                 {
                     x: 95,
-                    y: 108,
+                    y: 118,
                     srcRest: '/images/help/checkboxArrowRest.png',
                     srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
@@ -49,7 +49,7 @@ PageHelp = function PageHelp() {
                 },
                 {
                     x: 95,
-                    y: 133,
+                    y: 143,
                     srcRest: '/images/help/checkboxArrowRest.png',
                     srcHover: '/images/help/checkboxArrowHover.png',
                     srcActive: '/images/help/checkboxArrowActive.png',
@@ -65,7 +65,7 @@ PageHelp = function PageHelp() {
         self.elements.push(element);
         element = GUI.createElement('ElementText', {
             x: 120,
-            y: 85,
+            y: 95,
             width: 100,
             height: 25,
             text: 'Правила игры.',
@@ -78,7 +78,7 @@ PageHelp = function PageHelp() {
         self.elements.push(element);
         element = GUI.createElement('ElementText', {
             x: 120,
-            y: 110,
+            y: 120,
             width: 200,
             height: 20,
             text: 'Основное меню.',
@@ -91,7 +91,7 @@ PageHelp = function PageHelp() {
         self.elements.push(element);
         element = GUI.createElement('ElementText', {
             x: 120,
-            y: 135,
+            y: 145,
             width: 100,
             height: 20,
             text: 'Рейтинг',

@@ -232,7 +232,7 @@ WebSocketServer = function () {
         clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
         clientCode += getClientImageCode();
         clientCode += "<div style='height:686px;'></div>\r\n";
-        clientCode += "<iframe src='/VK/commentsWidget' style='border:none; height: 788px; width:788px;'></iframe>\r\n";
+        clientCode += "<iframe src='/VK/commentsWidget' style='border:none; height: 686px; width:788px;'></iframe>\r\n";
         clientCode += "</BODY></HTML>";
 
         FS.writeFile('/var/xo/js/VKClientCodeSource.js', clientJSCode);

@@ -237,6 +237,7 @@ PageXOGame = function PageXOGame() {
         /* Сбросим фото */
         elementPhoto.update({user: getRobotDummy()});
         elementPhoto2.update({user: getRobotDummy()});
+        elementPhoto.hide();
         elementPhoto2.hide();
         domSignO.hide();
         domSignX.hide();
@@ -329,6 +330,9 @@ PageXOGame = function PageXOGame() {
             elementPhoto.degreesDiapazon = 12;
             elementPhoto.showCardInfo = Boolean(opponent.id);
             elementPhoto.x = 585;
+            elementPhoto2.hide();
+            domSignO.hide();
+            domSignX.hide();
         } else if (game && justLooking) {
             user1 = game.creatorUserId ? LogicUser.getById(game.creatorUserId) : getRobotDummy();
             user2 = game.joinerUserId ? LogicUser.getById(game.joinerUserId) : getRobotDummy();

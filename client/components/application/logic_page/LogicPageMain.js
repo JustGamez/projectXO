@@ -64,6 +64,7 @@ LogicPageMain = function () {
         SAPIStatistic.clickLookGameStart();
         if (game && LogicXO.isMember(game, LogicUser.getCurrentUser().id)) {
             LogicGame.setCurrentGameId(game.id);
+            // @todo reopen game?
             pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
         } else {
             SAPIGameLooks.start(user.onGameId);
