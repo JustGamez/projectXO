@@ -166,7 +166,7 @@ PageBackground = function PageBackground() {
                 name = name.length > 16 ? name.substr(0, 16 - 3) + '...' : name;
                 text += name + ". ";
                 text += "поле " + (inviter.fieldTypeId == LogicXO.FIELD_TYPE_3X3 ? '3х3' : '15х15');
-                text += " ваш знак " + ( signs.XUserId == currentUser.id ? 'х' : 'о' ) + ".";
+                text += " твой знак " + ( signs.XUserId == currentUser.id ? 'х' : 'о' ) + ".";
                 elementInviteText.setText(text);
                 elementInviteButton.show();
                 elementInviteButton.redraw();

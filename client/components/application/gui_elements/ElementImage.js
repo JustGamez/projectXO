@@ -51,7 +51,11 @@ ElementImage = function () {
      * Дом картинки.
      * @type {GUIDom}
      */
-    var dom = null;
+    this.dom = null;
+
+    this.pointer = undefined;
+
+    var dom;
 
     this.title = undefined;
 
@@ -63,6 +67,7 @@ ElementImage = function () {
         dom.width = self.width;
         dom.height = self.height;
         dom.backgroundImage = self.src;
+        self.dom = dom;
     };
 
     /**
@@ -96,5 +101,6 @@ ElementImage = function () {
         dom.x = self.x;
         dom.y = self.y;
         dom.title = self.title;
+        dom.pointer = self.pointer;
     };
 };

@@ -2,7 +2,7 @@
  * Страница шаблон.
  * @constructor
  */
-PageOnlineScore = function PageOnlineScore() {
+PageOnlineAndRating = function PageOnlineAndRating() {
     var self = this;
 
     /**
@@ -30,12 +30,6 @@ PageOnlineScore = function PageOnlineScore() {
     this.elementPositionIndicator;
 
     /**
-     *
-     * @type {ElementText}
-     */
-    this.elementScore15x15vsPerson;
-
-    /**
      * кард-инфо юзера.
      * @type {ElementCardInfo}
      */
@@ -46,8 +40,8 @@ PageOnlineScore = function PageOnlineScore() {
         /* Тут создаются элементы страницы. */
         /* online indicator */
         element = GUI.createElement(ElementGraphicText, {
-            x: 570,
-            y: 405,
+            x: 575,
+            y: 395,
             width: 140,
             text: 'онлайн: -'
         });
@@ -55,36 +49,31 @@ PageOnlineScore = function PageOnlineScore() {
         self.elementOnlineIndicator = element;
         /* rating position */
         element = GUI.createElement(ElementGraphicText, {
-            x: 570,
-            y: 435,
+            x: 575,
+            y: 425,
             width: 160,
             text: 'рейтинг: -',
             pointer: GUI.POINTER_HAND
         });
         self.elements.push(element);
         self.elementPositionIndicator = element;
-        element = GUI.createElement(ElementImage, {
-            x: 570 - 5,
-            y: 470,
-            src: '/images/cardInfo/image15x15vsPerson.png',
-            title: 'Побед 15х15 с человеком.'
-        });
-        self.elements.push(element);
-        element = GUI.createElement(ElementText, {
-            x: 570 + 58,
-            y: 470 - 3,
-            bold: true,
-            fontSize: 19
-        });
-        self.elementScore15x15vsPerson = element;
-        self.elements.push(element);
         element = GUI.createElement(ElementCardInfo, {
             x: 445,
             y: 320
         });
+        elementCardInfo = element;
         GUI.bind(self.elementPositionIndicator.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
         GUI.bind(self.elementPositionIndicator.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
-        elementCardInfo = element;
+        element = GUI.createElement(ElementImage, {
+            x: 652,
+            y: 419,
+            src: '/images/ratingInfo.png',
+            opacity: 0.87,
+            pointer: GUI.POINTER_HAND
+        });
+        self.elements.push(element);
+        GUI.bind(element.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
+        GUI.bind(element.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
     };
 
     /**
@@ -116,17 +105,15 @@ PageOnlineScore = function PageOnlineScore() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var onlineCount, position, user, score15x15vsPerson;
+        var onlineCount, position, user;
         /* Возможны какие то обновления, до отрисовки. */
         onlineCount = LogicUser.getOnlineCount();
         user = LogicUser.getCurrentUser();
         if (user && user.id) {
             position = LogicUser.getRatingPosition();
-            score15x15vsPerson = user.score15x15vsPerson;
         }
         self.elementOnlineIndicator.setText('онлайн: ' + (typeof onlineCount == 'number' ? onlineCount : '-'));
-        self.elementPositionIndicator.setText('рейтинг: ' + (typeof position == 'number' ? position : '-'));
-        self.elementScore15x15vsPerson.setText(typeof score15x15vsPerson == 'number' ? score15x15vsPerson : '-');
+        self.elementPositionIndicator.setText('рейтинг:  ' + (typeof position == 'number' ? position : '-'));
         elementCardInfo.updateUser(LogicUser.getCurrentUser());
     };
 

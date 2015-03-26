@@ -67,7 +67,7 @@ window.onload = function () {
     PageController.PAGE_ID_BACKGROUND = 1;
     pageController.addPage(PageController.PAGE_ID_BACKGROUND, new PageBackground());
     PageController.PAGE_ID_ONLINE_SCORE = 2;
-    pageController.addPage(PageController.PAGE_ID_ONLINE_SCORE, new PageOnlineScore());
+    pageController.addPage(PageController.PAGE_ID_ONLINE_SCORE, new PageOnlineAndRating());
     PageController.PAGE_ID_MAIN = 3;
     pageController.addPage(PageController.PAGE_ID_MAIN, new PageMain());
     PageController.PAGE_ID_XO_GAME = 4;

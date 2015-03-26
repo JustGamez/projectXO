@@ -83,7 +83,7 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/signXRest.png',
                     srcHover: '/images/radio/signXHover.png',
                     srcActive: '/images/radio/signXActive.png',
-                    x: 212,
+                    x: 205,
                     y: 80,
                     width: 146,
                     height: 102,
@@ -94,7 +94,7 @@ PageMain = function PageMain() {
                     srcRest: '/images/radio/signORest.png',
                     srcHover: '/images/radio/signOHover.png',
                     srcActive: '/images/radio/signOActive.png',
-                    x: 307,
+                    x: 298,
                     y: 78,
                     width: 146,
                     height: 102,
@@ -120,7 +120,7 @@ PageMain = function PageMain() {
         /* Кнопка рейтинг. */
         element = GUI.createElement(ElementButton, {
             x: 560,
-            y: 360,
+            y: 350,
             width: 140,
             height: 48,
             srcRest: '/images/buttons/ratingRest.png',
