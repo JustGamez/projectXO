@@ -325,7 +325,7 @@ PageXOGame = function PageXOGame() {
         elementGameStatus.y = 258;
         /* Фото оппонента. */
         if (game && !justLooking) {
-            opponent = LogicXO.getOpponentUserId(game, user.id) ? LogicUser.getById(LogicXO.getOpponentUserId(game, user.id)) : getRobotDummy();
+            opponent = !game.vsRobot ? LogicUser.getById(LogicXO.getOpponentUserId(game, user.id)) : getRobotDummy();
             elementPhoto.update({user: opponent});
             elementPhoto.degreesDiapazon = 12;
             elementPhoto.showCardInfo = Boolean(opponent.id);

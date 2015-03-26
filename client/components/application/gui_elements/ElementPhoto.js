@@ -232,7 +232,6 @@ ElementPhoto = function () {
         domBorder.border = borderWidth + 'px solid #ebb';
         domBorder.width = self.frameWidth * 2 + self.photoWidth;
         domBorder.height = self.frameWidth * 2 + self.photoHeight;
-        domBorder.pointer = self.pointer;
         /* Рамка фотографии */
         domFrame = GUI.createDom(domBorder);
         domFrame.border = self.frameWidth + 'px solid #eee';
@@ -377,6 +376,7 @@ ElementPhoto = function () {
         elementCardInfo.y = self.y + self.cardInfoOffsetY;
         domRegion.redraw();
         domPhoto.redraw();
+        domPhoto.pointer = (user && user.id ) > 0 ? GUI.POINTER_HAND : GUI.POINTER_ARROW;
         domBorder.redraw();
         domFrame.redraw();
         elementCardInfo.redraw();
@@ -452,8 +452,6 @@ ElementPhoto = function () {
                 if (element === stateElLetsPlay) yOffset += 15;
             });
         }
-
-//coords : 74, 94
     };
 
     /**
