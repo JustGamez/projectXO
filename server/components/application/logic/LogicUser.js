@@ -102,6 +102,7 @@ LogicUser = function () {
                 user.online = self.isUserOnline(user.id);
                 user.isBusy = self.isUserBusy(user.id);
                 user.onGameId = self.isUserOnGame(user.id);
+                user.vsRobot = self.isUserVsRobot(user.id);
                 CAPIUser.updateUserInfo(toUserId, user);
                 Profiler.stop(Profiler.ID_SEND_USER_INFO, prid);
                 if (user.socNetUpdated <= time() - Config.SocNet.refreshInfoTimeout) {
@@ -109,6 +110,7 @@ LogicUser = function () {
                         user.online = self.isUserOnline(user.id);
                         user.isBusy = self.isUserBusy(user.id);
                         user.onGameId = self.isUserOnGame(user.id);
+                        user.vsRobot = self.isUserVsRobot(user.id);
                         CAPIUser.updateUserInfo(toUserId, user);
                     });
                 }
@@ -239,9 +241,15 @@ LogicUser = function () {
         if (userToCntx[userId] == undefined) return undefined;
         return userToCntx[userId].user.isBusy;
     };
+
     this.isUserOnGame = function (userId) {
         if (userToCntx[userId] == undefined) return undefined;
         return userToCntx[userId].user.onGameId;
+    };
+
+    this.isUserVsRobot = function (userId) {
+        if (userToCntx[userId] == undefined) return undefined;
+        return userToCntx[userId].user.vsRobot;
     };
 
     /**
@@ -284,6 +292,7 @@ LogicUser = function () {
                 user: {
                     isBusy: false,
                     onGameId: 0,
+                    vsRobot: false,
                     id: user.id
                 },
                 connsCount: 0
@@ -411,6 +420,7 @@ LogicUser = function () {
                 user.online = self.isUserOnline(user.id);
                 user.isBusy = self.isUserBusy(user.id);
                 user.onGameId = self.isUserOnGame(user.id);
+                user.vsRobot = self.isUserVsRobot(user.id);
                 /* В рейтинге учитываются очки, только на поле 15х15 в игре с персонажем. */
                 if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
                     user.score15x15vsPerson++;

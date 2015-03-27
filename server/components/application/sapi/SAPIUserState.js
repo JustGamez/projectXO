@@ -53,6 +53,7 @@ SAPIUserState = function () {
         }
         var prid = Profiler.start(Profiler.ID_USER_ON_GAME);
         cntx.user.onGameId = gameId;
+        cntx.user.vsRobot = vsRobot;
         LogicUser.sendToAll(CAPIUserState.onGame, cntx.userId, gameId, vsRobot);
         Profiler.stop(Profiler.ID_USER_ON_GAME, prid);
     };
