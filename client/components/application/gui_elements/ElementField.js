@@ -125,6 +125,10 @@ ElementField = function () {
     this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_LEFT_UP] = '/images/fields/15x15LineLeftToUp.png';
     this.configure[LogicXO.FIELD_TYPE_15X15].lines[LogicXO.LINE_LEFT_DOWN] = '/images/fields/15x15LineLeftToDown.png';
 
+    ElementField.getConfigure = function (type) {
+        return self.configure[type];
+    };
+
     /**
      * Тут будут все домы.
      * - поля;
@@ -171,8 +175,8 @@ ElementField = function () {
             self.field[typeId][y] = [];
             for (var x = 0; x < cfg.fieldSize; x++) {
                 dom = GUI.createDom();
-                dom.x = cfg.signOffsetX + self.x + x * (cfg.signWidth + self.configure[typeId].padding);
-                dom.y = cfg.signOffsetY + self.y + y * (cfg.signHeight + self.configure[typeId].padding);
+                dom.x = cfg.signOffsetX + self.x + x * (cfg.signWidth + cfg.padding);
+                dom.y = cfg.signOffsetY + self.y + y * (cfg.signHeight + cfg.padding);
                 dom.pointer = GUI.POINTER_HAND;
                 dom.backgroundImage = cfg.srcSignClear;
                 GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onSignClick, {x: x, y: y});

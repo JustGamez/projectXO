@@ -95,6 +95,11 @@ PageXOGame = function PageXOGame() {
         nobodyWin: 'ничья.'
     };
 
+    /**
+     * @type {ElementButton}
+     */
+    var elementButtonWallPost;
+
     var textVariants = [
         {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
         {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: true, text: gameStatusTextList.yourTurnX},
@@ -194,7 +199,7 @@ PageXOGame = function PageXOGame() {
         /* Кнопка играть "Еще". */
         element = GUI.createElement(ElementButton, {
             x: 535,
-            y: 312,
+            y: 338,
             width: 175,
             height: 94,
             srcRest: '/images/buttons/againRest.png',
@@ -222,6 +227,27 @@ PageXOGame = function PageXOGame() {
         });
         self.elements.push(element);
         elementScores = element;
+
+        element = GUI.createElement(ElementButton, {
+            x: 550,
+            y:317,
+            srcRest: '/images/buttons/wallPostRest.png',
+            srcHover: '/images/buttons/wallPostHover.png',
+            srcActive: '/images/buttons/wallPostHover.png',
+            onClick: function () {
+                var game, user, opponentId, opponent;
+                game = LogicGame.getCurrentGame();
+                user = LogicUser.getCurrentUser();
+                opponentId = LogicXO.getOpponentUserId(game, user.id);
+                if (opponentId) {
+                    opponent = LogicUser.getById(opponentId);
+                } else {
+                    opponent = getRobotDummy();
+                }
+                LogicDrawWallPost.draw(game, user, opponent);
+            }
+        });
+        elementButtonWallPost = element;
     };
 
     /**
@@ -253,6 +279,7 @@ PageXOGame = function PageXOGame() {
         elementPhoto2.hide();
         domSignO.hide();
         domSignX.hide();
+        elementButtonWallPost.hide();
     };
 
     /**
@@ -395,8 +422,15 @@ PageXOGame = function PageXOGame() {
         if (game && game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
             elementScores.setText('побед: ' + currentUser.score3x3vsRobot);
         }
-        if(!game){
+        if (!game) {
             elementScores.setText('побед: -');
+        }
+        //@todo
+        if (game && (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN)) {
+            elementButtonWallPost.hide();
+        } else {
+            elementButtonWallPost.hide();
+            //elementButtonWallPost.hide();
         }
     };
 

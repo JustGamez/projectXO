@@ -82,7 +82,7 @@ DataUser = function () {
             score15x15vsRobot: 0,
             score3x3vsRobot: 0,
             robotLevel3x3: 500,
-            robotLevel15x15: 500
+            robotLevel15x15: 600
         }, function (result) {
             var user = {
                 id: parseInt(result.insertId),
@@ -97,7 +97,7 @@ DataUser = function () {
                 score15x15vsRobot: 0,
                 score3x3vsRobot: 0,
                 robotLevel3x3: 500,
-                robotLevel15x15: 500
+                robotLevel15x15: 600
             };
             callback(user);
             delete waitForCreateByScoNet[socNetUserId];

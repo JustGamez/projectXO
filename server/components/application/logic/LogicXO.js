@@ -596,6 +596,22 @@ LogicXO = function () {
         newGame.copyFromId = oldGame.id;
         return newGame;
     };
+
+    this.getScoreByGame = function (game, user) {
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && !game.vsRobot) {
+            return user.score15x15vsPerson;
+        }
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && !game.vsRobot) {
+            return user.score3x3vsPerson;
+        }
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_15X15 && game.vsRobot) {
+            return user.score15x15vsRobot;
+        }
+        if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
+            return user.score3x3vsRobot;
+        }
+        Logs.log("LogicXO.getScoreByGame. can't detec score for game", Logs.LEVELR_WARNING, {game: game, user: user});
+    };
 };
 
 /**

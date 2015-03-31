@@ -135,7 +135,13 @@ ElementButton = function () {
         if (!mouseStateFocused && mouseStateDown) src = self.srcRest;
         dom.backgroundImage = src;
         if (self.title) dom.title = self.title;
-        dom.opacity = self.enabled ? undefined : 0.5;
+        if (self.enabled) {
+            dom.pointer = GUI.POINTER_HAND;
+            dom.opacity = 1.0;
+        } else {
+            dom.pointer = GUI.POINTER_ARROW;
+            dom.opacity = 0.5;
+        }
         dom.x = self.x;
         dom.y = self.y;
         dom.redraw();

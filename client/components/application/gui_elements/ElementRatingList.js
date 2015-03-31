@@ -61,7 +61,7 @@ ElementRatingList = function () {
     this.offsetPhoto = 0;
     this.offsetName = 80;
     this.offsetPosition = 350;
-    this.offsetScore15x15vsPerson = 450;
+    this.offsetRatingInfo = 450;
     this.widthName = 300;
 
     /**
@@ -87,7 +87,7 @@ ElementRatingList = function () {
                 frameWidth: 4,
                 degreesDiapazon: 7,
                 showCardInfo: true,
-                cardInfoOffsetX: 442,
+                cardInfoOffsetX: 342,
                 cardInfoOffsetY: -32
             });
             row.all.push(row.photo);
@@ -110,22 +110,17 @@ ElementRatingList = function () {
                 pointer: GUI.POINTER_HAND
             });
             row.all.push(row.position);
-            /* Очки 15х15 с игроком. */
-            row.score15x15vsPerson = GUI.createElement(ElementGraphicText, {
-                x: self.x + self.offsetScore15x15vsPerson,
+            /* Инфо об игроке. */
+            row.ratingInfo = GUI.createElement(ElementImage, {
+                x: self.x + self.offsetRatingInfo,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
-                width: 40,
-                text: '-',
-                alignCenter: true,
+                src: '/images/ratingInfo.png',
+                opacity: 0.87,
                 pointer: GUI.POINTER_HAND
             });
-            row.all.push(row.score15x15vsPerson);
-            GUI.bind(row.name.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
-            GUI.bind(row.name.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
-            GUI.bind(row.position.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
-            GUI.bind(row.position.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
-            GUI.bind(row.score15x15vsPerson.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
-            GUI.bind(row.score15x15vsPerson.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
+            row.all.push(row.ratingInfo);
+            GUI.bind(row.ratingInfo.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, row);
+            GUI.bind(row.ratingInfo.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, row);
             rowsElements[i] = row;
         }
     };
@@ -166,7 +161,6 @@ ElementRatingList = function () {
                 elements.photo.update(data);
                 elements.name.setText(data.user.firstName + " " + data.user.lastName);
                 elements.position.setText(data.position);
-                elements.score15x15vsPerson.setText(data.user.score15x15vsPerson);
                 /* Перерисуем */
                 for (var j = 0, length = elements.all.length; j < length; j++) {
                     elements.all[j].show();

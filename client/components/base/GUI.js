@@ -189,10 +189,27 @@ GUI = function () {
      * @param parent {GUIDom} родитель, в который будет добавлен дом.
      * @returns {GUIDom}
      */
-    this.createInput = function (parent) {
+    this.createInput = function (parent, params) {
         var dom;
         dom = new GUIDom();
         dom.init('input', parent);
+        if (params) {
+            for (var name in params) {
+                dom[name] = params[name];
+            }
+        }
+        return dom;
+    };
+
+    this.createCanvas = function (parent, params) {
+        var dom;
+        dom = new GUIDom();
+        dom.init('canvas', parent);
+        if (params) {
+            for (var name in params) {
+                dom[name] = params[name];
+            }
+        }
         return dom;
     };
 

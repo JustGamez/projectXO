@@ -23,7 +23,7 @@ LogicImages = function () {
             drawImage(images[i], '/var/xo/images/fields/3x3Field.png', function (resultImage) {
                 resultImage.writeImage('/var/xo/images/' + i + '.png', function () {
                     sumTime += mtime() - startTime;
-                    console.log('o.k. sum time:' + sumTime);
+                    //console.log('o.k. sum time:' + sumTime);
                 });
             });
         }

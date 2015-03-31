@@ -52,6 +52,10 @@ CAPIUser = function () {
         LogicUser.setRatingPositionsNeedReload();
         LogicRating.onRatingUpdated();
     };
+
+    this.wallPostSended = function (cntx, vkResponse) {
+        LogicDrawWallPost.onUploadComplete(vkResponse);
+    };
 };
 
 /**

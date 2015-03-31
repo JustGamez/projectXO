@@ -24,6 +24,18 @@ PageMain = function PageMain() {
     this.elementFriendsType = null;
 
     /**
+     * @type {ElementButton}
+     */
+    var elementFriendsTypeLeftButton;
+
+    /**
+     * @typw {ElementButton}
+     */
+    var elementFriendsTypeRightButton;
+
+    var friendsTypeOffset = 0;
+
+    /**
      * Создадим тут все элементы страницы.
      */
     this.init = function () {
@@ -133,8 +145,6 @@ PageMain = function PageMain() {
         element = GUI.createElement(ElementButton, {
             x: 70,
             y: 355,
-            width: 75,
-            height: 80,
             title: 'Пригласить друзей.',
             srcRest: '/images/buttons/addFriendRest.png',
             srcHover: '/images/buttons/addFriendHover.png',
@@ -142,6 +152,32 @@ PageMain = function PageMain() {
             onClick: LogicPageMain.onAddFriendButtonClick
         });
         self.elements.push(element);
+        element = GUI.createElement(ElementButton, {
+            x: 127,
+            y: 371,
+            srcRest: '/images/buttons/friendsTypeLeftRest.png',
+            srcHover: '/images/buttons/friendsTypeLeftHover.png',
+            srcActive: '/images/buttons/friendsTypeLeftRest.png',
+            onClick: function () {
+                friendsTypeOffset--;
+                pageController.redraw();
+            }
+        });
+        self.elements.push(element);
+        elementFriendsTypeLeftButton = element;
+        element = GUI.createElement(ElementButton, {
+            x: 533,
+            y: 371,
+            srcRest: '/images/buttons/friendsTypeRightRest.png',
+            srcHover: '/images/buttons/friendsTypeRightHover.png',
+            srcActive: '/images/buttons/friendsTypeRightRest.png',
+            onClick: function () {
+                friendsTypeOffset++;
+                pageController.redraw();
+            }
+        });
+        self.elements.push(element);
+        elementFriendsTypeRightButton = element;
     };
 
     /**
@@ -212,10 +248,14 @@ PageMain = function PageMain() {
          * - в игре;
          * - онлайн;
          */
-
         usersList.sort(function (a, b) {
-            if (a.user.lastLogoutTimestamp > b.user.lastLogoutTimestamp)return -1;
+            if (a.user.socNetUserId > b.user.socNetUserId)return -1;
+            if (a.user.socNetUserId < b.user.socNetUserId)return 1;
+            return 0;
+        });
+        usersList.sort(function (a, b) {
             if (a.user.lastLogoutTimestamp < b.user.lastLogoutTimestamp)return 1;
+            if (a.user.lastLogoutTimestamp > b.user.lastLogoutTimestamp)return -1;
             return 0;
         });
         usersList.sort(function (a, b) {
@@ -233,7 +273,21 @@ PageMain = function PageMain() {
             if (!a.user.online && b.user.online)return 1;
             return 0;
         });
-        self.elementFriendsType.update(usersList);
+
+        if (friendsTypeOffset >= usersList.length - 1) {
+            friendsTypeOffset = usersList.length - 1;
+            elementFriendsTypeRightButton.enabled = false;
+        } else {
+            elementFriendsTypeRightButton.enabled = true;
+        }
+        if (friendsTypeOffset <= 0) {
+            friendsTypeOffset = 0;
+            elementFriendsTypeLeftButton.enabled = false;
+        } else {
+            elementFriendsTypeLeftButton.enabled = true;
+        }
+
+        self.elementFriendsType.update(usersList.slice(friendsTypeOffset));
     };
 
     /**

@@ -3,7 +3,6 @@
  */
 var WEBSOCKET = require('websocket');
 var HTTP = require('http');
-var HTTPS = require('https');
 var FS = require('fs');
 var PATH = require('path');
 var UGLIFYJS = require('uglify-js');
@@ -34,34 +33,16 @@ WebSocketServer = function () {
     var reloadClientCodeEveryRequest = null;
 
     /**
-     * Перезагружать ли код робота Криспи, каждый раз, когда его запрашивают.
-     * @type {boolean}
-     */
-    var reloadRobotKrispiCodeEveryRequest = true;
-
-    /**
      * Порт для прослушки.
      * @type {int};
      */
     var port = null;
 
     /**
-     * Порт для прослушки, ssl-ный.
-     * @type {int};
-     */
-    var portSSL = null;
-
-    /**
      * Путь откуда загружать клиентский код.
      * @type {string}
      */
     var clientCodePath = null;
-
-    /**
-     * Путь где находиться код робота Криспи.
-     * @type {string}
-     */
-    var robotCodePath = '../robotKrispi/';
 
     /**
      * Проверка перед запуском:
@@ -80,9 +61,6 @@ WebSocketServer = function () {
         }
         if (typeof port != 'number') {
             Logs.log("port given by .setup, must be number", Logs.LEVEL_FATAL_ERROR, port);
-        }
-        if (typeof portSSL != 'number') {
-            Logs.log("portSSL given by .setup, must be number", Logs.LEVEL_FATAL_ERROR, portSSL);
         }
         if (typeof reloadClientCodeEveryRequest != 'boolean') {
             Logs.log("reloadClientCodeEveryRequest given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, reloadClientCodeEveryRequest);
@@ -147,21 +125,11 @@ WebSocketServer = function () {
      * @type {string}
      */
     var clientCode = '';
-    /**
-     * Код робота Криспи.
-     * @type {string}
-     */
-    var robotKrispiCode = null;
 
     /**
      * Тут храниться HTTP сервер, nodeJS-модуль
      */
     var http;
-
-    /**
-     * Тут храниться HTTPS сервер, nodeJS-модуль
-     */
-    var https;
 
     /**
      * Тут храниться WebSocket.server, nodeJS-модуль
@@ -176,7 +144,6 @@ WebSocketServer = function () {
     this.init = function (afterInitCallback) {
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
         port = Config.WebSocketServer.port;
-        portSSL = Config.WebSocketServer.portSSL;
         clientCodePath = Config.WebSocketServer.clientCodePath;
         imagesPath = Config.WebSocketServer.imagesPath;
 
@@ -184,33 +151,18 @@ WebSocketServer = function () {
         /* загрузка клиентского кода. */
         loadClientCode();
 
-        var isSSL;
-        isSSL = false;
-        if (!isSSL) {
-            /* создадим сервер */
-            http = HTTP.createServer(onHTTPRequest);
-            /* запустим прослушивание */
-            http.listen(port);
-            /* создадим websocket */
-        } else {
-            /* @todo path-s to Config file.*/
-            var options = {
-                key: FS.readFileSync('ssl/ssl.key'),
-                cert: FS.readFileSync('ssl/ssl.crt'),
-                passphrase: 'UnderGround88'
-            };
-            https = HTTPS.createServer(options, onHTTPRequest);
-            /* @todo to Config.WebSocketServer. */
-            https.listen(portSSL);
-            /* @todo crunch */
-            http = https;
-        }
+        /* создадим сервер */
+        http = HTTP.createServer(onHTTPRequest);
+        /* запустим прослушивание */
+        http.listen(port);
+        /* создадим websocket */
+
         server = new WEBSOCKET.server({
             httpServer: http
         });
         server.on('request', onWebSocketRequest);
 
-        Logs.log("WebSocketServer running. port:" + port + ' or may be ssl port:' + portSSL, Logs.LEVEL_NOTIFY);
+        Logs.log("WebSocketServer running. port:" + port, Logs.LEVEL_NOTIFY);
         Logs.log("WebSocketServer inited.", Logs.LEVEL_NOTIFY);
         afterInitCallback();
     };
@@ -238,26 +190,10 @@ WebSocketServer = function () {
         FS.writeFile('/var/xo/js/VKClientCodeSource.js', clientJSCode);
 
         if (Config.WebSocketServer.compressJSClientCode) {
-            var result = UGLIFYJS.minify(clientJSCode, {
-                fromString: true
-            });
-            FS.writeFile('/var/xo/js/VKClientCode.js', result.code);
-        } else {
-            FS.writeFile('/var/xo/js/VKClientCode.js', clientJSCode);
+            var result = UGLIFYJS.minify(clientJSCode, {fromString: true});
+            clientJSCode = result.code;
         }
-    };
-
-    /**
-     * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
-     */
-    var loadRobotKrispiCode = function () {
-        Logs.log("Load Krispi robot code.");
-        /* Сформируем код робота. */
-        robotKrispiCode = "";
-        robotKrispiCode += "<HTML><HEAD><meta charset='utf-8' />";
-        robotKrispiCode += getRobotKrispiJSCode();
-        robotKrispiCode += "</HEAD><BODY>";
-        robotKrispiCode += "</BODY></HTML>";
+        FS.writeFile('/var/xo/js/VKClientCode.js', clientJSCode);
     };
 
     /**
@@ -276,16 +212,6 @@ WebSocketServer = function () {
         jsFiles.push(clientConfigPath);
         jsFiles.push(clientCodePath + '/run.js');
         return clientCodePrepareCode(jsFiles);
-    };
-
-    /**
-     * Вернем js-код робота.(js-scripts).
-     */
-    var getRobotKrispiJSCode = function () {
-        var jsFiles;
-        /* Загрузим список файлов робота кода. */
-        jsFiles = getFileListRecursive(robotCodePath);
-        return robotCodePrepareCode(jsFiles);
     };
 
     /**
@@ -356,43 +282,8 @@ WebSocketServer = function () {
     };
 
     /**
-     * Загрузим код всех файлов, конкатинируем и составим из них одну строку кода.
-     * @param files[]
-     */
-    var robotCodePrepareCode = function (files) {
-        var code, path, file_content, name;
-        code = '';
-        for (var i in files) {
-            path = files[i];
-            file_content = FS.readFileSync(path);
-            if (file_content == 'LoadFromClientCode') {
-                /*
-                 Меняем базовый путь роботского-кода на клиентский путь и загружаем аналогичный файл,
-                 по идентичному относительному пути.
-                 */
-                path = path.replace(robotCodePath, clientCodePath);
-                file_content = FS.readFileSync(path);
-                if (file_content == 'ClientServerCompliant') {
-                    path = path.replace(clientCodePath, '');
-                    file_content = FS.readFileSync(path);
-                }
-            }
-            code += "\r\n<script type='text/javascript'>" +
-            "\r\n/* " + path + " */\r\n" +
-            file_content + "\r\n</script>";
-            name = PATH.basename(path, '.js');
-            /* Добавим пути к файлам компонент, это нужно для отладки */
-            code += '<script>' +
-            'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"' +
-            '};</script>';
-        }
-        return code;
-    };
-
-    /**
      * Обработчки запросов от HTTP сервера.
      * при запросе ^/VK/clientCode*, вернёт клинтский код.
-     * при запросе ^/robotKrispiCode?*, вернёт код робота Криспи.
      * при запросе ^{imagesPrefix}*, вернёт соответствующую картинку из папки imagePath
      * при любом другом запросе вернёт 404 ошибку.
      * @param request
@@ -401,8 +292,6 @@ WebSocketServer = function () {
      */
     var onHTTPRequest = function (request, response) {
         var path;
-        /* Logs.log("WebSocketServer", Logs.LEVEL_DETAIL, {url: request.url, method: request.method}); */
-
         /* Запрашивается клинетский код? */
         if (request.url.indexOf('/VK/clientCode') == 0) {
             if (reloadClientCodeEveryRequest) {
@@ -430,18 +319,6 @@ WebSocketServer = function () {
             response.end(VKCommentsWidgetCode);
             return true;
         }
-        /* Запрашивается код робота Криспи. ? */
-        /**
-         * @todo create config varialbe, like a Configuration.robotKrispiEnabled or something like this.
-         */
-        if (false && request.url.indexOf('/robotKrispiCode') == 0) {
-            if (reloadRobotKrispiCodeEveryRequest) {
-                loadRobotKrispiCode();
-            }
-            response.writeHead(200, {'Content-Type': 'text/html'});
-            response.end(robotKrispiCode);
-            return true;
-        }
         if (request.url.indexOf('/status') == 0) {
             var status = Profiler.getTextReport();
             var status2 = ApiRouterMetrics.getMetrics();
@@ -460,12 +337,12 @@ WebSocketServer = function () {
             return true;
         }
         if (request.url.indexOf('/reloadClientCode') == 0) {
+            loadClientCode();
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Reload Client Code executed!" + new Date().getTime() + '</pre>');
-            loadClientCode();
             return true;
         }
-        if (request.url.indexOf('/Statistic/showLast') == 0) {
+        if (request.url.indexOf('/statistic') == 0) {
             Statistic.flushCache();
             Statistic.getStatus(function (text) {
                 response.writeHead(200, {'Content-Type': 'text/html'});

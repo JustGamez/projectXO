@@ -76,7 +76,15 @@ ApiRouter = function () {
         var connectionsKey;
         connectionsKey = '';
         if (id)connectionsKey = id;
-        Logs.log(id + " " + ">> " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
+        if (Config.Logs.triggerLevel == Logs.LEVEL_DETAIL) {
+            var argsString;
+            argsString = JSON.stringify(args);
+            if (method == 'sendWallPost') {
+                // data, may be chunk of image! it's 30 000 bytes or less!
+                argsString = argsString.substr(0, 250);
+            }
+            Logs.log(id + " " + ">> " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
+        }
         /* group_method.counter ++ */
         ApiRouterMetrics[group][method]++;
         map[group][method].apply(self, args);
@@ -105,7 +113,16 @@ ApiRouter = function () {
             connectionsKey += cntxList[i].connectionId
         }
         args = Array.prototype.slice.call(args);
-        Logs.log(connectionsKey + " " + "<< " + group + "." + method + JSON.stringify(args), Logs.LEVEL_DETAIL);
+
+        if (Config.Logs.triggerLevel == Logs.LEVEL_DETAIL) {
+            var argsString;
+            argsString = JSON.stringify(args);
+            if (method == 'sendWallPost') {
+                // data, may be chunk of image! it's 30 000 bytes or less!
+                argsString = argsString.substr(0, 250);
+            }
+            Logs.log(connectionsKey + " " + "<< " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
+        }
         /* group_method.counter ++ */
         ApiRouterMetrics[group][method]++;
         var packet = {

@@ -65,8 +65,8 @@ PageOnlineAndRating = function PageOnlineAndRating() {
         GUI.bind(self.elementPositionIndicator.dom, GUI.EVENT_MOUSE_OVER, onMouseOver, this);
         GUI.bind(self.elementPositionIndicator.dom, GUI.EVENT_MOUSE_OUT, onMouseOut, this);
         element = GUI.createElement(ElementImage, {
-            x: 652,
-            y: 419,
+            x: 659,
+            y: 415,
             src: '/images/ratingInfo.png',
             opacity: 0.87,
             pointer: GUI.POINTER_HAND

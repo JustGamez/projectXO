@@ -71,12 +71,11 @@ GUIDom = function () {
         for (var i in props) {
             oldProps[i] = undefined;
         }
-        /* Создадим дом */
-        if (type == 'input') {
-            dom = document.createElement("input");
-        } else {
-            dom = document.createElement("div");
+        if (!type) {
+            type = 'div';
         }
+        /* Создадим дом */
+        dom = document.createElement(type);
         /* значения по умолчанию для дом-ов. */
         dom.style.position = 'absolute';
         dom.style.overflow = 'hidden';
@@ -257,8 +256,8 @@ GUIDom = function () {
         }, false);
     };
 
-    this.setFocus = function(){
-      dom.focus();
+    this.setFocus = function () {
+        dom.focus();
     };
 
     /* Далее идут методы перерисовки. */

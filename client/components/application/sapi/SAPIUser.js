@@ -39,8 +39,12 @@ SAPIUser = function () {
         apiRouter.executeRequest('SAPIUser', 'sendMeOnlineUserIds', arguments, [{connectionId: null}]);
     };
 
-    this.sendMeRatingPosition = function(userId){
+    this.sendMeRatingPosition = function (userId) {
         apiRouter.executeRequest('SAPIUser', 'sendMeRatingPosition', arguments, [{connectionId: null}]);
+    };
+
+    this.sendWallPost = function (data, fileId, finish) {
+        apiRouter.executeRequest('SAPIUser', 'sendWallPost', arguments, [{connectionId: null}]);
     };
 };
 

@@ -131,6 +131,13 @@ ElementChatWindow = function () {
                 text += "<br>";
             }
         }
+        if (messages.length == 0) {
+            text += "<br><br>";
+            text += "<div style='text-align: center;'>";
+            text += "<b style='font-size:12pt;letter-spacing:-2px;font-weight:normal;opacity:0.71;'>Здесь будет выводиться переписка.</b>";
+            text += "</div>";
+        }
+
         dom.innerHTML = text;
         dom.redraw();
         /* На данный момент это трюк\костыль */

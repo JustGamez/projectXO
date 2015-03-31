@@ -52,6 +52,10 @@ CAPIUser = function () {
     this.ratingChanged = function (toUserId) {
         LogicUser.sendToUser(toUserId, 'CAPIUser', 'ratingChanged', []);
     };
+
+    this.wallPostSended = function (toUserId, data) {
+        LogicUser.sendToUser(toUserId, 'CAPIUser', 'wallPostSended', [data]);
+    };
 };
 
 /**

@@ -71,7 +71,7 @@ PageChat = function PageChat() {
         self.elements.push(element);
         element = GUI.createElement(ElementText, {
             x: 100,
-            y: 484,
+            y: 487,
             width: 100,
             height: 20,
             text: 'общий',
@@ -91,7 +91,7 @@ PageChat = function PageChat() {
         for (var i = 0; i < 4; i++) {
             element = GUI.createElement(ElementText, {
                 x: 100 + (i + 1) * 100,
-                y: 484,
+                y: 487,
                 width: 100,
                 height: 20,
                 text: '-',

@@ -23,14 +23,14 @@ PageRating = function PageRating() {
      */
     var elementRatingList = null;
 
-    var offsetPhoto = 0;
+    var offsetPhoto = 10;
     var offsetName = 112;
-    var offsetPosition = 440;
-    var offsetScore15x15vsPerson = 530;
+    var offsetPosition = 465;
+    var offsetRatingInfo = 538;
     var widthName = 350;
 
     /**
-     *
+     * Стрелка выбора: моя позиция, топ игроков.
      * @type {ElementImage}
      */
     var elementArrow = null;
@@ -49,7 +49,7 @@ PageRating = function PageRating() {
             offsetPhoto: offsetPhoto,
             offsetName: offsetName,
             offsetPosition: offsetPosition,
-            offsetScore15x15vsPerson: offsetScore15x15vsPerson,
+            offsetRatingInfo: offsetRatingInfo,
             widthName: widthName
         });
         self.elements.push(element);
@@ -84,14 +84,6 @@ PageRating = function PageRating() {
             x: ratingListX + offsetPosition - 18,
             y: 142 - 7 + offsetY,
             src: '/images/rating/headerPositionByScore.png'
-        });
-        self.elements.push(element);
-        /* Очки 15х15 с персонажом */
-        element = GUI.createElement(ElementImage, {
-            x: ratingListX + offsetScore15x15vsPerson,
-            y: 142 + offsetY,
-            src: '/images/rating/headerScore15x15vsPerson.png',
-            title: 'Побед 15х15 с человеком.'
         });
         self.elements.push(element);
         element = GUI.createElement(ElementButton, {
@@ -132,7 +124,7 @@ PageRating = function PageRating() {
         self.elements.push(element);
         element = GUI.createElement(ElementImage, {
             x: 114,
-            y: 115 + offsetY,
+            y: 130 + offsetY,
             src: '/images/rating/arrow.png'
         });
         elementArrow = element;
@@ -189,11 +181,11 @@ PageRating = function PageRating() {
         self.preset();
         switch (LogicPageRating.showId) {
             case LogicPageRating.SHOW_TOP:
-                elementArrow.y = 85;
+                elementArrow.y = 100;
                 elementArrow.show();
                 break;
             case LogicPageRating.SHOW_MY_POSITION:
-                elementArrow.y = 115;
+                elementArrow.y = 130;
                 elementArrow.show();
                 break;
             case LogicPageRating.SHOW_CUSTOM:

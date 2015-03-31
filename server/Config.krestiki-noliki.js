@@ -49,7 +49,6 @@ Config = {
         reloadClientCodeEveryRequest: true,
         compressJSClientCode: false,
         port: 3000,
-        portSSL: 443,
         clientCodePath: '../client/',
         imagesPath: '../images/'
     },

@@ -94,3 +94,10 @@ str_pad = function (str, len, pad, dir) {
 time = function () {
     return Math.floor((new Date()).getTime() / 1000);
 };
+
+/**
+ * Возвращает время в миллисекундах секундах.
+ */
+mtime = function () {
+    return new Date().getTime();
+};

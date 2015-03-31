@@ -128,11 +128,11 @@ ElementGraphicText = function () {
     };
 
     var refreshText = function () {
-        var textHTML, symbol_url, charCode, existsSymbols;
-        existsSymbols = '1234567890абвгдеёжзийклмнопрстуфхцчшщьыъэюя.!- АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+        var textHTML, symbol_url, charCode, existsSymbols, symbol;
+        existsSymbols = '1234567890абвгдеёжзийклмнопрстуфхцчшщьыъэюя.!-: АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
         textHTML = '';
         for (var i in self.text) {
-            var symbol = self.text[i];
+            symbol = self.text[i];
             charCode = self.text.charCodeAt(i);
             /* feed line symbol: 0xAh, 10d, \n */
             if (charCode == 10) {
