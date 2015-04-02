@@ -113,6 +113,8 @@ addDeInitCallback(DataGame.flushCache);
 sequencedInit(Logs.init);
 sequencedInit(Profiler.init);
 sequencedInit(DB.init);
+sequencedInit(DataGame.init);
+sequencedInit(DataUser.init);
 sequencedInit(Statistic.init);
 sequencedInit(SocNet.init);
 sequencedInit(LogicUser.init);
@@ -126,6 +128,4 @@ sequencedInit(function (afterInitCallback) {
     Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
     afterInitCallback();
 });
-
-//LogicImages.drawPost();
 

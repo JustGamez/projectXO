@@ -4,6 +4,8 @@ CAPIChat = function () {
         message.text = LogicChat.censureIt(message.text);
         LogicChat.addList([message]);
         checkIsOpened(message);
+        //@todo only if is it current chat
+        Sounds.play('/sounds/chatMessage.wav', 0.4);
     };
 
     var checkIsOpened = function (message) {

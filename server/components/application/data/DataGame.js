@@ -25,6 +25,17 @@ DataGame = function () {
 
     var cache = [];
 
+    var autoIncrementValue = null;
+    var notSavedIds = [];
+
+    this.init = function (afterInitCallback) {
+        DB.query("SELECT `AUTO_INCREMENT` as autoIncrement FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'xo' AND TABLE_NAME   = 'games';", function (rows) {
+            autoIncrementValue = rows[0].autoIncrement;
+            Logs.log("games.autoincrementId:" + autoIncrementValue, Logs.LEVEL_NOTIFY);
+            afterInitCallback();
+        });
+    };
+
     /**
      * Вернуть игру по id.
      * @param id {Number} id игры
@@ -56,11 +67,13 @@ DataGame = function () {
      */
     this.save = function (game, callback) {
         if (!game.id) {
-            DB.insert(tableName, game, function (result) {
-                game.id = result.insertId;
-                cache[game.id] = game;
-                callback(game);
-            }, fields, {field: compressField});
+            game.id = autoIncrementValue++;
+            cache[game.id] = game;
+            notSavedIds[game.id] = true;
+            callback(game);
+            setTimeout(function () {
+                flushGameById(game.id, false);
+            }, 10000);
         } else {
             if (!cache[game.id]) {
                 Logs.log("DataGame.save", "game does not exists in cache. strange...", Logs.LEVEL_WARNING, game);
@@ -76,10 +89,10 @@ DataGame = function () {
                 case LogicXO.STATUS_CLOSED:
                 case LogicXO.STATUS_SOMEBODY_WIN:
                 case LogicXO.STATUS_NOBODY_WIN:
-                    DB.update(tableName, game, function (result) {
-                        callback(game);
-                        delete cache[game.id];
-                    }, fields, {field: compressField});
+                    callback(game);
+                    setTimeout(function () {
+                        flushGameById(game.id);
+                    }, Config.DataGame.cacheFinishedGameTimeout);
                     break;
                 default:
                     Logs.log("DataGame.save. unknown games status", Logs.LEVEL_WARNING, game);
@@ -109,12 +122,35 @@ DataGame = function () {
     this.flushCache = function () {
         Logs.log("Flush data game cache begin.");
         cache.forEach(function (game) {
-            DB.update(tableName, game, function () {
-                delete cache[game.id];
-                Logs.log("Game flushed. id:" + game.id + " status:" + game.status);
-            }, fields, {field: compressField});
+            flushGameById(game.id);
+            Logs.log("Game flushed. id:" + game.id + " status:" + game.status);
         });
     };
+
+    var flushGameById = function (id, deleteCache) {
+        var game;
+        if (deleteCache == undefined) {
+            deleteCache = true;
+        }
+        game = cache[id];
+        if (notSavedIds[id]) {
+            DB.insert(tableName, game, function (result) {
+                if (result.insertId != game.id) {
+                    Logs.log("DataGame.save. result. insertId != game.id", Logs.LEVEL_WARNING, game);
+                }
+                delete notSavedIds[game.id];
+                if (deleteCache) {
+                    delete cache[game.id];
+                }
+            }, fields, {field: compressField});
+        } else {
+            DB.update(tableName, game, function () {
+                if (deleteCache) {
+                    delete cache[game.id];
+                }
+            }, fields, {field: compressField});
+        }
+    }
 };
 
 /**

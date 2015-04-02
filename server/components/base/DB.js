@@ -107,6 +107,8 @@ DB = function () {
         DB.query(query, callback);
     };
 
+    var tableLastIds = {};
+
     /**
      * Выполняет вставку в БД.
      * @param tableName {string} имя таблицы.

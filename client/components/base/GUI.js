@@ -79,7 +79,7 @@ GUI = function () {
      * - установим родителя, это будет тело документа.
      */
     this.init = function () {
-        parentsStack.push(document.body);
+        parentsStack.push(document.getElementById('applicationArea'));
         var style = document.createElement('style');
         style.type = 'text/css';
         style.innerHTML = '.sepia { ' +

@@ -24,6 +24,7 @@ ActionsRobotGame = function () {
      */
     this.raiseAIMove = function (gameId) {
         var AICoords;
+        var prid = Profiler.start(Profiler.ID_ROBOT_THINKING);
         DataGame.getById(gameId, function (game) {
             if (!game || !game.id) {
                 Logs.log("ActionsRobotGame.raiseAIMove. game does not exists.", Logs.LEVEL_WARNING, gameId);
@@ -44,14 +45,11 @@ ActionsRobotGame = function () {
             }
             /* Сюда будем ставить ход. */
             DataUser.getById(game.creatorUserId, function (user) {
-                var prid = Profiler.start(Profiler.ID_ROBOT_THINKING);
                 AICoords = LogicRobot.generateMovementCoords(game, user);
                 if (!LogicXO.userCanDoMove(game, 0, AICoords.x, AICoords.y)) {
                     Logs.log("ActionsRobotGame.raiseAIMove. Robot can not do move.x:" + AICoords.x + ", y:" + AICoords.y, Logs.LEVEL_WARNING, game);
-                    Profiler.stop(Profiler.ID_ROBOT_THINKING, prid);
                     return;
                 }
-                Profiler.stop(Profiler.ID_ROBOT_THINKING, prid);
                 /* Тут мы добавим\обновим линии робота на основании последнего хода. */
                 game = LogicXO.setSign(game, AICoords.x, AICoords.y);
                 game = LogicXO.switchTurn(game);
@@ -61,6 +59,7 @@ ActionsRobotGame = function () {
                     for (var userId in lookers) {
                         CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
                     }
+                    Profiler.stop(Profiler.ID_ROBOT_THINKING, prid);
                 });
             });
         });

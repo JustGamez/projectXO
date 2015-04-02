@@ -6,30 +6,57 @@
  * @constructor
  */
 LogicDrawWallPost = function () {
+    var self = this;
 
-    var fieldStartX = 50;
-    var fieldStartY = 50;
+    var fieldStartX = 55;
+    var fieldStartY = 55;
+    var canvasHeight = 520;
+    var canvasWidth = 520;
 
     var canvasDom;
 
-    var show = true;
+    var debugShow = false;
 
     var images = [];
 
     var postText = '';
 
-    this.draw = function (game, user, opponent) {
+    this.blocked = false;
+
+    this.drawingWallPost = false;
+    this.drawingCameraPhoto = false;
+
+    this.postReady = false;
+
+    this.drawWallPost = function (game, user, opponent) {
+        if (self.blocked) return;
+        self.blocked = true;
+        self.postReady = false;
+        self.drawingWallPost = true;
         init(function () {
             drawPost(game, user, opponent);
         });
     };
 
-    var drawPost = function (game, user, opponent) {
+    this.drawCameraPhoto = function (game, user, opponent) {
+        if (self.blocked) return;
+        self.blocked = true;
+        self.postReady = false;
+        self.drawingCameraPhoto = true;
+        init(function () {
+            drawPost(game, user, opponent, true);
+        });
+    };
+
+
+    var drawPost = function (game, user, opponent, notText) {
         var context, srcField, srcSignX, srcSignO, cfg, imageX, imageY, src;
         context = getContext();
         cfg = ElementField.getConfigure(game.fieldTypeId);
+        /* Стираем всё. */
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
         /* 1 - рисуем стол */
-        drawImage(context, '/images/table.png', -100, -100);
+        drawImage(context, '/images/wallPost.png', 0, 0);
         /* 2 - рисуем поле */
         drawImage(context, cfg.srcField, fieldStartX, fieldStartY);
         /* 3 - рисуем знаки */
@@ -62,49 +89,60 @@ LogicDrawWallPost = function () {
                 drawImage(context, src, imageX, imageY);
             }
         }
-        /* - рисуем побед: */
-        drawText(context, 'побед: ' + LogicXO.getScoreByGame(game, user), 77, 447);
-        /* - рисуем рейтинг текст вверху */
-        drawText(context, 'мой рейтинг: ' + LogicUser.getRatingPosition(), 251, 447);
-        /* - оппонент*/
-        //console.log(opponent);
-        postText = '';
-        var opponentNameText = '';
-        var text = '';
-        if (game.vsRobot) {
-            opponentNameText = 'роботом';
-        } else {
-            opponentNameText = opponent.firstName + " " + opponent.lastName;
+        if (!notText) {
+            /* - рисуем побед: */
+            drawText(context, 'побед: ' + LogicXO.getScoreByGame(game, user), fieldStartX + 35, fieldStartY + 397);
+            /* - рисуем рейтинг текст вверху */
+            drawText(context, 'мой рейтинг: ' + LogicUser.getRatingPosition(), fieldStartX + 215, fieldStartY + 397);
+            /* - оппонент*/
+            //console.log(opponent);
+            postText = '';
+            var opponentNameTextNom = '';
+            var opponentNameTextIns = '';
+            var opponentNameTextGen = '';
+            var opponentNameTextDat = '';
+            var text = '';
+            // ins - играю с роботом, ничья с роботом
+            // gen - выиграл у робота
+            // dat - проиграл роботу
+            if (game.vsRobot) {
+                opponentNameTextNom = 'робот';
+                opponentNameTextIns = 'роботом';
+                opponentNameTextGen = 'робота';
+                opponentNameTextDat = 'роботу';
+            } else {
+                opponentNameTextNom = opponent.firstName + " " + opponent.lastName;
+                opponentNameTextIns = opponent.firstName_ins + " " + opponent.lastName_ins;
+                opponentNameTextGen = opponent.firstName_gen + " " + opponent.lastName_gen;
+                opponentNameTextDat = opponent.firstName_dat + " " + opponent.lastName_dat;
+            }
+            //console.log(opponent);
+            postText = 'http://vk.com/krestik.nolik';
+            switch (game.status) {
+                case LogicXO.STATUS_WAIT:
+                    text = '';
+                    break;
+                case LogicXO.STATUS_RUN:
+                    text = 'Я играю с ' + opponentNameTextIns + '.';
+                    break;
+                case LogicXO.STATUS_SOMEBODY_WIN:
+                    if (game.winnerId == user.id) {
+                        text = 'Я выиграл у ' + opponentNameTextGen + '!';
+                    } else {
+                        text = 'Я проиграл ' + opponentNameTextDat + '.';
+                    }
+                    break;
+                case LogicXO.STATUS_NOBODY_WIN:
+                    text = 'Ничья с ' + opponentNameTextIns;
+                    break;
+                case LogicXO.STATUS_CLOSE:
+                    text = 'Игра закончена с ' + opponentNameTextIns;
+                    break;
+            }
+            text = text.substr(0, 100);
+            drawText(context, text, fieldStartX + 21, fieldStartY - 24, 357);
         }
-        switch (game.status) {
-            case LogicXO.STATUS_WAIT:
-                text = '';
-                break;
-            case LogicXO.STATUS_RUN:
-                text = 'Я играю с ' + opponentNameText;
-                postText = 'Я играю.';
-                break;
-            case LogicXO.STATUS_SOMEBODY_WIN:
-                if (game.winnerId == user.id) {
-                    text = 'Я выиграл у ' + opponentNameText;
-                    postText = 'Я выиграл!';
-                } else {
-                    text = 'Я проиграл ' + opponentNameText;
-                    postText = 'Я проигарал';
-                }
-                break;
-            case LogicXO.STATUS_NOBODY_WIN:
-                text = 'Ничья с ' + opponentNameText;
-                postText = 'Игра закончилась ничёй';
-                break;
-            case LogicXO.STATUS_CLOSE:
-                text = 'Игра закончена.' + opponent.firstName + " " + opponent.lastName;
-                postText = '';
-                break;
-        }
-
-        drawText(context, text, 71, 22, 357);
-        if (show) {
+        if (debugShow) {
             canvasDom.show();
             setTimeout(canvasDom.hide, 3500);
         }
@@ -153,11 +191,17 @@ LogicDrawWallPost = function () {
 
     var createPostOnWall = function (answer) {
         //console.log(answer);
+        self.postReady = true;
         VK.api('wall.post', {
             owner_id: LogicUser.getCurrentUser().socNetUserId,
             message: postText,// +' \nhttp://vk.com/krestik.nolik',
             attachments: 'photo' + LogicUser.getCurrentUser().socNetUserId + '_' + answer.response[0].id + ',http://vk.com/krestik.nolik'
         }, function (answer) {
+            self.blocked = false;
+            self.postReady = false;
+            self.drawingWallPost = false;
+            self.drawingCameraPhoto = false;
+            pageController.redraw();
             //console.log('answer after post on wall', answer);
         });
     };
@@ -172,7 +216,7 @@ LogicDrawWallPost = function () {
             '/images/fields/3x3SignX.png',
             '/images/fields/3x3SignO.png',
             '/images/fields/3x3SignClear.png',
-            '/images/table.png',
+            '/images/wallPost.png',
             '/images/fields/15x15LineHorizontal.png',
             '/images/fields/15x15LineVertical.png',
             '/images/fields/15x15LineLeftToDown.png',
@@ -265,8 +309,11 @@ LogicDrawWallPost = function () {
         ], callback);
     };
 
-    var drawText = function (context, text, offsetX, offsetY, width) {
+    var drawText = function (context, text, offsetX, offsetY, width, scale) {
         var textHTML, symbol_url, charCode, existsSymbols, symbol, x, y, resultWidth;
+        if (!scale) {
+            scale = 0.85;
+        }
         existsSymbols = '1234567890абвгдеёжзийклмнопрстуфхцчшщьыъэюя.!:- АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
         x = offsetX;
         y = offsetY;
@@ -280,7 +327,7 @@ LogicDrawWallPost = function () {
                 Logs.log("LogicDrawWallPost. symbol does not found!", Logs.LEVEL_WARNING);
             } else {
                 symbol_url = "/images/font/" + charCode + ".png";
-                resultWidth += images[symbol_url].width;
+                resultWidth += images[symbol_url].width * scale;
             }
         }
         if (width) {
@@ -299,8 +346,8 @@ LogicDrawWallPost = function () {
                 Logs.log("LogicDrawWallPost. symbol does not found!", Logs.LEVEL_WARNING);
             } else {
                 symbol_url = "/images/font/" + charCode + ".png";
-                drawImage(context, symbol_url, x, y);
-                x += images[symbol_url].width;
+                drawImage(context, symbol_url, x, y, images[symbol_url].width * scale, images[symbol_url].height * scale);
+                x += images[symbol_url].width * scale;
             }
         }
     };
@@ -312,8 +359,9 @@ LogicDrawWallPost = function () {
                 y: 0
             });
             //@todo size to 500x500 or somethink like this.
-            canvasDom.__dom.setAttribute('height', 500);
-            canvasDom.__dom.setAttribute('width', 500);
+            canvasDom.__dom.setAttribute('height', canvasHeight);
+            canvasDom.__dom.setAttribute('width', canvasWidth);
+            canvasDom.__dom.style.display = 'none';
         }
         return canvasDom;
     };

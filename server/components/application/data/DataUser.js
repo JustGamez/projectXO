@@ -25,6 +25,17 @@ DataUser = function () {
         return data;
     };
 
+    var autoIncrementValue = null;
+    var notSavedIds = [];
+
+    this.init = function (afterInitCallback) {
+        DB.query("SELECT `AUTO_INCREMENT` as autoIncrement FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'xo' AND TABLE_NAME   = 'users';", function (rows) {
+            autoIncrementValue = rows[0].autoIncrement;
+            Logs.log("users.autoincrementId:" + autoIncrementValue, Logs.LEVEL_NOTIFY);
+            afterInitCallback();
+        });
+    };
+
     /**
      * Вернуть пользователя по данным из соцаильной сети
      * @param socNetTypeId тип социальнйо сети SocNet.TYPE_*
@@ -70,11 +81,12 @@ DataUser = function () {
         /* Предотвращение двойной мгновенной регистрации. */
         if (waitForCreateByScoNet[socNetUserId])return;
         waitForCreateByScoNet[socNetUserId] = true;
-        DB.insert(tableName, {
+        var user = {
+            id: autoIncrementValue++,
             firstName: '',
             lastName: '',
-            socNetTypeId: socNetTypeId,
-            socNetUserId: socNetUserId,
+            socNetTypeId: parseInt(socNetTypeId),
+            socNetUserId: parseInt(socNetUserId),
             createTimestamp: new Date().getTime(),
             lastLoginTimestamp: new Date().getTime(),
             score15x15vsPerson: 0,
@@ -83,23 +95,13 @@ DataUser = function () {
             score3x3vsRobot: 0,
             robotLevel3x3: 500,
             robotLevel15x15: 600
-        }, function (result) {
-            var user = {
-                id: parseInt(result.insertId),
-                firstName: '',
-                lastName: '',
-                socNetTypeId: parseInt(socNetTypeId),
-                socNetUserId: parseInt(socNetUserId),
-                createTimestamp: new Date().getTime(),
-                lastLoginTimestamp: new Date().getTime(),
-                score15x15vsPerson: 0,
-                score3x3vsPerson: 0,
-                score15x15vsRobot: 0,
-                score3x3vsRobot: 0,
-                robotLevel3x3: 500,
-                robotLevel15x15: 600
-            };
-            callback(user);
+        };
+        cache[user.id] = user;
+        callback(user);
+        DB.insert(tableName, user, function (result) {
+            if (result.insertId != user.id) {
+                Logs.log("DataUser.createFromSocNet. result.insertId != user.id", Logs.LEVEL_ERROR);
+            }
             delete waitForCreateByScoNet[socNetUserId];
         });
     };
@@ -122,13 +124,11 @@ DataUser = function () {
      */
     this.save = function (user, callback) {
         var data;
-        if (cache[user.id]) {
-            cache[user.id] = null;
-        }
         if (user.robotLevel3x3 < 1) user.robotLevel3x3 = 1;
         if (user.robotLevel3x3 > 10000) user.robotLevel3x3 = 10000;
         if (user.robotLevel15x15 > 10000) user.robotLevel15x15 = 10000;
         if (user.robotLevel15x15 < 1) user.robotLevel15x15 = 1;
+        cache[user.id] = user;
         data = {
             id: user.id,
             firstName: user.firstName,
@@ -147,8 +147,8 @@ DataUser = function () {
             robotLevel3x3: user.robotLevel3x3,
             robotLevel15x15: user.robotLevel15x15
         };
+        callback(user);
         DB.update(tableName, data, function (result) {
-            callback(user);
         });
     };
 

@@ -223,6 +223,47 @@ LogicUser = function () {
             SAPIUserState.isNoBusy();
         }
     };
+
+    this.loadNameCasesById = function (userId) {
+        var user;
+        if (userId == 0) {
+            return;
+        }
+        user = self.getById(userId);
+        if (!user) {
+            return;
+        }
+        /* именительный – nom, родительный – gen, дательный – dat, винительный – acc, творительный – ins, предложный – abl. По умолчанию nom. */
+        // ins - играю с роботом
+        // gen - выиграл  у робота
+        // dat - проиграл роботу
+        if (!user.firstName_ins) {
+            setTimeout(function () {
+                self.loadNameCase(user, 'ins');
+            }, 100);
+        }
+        if (!user.firstName_gen) {
+            setTimeout(function () {
+                self.loadNameCase(user, 'gen');
+            }, 200);
+        }
+        if (!user.firstName_dat) {
+            setTimeout(function () {
+                self.loadNameCase(user, 'dat');
+            }, 300);
+        }
+    };
+
+    this.loadNameCase = function (user, nom) {
+        VK.api('users.get', {
+            user_ids: user.socNetUserId,
+            name_case: nom
+        }, function (result) {
+            Logs.log("VK.users.get response", Logs.LEVEL_DETAIL, result);
+            users[user.id]['firstName_' + nom] = result.response[0].first_name;
+            users[user.id]['lastName_' + nom] = result.response[0].last_name;
+        });
+    };
 };
 
 /**

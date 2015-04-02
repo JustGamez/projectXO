@@ -12,6 +12,7 @@ CAPIInvites = function () {
         LogicInvites.save(whoId, whomId, fieldTypeId, signId);
         LogicTimers.start('letsplay_' + whoId, Config.Invites.letsPlaytimeout, LogicInvites.clearInviteByPare, [whoId, whomId, fieldTypeId, signId]);
         LogicPageBackground.showLetsPlayDialog();
+        Sounds.play('/sounds/invite2.wav', 0.12);
     };
 };
 

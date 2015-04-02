@@ -3,6 +3,9 @@
  * @constructor
  */
 LogicPageXO = function () {
+    var self = this;
+
+    this.waitRepeat = false;
 
     /**
      * Действия при нажатии кнопки "Меню".
@@ -78,6 +81,10 @@ LogicPageXO = function () {
      * Действия, при нажатии на кнопку "Ещё"
      */
     this.onAgainButtonClick = function () {
+        self.waitRepeat = true;
+        setTimeout(function () {
+            self.waitRepeat = false;
+        }, 100);
         SAPIRepeatGame.repeat(LogicGame.getCurrentGameId());
     };
 };

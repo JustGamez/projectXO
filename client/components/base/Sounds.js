@@ -13,13 +13,17 @@ Sounds = function () {
         self.enabled = false;
     };
 
-    this.play = function (path) {
+    this.play = function (path, volume) {
         if (!self.enabled) {
             return;
         }
         if (!cache[path]) {
             cache[path] = new Audio(path + "?t=" + time());
         }
+        if (!volume) {
+            volume = 1.0;
+        }
+        cache[path].volume = volume;
         cache[path].play();
     };
 };

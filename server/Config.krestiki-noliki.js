@@ -58,5 +58,12 @@ Config = {
     },
     admin: {
         ids: [1, 2, 14]
+    },
+    Adv: {
+        id: '56307',
+        hash: 'c1646e2bb80df9d5ce5a03826e829156'
+    },
+    DataGame: {
+        cacheFinishedGameTimeout: 30 * 60 * 1000 // сливать в бд игры, через пол часа.
     }
 };

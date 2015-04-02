@@ -1,7 +1,7 @@
 Profiler = function () {
     var self = this;
 
-    var data = {};
+    var data = [];
     var lastId = 0;
     var maxTitleLength = 0;
 
@@ -65,8 +65,20 @@ Profiler = function () {
         var output, row, rps;
         output = '';
         output += "id " + str_pad("title", maxTitleLength + 3) + "  sumTime    count   rps\r\n";
-        for (var id in data) {
-            row = data[id];
+        data.forEach(function (row) {
+            row.rps = (row.count / (row.sumTime / 1000) * 10000) / 10000;
+            if (!row.rps) {
+                row.rps = 0;
+            }
+        });
+        var data2 = data.slice(0);
+        data2.sort(function (a, b) {
+            if (a.rps > b.rps) return -1;
+            if (a.rps < b.rps) return 1;
+            return 0;
+        });
+        for (var id in data2) {
+            row = data2[id];
             output += str_pad(id.toString(), 3);
             output += ' ';
             output += str_pad(row.title, maxTitleLength + 3);
@@ -75,8 +87,7 @@ Profiler = function () {
             output += ' ';
             output += str_pad((row.count).toString(), 7);
             output += ' ';
-            rps = (row.count / (row.sumTime / 1000) * 10000) / 10000;
-            output += rps;
+            output += row.rps;
             output += "\r\n";
         }
         var memoryUsage = process.memoryUsage();

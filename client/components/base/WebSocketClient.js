@@ -192,7 +192,7 @@ WebSocketClient = function () {
         }
         /* Если нет соединения пробуем позже. */
         if (!isConnected) {
-            setTimeout(trySend, self.trySendTimeout);
+            //setTimeout(trySend, self.trySendTimeout);
             return;
         }
         /* Берем элемент из буфера. */

@@ -100,6 +100,19 @@ PageXOGame = function PageXOGame() {
      */
     var elementButtonWallPost;
 
+    /**
+     * @type {ElementGraphicText}
+     */
+    var elementWallPostWait;
+
+    var wallPostCountDown;
+
+    var wallPostIntervalId;
+
+    var elementCameraButton;
+
+    var elementCameraWait;
+
     var textVariants = [
         {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
         {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: true, text: gameStatusTextList.yourTurnX},
@@ -138,7 +151,9 @@ PageXOGame = function PageXOGame() {
         {isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
         {isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
         {isLooking: true, vsRobot: false, bothLeave: true, text: gameStatusTextList.playersLeave},
-        {isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave}
+        {isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
+
+        {waitRepeat: true, text: gameStatusTextList.waiting}
     ];
 
     /**
@@ -198,10 +213,8 @@ PageXOGame = function PageXOGame() {
         elementGameStatus = element;
         /* Кнопка играть "Еще". */
         element = GUI.createElement(ElementButton, {
-            x: 535,
-            y: 338,
-            width: 175,
-            height: 94,
+            x: 549,
+            y: 345,
             srcRest: '/images/buttons/againRest.png',
             srcHover: '/images/buttons/againHover.png',
             srcActive: '/images/buttons/againActive.png',
@@ -223,6 +236,7 @@ PageXOGame = function PageXOGame() {
         element = GUI.createElement(ElementGraphicText, {
             x: 575,
             y: 455,
+            width: 150,
             text: 'побед: - '
         });
         self.elements.push(element);
@@ -230,7 +244,7 @@ PageXOGame = function PageXOGame() {
 
         element = GUI.createElement(ElementButton, {
             x: 550,
-            y:317,
+            y: 315,
             srcRest: '/images/buttons/wallPostRest.png',
             srcHover: '/images/buttons/wallPostHover.png',
             srcActive: '/images/buttons/wallPostHover.png',
@@ -244,10 +258,73 @@ PageXOGame = function PageXOGame() {
                 } else {
                     opponent = getRobotDummy();
                 }
-                LogicDrawWallPost.draw(game, user, opponent);
+                LogicDrawWallPost.drawWallPost(game, user, opponent);
+                wallPostCountDown = 5;
+                wallPostIntervalId = setInterval(function () {
+                    if (wallPostCountDown == 0) {
+                        clearInterval(wallPostIntervalId);
+                        wallPostIntervalId = false;
+                        return;
+                    }
+                    wallPostCountDown--;
+                    pageController.redraw();
+                }, 387);
+                pageController.redraw();
             }
         });
         elementButtonWallPost = element;
+        element = GUI.createElement(ElementGraphicText, {
+            x: 575,
+            y: 310,
+            width: 100,
+            text: 'ждём...'
+        });
+        elementWallPostWait = element;
+        element = GUI.createElement(ElementButton, {
+            x: 503,
+            y: 101,
+            srcRest: '/images/buttons/cameraRest.png',
+            srcHover: '/images/buttons/cameraHover.png',
+            srcActive: '/images/buttons/cameraActive.png',
+            title: 'Сфотографировать.',
+            onClick: function () {
+                var game, user, opponentId, opponent;
+                if (LogicGame.getLookingGameId()) {
+                    game = LogicGame.getById(LogicGame.getLookingGameId());
+                } else {
+                    game = LogicGame.getCurrentGame();
+                }
+                user = LogicUser.getCurrentUser();
+                opponentId = LogicXO.getOpponentUserId(game, user.id);
+                if (opponentId) {
+                    opponent = LogicUser.getById(opponentId);
+                } else {
+                    opponent = getRobotDummy();
+                }
+                LogicDrawWallPost.drawCameraPhoto(game, user, opponent);
+                wallPostCountDown = 5;
+                wallPostIntervalId = setInterval(function () {
+                    if (wallPostCountDown == 0) {
+                        clearInterval(wallPostIntervalId);
+                        wallPostIntervalId = false;
+                        return;
+                    }
+                    wallPostCountDown--;
+                    pageController.redraw();
+                }, 500);
+                pageController.redraw();
+            }
+        });
+        elementCameraButton = element;
+        element = GUI.createElement(ElementGraphicText, {
+            x: 503,
+            y: 101,
+            width: 20,
+            text: '5',
+            scale: 0.75
+        });
+        element.setText('5');
+        elementCameraWait = element;
     };
 
     /**
@@ -280,6 +357,9 @@ PageXOGame = function PageXOGame() {
         domSignO.hide();
         domSignX.hide();
         elementButtonWallPost.hide();
+        elementWallPostWait.hide();
+        elementCameraButton.hide();
+        elementCameraWait.hide();
     };
 
     /**
@@ -355,6 +435,7 @@ PageXOGame = function PageXOGame() {
                 if (variant.winSignId != undefined && variant.winSignId != winSignId) return;
                 if (variant.bothLeave != undefined && variant.bothLeave != bothLeave) return;
                 if (variant.opponentLeave != undefined && variant.opponentLeave != opponentLeave) return;
+                if (variant.waitRepeat != undefined && variant.waitRepeat != LogicPageXO.waitRepeat) return;
                 text = variant.text;
             });
         }
@@ -426,11 +507,36 @@ PageXOGame = function PageXOGame() {
             elementScores.setText('побед: -');
         }
         //@todo
-        if (game && (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN)) {
-            elementButtonWallPost.hide();
+        // кнопка рассказать
+        if (game && (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN) && !justLooking && !LogicDrawWallPost.blocked) {
+            elementButtonWallPost.show();
         } else {
             elementButtonWallPost.hide();
-            //elementButtonWallPost.hide();
+        }
+        // вейтер рассказать
+        if (LogicDrawWallPost.drawingWallPost && !LogicDrawWallPost.postReady) {
+            elementWallPostWait.show();
+            elementWallPostWait.setText('ждём...' + wallPostCountDown);
+        } else {
+            elementWallPostWait.hide();
+        }
+        // кнопка "фотоаппарат"
+        if (!LogicDrawWallPost.blocked) {
+            elementCameraButton.show();
+        } else {
+            elementCameraButton.hide();
+        }
+        // вейтер фотоаппарат
+        if (LogicDrawWallPost.drawingCameraPhoto && !LogicDrawWallPost.postReady) {
+            elementCameraWait.show();
+            elementCameraWait.setText(wallPostCountDown.toString());
+        } else {
+            elementCameraWait.hide();
+        }
+        // таймер
+        if (LogicDrawWallPost.blocked && LogicDrawWallPost.postReady && wallPostIntervalId) {
+            clearInterval(wallPostIntervalId);
+            wallPostIntervalId = false;
         }
     };
 
@@ -472,5 +578,8 @@ PageXOGame = function PageXOGame() {
         for (var i in self.elements) {
             self.elements[i].redraw();
         }
+        elementWallPostWait.redraw();
+        elementCameraWait.redraw();
     };
-};
+}
+;

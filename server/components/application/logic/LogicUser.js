@@ -69,8 +69,8 @@ LogicUser = function () {
      */
     var createUser = function (socNetTypeId, socNetUserId, callback) {
         DataUser.createFromSocNet(socNetTypeId, socNetUserId, function (user) {
-            LogicRating.onUserCreated(user);
             callback(user);
+            LogicRating.onUserCreated(user);
         });
     };
 

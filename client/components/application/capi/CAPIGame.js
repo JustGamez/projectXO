@@ -32,6 +32,9 @@ CAPIGame = function () {
         current = LogicGame.getCurrentGame();
         looking = LogicGame.getLookingGameId() ? LogicGame.getById(LogicGame.getLookingGameId()) : false;
 
+        LogicUser.loadNameCasesById(created.creatorUserId);
+        LogicUser.loadNameCasesById(created.joinerUserId);
+
         if (looking) {
             if (created.id == looking.id) {
                 LogicGame.setLookingGameId(created.id);
