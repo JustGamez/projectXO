@@ -95,7 +95,6 @@ LogicDrawWallPost = function () {
             /* - рисуем рейтинг текст вверху */
             drawText(context, 'мой рейтинг: ' + LogicUser.getRatingPosition(), fieldStartX + 215, fieldStartY + 397);
             /* - оппонент*/
-            //console.log(opponent);
             postText = '';
             var opponentNameTextNom = '';
             var opponentNameTextIns = '';
@@ -116,7 +115,6 @@ LogicDrawWallPost = function () {
                 opponentNameTextGen = opponent.firstName_gen + " " + opponent.lastName_gen;
                 opponentNameTextDat = opponent.firstName_dat + " " + opponent.lastName_dat;
             }
-            //console.log(opponent);
             postText = 'http://vk.com/krestik.nolik';
             switch (game.status) {
                 case LogicXO.STATUS_WAIT:
@@ -165,7 +163,6 @@ LogicDrawWallPost = function () {
         png = getBase64PNG();
         png = png.replace('data:image/png;base64,', '');
         png = png.match(/.{1,60000}/g);
-        //console.log(png);
         fileId = LogicUser.getCurrentUser().id.toString() + "_" + mtime().toString();
         png.forEach(function (chunk) {
             SAPIUser.sendWallPost(chunk, fileId, false);
@@ -176,21 +173,18 @@ LogicDrawWallPost = function () {
     this.onUploadComplete = function (vkResponse) {
         //@todo id for every requests...
         vkResponse = JSON.parse(vkResponse);
-        //console.log(vkResponse);
         VK.api('photos.saveWallPhoto', {
             user_id: LogicUser.getCurrentUser().socNetUserId,
             photo: vkResponse.photo,
             server: vkResponse.server,
             hash: vkResponse.hash
         }, function (answer) {
-            //console.log("after save to wall answer:", answer);
             createPostOnWall(answer);
         });
 
     };
 
     var createPostOnWall = function (answer) {
-        //console.log(answer);
         self.postReady = true;
         VK.api('wall.post', {
             owner_id: LogicUser.getCurrentUser().socNetUserId,
@@ -202,7 +196,6 @@ LogicDrawWallPost = function () {
             self.drawingWallPost = false;
             self.drawingCameraPhoto = false;
             pageController.redraw();
-            //console.log('answer after post on wall', answer);
         });
     };
 

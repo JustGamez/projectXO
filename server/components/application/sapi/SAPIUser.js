@@ -146,7 +146,6 @@ SAPIUser = function () {
                         'photo': REST.file(fileName, null, FS.statSync(fileName).size, null, 'image/png')
                     }
                 }).on('complete', function (response) {
-                    //console.log(response);
                     CAPIUser.wallPostSended(cntx.userId, response);
                     Profiler.stop(Profiler.ID_WALLPOST_SEND_TO_VK_SERVER, prid4);
                     Profiler.stop(Profiler.ID_WALLPOST_SUM, prid1);

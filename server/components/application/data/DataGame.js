@@ -73,7 +73,7 @@ DataGame = function () {
             callback(game);
             setTimeout(function () {
                 flushGameById(game.id, false);
-            }, 10000);
+            }, 120000);
         } else {
             if (!cache[game.id]) {
                 Logs.log("DataGame.save", "game does not exists in cache. strange...", Logs.LEVEL_WARNING, game);

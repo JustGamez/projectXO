@@ -281,7 +281,7 @@ PageXOGame = function PageXOGame() {
         });
         elementWallPostWait = element;
         element = GUI.createElement(ElementButton, {
-            x: 503,
+            x: 511,
             y: 101,
             srcRest: '/images/buttons/cameraRest.png',
             srcHover: '/images/buttons/cameraHover.png',

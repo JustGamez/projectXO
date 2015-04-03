@@ -6,6 +6,8 @@ DataChat = function () {
      */
     var tableName = 'chat_messages';
 
+    var cache = [];
+
     var fields = {
         id: null,
         userId: null,
@@ -24,6 +26,7 @@ DataChat = function () {
         query += ")";
         DB.query(query, function (result) {
             message.id = result.insertId;
+            cache[message.id] = message;
             callback(message);
         });
     };
@@ -38,6 +41,7 @@ DataChat = function () {
         query += "`withUserId` = " + DB.escape(message.withUserId);
         query += " WHERE id = " + DB.escape(message.id);
         DB.query(query, function (result) {
+            cache[message.id] = message;
             callback(message);
         });
     };
@@ -51,6 +55,36 @@ DataChat = function () {
      */
     this.getLastMessages = function (limit, afterId, withUserId, callback) {
         var query;
+        if (!withUserId) {
+            var tmp = cache.slice(0);
+            // сортируем по id
+            tmp.sort(function (a, b) {
+                if (a.id < b.id)return 1;
+                if (a.id > b.id)return -1;
+                return 0;
+            });
+            tmp.sort(function (a, b) {
+                if (a.timestamp < b.timestamp)return 1;
+                if (a.timestamp > b.timestamp)return -1;
+                return 0;
+            });
+            var tmp2;
+            tmp2 = [];
+            if (afterId) {
+                tmp.forEach(function (row) {
+                    if (row.blocked) return;
+                    if (row.id < afterId) {
+                        tmp2.push(row);
+                    }
+                });
+                tmp = tmp2;
+            }
+            tmp = tmp.slice(0, limit);
+            if (tmp.length >= limit) {
+                callback(tmp);
+                return;
+            }
+        }
         if (afterId) {
             query = "SELECT * FROM " + tableName + " WHERE id < " + DB.escape(afterId);
         } else {
@@ -60,11 +94,20 @@ DataChat = function () {
             query += " AND withUserId = " + DB.escape(withUserId);
         }
         query += " ORDER BY id DESC LIMIT " + limit;
-        DB.query(query, callback);
+        DB.query(query, function (rows) {
+            rows.forEach(function (row) {
+                cache[row.id] = row;
+            });
+            callback(rows);
+        });
     };
 
     this.getById = function (id, callback) {
         var query;
+        if (cache[id]) {
+            callback(cache[id]);
+            return;
+        }
         query = "SELECT * FROM chat_messages WHERE id = " + DB.escape(id);
         DB.query(query, function (rows) {
             if (!rows[0]) {

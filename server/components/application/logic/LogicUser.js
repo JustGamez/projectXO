@@ -175,8 +175,8 @@ LogicUser = function () {
                             for (var i in rows) {
                                 ids.push(rows[i].id);
                             }
-                            Profiler.stop(Profiler.ID_SEND_FRIENDS, prid);
                             CAPIUser.updateFriends(cntx.userId, userId, ids);
+                            Profiler.stop(Profiler.ID_SEND_FRIENDS, prid);
                         });
                     }
                 });

@@ -94,12 +94,13 @@ LogicRating = function () {
             var prid = Profiler.start(Profiler.ID_RATING_UPDATE_STEP_2);
             query = "SELECT * FROM rating" +
             " WHERE " +
-            " " +
+            " position <= " + before.position +
+            " AND ( " +
             " score15x15vsPerson < " + data._15x15PVP + " OR" +
             " (score15x15vsPerson = " + data._15x15PVP + " AND score3x3vsPerson < " + data._3x3PVP + ") OR" +
             " (score15x15vsPerson = " + data._15x15PVP + " AND score3x3vsPerson = " + data._3x3PVP + " AND score15x15vsRobot < " + data._15x15PVB + ") OR" +
             " (score15x15vsPerson = " + data._15x15PVP + " AND score3x3vsPerson = " + data._3x3PVP + " AND score15x15vsRobot = " + data._15x15PVB + " AND score3x3vsRobot < " + data._3x3PVB + ")" +
-            " " +
+            " )" +
             "ORDER BY position ASC" +
             " LIMIT 1";
             DB.query(query, function (rows) {
