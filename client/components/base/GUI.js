@@ -231,9 +231,11 @@ GUI = function () {
      * @returns {*}
      */
     this.getImageURL = function (url) {
+        //@todo it's so complicated...
+        url = '/xo' + url;
         if (!window.imagesData[url]) {
             Logs.log("Image url not found for: " + url, Logs.LEVEL_ERROR);
-            return '/images/notFound.png';
+            return '/xo/images/notFound.png';
         }
         return window.imagesData[url].path;
     };

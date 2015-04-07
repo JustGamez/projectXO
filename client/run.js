@@ -43,8 +43,7 @@ window.onload = function () {
     /* setInterval(ApiRouterMetrics.printMetrics, 5000); */
 
     /* ApiRouter */
-    apiRouter = new ApiRouter();
-    apiRouter.setMap({
+    apiRouter = new ApiRouter({
         CAPIUser: CAPIUser,
         CAPIGame: CAPIGame,
         CAPIChat: CAPIChat,

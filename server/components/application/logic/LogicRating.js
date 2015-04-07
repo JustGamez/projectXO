@@ -112,7 +112,7 @@ LogicRating = function () {
         var step_3 = function (before, nearest) {
             var query;
             var prid = Profiler.start(Profiler.ID_RATING_UPDATE_STEP_3);
-            query = "UPDATE rating SET position = position + 1 WHERE position < " + before.position + " AND position >= " + nearest.position;
+            query = "UPDATE rating SET position = position + 1, updated = " + (time()) + " WHERE position < " + before.position + " AND position >= " + nearest.position;
             DB.query(query, function () {
                 Profiler.stop(Profiler.ID_RATING_UPDATE_STEP_3, prid);
                 step_4(before, nearest);
@@ -128,6 +128,7 @@ LogicRating = function () {
             ",score15x15vsRobot = " + data._15x15PVB +
             ",score3x3vsRobot = " + data._3x3PVB +
             ",position = " + nearest.position +
+            ",updated = " + time() +
             " WHERE userId = " + data.userId;
             DB.query(query, function () {
                 /* Теперь соощим всем клиентам, что рейтинг обновитлся и те сбросят кэш позиций. */

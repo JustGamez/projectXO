@@ -64,7 +64,7 @@ LogicDrawWallPost = function () {
             for (var x = 0; x < cfg.fieldSize; x++) {
                 imageX = fieldStartX + cfg.signOffsetX + x * (cfg.signWidth + cfg.padding);
                 imageY = fieldStartY + cfg.signOffsetY + y * (cfg.signHeight + cfg.padding);
-                src = '/images/notFound.png';
+                src = '/xo/images/notFound.png';
                 switch (game.field[y][x]) {
                     case LogicXO.SIGN_ID_X:
                         src = cfg.srcSignX;
@@ -82,7 +82,7 @@ LogicDrawWallPost = function () {
         /* 4 - рисуем линю победы, если есть */
         if (game && game.outcomeResults) {
             if (game.outcomeResults.someBodyWin) {
-                src = '/images/notFound.png';
+                src = '/xo/images/notFound.png';
                 imageX = fieldStartX + cfg.lineOffset + game.outcomeResults.x * (cfg.signWidth + cfg.padding);
                 imageY = fieldStartY + cfg.lineOffset + game.outcomeResults.y * (cfg.signHeight + cfg.padding);
                 src = cfg.lines[game.outcomeResults.lineId];

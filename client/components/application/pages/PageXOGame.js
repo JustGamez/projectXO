@@ -317,7 +317,7 @@ PageXOGame = function PageXOGame() {
         });
         elementCameraButton = element;
         element = GUI.createElement(ElementGraphicText, {
-            x: 503,
+            x: 512,
             y: 101,
             width: 20,
             text: '5',

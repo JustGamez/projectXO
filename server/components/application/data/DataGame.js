@@ -48,7 +48,7 @@ DataGame = function () {
         }
         DB.queryWhere(tableName, {id: [id]}, function (rows) {
             if (!rows[0]) {
-                Logs.log("DataGame.getById game not found", Logs.LEVEL_WARNING, gameId);
+                Logs.log("DataGame.getById game not found", Logs.LEVEL_WARNING, id);
                 return;
             }
             rows[0].field = uncompressField(rows[0].field);

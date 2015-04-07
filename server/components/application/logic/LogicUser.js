@@ -71,6 +71,7 @@ LogicUser = function () {
         DataUser.createFromSocNet(socNetTypeId, socNetUserId, function (user) {
             callback(user);
             LogicRating.onUserCreated(user);
+            LogicNotifier.onUserCreated(user);
         });
     };
 
@@ -86,6 +87,7 @@ LogicUser = function () {
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
         Profiler.stop(Profiler.ID_AUTH_VK, prid);
+        LogicNotifier.onUserLogin(user);
         refreshUserSocNetInfo(user, function (user) {
         });
     };

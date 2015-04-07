@@ -23,7 +23,7 @@ WebSocketServer = function () {
      * в папке imagesPath.
      * @type {string}
      */
-    var imagesPrefix = '/images/';
+    var imagesPrefix = '/xo/images/';
     var lastConnectionId = null;
 
     /**
@@ -205,11 +205,11 @@ WebSocketServer = function () {
         clientCode += "<HEAD>\r\n";
         clientCode += "<meta charset='utf-8' />\r\n";
         clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
-        clientCode += "<script type='text/javascript' src='/js/VKClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        clientCode += "<script type='text/javascript' src='/xo/js/VKClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
         clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
         clientCode += getClientImageCode();
         clientCode += "<div style='height:686px;position:absolute;top:125px;' id='applicationArea' ></div>\r\n";
-        clientCode += "<div style='top:811px;position:absolute;'><iframe src='/VK/commentsWidget' style='border:none; height: 686px; width:788px;'></iframe></div>\r\n";
+        clientCode += "<div style='top:811px;position:absolute;'><iframe src='/xo/commentsWidget' style='border:none; height: 686px; width:788px;'></iframe></div>\r\n";
         clientCode += '<div style="height:125px;">' + advData + "</div>";
         clientCode += "</BODY></HTML>";
 
@@ -309,8 +309,7 @@ WebSocketServer = function () {
 
     /**
      * Обработчки запросов от HTTP сервера.
-     * при запросе ^/VK/clientCode*, вернёт клинтский код.
-     * при запросе ^{imagesPrefix}*, вернёт соответствующую картинку из папки imagePath
+     * при запросе ^/XO/clientCode*, вернёт клинтский код.
      * при любом другом запросе вернёт 404 ошибку.
      * @param request
      * @param response
@@ -318,8 +317,9 @@ WebSocketServer = function () {
      */
     var onHTTPRequest = function (request, response) {
         var path;
+        console.log(request.url);
         /* Запрашивается клинетский код? */
-        if (request.url.indexOf('/VK/clientCode') == 0) {
+        if (request.url.indexOf('/xo/clientCode') == 0) {
             if (reloadClientCodeEveryRequest) {
                 loadClientCode();
             }
@@ -327,7 +327,7 @@ WebSocketServer = function () {
             response.end(clientCode);
             return true;
         }
-        if (request.url.indexOf('/VK/commentsWidget') == 0) {
+        if (request.url.indexOf('/xo/commentsWidget') == 0) {
             var VKCommentsWidgetCode = "" +
                 "<html>" +
                 "<head>" +
@@ -345,7 +345,7 @@ WebSocketServer = function () {
             response.end(VKCommentsWidgetCode);
             return true;
         }
-        if (request.url.indexOf('/status') == 0) {
+        if (request.url.indexOf('/xo/status') == 0) {
             var status = Profiler.getTextReport();
             var status2 = ApiRouterMetrics.getMetrics();
             var reloadJSScript = "" +
@@ -354,7 +354,7 @@ WebSocketServer = function () {
             response.end('<pre>' + status + '</pre>' + '<pre>' + status2 + '</pre>' + reloadJSScript);
             return true;
         }
-        if (request.url.indexOf('/shutdown') == 0) {
+        if (request.url.indexOf('/xo/shutdown') == 0) {
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Shutdown executed!" + new Date().getTime() + '</pre>');
             deInitBeforeShutdown(function () {
@@ -362,13 +362,13 @@ WebSocketServer = function () {
             });
             return true;
         }
-        if (request.url.indexOf('/reloadClientCode') == 0) {
+        if (request.url.indexOf('/xo/reloadClientCode') == 0) {
             loadClientCode();
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end('<pre>' + "Reload Client Code executed!" + new Date().getTime() + '</pre>');
             return true;
         }
-        if (request.url.indexOf('/statistic') == 0) {
+        if (request.url.indexOf('/xo/statistic') == 0) {
             Statistic.flushCache();
             Statistic.getStatus(function (text) {
                 response.writeHead(200, {'Content-Type': 'text/html'});
@@ -376,7 +376,13 @@ WebSocketServer = function () {
             });
             return true;
         }
-        if (request.url.indexOf('/Logs/setDetail') == 0) {
+        if (request.url.indexOf('/xo/runNotifier') == 0) {
+            LogicNotifier.runManual();
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end('' + "executed notifiery: " + time());
+            return true;
+        }
+        if (request.url.indexOf('/xo/Logs/setDetail') == 0) {
             Logs.setLevel(Logs.LEVEL_DETAIL);
             setTimeout(function () {
                 Logs.setLevel(Logs.LEVEL_NOTIFY);
@@ -385,7 +391,7 @@ WebSocketServer = function () {
             response.end("set detail log level " + new Date().getTime());
             return true;
         }
-        if (request.url.indexOf('/Logs/setNotify') == 0) {
+        if (request.url.indexOf('/xo/Logs/setNotify') == 0) {
             Logs.setLevel(Logs.LEVEL_NOTIFY);
             response.writeHead(200, {'Content-Type': 'text/html'});
             response.end("set notify log level " + new Date().getTime());

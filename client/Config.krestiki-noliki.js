@@ -9,9 +9,10 @@ Config = {
         triggerLevel: Logs.LEVEL_DETAIL
     },
     WebSocketClient: {
-        host: 'ssl.krestiki-noliki'
+        host: 'ssl.krestiki-noliki',
+        url: '/xo'
     },
-    ElementCardInfo:{
+    ElementCardInfo: {
         hideTimeout: 475
     },
     admin: {

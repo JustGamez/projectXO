@@ -1,20 +1,17 @@
 /**
  * ApiRouter
  * Клиент-серверный компонент!
+ * @param apiMap {Object}
  * @constructor
  */
-ApiRouter = function () {
+ApiRouter = function (apiMap) {
     var self = this;
 
-    var map = null;
+    var map = apiMap;
 
     var connections = {};
     var onDisconnectCallbacks = [];
     var onFailedSendCallbacks = [];
-
-    this.setMap = function (givenMap) {
-        map = givenMap;
-    };
 
     /**
      * Обрабатываем поступающие данные.

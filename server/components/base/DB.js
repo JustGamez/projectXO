@@ -140,6 +140,8 @@ DB = function () {
      * @param tableName {string} имя таблицы.
      * @param values {object} значения
      * @param callback {function}
+     * @param fields
+     * @param packFunctions
      */
     this.update = function (tableName, values, callback, fields, packFunctions) {
         var query, value, setSQL, valuesSQL;

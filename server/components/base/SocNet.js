@@ -10,9 +10,9 @@ if (typeof window == 'undefined') {
 }
 
 SocNet = function () {
+    var self = this;
     var baseHost = 'api.vk.com';
     var baseUrl = '/method/';
-    var self = this;
     var getParams = {};
 
     var accessToken = null;
@@ -72,7 +72,7 @@ SocNet = function () {
      * @param callback {Function}
      */
     this.getFriends = function (socNetTypeId, socNetUserId, callback) {
-        executeMethod('friends.get', {user_id: socNetUserId}, callback);
+        self.executeMethod('friends.get', {user_id: socNetUserId}, callback);
     };
 
     /**
@@ -82,7 +82,7 @@ SocNet = function () {
      * @param callback
      */
     this.getUserInfo = function (socNetTypeId, socNetUserId, callback) {
-        executeMethod('users.get', {user_ids: socNetUserId, fields: 'photo_50,sex', https: 1}, function (source) {
+        self.executeMethod('users.get', {user_ids: socNetUserId, fields: 'photo_50,sex', https: 1}, function (source) {
                 var info;
                 info = {};
                 info.firstName = source[0].first_name;
@@ -104,6 +104,17 @@ SocNet = function () {
         )
     };
 
+    this.getUsersOnline = function (userIds, callback) {
+        self.executeMethod('users.get', {user_ids: userIds.join(','), fields: 'online'}, function (sourceList) {
+            var out;
+            out = [];
+            sourceList.forEach(function (source) {
+                out[source.uid] = {socNetUserId: source.uid, online: source.online};
+            });
+            callback(out);
+        })
+    };
+
     /**
      * Проверка авторизации
      * @param socNetTypeId тип социальной сети SocNet.TYPE_*
@@ -118,7 +129,6 @@ SocNet = function () {
         if (generatedAuthKey != authParams.authKey) {
             Logs.log("auth key mismatch, generated:" + generatedAuthKey + " given:" + authParams.authKey);
         }
-        return true;
         return generatedAuthKey == authParams.authKey;
     };
 
@@ -140,12 +150,16 @@ SocNet = function () {
      * @param params {Object}
      * @param callback {Function}
      */
-    var executeMethod = function (method, params, callback) {
+    this.executeMethod = function (method, params, callback, isSecure) {
         var url, options, req, key, data;
         /* https://api.vk.com/method/'''METHOD_NAME'''?'''PARAMETERS'''&access_token='''ACCESS_TOKEN''' */
         url = baseUrl + method + '?';
+        if (isSecure) {
+            params.access_token = accessToken;
+            params.client_secret = Config.SocNet.secretKey;
+        }
         for (var i in params) {
-            url += '&' + i + '=' + params[i];
+            url += '&' + i + '=' + encodeURIComponent(params[i]);
         }
         options = {};
         options.hostname = baseHost;

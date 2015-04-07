@@ -31,10 +31,13 @@ WebSocketClient = function () {
      */
     var connectionId = null;
 
+    var url;
+
     this.init = function (afterInitCallback) {
         port = window.document.location.protocol == 'https:' ? 443 : 80;
         protocol = window.document.location.protocol == 'https:' ? 'wss' : 'ws';
         host = Config.WebSocketClient.host;
+        url = Config.WebSocketClient.url;
         afterInitCallback();
     };
 
@@ -111,7 +114,7 @@ WebSocketClient = function () {
     var connect = function () {
         var uri;
         raiseConnectCount++;
-        uri = protocol + "://" + host + ":" + port + "/";
+        uri = protocol + "://" + host + ":" + port + url ;
         Logs.log("WebSocket URL=`" + uri + "`" + "raiseConnectCount:" + raiseConnectCount, Logs.LEVEL_NOTIFY);
         socket = new WebSocket(uri);
         /* установим обработчики. */

@@ -276,9 +276,9 @@ GUIDom = function () {
     var redrawBackgroundImage = function () {
         var url;
         /* Если размер не задан, пробуем задать его автоматически. */
-        if (!self.width && !self.height && window.imagesData[self.backgroundImage]) {
-            self.width = window.imagesData[self.backgroundImage].w;
-            self.height = window.imagesData[self.backgroundImage].h;
+        if (!self.width && !self.height && window.imagesData['/xo' + self.backgroundImage]) {
+            self.width = window.imagesData['/xo' + self.backgroundImage].w;
+            self.height = window.imagesData['/xo' + self.backgroundImage].h;
             props.height.call();
             props.width.call();
         }
