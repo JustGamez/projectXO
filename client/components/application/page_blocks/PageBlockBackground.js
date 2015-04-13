@@ -2,7 +2,7 @@
  * Страница бэкграудна.
  * @constructor
  */
-PageBackground = function PageBackground() {
+PageBlockBackground = function PageBlockBackground() {
     var self = this;
 
     /**
@@ -55,7 +55,7 @@ PageBackground = function PageBackground() {
                 } else {
                     Sounds.off();
                 }
-                pageController.redraw();
+                PageController.redraw();
             }
         });
         elementSound = element;
@@ -193,3 +193,5 @@ PageBackground = function PageBackground() {
         }
     };
 };
+
+PageBlockBackground = new PageBlockBackground();

@@ -22,33 +22,33 @@ LogicPageRating = function () {
      */
     this.onMenuButtonClick = function () {
         LogicUser.setBusy(false);
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
+        PageController.showPage(PageMain);
     };
 
     this.onTopButtonClick = function () {
         SAPIStatistic.clickRatingTop();
         self.showId = LogicPageRating.SHOW_TOP;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.onMyPositionButtonClick = function () {
         SAPIStatistic.clickRatingMy();
         self.showId = LogicPageRating.SHOW_MY_POSITION;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.onUpButtonClick = function () {
         SAPIStatistic.clickRatingUp();
         self.showId = LogicPageRating.SHOW_CUSTOM;
         self.ratingBegin -= self.ratingRows;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.onDownButtonClick = function () {
         SAPIStatistic.clickRatingDown();
         self.showId = LogicPageRating.SHOW_CUSTOM;
         self.ratingBegin += self.ratingRows;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.getRatingList = function () {

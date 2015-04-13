@@ -2,7 +2,7 @@
  * Страница шаблон.
  * @constructor
  */
-PageOnlineAndRating = function PageOnlineAndRating() {
+PageBlockOnlineAndRating = function PageBlockOnlineAndRating() {
     var self = this;
 
     /**
@@ -143,3 +143,5 @@ PageOnlineAndRating = function PageOnlineAndRating() {
         elementCardInfo.hideStart();
     };
 };
+
+PageBlockOnlineAndRating = new PageBlockOnlineAndRating;

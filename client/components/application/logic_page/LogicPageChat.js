@@ -47,7 +47,7 @@ LogicPageChat = function () {
         targetChat.enabled = true;
         targetChat.withUserId = withUserId;
         self.currentChat = targetChat;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -58,7 +58,7 @@ LogicPageChat = function () {
             return;
         }
         self.currentChat = this.chat;
-        pageController.redraw();
+        PageController.redraw();
     };
 };
 

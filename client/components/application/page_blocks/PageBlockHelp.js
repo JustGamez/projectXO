@@ -2,7 +2,7 @@
  * Страница помощи.
  * @constructor
  */
-PageHelp = function PageHelp() {
+PageBlockHelp = function PageBlockHelp() {
     var self = this;
 
     /**
@@ -146,3 +146,5 @@ PageHelp = function PageHelp() {
         }
     };
 };
+
+PageBlockHelp = new PageBlockHelp;

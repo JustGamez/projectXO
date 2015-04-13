@@ -25,7 +25,7 @@ LogicGame = function () {
      */
     this.update = function (game) {
         games[game.id] = game;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -38,7 +38,7 @@ LogicGame = function () {
             SAPIUserState.onGame(gameId, gameId ? Boolean(LogicGame.getById(gameId).vsRobot) : false);
             LogicUser.setBusy(gameId ? true : false);
             currentGameId = gameId;
-            pageController.redraw();
+            PageController.redraw();
         }
     };
 

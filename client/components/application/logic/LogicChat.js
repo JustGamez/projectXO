@@ -12,7 +12,7 @@ LogicChat = function () {
             }
             cache.unshift(newMessage);
         });
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.updateId = function (messageIdwith) {
@@ -25,7 +25,7 @@ LogicChat = function () {
             message.id = messageIdwith.id;
             cacheIds[message.id] = true;
         });
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.update = function (sourceMessage) {
@@ -33,7 +33,7 @@ LogicChat = function () {
             if (message.id != sourceMessage.id) return;
             cache[index] = sourceMessage;
         });
-        pageController.redraw();
+        PageController.redraw();
     };
 
     var waitMessagesBeforeId = [];

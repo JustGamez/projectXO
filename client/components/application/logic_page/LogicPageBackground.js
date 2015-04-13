@@ -13,12 +13,12 @@ LogicPageBackground = function () {
      */
     this.showLetsPlayDialog = function () {
         self.showInviteDialog = true;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.hideInviteDialog = function () {
         self.showInviteDialog = false;
-        pageController.redraw();
+        PageController.redraw();
     };
 };
 

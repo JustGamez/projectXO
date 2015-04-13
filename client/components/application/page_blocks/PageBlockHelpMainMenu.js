@@ -2,7 +2,7 @@
  * Страница шаблон.
  * @constructor
  */
-PageHelpMainMenu = function PageHelpMainMenu() {
+PageBlockHelpMainMenu = function PageBlockHelpMainMenu() {
     var self = this;
 
     /**
@@ -93,3 +93,5 @@ PageHelpMainMenu = function PageHelpMainMenu() {
         }
     };
 };
+
+PageBlockHelpMainMenu = new PageBlockHelpMainMenu;

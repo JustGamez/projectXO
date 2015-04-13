@@ -33,18 +33,19 @@ LogicPageHelp = function () {
      * Действия при нажатии кнопкаи `(X)`.
      */
     this.onButtonCloseClick = function () {
-        pageController.showPages(pageIdBefore);
-        if (pageController.isShowedNow(PageController.PAGE_ID_MAIN)) {
+        PageController.showPage(pageBefore);
+        if (PageController.isShowedNow(PageMain)) {
             LogicUser.setBusy(false);
         }
     };
 
-    var pageIdBefore = [];
+    var pageBefore;
+
     /**
      * Действия при нажатии кнопки "(?)"
      */
     this.onButtonHelpClick = function () {
-        pageIdBefore = pageController.currentPageIds();
+        pageBefore = PageController.getCurrentPage();
         SAPIStatistic.clickHelp();
         LogicUser.setBusy(true);
         LogicPageHelp.showPageAndTab();
@@ -81,13 +82,13 @@ LogicPageHelp = function () {
     this.showPageAndTab = function () {
         switch (LogicPageHelp.getCurrentTabId()) {
             case self.TAB_ID_MAIN_MENU:
-                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP, PageController.PAGE_ID_HELP_MAIN_MENU]);
+                PageController.showBlocks([PageBlockBackground, PageBlockHelp, PageBlockHelpMainMenu]);
                 break;
             case self.TAB_ID_RATING:
-                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP, PageController.PAGE_ID_HELP_RATING]);
+                PageController.showBlocks([PageBlockBackground, PageBlockHelp, PageBlockHelpRating]);
                 break;
             case self.TAB_ID_RULES:
-                pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_HELP, PageController.PAGE_ID_HELP_RULES]);
+                PageController.showBlocks([PageBlockBackground, PageBlockHelp, PageBlockHelpRules]);
                 break;
             default:
                 Logs.log("Попытка отобразить не существующий таб хелпа.", Logs.LEVEL_FATAL_ERROR, LogicPageHelp.getCurrentTabId());

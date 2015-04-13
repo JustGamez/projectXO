@@ -195,7 +195,7 @@ LogicDrawWallPost = function () {
             self.postReady = false;
             self.drawingWallPost = false;
             self.drawingCameraPhoto = false;
-            pageController.redraw();
+            PageController.redraw();
         });
     };
 

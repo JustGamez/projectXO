@@ -46,7 +46,7 @@ LogicRating = function () {
             ratingByPosition[list[i].position].needUpdate = false;
             LogicUser.getById(list[i].userId);
         }
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -55,7 +55,7 @@ LogicRating = function () {
      */
     this.updateLastPosition = function (givenLastPosition) {
         lastPosition = givenLastPosition;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.getLastPosition = function () {

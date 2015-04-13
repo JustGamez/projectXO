@@ -14,7 +14,7 @@ LogicInvites = function () {
      */
     this.save = function (whoId, whomId, fielTypeId, signId) {
         invites.push({whoId: whoId, whomId: whomId, fieldTypeId: fielTypeId, signId: signId});
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -59,7 +59,7 @@ LogicInvites = function () {
                 break;
             }
         }
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -73,7 +73,7 @@ LogicInvites = function () {
                 break;
             }
         }
-        pageController.redraw();
+        PageController.redraw();
     };
 };
 

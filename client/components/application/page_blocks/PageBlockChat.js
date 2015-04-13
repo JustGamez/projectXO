@@ -2,7 +2,7 @@
  * Страница чата.
  * @constructor
  */
-PageChat = function PageChat() {
+PageBlockChat = function PageBlockChat() {
     var self = this;
 
     /**
@@ -185,3 +185,5 @@ PageChat = function PageChat() {
         }
     };
 };
+
+PageBlockChat = new PageBlockChat;

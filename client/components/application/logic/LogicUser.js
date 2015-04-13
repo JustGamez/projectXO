@@ -137,7 +137,7 @@ LogicUser = function () {
         for (var field in user) {
             users[user.id][field] = user[field];
         }
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /** Возвращает количество онлайн игроков. */
@@ -161,7 +161,7 @@ LogicUser = function () {
         onlineCount = count;
         /* Сбрасываем пользователя если он вошел\вышел. */
         self.updateUserInfo({id: userId, online: direction, isBusy: false, onGameId: 0});
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -201,14 +201,14 @@ LogicUser = function () {
             position: position,
             needReload: false
         };
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.setRatingPositionsNeedReload = function () {
         for (var userId in ratingPositions) {
             ratingPositions[userId].needReload = true;
         }
-        pageController.redraw();
+        PageController.redraw();
     };
 
     this.setBusy = function (state) {

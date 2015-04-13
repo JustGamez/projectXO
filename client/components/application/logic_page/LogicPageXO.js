@@ -16,7 +16,7 @@ LogicPageXO = function () {
     this.onMenuButtonClick = function () {
         var game, lookingGameId;
         LogicUser.setBusy(false);
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_MAIN]);
+        PageController.showPage(PageMain);
         game = LogicGame.getCurrentGame();
         lookingGameId = LogicGame.getLookingGameId();
         if (game && !lookingGameId) {

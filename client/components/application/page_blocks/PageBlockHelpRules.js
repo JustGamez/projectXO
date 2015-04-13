@@ -2,7 +2,7 @@
  * Страница шаблон.
  * @constructor
  */
-PageHelpRules = function PageHelpRules() {
+PageBlockHelpRules = function PageBlockHelpRules() {
     var self = this;
 
     /**
@@ -92,3 +92,5 @@ PageHelpRules = function PageHelpRules() {
         }
     };
 };
+
+PageBlockHelpRules = new PageBlockHelpRules;

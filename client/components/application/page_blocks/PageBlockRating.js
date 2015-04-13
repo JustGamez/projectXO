@@ -2,7 +2,7 @@
  * Страница шаблон.
  * @constructor
  */
-PageRating = function PageRating() {
+PageBlockRating = function PageBlockRating() {
     var self = this;
 
     /**
@@ -198,3 +198,5 @@ PageRating = function PageRating() {
         }
     };
 };
+
+PageBlockRating = new PageBlockRating;

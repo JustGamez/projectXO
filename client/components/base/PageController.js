@@ -8,57 +8,88 @@ PageController = function () {
      * Все страницы.
      * @type {Array}
      */
-    var pages = [];
+    var blocks = [];
 
-    /**
-     * Id отображенных в данный момент страниц.
-     * @type {Array}
-     */
-    var currentShowedPageIds = [];
+    var lastBlockId = 0;
 
     /**
      * Добавляет страницу.
-     * @param id {Number} id PageController.PAGE_ID_*
-     * @param page {object} страница.
+     * @param blocksToAdd {array} массив.
      */
-    this.addPage = function (id, page) {
-        pages[id] = page;
-        if (!page.init) {
-            Logs.log("PageController.addPage. page must have method init(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
-        }
-        if (!page.show) {
-            Logs.log("PageController.addPage. page must have method show(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
-        }
-        if (!page.hide) {
-            Logs.log("PageController.addPage. page must have method hide(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
-        }
-        if (!page.redraw) {
-            Logs.log("PageController.addPage. page must have method redraw(). Page constructor:" + page.constructorName, Logs.LEVEL_FATAL_ERROR);
-        }
-        page.init();
+    this.addBlocks = function (blocksToAdd) {
+        blocksToAdd.forEach(function (block) {
+            var newBlockId = lastBlockId++;
+            blocks[newBlockId] = {
+                block: block,
+                showed: false,
+                id: newBlockId
+            };
+            if (!block.init) {
+                Logs.log("PageController.addPage. block must have method init(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+            }
+            if (!block.show) {
+                Logs.log("PageController.addPage. block must have method show(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+            }
+            if (!block.hide) {
+                Logs.log("PageController.addPage. block must have method hide(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+            }
+            if (!block.redraw) {
+                Logs.log("PageController.addPage. block must have method redraw(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+            }
+            block.init();
+        });
     };
 
     /**
      * Показать страницу, все остальные скрыть.
-     * @param idToShowList {Array}
+     * @param pagesToShow {Array}
      */
-    this.showPages = function (idToShowList) {
-        Logs.log("Pages to show:" + idToShowList.toString(), Logs.LEVEL_DETAIL);
-        var tmp = [];
-        for (var i in idToShowList) {
-            tmp[idToShowList[i]] = idToShowList[i];
+    this.showBlocks = function (pagesToShow) {
+        Logs.log("Pages to show:...", Logs.LEVEL_DETAIL);
+        console.log(pagesToShow);
+        console.log(pagesToShow);
+        console.log(pagesToShow);
+        console.log(pagesToShow);
+
+        var toShow;
+        for (var id in blocks) {
+            toShow = false;
+            for (var j in pagesToShow) {
+                if (blocks[id].block === pagesToShow[j]) {
+                    toShow = true;
+                }
+            }
+            if (toShow) {
+                if (blocks[id].showed == false) {
+                    blocks[id].block.show();
+                    blocks[id].showed = true;
+                }
+            } else {
+                if (blocks[id].showed == true) {
+                    blocks[id].block.hide();
+                    blocks[id].showed = false;
+                }
+            }
         }
-        idToShowList = tmp;
-        /* show pages */
-        for (var id in idToShowList) {
-            pages[id].show();
+
+        self.redraw();
+
+        return;
+        var tmp = [];
+        for (var i in pagesToShow) {
+            tmp[pagesToShow[i]] = pagesToShow[i];
+        }
+        pagesToShow = tmp;
+        /* show page_blocks */
+        for (var id in pagesToShow) {
+            blocks[id].show();
         }
         /* hide all other */
-        for (var id in pages) {
+        for (var id in blocks) {
             if (tmp[id])continue;
-            pages[id].hide();
+            blocks[id].hide();
         }
-        currentShowedPageIds = idToShowList;
+        currentShowedPages = pagesToShow;
         self.redraw();
     };
 
@@ -66,31 +97,29 @@ PageController = function () {
      * Вызывает редрей всех активных страниц.
      */
     this.redraw = function () {
-        for (var id in pages) {
-            pages[id].redraw();
+        for (var id in blocks) {
+            blocks[id].block.redraw();
         }
+    };
+
+    var currentPage;
+
+    this.showPage = function (page) {
+        currentPage = page;
+        self.showBlocks(page.blocks);
     };
 
     /**
      * Показаны ли сейчас эта страница.
-     * @param pageId {Number} id Страницы.
+     * @param page {Number} id Страницы.
      */
-    this.isShowedNow = function (pageId) {
-        for (var i in currentShowedPageIds) {
-            if (pageId == currentShowedPageIds[i]) {
-                return true;
-            }
-        }
-        return false;
+    this.isShowedNow = function (page) {
+        return page === currentPage;
     };
 
-    this.currentPageIds = function () {
-        var out = [];
-        currentShowedPageIds.forEach(function (isShowed, id) {
-            if (isShowed) {
-                out.push(id);
-            }
-        });
-        return out;
+    this.getCurrentPage = function () {
+        return currentPage;
     };
 };
+
+PageController = new PageController();

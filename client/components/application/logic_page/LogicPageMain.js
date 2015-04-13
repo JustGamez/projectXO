@@ -11,7 +11,7 @@ LogicPageMain = function () {
      */
     this.onPlayButtonClick = function () {
         LogicUser.setBusy(true);
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+        PageController.showPage(PageXOGame);
         SAPIRobotGame.createGame(LogicXOSettings.requestedFieldTypeId, LogicXOSettings.requestedSignId);
     };
 
@@ -31,7 +31,7 @@ LogicPageMain = function () {
      */
     this.onRadioSignChange = function (value, index) {
         LogicXOSettings.requestedSignId = value;
-        pageController.redraw();
+        PageController.redraw();
     };
 
     /**
@@ -54,7 +54,7 @@ LogicPageMain = function () {
     this.onLetsPlayClick = function (user) {
         var invite, sign;
         LogicUser.setBusy(true);
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+        PageController.showPage(PageXOGame);
         invite = LogicInvites.get(user.id, LogicUser.getCurrentUser().id);
         SAPIInvites.createGame(invite.fieldTypeId, invite.signId, LogicXOSettings.requestedSignId, invite.whoId);
     };
@@ -65,7 +65,7 @@ LogicPageMain = function () {
         if (game && LogicXO.isMember(game, LogicUser.getCurrentUser().id)) {
             LogicGame.setCurrentGameId(game.id);
             // @todo reopen game?
-            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+            PageController.showPage(PageXOGame);
         } else {
             SAPIGameLooks.start(user.onGameId);
             LogicUser.setBusy(true);
@@ -80,7 +80,7 @@ LogicPageMain = function () {
     this.onRatingButtonClick = function () {
         SAPIStatistic.onRatingButtonClick();
         LogicUser.setBusy(true);
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_RATING]);
+        PageController.showBlocks([PageBlockBackground, PageBlockRating]);
     };
 
     /**

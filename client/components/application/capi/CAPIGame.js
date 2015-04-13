@@ -10,7 +10,7 @@ CAPIGame = function () {
             /* Вполне возможно, в игре уже решен исход. */
             LogicXO.setOutcomeResults(game, LogicXO.findWinLine(game));
             LogicGame.update(game);
-            pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
+            PageController.showPage(PageXOGame);
         }
         LogicGame.update(game);
     };
@@ -81,8 +81,8 @@ CAPIGame = function () {
                 LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
             }
         }
-        pageController.showPages([PageController.PAGE_ID_BACKGROUND, PageController.PAGE_ID_CHAT, PageController.PAGE_ID_ONLINE_SCORE, PageController.PAGE_ID_XO_GAME]);
-        pageController.redraw();
+        PageController.showPage(PageXOGame);
+        PageController.redraw();
     };
 
     this.updateMove = function (cntx, gameId, x, y) {
