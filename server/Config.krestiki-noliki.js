@@ -7,7 +7,7 @@ Config = {
         triggerLevel: 1 // detail, see Logs.LEVEL_*
     },
     DB: {
-        host: '192.168.100.2',
+        host: 'localhost',
         username: 'root',
         password: 'root',
         database: 'xo',
@@ -71,5 +71,8 @@ Config = {
         timeInterval: 3 * 60 * 1000,
         /* 100 это макимум, т.к. больше мы не сможет узнать об онлайне.*/
         usersPerIteration: 30
+    },
+    Project: {
+        urlPrefix: '/xo'
     }
 };

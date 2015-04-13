@@ -9,7 +9,8 @@
 var FS = require('fs');
 var PATH = require('path');
 var OS = require('os');
-ROOT_DIR = FS.realpathSync('.') + '/';
+ROOT_DIR = FS.realpathSync('./..') + '/';
+SERVER_DIR = ROOT_DIR + '/server/';
 require('./functions.js');
 loadAllComponents(process.cwd() + '/components/');
 /* Include Config file. */

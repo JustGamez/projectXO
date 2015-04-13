@@ -44,16 +44,18 @@ DB = function () {
      * Ппроизведем коннект к БД, согласно конфигурации.
      */
     this.init = function (afterInitCallback) {
-        connection = MYSQL.createConnection({
+        var connectionData;
+        connectionData = {
             host: Config.DB.host,
             user: Config.DB.username,
             password: Config.DB.password,
             database: Config.DB.database,
             charset: Config.DB.charset
-        });
+        };
+        connection = MYSQL.createConnection(connectionData);
         connection.connect(function (err) {
             if (err) {
-                Logs.log("Cant connect to DB.", Logs.LEVEL_FATAL_ERROR, err);
+                Logs.log("Cant connect to DB.", Logs.LEVEL_FATAL_ERROR, {err: err, connectionData: connectionData});
             }
             isConnected = true;
             Logs.log("Connect to DB successful.", Logs.LEVEL_NOTIFY);

@@ -83,7 +83,6 @@ ApiRouter = function (apiMap) {
             Logs.log(id + " " + ">> " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
         }
         /* group_method.counter ++ */
-        ApiRouterMetrics[group][method]++;
         map[group][method].apply(self, args);
     };
 
@@ -121,7 +120,6 @@ ApiRouter = function (apiMap) {
             Logs.log(connectionsKey + " " + "<< " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
         }
         /* group_method.counter ++ */
-        ApiRouterMetrics[group][method]++;
         var packet = {
             group: group,
             method: method,
@@ -162,5 +160,32 @@ ApiRouter = function (apiMap) {
      */
     this.addOnFailedSendCallback = function (callback) {
         onFailedSendCallbacks.push(callback);
+    };
+
+    this.getSAPIJSCode = function () {
+        var code;
+        code = '';
+        var pureData;
+        pureData = {};
+        for (var group in map) {
+            for (var method in GLOBAL[group]) {
+                if (typeof GLOBAL[group][method] != 'function')continue;
+                if (!pureData[group]) {
+                    pureData[group] = {};
+                }
+                pureData[group][method] = true;
+            }
+        }
+        for (var group in pureData) {
+            code += "" + group + " = function(){\r\n";
+            for (var method in pureData[group]) {
+                code += "\tthis." + method + " = function(){\r\n";
+                code += "\t\tapiRouter.executeRequest('" + group + "' ,'" + method + "', arguments, [{connectionId: null}]);\r\n";
+                code += "\t};\r\n";
+            }
+            code += "};\r\n";
+            code += group + " = new " + group + "();\r\n";
+        }
+        return code;
     };
 };

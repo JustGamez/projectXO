@@ -20,28 +20,6 @@ window.onload = function () {
     webSocketClient.init(function () {
     });
 
-    /* ApiRouterMetrics */
-    ApiRouterMetrics.setup({
-        SAPIUser: true,
-        SAPIGame: true,
-        SAPIChat: true,
-        SAPIRobotGame: true,
-        SAPIInvites: true,
-        SAPIUserState: true,
-        SAPIRating: true,
-        SAPIRepeatGame: true,
-        SAPIStatistic: true,
-        SAPIGameLooks: true,
-
-        CAPIChat: true,
-        CAPIGame: true,
-        CAPIInvites: true,
-        CAPIRating: true,
-        CAPIUser: true,
-        CAPIUserState: true
-    });
-    /* setInterval(ApiRouterMetrics.printMetrics, 5000); */
-
     /* ApiRouter */
     apiRouter = new ApiRouter({
         CAPIUser: CAPIUser,

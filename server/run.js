@@ -54,29 +54,16 @@ Statistic.ID_NOTIFIER_FAILED = Statistic.getNewId("отправка нотифи
 
 /*  WebSocketServer */
 webSocketServer = new WebSocketServer({
-    SAPIUser: true,
-    SAPIGame: true,
-    SAPIChat: true,
-    SAPIRobotGame: true,
-    SAPIInvites: true,
-    SAPIUserState: true,
-    SAPIRating: true,
-    SAPIRepeatGame: true,
-    SAPIStatistic: true,
-    SAPIGameLooks: true,
-
-    CAPIChat: true,
-    CAPIGame: true,
-    CAPIInvites: true,
-    CAPIRating: true,
-    CAPIUser: true,
-    CAPIUserState: true
+    '/xo/clientCode': LogicClientCodeLoader.getClientCode,
+    '/xo/reloadClientCode': LogicClientCodeLoader.reloadClientCode,
+    '/xo/commentsWidget': LogicClientCodeLoader.getCommentsWidget,
+    '/xo/status': LogicSystemRequests.getStatus,
+    '/xo/statistic': LogicSystemRequests.getStatistic,
+    '/xo/shutdown___': LogicSystemRequests.shutdown,
+    '/xo/runNotifier': LogicSystemRequests.runNotifier,
+    '/xo/logsSetDetail': LogicSystemRequests.logsSetDetail,
+    '/xo/logsSetNotify': LogicSystemRequests.logsSetNotify
 });
-
-setInterval(function () {
-        ApiRouterMetrics.printMetrics();
-    }, Config.ApiRouterMetric.reportTimeout
-);
 
 /* ApiRouter */
 apiRouter = new ApiRouter({
@@ -90,27 +77,6 @@ apiRouter = new ApiRouter({
     SAPIRepeatGame: SAPIRepeatGame,
     SAPIStatistic: SAPIStatistic,
     SAPIGameLooks: SAPIGameLooks
-});
-
-/* ApiRouterMetrics */
-ApiRouterMetrics.setup({
-    SAPIUser: true,
-    SAPIGame: true,
-    SAPIChat: true,
-    SAPIRobotGame: true,
-    SAPIInvites: true,
-    SAPIUserState: true,
-    SAPIRating: true,
-    SAPIRepeatGame: true,
-    SAPIStatistic: true,
-    SAPIGameLooks: true,
-
-    CAPIChat: true,
-    CAPIGame: true,
-    CAPIInvites: true,
-    CAPIRating: true,
-    CAPIUser: true,
-    CAPIUserState: true
 });
 
 /* links apiRouter and webSocketServer */
@@ -135,9 +101,8 @@ sequencedInit(LogicUser.init);
 sequencedInit(LogicRobot.init);
 sequencedInit(DataRating.init);
 sequencedInit(LogicNotifier.init);
-
-/* run all components */
 sequencedInit(webSocketServer.init);
+sequencedInit(LogicClientCodeLoader.init);
 
 sequencedInit(function (afterInitCallback) {
     Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);

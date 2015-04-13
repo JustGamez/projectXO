@@ -1,23 +1,23 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:	xoserver
+# Provides:	trserver
 # Default-Start: 2 3 4 5
 # Default-Stop:  0 1 6
-# Short-Description: Start/stop xoServer.
-# Description: XO Server init.
+# Short-Description: Start/stop tkServer.
+# Description: TK Server init.
 ### END INIT INFO
 
-DAEMON_PATH="/var/xo/server/"
+DAEMON_PATH="/var/tk/server/"
 
 DAEMON="run.sh"
 
 DAEMONOPTS=""
 
-OUTPUT_FILE="/var/xo/server/xoserver_last.out"
+OUTPUT_FILE="/var/tk/server/tkserver_last.out"
 
-NAME=xoserver
+NAME=tkserver
 
-DESC="XO service daemon description"
+DESC="TK service daemon description"
 
 PIDFILE=/var/run/$NAME.pid
 
