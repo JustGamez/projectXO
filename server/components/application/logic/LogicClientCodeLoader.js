@@ -65,10 +65,10 @@ LogicClientCodeLoader = function () {
             "<script>VK.init({apiId: " + Config.SocNet.appId + ", onlyWidgets: true});</script>" +
             "</head>" +
             "<body style='margin:0px;'>" +
-            "<div id='vk_comments'></div>\
-        <script type='text/javascript'>\
-            VK.Widgets.Comments('vk_comments', {limit: 5, width: 788, height: 585, attach: '*'});\
-        </script>" +
+            "<div id='vk_comments'></div>" +
+            "<script type='text/javascript'>" +
+            "VK.Widgets.Comments('vk_comments', {limit: 5, height: " + (Config.VKCommentWidget.height).toString() + ", width: " + (Config.VKCommentWidget.width).toString() + ", attach: '*', pageUrl: 'http://vk.com/app" + Config.SocNet.appId + "'});" +
+            "</script>" +
             "</body>" +
             "</html>";
         callback(VKCommentsWidgetCode);
@@ -83,7 +83,7 @@ LogicClientCodeLoader = function () {
      * «агрузит весь клиентсий код и сохранит его в переменной clientCode.
      */
     var loadClientCode = function () {
-        var clientJSCode, advCode;
+        var clientJSCode, advCode, advHeight;
         Logs.log("Load client code.");
         clientJSCode = getClientJSCode();
         /* —формируем клинтский код. */
@@ -112,8 +112,11 @@ LogicClientCodeLoader = function () {
             "   }" +
             "}, 0);" +
             "</script>";
-        }else{
+            advCode = '<div style="height:125px;">' + advCode + "</div>";
+            advHeight = 125;
+        } else {
             advCode = '';
+            advHeight = 0;
         }
 
         clientCode = "";
@@ -124,9 +127,13 @@ LogicClientCodeLoader = function () {
         clientCode += "<script type='text/javascript' src='" + Config.Project.urlPrefix + "/js/VKClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
         clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
         clientCode += getClientImageCode();
-        clientCode += "<div style='height:686px;position:absolute;top:125px;' id='applicationArea' ></div>\r\n";
-        clientCode += "<div style='top:811px;position:absolute;'><iframe src='" + Config.Project.urlPrefix + "/commentsWidget' style='border:none; height: 686px; width:788px;'></iframe></div>\r\n";
-        clientCode += '<div style="height:125px;">' + advCode + "</div>";
+        /* application div */
+        clientCode += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;top:" + advHeight + "px;' id='applicationArea' ></div>\r\n";
+        /* comments div */
+        clientCode += "<div style='top:" + (Config.Project.applicationAreaHeight + advHeight ) + "px;position:absolute;'>";
+        clientCode += "<iframe src='" + Config.Project.urlPrefix + "/commentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
+        clientCode += "</div>\r\n";
+        clientCode += advCode;
         clientCode += "</BODY></HTML>";
 
         FS.writeFile(ROOT_DIR + '/js/VKClientCodeSource.js', clientJSCode);

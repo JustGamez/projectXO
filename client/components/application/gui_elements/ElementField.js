@@ -246,6 +246,16 @@ ElementField = function () {
      */
     this.redraw = function () {
         var domList;
+        if (focusedCeil) {
+            var game = LogicGame.getCurrentGame();
+            var user = LogicUser.getCurrentUser();
+            if (LogicXO.isHisTurn(game, user.id) && self.field[fieldTypeId][focusedCeil.y][focusedCeil.x] == LogicXO.SIGN_ID_Empty) {
+                animateFadeIn(game.turnId, focusedCeil.dom);
+            } else {
+                focusedCeil.dom.animateStop();
+                focusedCeil = null;
+            }
+        }
         if (!showed) return;
         domList = self.domList[fieldTypeId];
         domList.domField.redraw();
@@ -363,6 +373,7 @@ ElementField = function () {
         self.onClick.call(null, this.x, this.y);
     };
 
+    var focusedCeil;
     /**
      * При вхождении курсора в ячейку знака, анимируем "проявление", если надо.
      */
@@ -371,28 +382,34 @@ ElementField = function () {
         if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
             return;
         }
+        focusedCeil = this;
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
         if (LogicXO.isHisTurn(game, user.id)) {
-            if (game.turnId == LogicXO.SIGN_ID_X) {
-                this.dom.backgroundImage = currentConfigure.srcSignX;
-            } else {
-                this.dom.backgroundImage = currentConfigure.srcSignO;
-            }
-            if (fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
-                this.dom.animateOpacity(0.21, 0.18, 20);
-            }
-            if (fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
-                this.dom.animateOpacity(0.52, 0.21, 20);
-            }
-            this.dom.redraw();
+            animateFadeIn(game.turnId, this.dom);
         }
+    };
+
+    var animateFadeIn = function (signId, dom) {
+        if (signId == LogicXO.SIGN_ID_X) {
+            dom.backgroundImage = currentConfigure.srcSignX;
+        } else {
+            dom.backgroundImage = currentConfigure.srcSignO;
+        }
+        if (fieldTypeId == LogicXO.FIELD_TYPE_3X3) {
+            dom.animateOpacity(0.21, 0.18, 20);
+        }
+        if (fieldTypeId == LogicXO.FIELD_TYPE_15X15) {
+            dom.animateOpacity(0.52, 0.21, 20);
+        }
+        dom.redraw();
     };
 
     /**
      * При ухода курсора со знака, анимируем затимнение, если надо.
      */
     var onMouseOut = function () {
+        focusedCeil = null;
         if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
             return;
         }

@@ -10,5 +10,6 @@ xoserver_last.out
 run.log
 /server/run*.log
 /js/VKClientCode.js
+/js/VKClientCodeSource.js
 /sql_dumps/*
 /posts/*

@@ -232,10 +232,10 @@ GUI = function () {
      */
     this.getImageURL = function (url) {
         //@todo it's so complicated...
-        url = '/xo' + url;
+        url = Config.Project.urlPrefix + url;
         if (!window.imagesData[url]) {
             Logs.log("Image url not found for: " + url, Logs.LEVEL_ERROR);
-            return '/xo/images/notFound.png';
+            return Config.Project.urlPrefix + '/images/notFound.png';
         }
         return window.imagesData[url].path;
     };

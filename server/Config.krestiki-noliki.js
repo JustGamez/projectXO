@@ -59,7 +59,7 @@ Config = {
     admin: {
         ids: [1, 2, 14]
     },
-    Adv: {
+    Adv_Disabled: {
         id: '56307',
         hash: 'c1646e2bb80df9d5ce5a03826e829156'
     },
@@ -70,9 +70,16 @@ Config = {
         /* Время запуска очередной нотификации пользователей. */
         timeInterval: 3 * 60 * 1000,
         /* 100 это макимум, т.к. больше мы не сможет узнать об онлайне.*/
-        usersPerIteration: 30
+        usersPerIteration: 30,
+        notifyTimeInterval: 3000
     },
     Project: {
-        urlPrefix: '/xo'
+        urlPrefix: '/xo',
+        applicationAreaHeight: 685
+    },
+    VKCommentWidget: {
+        // 125 - is it Adv
+        height: 570 + 125,
+        width: 788
     }
 };

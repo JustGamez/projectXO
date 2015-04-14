@@ -18,7 +18,7 @@ Sounds = function () {
             return;
         }
         if (!cache[path]) {
-            cache[path] = new Audio(path + "?t=" + time());
+            cache[path] = new Audio(Config.Project.urlPrefix + path + "?t=" + time());
         }
         if (!volume) {
             volume = 1.0;

@@ -21,6 +21,8 @@ PageBlockBackground = function PageBlockBackground() {
 
     var elementHelpIcon;
 
+    var elementGameGroupLink;
+
     var onHelpPage = false;
 
     /**
@@ -116,6 +118,18 @@ PageBlockBackground = function PageBlockBackground() {
             }
         });
         elementInviteButton = element;
+        element = GUI.createElement(ElementButton, {
+            x: 60,
+            y: 60,
+            opacity: 0.3,
+            srcRest: '/images/buttons/gameGroupLink.png',
+            srcHover: '/images/buttons/gameGroupLink.png',
+            srcActive: '/images/buttons/gameGroupLink.png',
+            onClick: function () {
+                window.open('http://vk.com/tictactoegames');
+            }
+        });
+        elementGameGroupLink = element;
     };
 
     /**
@@ -128,6 +142,7 @@ PageBlockBackground = function PageBlockBackground() {
         for (var i in self.elements) {
             self.elements[i].show();
         }
+        elementGameGroupLink.show();
         self.redraw();
     };
 
@@ -140,6 +155,7 @@ PageBlockBackground = function PageBlockBackground() {
         for (var i in self.elements) {
             self.elements[i].hide();
         }
+        elementGameGroupLink.hide();
     };
 
     /**
@@ -172,11 +188,14 @@ PageBlockBackground = function PageBlockBackground() {
                 elementInviteButton.redraw();
                 elementInviteText.show();
                 elementInviteText.redraw();
+                elementGameGroupLink.hide();
             } else {
                 elementInviteButton.hide();
                 elementInviteText.hide();
+                elementGameGroupLink.show();
             }
         } else {
+            elementGameGroupLink.show();
             elementInviteButton.hide();
             elementInviteText.hide();
         }
@@ -191,6 +210,7 @@ PageBlockBackground = function PageBlockBackground() {
         for (var i in self.elements) {
             self.elements[i].redraw();
         }
+        elementGameGroupLink.redraw();
     };
 };
 

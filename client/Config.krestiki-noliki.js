@@ -17,5 +17,11 @@ Config = {
     },
     admin: {
         ids: [1, 2, 14]
+    },
+    Project: {
+        urlPrefix: '/xo'
+    },
+    SocNet: {
+        appId: 4467180
     }
 };

@@ -249,8 +249,8 @@ ElementPhoto = function () {
         domPhoto.isItsepia = true;
         /* Кнопка приглашения в игру */
         stateElInvite = GUI.createElement(ElementButton, {
-            x: 0,
-            _y: 77,
+            x: 8,
+            _y: 71,
             srcRest: '/images/photo/buttonInviteRest.png',
             srcHover: '/images/photo/buttonInviteHover.png',
             srcActive: '/images/photo/buttonInviteActive.png',
@@ -286,7 +286,7 @@ ElementPhoto = function () {
         /* Индикатор "Ждём..." */
         stateElWaiting = GUI.createDom(domRegion, {
             x: 3,
-            _y: 64,
+            _y: 69,
             backgroundImage: '/images/photo/indicatorWait.png',
             title: 'Отправлено приглашение.'
         });
