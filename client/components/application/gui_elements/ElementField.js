@@ -246,14 +246,14 @@ ElementField = function () {
      */
     this.redraw = function () {
         var domList;
-        if (focusedCeil) {
+        if (focusedCell) {
             var game = LogicGame.getCurrentGame();
             var user = LogicUser.getCurrentUser();
-            if (LogicXO.isHisTurn(game, user.id) && self.field[fieldTypeId][focusedCeil.y][focusedCeil.x] == LogicXO.SIGN_ID_Empty) {
-                animateFadeIn(game.turnId, focusedCeil.dom);
+            if (LogicXO.isHisTurn(game, user.id) && self.field[fieldTypeId][focusedCell.y][focusedCell.x] == LogicXO.SIGN_ID_Empty) {
+                animateFadeIn(game.turnId, focusedCell.dom);
             } else {
-                focusedCeil.dom.animateStop();
-                focusedCeil = null;
+                focusedCell.dom.animateStop();
+                focusedCell = null;
             }
         }
         if (!showed) return;
@@ -373,7 +373,7 @@ ElementField = function () {
         self.onClick.call(null, this.x, this.y);
     };
 
-    var focusedCeil;
+    var focusedCell;
     /**
      * При вхождении курсора в ячейку знака, анимируем "проявление", если надо.
      */
@@ -382,7 +382,7 @@ ElementField = function () {
         if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
             return;
         }
-        focusedCeil = this;
+        focusedCell = this;
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
         if (LogicXO.isHisTurn(game, user.id)) {
@@ -409,7 +409,7 @@ ElementField = function () {
      * При ухода курсора со знака, анимируем затимнение, если надо.
      */
     var onMouseOut = function () {
-        focusedCeil = null;
+        focusedCell = null;
         if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
             return;
         }
