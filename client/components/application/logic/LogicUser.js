@@ -149,9 +149,10 @@ LogicUser = function () {
      * Обновим данные о кол-во онлайн пользователей.
      * @param count int кол-во онлайн пользователей.
      * @param userId int
-     * @param direction boolean
+     * @param direction boolean если true - пользователь вошел, если false - то вышел.
      */
     this.updateOnlineCount = function (count, userId, direction) {
+        // если онлайн повысился, издадим звук для админа! :)
         if (count > onlineCount) {
             var currentUser = LogicUser.getCurrentUser();
             if (currentUser && currentUser.id && currentUser.id == 1) {

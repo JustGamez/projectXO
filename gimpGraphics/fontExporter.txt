@@ -1,0 +1,39 @@
+
+# variables
+
+basePath = 'c:\\wamp\\www\\xo\\client\\images\\'
+filename = '1.png'
+
+
+# load image
+#image = pdb.gimp_file_load('C:\Users\mrDS777\Desktop\XO\old paper theme\\fonts.xcf',  RUN_INTERACTIVE)
+#image = pdb.gimp_file_load('C:\Users\mrDS777\Desktop\XO\old paper theme\\font_c.xcf',  RUN_INTERACTIVE)
+image = pdb.gimp_file_load('C:\Users\ds777\Desktop\XO project\Gimp graphics\\font_c.xcf',  RUN_INTERACTIVE)
+
+#get name of each vector
+ 
+for vector in image.vectors: 
+ 
+ vectorName = pdb.gimp_item_get_name( vector )
+ 
+ # vector to selection 
+ pdb.gimp_vectors_to_selection( vector, 2, True, False, 0, 0 )
+ 
+ # copy 
+ fragment = pdb.gimp_edit_copy( image.layers[0] )
+ 
+ # paste as new
+ imageNew = pdb.gimp_edit_paste_as_new()
+  
+ # export image
+ 
+ # it's for export
+ imageNew.layers[0].set_offsets(0, 0) 
+ 
+ fragmentName = str( ord( unicode( vectorName, 'utf-8' ) ) );
+ 
+ fullpath = basePath + 'font_' + fragmentName + '.png'
+ filename = fragmentName + '.png'
+ 
+ pdb.file_png_save(imageNew, imageNew.layers[0], fullpath, filename, 0, 9, 1, 1, 1, 1, 1)
+ 

@@ -13,3 +13,4 @@ run.log
 /js/VKClientCodeSource.js
 /sql_dumps/*
 /posts/*
+/hostingData/*
