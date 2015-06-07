@@ -95,6 +95,8 @@ LogicXO = function () {
      */
     this.STATUS_NOBODY_WIN = 5;
 
+    this.turnTimerValue = 10;
+
     /**
      * Создать игру.
      * @param creatorUserId {object} внутрений id пользователя создающего игру.
@@ -231,6 +233,16 @@ LogicXO = function () {
         return game;
     };
 
+    /**
+     * Возвращает, кто будет крестиком.
+     * @todo возвращать 'random'
+     * возвращает объект {XUserId, OUserId}, оба свойства будут иметь одно из значений: 'creator', 'joiner', 'random'
+     * @param creatorSignId
+     * @param joinerSignId
+     * @param creatorUserId
+     * @param joinerUserId
+     * @returns {{XUserId: *, OUserId: *}}
+     */
     this.whoIsX = function (creatorSignId, joinerSignId, creatorUserId, joinerUserId) {
         var XUserId, OUserId;
         chooseVariants.forEach(function (variant) {
@@ -256,7 +268,6 @@ LogicXO = function () {
         });
         return {XUserId: XUserId, OUserId: OUserId};
     };
-
 
     /**
      * Запустить игру.
@@ -593,6 +604,7 @@ LogicXO = function () {
         newGame = self.joinGame(oldGame.joinerUserId, oldGame.joinerSignId, newGame);
         newGame = self.chooseSigns(newGame);
         newGame = self.run(newGame);
+        newGame = self.resetTimer(newGame);
         newGame.copyFromId = oldGame.id;
         return newGame;
     };
@@ -611,6 +623,15 @@ LogicXO = function () {
             return user.score3x3vsRobot;
         }
         Logs.log("LogicXO.getScoreByGame. can't detec score for game", Logs.LEVELR_WARNING, {game: game, user: user});
+    };
+
+    this.checkLastTurnTimeOut = function (game) {
+        return ((mtime() - game.lastTurnTimestamp) > (self.turnTimerValue * 1000) );
+    };
+
+    this.resetTimer = function (game) {
+        game.lastTurnTimestamp = mtime();
+        return game;
     };
 };
 

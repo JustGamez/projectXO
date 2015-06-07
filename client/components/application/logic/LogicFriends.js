@@ -53,7 +53,7 @@ LogicFriends = function () {
             friendIds[userId][friendList[i]] = friendList[i];
         }
         PageController.redraw();
-        Logs.log("LogicUser.udpateFriends for userId=" + userId, Logs.LEVEL_DETAIL);
+        Logs.log("LogicUser.udpateFriends for userId=" + userId);
     };
 
     /**

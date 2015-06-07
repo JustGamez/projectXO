@@ -159,7 +159,7 @@ WebSocketServer = function (givenMap) {
         connection = request.accept(null, request.origin);
         id = ++lastId;
         connectionStack[id] = connection;
-        Logs.log("WebSocketServer.onConnected: id=" + id, Logs.LEVEL_DETAIL);
+        Logs.log("WebSocketServer.onConnected: id=" + id);
         self.onConnect(id);
         connection.on('message', function (message) {
             if (message.type == 'utf8') {

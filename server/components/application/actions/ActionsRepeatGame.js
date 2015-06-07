@@ -10,7 +10,7 @@ ActionsRepeatGame = function () {
         var prid = Profiler.start(Profiler.ID_REPEATE_GAME);
         DataGame.getById(gameId, function (oldGame) {
             if (!oldGame) {
-                Logs.log("ActionsRepratGame.copyGame. game not found.", Logs.LEVEL_WARNING, gameId);
+                Logs.log("ActionsRepeatGame.copyGame. game not found.", Logs.LEVEL_WARNING, gameId);
                 return;
             }
             newGame = LogicXO.copy(oldGame);

@@ -61,7 +61,7 @@ LogicWaitersStack = function () {
             }
         }
         if (count) {
-            Logs.log("LogicWaitersStack. Delete waiters for user. count=" + count + " , userId=" + userId, Logs.LEVEL_DETAIL);
+            Logs.log("LogicWaitersStack. Delete waiters for user. count=" + count + " , userId=" + userId);
         }
     };
 };

@@ -51,7 +51,7 @@ LogicPageXO = function () {
             return;
         }
         if (!LogicXO.userCanDoMove(game, user.id, x, y)) {
-            Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
+            Logs.log("current user can't go right now");
             return;
         }
         Sounds.play('/sounds/turn.mp3');
@@ -60,6 +60,8 @@ LogicPageXO = function () {
         /* Обновим у нас. */
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
+        game = LogicXO.resetTimer(game);
+        LogicTurnTimer.start(game.lastTurnTimestamp);
         /* Проверим, есть ли победитель. */
         winLine = LogicXO.findWinLine(game);
         game = LogicXO.setOutcomeResults(game, winLine);

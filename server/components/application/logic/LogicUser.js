@@ -301,7 +301,7 @@ LogicUser = function () {
             };
             userToCntxCount++;
         }
-        Logs.log("ADD user conn", Logs.LEVEL_DETAIL);
+        Logs.log("ADD user conn");
         cntx.userId = user.id;
         cntx.isAuthorized = true;
         cntx.user = userToCntx[user.id].user;
@@ -325,11 +325,11 @@ LogicUser = function () {
      */
     var userDeleteConn = function (cntx) {
         var userId = cntx.userId;
-        Logs.log("DELETE user conn", Logs.LEVEL_DETAIL);
+        Logs.log("DELETE user conn");
         delete userToCntx[userId].conns[cntx.connectionId];
         userToCntx[userId].connsCount--;
         if (userToCntx[userId].connsCount == 0) {
-            Logs.log("DELETE user Context", Logs.LEVEL_DETAIL);
+            Logs.log("DELETE user Context");
             delete userToCntx[userId];
             userToCntxCount--;
         }
@@ -350,7 +350,7 @@ LogicUser = function () {
                 CAPIGame.updateInfo(LogicXO.getOpponentUserId(game, userId), game);
             });
         }
-        Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
+        Logs.log("User logout. user.id=" + userId);
         DataUser.updateLastLogout(userId);
     };
 

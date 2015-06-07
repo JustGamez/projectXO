@@ -33,7 +33,7 @@ LogicGame = function () {
      * @param gameId
      */
     this.setCurrentGameId = function (gameId) {
-        Logs.log("setCurrentGame:" + gameId, Logs.LEVEL_DETAIL);
+        Logs.log("setCurrentGame:" + gameId);
         if (currentGameId != gameId) {
             SAPIUserState.onGame(gameId, gameId ? Boolean(LogicGame.getById(gameId).vsRobot) : false);
             LogicUser.setBusy(gameId ? true : false);

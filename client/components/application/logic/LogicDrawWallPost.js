@@ -148,7 +148,7 @@ LogicDrawWallPost = function () {
     };
 
     var afterDraw = function () {
-        Logs.log('photos.getWallUploadServer', Logs.LEVEL_DETAIL);
+        Logs.log('photos.getWallUploadServer');
         VK.api('photos.getWallUploadServer', {}, function (data) {
             /* .response.album_id=, .response.upload_url='', .response.user_id=*/
             Logs.log('photos.getWallUploadServer answered', Logs.LEVEL_DETAIL, data);
@@ -158,7 +158,7 @@ LogicDrawWallPost = function () {
 
     var afterGetUploadServer = function (uploadUrl) {
         var png, fileId;
-        Logs.log('uploading... to xoServer:' + uploadUrl, Logs.LEVEL_DETAIL);
+        Logs.log('uploading... to xoServer:' + uploadUrl);
         // to xo server
         png = getBase64PNG();
         png = png.replace('data:image/png;base64,', '');

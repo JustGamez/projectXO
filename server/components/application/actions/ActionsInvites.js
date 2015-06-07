@@ -8,15 +8,17 @@ ActionsInvites = function () {
      * @param joinerSignId {Number} id знака запрашиваемого принявшем, LogicXO.SIGN_ID_*.
      * @param creatorUserId {Number} внутрений id пользователя создающего игру.
      * @param joinerUserId {Number} внутрений id второго участника игры.
+     * @param callback {Function}
      */
     this.createGame = function (fieldTypeId, creatorSignId, joinerSignId, creatorUserId, joinerUserId, callback) {
         var game;
         Logs.log("ActionsInvites.createGame", Logs.LEVEL_DETAIL, arguments);
         game = LogicXO.create(creatorUserId, creatorSignId, fieldTypeId, false, true, false);
-        /* @todo учесть знака второго игрока, пока что любой  */
+        /* @todo учесть знак второго игрока, пока что любой  */
         game = LogicXO.joinGame(joinerUserId, joinerSignId, game);
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
+        game = LogicXO.resetTimer(game);
         DataGame.save(game, callback);
     };
 };

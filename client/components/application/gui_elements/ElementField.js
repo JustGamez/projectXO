@@ -179,6 +179,7 @@ ElementField = function () {
                 dom.y = cfg.signOffsetY + self.y + y * (cfg.signHeight + cfg.padding);
                 dom.pointer = GUI.POINTER_HAND;
                 dom.backgroundImage = cfg.srcSignClear;
+                dom.opacity = 1.0;
                 GUI.bind(dom, GUI.EVENT_MOUSE_CLICK, onSignClick, {x: x, y: y});
                 GUI.bind(dom, GUI.EVENT_MOUSE_OVER, onMouseOver, {dom: dom, x: x, y: y});
                 GUI.bind(dom, GUI.EVENT_MOUSE_OUT, onMouseOut, {dom: dom, x: x, y: y});
@@ -246,14 +247,16 @@ ElementField = function () {
      */
     this.redraw = function () {
         var domList;
-        if (focusedCell) {
+        if (highlightedCell && highlightedCell.animateStarted == false) {
             var game = LogicGame.getCurrentGame();
             var user = LogicUser.getCurrentUser();
-            if (LogicXO.isHisTurn(game, user.id) && self.field[fieldTypeId][focusedCell.y][focusedCell.x] == LogicXO.SIGN_ID_Empty) {
-                animateFadeIn(game.turnId, focusedCell.dom);
-            } else {
-                focusedCell.dom.animateStop();
-                focusedCell = null;
+            if (LogicXO.isHisTurn(game, user.id) && self.field[fieldTypeId][highlightedCell.y][highlightedCell.x] == LogicXO.SIGN_ID_Empty) {
+                animateFadeIn(game.turnId, highlightedCell.dom);
+                highlightedCell.animateStarted = true;
+            } else if (self.field[fieldTypeId][highlightedCell.y][highlightedCell.x] != LogicXO.SIGN_ID_Empty) {
+                highlightedCell.dom.animateStop();
+                highlightedCell.animateStarted = false;
+                highlightedCell = null;
             }
         }
         if (!showed) return;
@@ -320,6 +323,7 @@ ElementField = function () {
      */
     this.setSign = function (x, y, signId) {
         var src, domSign, isItLast;
+        if (highlightedCell && highlightedCell.x == x && highlightedCell.y == y && signId == LogicXO.SIGN_ID_Empty) return;
         domSign = self.domList[fieldTypeId].domSigns[y][x];
         isItLast = lastMove && lastMove.x == x && lastMove.y == y;
         if (signId == LogicXO.SIGN_ID_X && isItLast) src = currentConfigure.srcSignXLastMove;
@@ -347,6 +351,10 @@ ElementField = function () {
             }
         }
         lastMove = null;
+        self.clearWinLine();
+    };
+
+    this.clearWinLine = function () {
         winLineId = null;
         winLineX = 0;
         winLineY = 0;
@@ -373,7 +381,7 @@ ElementField = function () {
         self.onClick.call(null, this.x, this.y);
     };
 
-    var focusedCell;
+    var highlightedCell;
     /**
      * При вхождении курсора в ячейку знака, анимируем "проявление", если надо.
      */
@@ -382,12 +390,9 @@ ElementField = function () {
         if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
             return;
         }
-        focusedCell = this;
-        game = LogicGame.getCurrentGame();
-        user = LogicUser.getCurrentUser();
-        if (LogicXO.isHisTurn(game, user.id)) {
-            animateFadeIn(game.turnId, this.dom);
-        }
+        highlightedCell = this;
+        highlightedCell.animateStarted = false;
+        self.redraw();
     };
 
     var animateFadeIn = function (signId, dom) {
@@ -409,7 +414,8 @@ ElementField = function () {
      * При ухода курсора со знака, анимируем затимнение, если надо.
      */
     var onMouseOut = function () {
-        focusedCell = null;
+        if (highlightedCell)highlightedCell.animateStart = false;
+        highlightedCell = null;
         if (self.field[fieldTypeId][this.y][this.x] != LogicXO.SIGN_ID_Empty) {
             return;
         }

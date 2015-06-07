@@ -21,6 +21,7 @@ ActionsGame = function () {
             }
             game = LogicXO.setSign(game, x, y);
             game = LogicXO.switchTurn(game);
+            game = LogicXO.resetTimer(game);
             DataGame.save(game, callback);
         });
     };
@@ -34,7 +35,7 @@ ActionsGame = function () {
     this.close = function (userId, gameId, callback) {
         DataGame.getById(gameId, function (game) {
             if (!game) {
-                Logs.log("ActionsGame.close. Game to Close not found in Store", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
+                Logs.log("ActionsGame.close. Game to Close not found.", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
                 return;
             }
             if (!LogicXO.userCanCloseGame(game, userId)) {

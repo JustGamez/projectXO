@@ -63,6 +63,9 @@ PageBlockXOGame = function PageBlockXOGame() {
      */
     var elementScores;
 
+    /** {ElementText} */
+    var elementTurnTimer;
+
     /**
      * Тексты для статусов игры.
      * @type {{waiting: string, yourTurnX: string, yourTurnO: string, opponentTurnX: string, opponentTurnO: string, closed: string, nobodyWin: string, youWinSexMan: string, youWinSexWoman: string, opponentWinSexMan: string, opponentWinSexWoman: string}}
@@ -328,6 +331,8 @@ PageBlockXOGame = function PageBlockXOGame() {
         });
         element.setText('5');
         elementCameraWait = element;
+        /* элемент таймера хода*/
+        elementTurnTimer = GUI.createElement(ElementGraphicText, {x: 597, y: 331, width: 150, text: '-'});
     };
 
     /**
@@ -363,6 +368,7 @@ PageBlockXOGame = function PageBlockXOGame() {
         elementWallPostWait.hide();
         elementCameraButton.hide();
         elementCameraWait.hide();
+        elementTurnTimer.hide();
     };
 
     /**
@@ -390,7 +396,7 @@ PageBlockXOGame = function PageBlockXOGame() {
         } else {
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
             elementField.switchToField(game.fieldTypeId);
-            elementField.clearField();
+            elementField.clearWinLine();
 
             /* Подсветить последний шаг. */
             if (game.lastMove && game.status == LogicXO.STATUS_RUN) {
@@ -536,10 +542,19 @@ PageBlockXOGame = function PageBlockXOGame() {
         } else {
             elementCameraWait.hide();
         }
-        // таймер
+        // таймер поста на стену
         if (LogicDrawWallPost.blocked && LogicDrawWallPost.postReady && wallPostIntervalId) {
             clearInterval(wallPostIntervalId);
             wallPostIntervalId = false;
+        }
+        /* таймер игры */
+        if (game && game.status == LogicXO.STATUS_RUN) {
+            elementTurnTimer.setText(LogicTurnTimer.getMinutes().toString() + ":" + LogicTurnTimer.getSeconds().toString());
+            elementTurnTimer.show();
+            elementTurnTimer.redraw();
+        } else {
+            elementTurnTimer.setText('');
+            elementTurnTimer.hide();
         }
     };
 
@@ -585,6 +600,5 @@ PageBlockXOGame = function PageBlockXOGame() {
         elementCameraWait.redraw();
     };
 };
-
 
 PageBlockXOGame = new PageBlockXOGame;
