@@ -19,11 +19,6 @@ LogicSystemRequests = function () {
         });
     };
 
-    this.runNotifier = function (callback) {
-        LogicNotifier.runManual();
-        callback('' + "executed notifiery: " + time());
-    };
-
     this.logsSetDetail = function (callback) {
         Logs.setLevel(Logs.LEVEL_DETAIL);
         setTimeout(function () {

@@ -100,7 +100,6 @@ sequencedInit(SocNet.init);
 sequencedInit(LogicUser.init);
 sequencedInit(LogicRobot.init);
 sequencedInit(DataRating.init);
-sequencedInit(LogicNotifier.init);
 sequencedInit(webSocketServer.init);
 sequencedInit(LogicClientCodeLoader.init);
 

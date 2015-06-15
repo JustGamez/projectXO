@@ -95,7 +95,11 @@ LogicXO = function () {
      */
     this.STATUS_NOBODY_WIN = 5;
 
-    this.turnTimerValue = 10;
+    /**
+     * Таймер отсчитывающий ход.
+     * @type {number}
+     */
+    this.turnTimerValue = 20;
 
     /**
      * Создать игру.

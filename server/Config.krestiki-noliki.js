@@ -35,9 +35,6 @@ Config = {
     Rating: {
         TopLimitSize: 10
     },
-    ApiRouterMetric: {
-        reportTimeout: 1000 * 60 * 60 * 6 // six hours
-    },
     Profiler: {
         reportTimeout: 1000 * 60 * 60 * 6, // six hours
         saveToDBTimeout: 1000 * 60 * 10 // ten minutes
@@ -65,13 +62,6 @@ Config = {
     },
     DataGame: {
         cacheFinishedGameTimeout: 30 * 60 * 1000 // сливать в бд игры, через пол часа.
-    },
-    LogicNotifier: {
-        /* Время запуска очередной нотификации пользователей. */
-        timeInterval: 3 * 60 * 1000,
-        /* 100 это макимум, т.к. больше мы не сможет узнать об онлайне.*/
-        usersPerIteration: 30,
-        notifyTimeInterval: 3000
     },
     Project: {
         urlPrefix: '/xo',

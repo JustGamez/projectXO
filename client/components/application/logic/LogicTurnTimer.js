@@ -55,7 +55,8 @@ LogicTurnTimer = function () {
         PageController.redraw();
         if (self.getAllSeconds() == 0) {
             self.stop();
-            onTimeLeft();
+            /* Сделать задержку, что бы не запросить раньше, чем произоёдет смена хода. */
+            setTimeout(onTimeLeft, 500);
         }
         timeElapsed += 1000;
         setTimeout(checkSecondsJumping, 24);
