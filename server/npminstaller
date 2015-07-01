@@ -3,5 +3,4 @@ npm install MD5
 npm install websocket
 npm install image-size
 npm install uglify-js
-npm install MD5
 npm install restler

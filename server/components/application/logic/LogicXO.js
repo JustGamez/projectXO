@@ -96,12 +96,6 @@ LogicXO = function () {
     this.STATUS_NOBODY_WIN = 5;
 
     /**
-     * Таймер отсчитывающий ход.
-     * @type {number}
-     */
-    this.turnTimerValue = 20;
-
-    /**
      * Создать игру.
      * @param creatorUserId {object} внутрений id пользователя создающего игру.
      * @param creatorSignId {number} id запрашиваемого создателем игры знака, LogicXO.SIGN_ID_*
@@ -608,7 +602,6 @@ LogicXO = function () {
         newGame = self.joinGame(oldGame.joinerUserId, oldGame.joinerSignId, newGame);
         newGame = self.chooseSigns(newGame);
         newGame = self.run(newGame);
-        newGame = self.resetTimer(newGame);
         newGame.copyFromId = oldGame.id;
         return newGame;
     };
@@ -627,15 +620,6 @@ LogicXO = function () {
             return user.score3x3vsRobot;
         }
         Logs.log("LogicXO.getScoreByGame. can't detec score for game", Logs.LEVELR_WARNING, {game: game, user: user});
-    };
-
-    this.checkLastTurnTimeOut = function (game) {
-        return ((mtime() - game.lastTurnTimestamp) > (self.turnTimerValue * 1000) );
-    };
-
-    this.resetTimer = function (game) {
-        game.lastTurnTimestamp = mtime();
-        return game;
     };
 };
 

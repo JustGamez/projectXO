@@ -21,7 +21,6 @@ ActionsGame = function () {
             }
             game = LogicXO.setSign(game, x, y);
             game = LogicXO.switchTurn(game);
-            game = LogicXO.resetTimer(game);
             DataGame.save(game, callback);
         });
     };

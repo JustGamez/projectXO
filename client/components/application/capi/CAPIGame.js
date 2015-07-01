@@ -13,7 +13,6 @@ CAPIGame = function () {
             PageController.showPage(PageXOGame);
         }
         LogicGame.update(game);
-        LogicTurnTimer.start(game.lastTurnTimestamp);
     };
 
     /**
@@ -82,13 +81,12 @@ CAPIGame = function () {
                 LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
             }
         }
-        LogicTurnTimer.start(created.lastTurnTimestamp);
 
         PageController.showPage(PageXOGame);
         PageController.redraw();
     };
 
-    this.updateMove = function (cntx, gameId, x, y, lastTurnTimestamp) {
+    this.updateMove = function (cntx, gameId, x, y) {
         var game, currentGameId;
         game = LogicGame.getById(gameId);
         currentGameId = LogicGame.getCurrentGameId();
@@ -100,7 +98,6 @@ CAPIGame = function () {
         /* Мы ставим это у себя. */
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
-        game.lastTurnTimestamp = lastTurnTimestamp;
         LogicGame.update(game);
         /* В этом случае, мы являемсяе наблюдателем. */
         if (LogicGame.getLookingGameId()) {
@@ -114,7 +111,6 @@ CAPIGame = function () {
                 SAPIGame.checkWinner(gameId);
             }
         }
-        LogicTurnTimer.start(lastTurnTimestamp);
     };
 };
 

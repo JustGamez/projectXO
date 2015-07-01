@@ -15,7 +15,6 @@ ActionsRobotGame = function () {
         game = LogicXO.create(userId, signId, fieldTypeId, false, false, true);
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
-        game = LogicXO.resetTimer(game);
         DataGame.save(game, callback);
     };
 
@@ -55,10 +54,10 @@ ActionsRobotGame = function () {
                 game = LogicXO.setSign(game, AICoords.x, AICoords.y);
                 game = LogicXO.switchTurn(game);
                 DataGame.save(game, function (game) {
-                    CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y, game.lastTurnTimestamp);
+                    CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
                     var lookers = LogicGameLookers.get(game.id);
                     for (var userId in lookers) {
-                        CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y, game.lastTurnTimestamp);
+                        CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
                     }
                     Profiler.stop(Profiler.ID_ROBOT_THINKING, prid);
                 });

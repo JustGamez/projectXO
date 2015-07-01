@@ -18,7 +18,6 @@ ActionsInvites = function () {
         game = LogicXO.joinGame(joinerUserId, joinerSignId, game);
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
-        game = LogicXO.resetTimer(game);
         DataGame.save(game, callback);
     };
 };

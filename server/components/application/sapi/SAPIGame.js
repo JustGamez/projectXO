@@ -28,11 +28,11 @@ SAPIGame = function () {
         ActionsGame.doMove(cntx.userId, gameId, x, y, function (game) {
             /* Если по приглашению, оповестим оппонента, в игре с роботом этого не нужно. */
             if (game.isInvitation) {
-                CAPIGame.updateMove(LogicXO.getOpponentUserId(game, cntx.userId), game.id, game.lastMove.x, game.lastMove.y, game.lastTurnTimestamp);
+                CAPIGame.updateMove(LogicXO.getOpponentUserId(game, cntx.userId), game.id, game.lastMove.x, game.lastMove.y);
             }
             var lookers = LogicGameLookers.get(game.id);
             for (var userId in lookers) {
-                CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y, game.lastTurnTimestamp);
+                CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
             }
         });
     };
@@ -96,34 +96,6 @@ SAPIGame = function () {
             var lookers = LogicGameLookers.get(game.id);
             for (var userId in lookers) {
                 CAPIGame.updateInfo(userId, game);
-            }
-        });
-    };
-
-    this.checkTimeLeft = function (cntx, gameId) {
-        if (!cntx.isAuthorized) {
-            Logs.log("SAPIGame.close: must be authorized", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (!gameId || typeof gameId != 'number') {
-            Logs.log("SAPIGame.close: must have gameId", Logs.LEVEL_WARNING, gameId);
-            return;
-        }
-        DataGame.getById(gameId, function (game) {
-            if (!game) {
-                Logs.log("SAPIGame.checkTimeLeft. Game to Close not found", Logs.LEVEL_WARNING, {userId: userId, gameId: gameId});
-                return;
-            }
-            if (LogicXO.checkLastTurnTimeOut(game)) {
-                game = LogicXO.switchTurn(game);
-                game = LogicXO.resetTimer(game);
-                CAPIGame.updateInfo(game.creatorUserId, game);
-                /* Если с оппонентом, оповестить оппонента, робота опевещать не надо. */
-                if (game.isInvitation) CAPIGame.updateInfo(game.joinerUserId, game);
-                var lookers = LogicGameLookers.get(game.id);
-                for (var userId in lookers) {
-                    CAPIGame.updateInfo(userId, game);
-                }
             }
         });
     };

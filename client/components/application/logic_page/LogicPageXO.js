@@ -60,8 +60,6 @@ LogicPageXO = function () {
         /* Обновим у нас. */
         game = LogicXO.setSign(game, x, y);
         game = LogicXO.switchTurn(game);
-        game = LogicXO.resetTimer(game);
-        LogicTurnTimer.start(game.lastTurnTimestamp);
         /* Проверим, есть ли победитель. */
         winLine = LogicXO.findWinLine(game);
         game = LogicXO.setOutcomeResults(game, winLine);
