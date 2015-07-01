@@ -1,0 +1,6 @@
+.idea/*
+/sql_dumps/
+/hostingData
+/server/Config.*.js
+/client/Config.*.js
+/server/ssl/*

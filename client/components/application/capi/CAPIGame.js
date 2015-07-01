@@ -82,7 +82,7 @@ CAPIGame = function () {
                 LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
             }
         }
-        LogicTurnTimer.start(created.lastTurnTimestamp);7
+        LogicTurnTimer.start(created.lastTurnTimestamp);
 
         PageController.showPage(PageXOGame);
         PageController.redraw();
