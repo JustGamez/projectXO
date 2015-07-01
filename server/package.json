@@ -1,0 +1,13 @@
+{
+  "name": "projectXO",
+  "version": "1.0.0",
+  "description": "projectXO",
+  "dependencies": {
+    "mysql": "*",
+    "MD5": "*",
+    "websocket": "*",
+    "image-size": "*",
+    "uglify-js": "*",
+    "restler": "*"
+  }
+}
