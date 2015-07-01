@@ -4,3 +4,4 @@
 /server/Config.*.js
 /client/Config.*.js
 /server/ssl/*
+/server/*.log
