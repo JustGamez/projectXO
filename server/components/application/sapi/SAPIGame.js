@@ -75,6 +75,7 @@ SAPIGame = function () {
         });
     };
 
+
     /**
      * Закроем игру, обычно это означает, что игрок вышел из игры.
      * @param cntx {Object} контекст соединения.
@@ -92,7 +93,7 @@ SAPIGame = function () {
         Statistic.add(cntx.userId, Statistic.ID_CLOSE_GAME);
         ActionsGame.close(cntx.userId, gameId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);
-            if (!game.vsRobot) CAPIGame.updateInfo(game.joinerUserId, game);
+            CAPIGame.updateInfo(game.joinerUserId, game);
             var lookers = LogicGameLookers.get(game.id);
             for (var userId in lookers) {
                 CAPIGame.updateInfo(userId, game);

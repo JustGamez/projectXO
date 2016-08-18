@@ -51,7 +51,7 @@ LogicPageXO = function () {
             return;
         }
         if (!LogicXO.userCanDoMove(game, user.id, x, y)) {
-            Logs.log("current user can't go right now");
+            Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
         Sounds.play('/sounds/turn.mp3');

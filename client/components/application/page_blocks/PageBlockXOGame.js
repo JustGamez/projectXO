@@ -390,7 +390,7 @@ PageBlockXOGame = function PageBlockXOGame() {
         } else {
             fieldSize = LogicXO.getFieldSize(game.fieldTypeId);
             elementField.switchToField(game.fieldTypeId);
-            elementField.clearWinLine();
+            elementField.clearField();
 
             /* Подсветить последний шаг. */
             if (game.lastMove && game.status == LogicXO.STATUS_RUN) {
@@ -585,5 +585,6 @@ PageBlockXOGame = function PageBlockXOGame() {
         elementCameraWait.redraw();
     };
 };
+
 
 PageBlockXOGame = new PageBlockXOGame;

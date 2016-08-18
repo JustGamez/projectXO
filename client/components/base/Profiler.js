@@ -35,7 +35,7 @@ Profiler = function () {
 };
 
 /**
- * Статичный класс.
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
  * @type {Profiler}
  */
 Profiler = new Profiler();

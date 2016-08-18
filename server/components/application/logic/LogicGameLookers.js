@@ -31,7 +31,7 @@ LogicGameLookers = function () {
 };
 
 /**
- * Константный класс.
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
  * @type {LogicGameLookers}
  */
 LogicGameLookers = new LogicGameLookers();

@@ -71,6 +71,7 @@ LogicUser = function () {
         DataUser.createFromSocNet(socNetTypeId, socNetUserId, function (user) {
             callback(user);
             LogicRating.onUserCreated(user);
+            LogicNotifier.onUserCreated(user);
         });
     };
 
@@ -86,6 +87,7 @@ LogicUser = function () {
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
         Profiler.stop(Profiler.ID_AUTH_VK, prid);
+        LogicNotifier.onUserLogin(user);
         refreshUserSocNetInfo(user, function (user) {
         });
     };
@@ -299,7 +301,7 @@ LogicUser = function () {
             };
             userToCntxCount++;
         }
-        Logs.log("ADD user conn");
+        Logs.log("ADD user conn", Logs.LEVEL_DETAIL);
         cntx.userId = user.id;
         cntx.isAuthorized = true;
         cntx.user = userToCntx[user.id].user;
@@ -323,11 +325,11 @@ LogicUser = function () {
      */
     var userDeleteConn = function (cntx) {
         var userId = cntx.userId;
-        Logs.log("DELETE user conn");
+        Logs.log("DELETE user conn", Logs.LEVEL_DETAIL);
         delete userToCntx[userId].conns[cntx.connectionId];
         userToCntx[userId].connsCount--;
         if (userToCntx[userId].connsCount == 0) {
-            Logs.log("DELETE user Context");
+            Logs.log("DELETE user Context", Logs.LEVEL_DETAIL);
             delete userToCntx[userId];
             userToCntxCount--;
         }
@@ -348,7 +350,7 @@ LogicUser = function () {
                 CAPIGame.updateInfo(LogicXO.getOpponentUserId(game, userId), game);
             });
         }
-        Logs.log("User logout. user.id=" + userId);
+        Logs.log("User logout. user.id=" + userId, Logs.LEVEL_DETAIL);
         DataUser.updateLastLogout(userId);
     };
 

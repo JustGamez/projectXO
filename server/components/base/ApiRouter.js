@@ -80,21 +80,21 @@ ApiRouter = function (apiMap) {
                 // data, may be chunk of image! it's 30 000 bytes or less!
                 argsString = argsString.substr(0, 250);
             }
-            Logs.log(id + " " + ">> " + group + "." + method + argsString);
+            Logs.log(id + " " + ">> " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
         }
         /* group_method.counter ++ */
         map[group][method].apply(self, args);
     };
 
     this.onConnect = function (id) {
-        Logs.log("connection created: id=" + id);
+        Logs.log("connection created: id=" + id, Logs.LEVEL_DETAIL);
         connections[id] = {
             connectionId: id
         };
     };
 
     this.onDisconnect = function (id) {
-        Logs.log("connection close: id=" + id);
+        Logs.log("connection close: id=" + id, Logs.LEVEL_DETAIL);
         for (var i in onDisconnectCallbacks) {
             onDisconnectCallbacks[i].call(self, connections[id]);
         }
@@ -117,7 +117,7 @@ ApiRouter = function (apiMap) {
                 // data, may be chunk of image! it's 30 000 bytes or less!
                 argsString = argsString.substr(0, 250);
             }
-            Logs.log(connectionsKey + " " + "<< " + group + "." + method + argsString);
+            Logs.log(connectionsKey + " " + "<< " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
         }
         /* group_method.counter ++ */
         var packet = {

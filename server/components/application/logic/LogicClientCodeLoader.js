@@ -7,27 +7,27 @@ var UGLIFYJS = require('uglify-js');
 LogicClientCodeLoader = function () {
 
     /**
-     * Префикс запрашиваемых картинок, все запросы к картинкам должны начинаться с этого префикса.
-     * Далее префикс будет удаляться, и оставшаяся часть пути будет считаться путем к картинке
-     * в папке imagesPath.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+     * пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+     * пїЅ пїЅпїЅпїЅпїЅпїЅ imagesPath.
      * @type {string}
      */
     var imagesPrefix = '/images/';
 
     /**
-     * Перезагружать ли клиентский код, каждый раз, когда его запрашивают.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      * @type {boolean}
      */
     var reloadClientCodeEveryRequest = null;
 
     /**
-     * Путь откуда загружать клиентский код.
+     * пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.
      * @type {string}
      */
     var clientCodePath = null;
 
     /**
-     * Клиентский код.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.
      * @type {string}
      */
     var clientCode = '';
@@ -46,7 +46,7 @@ LogicClientCodeLoader = function () {
         if (typeof imagesPath != 'string') {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
-        /* загрузка клиентского кода. */
+        /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. */
         loadClientCode();
     };
 
@@ -80,13 +80,13 @@ LogicClientCodeLoader = function () {
     };
 
     /**
-     * Загрузит весь клиентсий код и сохранит его в переменной clientCode.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ clientCode.
      */
     var loadClientCode = function () {
         var clientJSCode, advCode, advHeight;
         Logs.log("Load client code.");
         clientJSCode = getClientJSCode();
-        /* Сформируем клинтский код. */
+        /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ. */
         if (Config.Adv) {
             var advId = Config.Adv.id;
             var advHash = Config.Adv.hash;
@@ -146,7 +146,7 @@ LogicClientCodeLoader = function () {
     };
 
     /**
-     * Загрузим код всех файлов, конкатинируем и составим из них одну строку кода.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.
      * @param files[]
      */
     var clientCodePrepareCode = function (files) {
@@ -163,18 +163,18 @@ LogicClientCodeLoader = function () {
             clientCode += "\r\n/* " + path + " */\r\n";
             clientCode += file_content;
             name = PATH.basename(path, '.js');
-            /* Добавим пути к файлам компонент, это нужно для отладки */
+            /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
             clientCode += 'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"};\r\n';
         }
         return clientCode;
     };
 
     /**
-     * Вернем клиентские js-скрипты.
+     * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ js-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      */
     var getClientJSCode = function () {
         var jsFiles, hostname, clientConfigPath, code;
-        /* Загрузим список файлов клиентского кода. */
+        /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. */
         jsFiles = [];
         jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'system/'));
         jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'components/'));
@@ -191,7 +191,7 @@ LogicClientCodeLoader = function () {
     };
 
     /**
-     * Вернем клинетские картинки.
+     * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      */
     var getClientImageCode = function () {
         var imageFiles, imageCode, path, timePostfix, demension;
@@ -205,7 +205,7 @@ LogicClientCodeLoader = function () {
             imageCode += "\r\nimagesData['" + path + "']={path:'" + path + timePostfix + "',w:" + demension.width + ",h:" + demension.height + "};";
         }
         imageCode += "</script>";
-        /* добавим img тэги для предзагрузки. */
+        /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ img пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
         imageCode += "<div style='display:none;'>";
         for (var i in imageFiles) {
             path = Config.Project.urlPrefix + imagesPrefix + imageFiles[i].substr(imagesPath.length);
@@ -216,7 +216,7 @@ LogicClientCodeLoader = function () {
     };
 
     /**
-     * Составляет список всех файлов, рекурсивно.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      */
     var getFileListRecursive = function (basePath) {
         var dirList, path, files;

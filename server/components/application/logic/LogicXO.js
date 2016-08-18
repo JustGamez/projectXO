@@ -267,6 +267,7 @@ LogicXO = function () {
         return {XUserId: XUserId, OUserId: OUserId};
     };
 
+
     /**
      * Запустить игру.
      * @param game {Object}

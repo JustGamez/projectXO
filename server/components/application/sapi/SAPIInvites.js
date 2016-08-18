@@ -78,6 +78,7 @@ SAPIInvites = function () {
             return;
         }
         /* @todo проверка занят\не занят */
+        /* @todo проверка на друга */
         Statistic.add(cntx.userId, Statistic.ID_CREATE_GAME_INVATION);
         ActionsInvites.createGame(fieldTypeId, creatorSignId, joinerSignId, withUserId, cntx.userId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);

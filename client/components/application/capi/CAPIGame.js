@@ -81,7 +81,6 @@ CAPIGame = function () {
                 LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
             }
         }
-
         PageController.showPage(PageXOGame);
         PageController.redraw();
     };

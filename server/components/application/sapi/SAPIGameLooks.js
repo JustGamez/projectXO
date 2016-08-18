@@ -1,8 +1,8 @@
 SAPIGameLooks = function () {
 
     /**
-     * Запрос на наблюдение за игрой.
-     * @param cntx {object} контекст соединения.
+     * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+     * @param cntx {object} пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      * @param gameId {int}
      */
     this.start = function (cntx, gameId) {
@@ -21,8 +21,8 @@ SAPIGameLooks = function () {
     };
 
     /**
-     * Запрос на остановку наблюдения за игрой.
-     * @param cntx {object} контекст соединения.
+     * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+     * @param cntx {object} пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      * @param gameId {int}
      */
     this.stop = function (cntx, gameId) {
@@ -40,7 +40,7 @@ SAPIGameLooks = function () {
     };
 };
 /**
- * Статичный класс.
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
  * @type {SAPIGameLooks}
  */
 SAPIGameLooks = new SAPIGameLooks();

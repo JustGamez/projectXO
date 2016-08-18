@@ -11,7 +11,7 @@ ActionsRobotGame = function () {
      */
     this.createGame = function (userId, fieldTypeId, signId, callback) {
         var game;
-        Logs.log("ActionsRobotGame.createGame");
+        Logs.log("ActionsRobotGame.createGame", Logs.LEVEL_DETAIL);
         game = LogicXO.create(userId, signId, fieldTypeId, false, false, true);
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);

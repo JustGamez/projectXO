@@ -166,17 +166,17 @@ SocNet = function () {
         options.port = 443;
         options.path = url;
         options.method = 'GET';
-        Logs.log("https request: " + baseHost + url);
+        Logs.log("https request: " + baseHost + url, Logs.LEVEL_DETAIL);
         key = baseHost + url;
         if (data = UrlCache.get(key)) {
-            Logs.log("https answer(cached): " + data);
+            Logs.log("https answer(cached): " + data, Logs.LEVEL_DETAIL);
             callback(data);
             return;
         }
         /* Далее выполняем запрос */
         req = HTTPS.request(options, function (res) {
             res.on('data', function (data) {
-                Logs.log("https answer: " + data);
+                Logs.log("https answer: " + data, Logs.LEVEL_DETAIL);
                 try {
                     data = JSON.parse(data);
                     data = data.response;

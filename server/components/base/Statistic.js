@@ -43,7 +43,7 @@ Statistic = function () {
             query = query.substr(0, query.length - 1);
             Logs.log("Statistic cache start:" + cache.length + "query length:" + query.length, Logs.LEVEL_NOTIFY);
             DB.query(query, function () {
-                Logs.log("Statistic cache flushed.rows:" + cache.length);
+                Logs.log("Statistic cache flushed.rows:" + cache.length, Logs.LEVEL_DETAIL);
             });
             cache = [];
         }
