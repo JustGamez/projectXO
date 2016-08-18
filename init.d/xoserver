@@ -1,19 +1,21 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:	xoserver
+# Required-Start: $all
+# Required-Stop: $all
 # Default-Start: 2 3 4 5
 # Default-Stop:  0 1 6
 # Short-Description: Start/stop xoServer.
 # Description: XO Server init.
 ### END INIT INFO
 
-DAEMON_PATH="/var/xo/server/"
+DAEMON_PATH="/var/www/xo/server/"
 
 DAEMON="run.sh"
 
 DAEMONOPTS=""
 
-OUTPUT_FILE="/var/xo/server/xoserver_last.out"
+OUTPUT_FILE="/var/www/xo/server/xoserver_last.out"
 
 NAME=xoserver
 
