@@ -51,6 +51,17 @@ LogicClientCodeLoader = function () {
     };
 
     this.getClientCode = function (callback) {
+        if( Config.Project.maintance){
+            var html;
+            html = '';
+            html += '\<!DOCTYPE html>\
+            <html>\
+                <head><meta charset=utf-8></head>\
+            <div style="text-align:center;">Игра на техническом обслуживании, пожалуйста зайдите немного позже.</div>\
+            </html>\
+                ';
+            callback(html);
+        }
         if (reloadClientCodeEveryRequest) {
             loadClientCode();
         }
