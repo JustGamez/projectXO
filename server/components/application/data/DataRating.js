@@ -18,14 +18,15 @@ DataRating = function () {
     this.addPosition = function (userId, callback) {
         self.getLastPosition(function (lastPosition) {
             var updated;
-            updated = new Date().getTime();
+            updated = time();
             DB.insert(tableName, {
                 userId: userId,
                 score15x15vsPerson: 0,
                 score3x3vsPerson: 0,
                 score15x15vsRobot: 0,
                 score3x3vsRobot: 0,
-                position: lastPosition + 1
+                position: lastPosition + 1,
+                updated: updated
             }, function () {
                 Logs.log("DataRating.addPosition. new position added.userId" + userId + ", score{*}:0, position:" + lastPosition + ", updated:" + updated);
                 lastPosition = null;

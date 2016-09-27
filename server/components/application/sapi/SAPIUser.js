@@ -134,7 +134,8 @@ SAPIUser = function () {
             Profiler.stop(Profiler.ID_WALLPOST_RECEIVE_DATA, prid2);
         } else {
             var prid3 = Profiler.start(Profiler.ID_WALLPOST_WRITE_FILE);
-            fileName = '/var/xo/posts/image_' + fileId + '.png';
+			//@todo move to config
+            fileName = '/var/www/xo/posts/image_' + fileId + '.png';
             content = new Buffer(files[fileId], 'base64');
             delete files[fileId];
             FS.writeFile(fileName, content, null, function (a, b, c) {
