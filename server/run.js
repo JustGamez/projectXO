@@ -54,9 +54,11 @@ Statistic.ID_NOTIFIER_FAILED = Statistic.getNewId("отправка нотифи
 
 /*  WebSocketServer */
 webSocketServer = new WebSocketServer({
-    '/xo/clientCode': LogicClientCodeLoader.getClientCode,
+    '/xo/clientCode': LogicClientCodeLoader.getClientCode,  //TODO удалить после изменеия настроек в приложении вКонтаке
+    '/xo/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
+    '/xo/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
     '/xo/reloadClientCode': LogicClientCodeLoader.reloadClientCode,
-    '/xo/commentsWidget': LogicClientCodeLoader.getCommentsWidget,
+    '/xo/commentsWidget': LogicClientCodeLoader.getVKCommentsWidget,
     '/xo/status': LogicSystemRequests.getStatus,
     '/xo/statistic': LogicSystemRequests.getStatistic,
     '/xo/shutdown___': LogicSystemRequests.shutdown,

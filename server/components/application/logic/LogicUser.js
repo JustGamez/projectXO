@@ -34,7 +34,7 @@ LogicUser = function () {
      */
     this.authorizeByVK = function (socNetUserId, authParams, cntx) {
         var socNetTypeId = SocNet.TYPE_VK;
-        var checkResult = SocNet.checkAuth(socNetTypeId, socNetUserId, authParams);
+        var checkResult = SocNet(socNetTypeId).checkAuth(socNetUserId, authParams);
         if (!checkResult) {
             Logs.log("LogicUser: cant auth, SocNet.checkAuth failed.", Logs.LEVEL_WARNING, {
                 socNeUserId: socNetUserId,
@@ -130,7 +130,7 @@ LogicUser = function () {
      */
     var refreshUserSocNetInfo = function (user, callback) {
         var prid = Profiler.start(Profiler.ID_UPDATE_SOCNET_INFO);
-        SocNet.getUserInfo(user.socNetTypeId, user.socNetUserId, function (info) {
+        SocNet(user.socNetTypeId).getUserInfo(user.socNetUserId, function (info) {
             user.firstName = info.firstName;
             user.lastName = info.lastName;
             user.photo50 = info.photo50;
@@ -163,7 +163,7 @@ LogicUser = function () {
         var prid = Profiler.start(Profiler.ID_SEND_FRIENDS);
         DataUser.getById(userId, function (user) {
             if (user) {
-                SocNet.getFriends(user.socNetTypeId, user.socNetUserId, function (friends) {
+                SocNet(user.socNetTypeId).getFriends(user.socNetUserId, function (friends) {
                     if (friends == undefined || friends.length == 0) {
                         CAPIUser.updateFriends(cntx.userId, userId, []);
                         Profiler.stop(Profiler.ID_SEND_FRIENDS, prid);

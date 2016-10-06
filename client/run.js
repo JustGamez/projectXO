@@ -11,8 +11,9 @@ window.onload = function () {
     Logs.init(function () {
     });
 
-    /** init some cpomopnents */
-    SocNet.VKInitClient();
+    /** init some components */
+    SocNet.init();
+
     GUI.init();
 
     /* WebSocket Client */
@@ -47,8 +48,6 @@ window.onload = function () {
     }
     PageController.showPage(PageMain);
 
-    /* client specific code */
-    SocNet.parseSocNetURL();
 
     /* running */
     webSocketClient.run();

@@ -6,6 +6,7 @@ var UGLIFYJS = require('uglify-js');
 
 LogicClientCodeLoader = function () {
 
+    var self = this;
     /**
      * ������� ������������� ��������, ��� ������� � ��������� ������ ���������� � ����� ��������.
      * ����� ������� ����� ���������, � ���������� ����� ���� ����� ��������� ����� � ��������
@@ -21,16 +22,23 @@ LogicClientCodeLoader = function () {
     var reloadClientCodeEveryRequest = null;
 
     /**
+     * Client code VK.
+     * @type {string}
+     */
+    var clientCodeVK = '';
+
+    /**
+     * Client code Standalone.
+     * @type {string}
+     */
+    var clientCodeStandalone = '';
+
+
+    /**
      * ���� ������ ��������� ���������� ���.
      * @type {string}
      */
     var clientCodePath = null;
-
-    /**
-     * ���������� ���.
-     * @type {string}
-     */
-    var clientCode = '';
 
     this.init = function () {
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
@@ -47,11 +55,20 @@ LogicClientCodeLoader = function () {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
         /* �������� ����������� ����. */
-        loadClientCode();
+        loadClientCodeVK();
     };
 
+    /**
+     * DEPRECATED
+     * @TODO удалить после настройки
+     * @param callback
+     */
     this.getClientCode = function (callback) {
-        if( Config.Project.maintance){
+        self.getClientCodeVK(callback);
+    };
+
+    this.getClientCodeVK = function (callback) {
+        if (Config.Project.maintance) {
             var html;
             html = '';
             html += '\<!DOCTYPE html>\
@@ -63,12 +80,30 @@ LogicClientCodeLoader = function () {
             callback(html);
         }
         if (reloadClientCodeEveryRequest) {
-            loadClientCode();
+            loadClientCodeVK();
         }
-        callback(clientCode);
+        callback(clientCodeVK);
     };
 
-    this.getCommentsWidget = function (callback) {
+    this.getClientCodeStandalone = function () {
+        if (Config.Project.maintance) {
+            var html;
+            html = '';
+            html += '\<!DOCTYPE html>\
+            <html>\
+                <head><meta charset=utf-8></head>\
+            <div style="text-align:center;">Игра на техническом обслуживании, пожалуйста зайдите немного позже.</div>\
+            </html>\
+                ';
+            callback(html);
+        }
+        if (reloadClientCodeEveryRequest) {
+            loadClientCodeStandalone();
+        }
+        callback(clientCodeStandalone);
+    };
+
+    this.getVKCommentsWidget = function (callback) {
         var VKCommentsWidgetCode = "" +
             "<html>" +
             "<head>" +
@@ -86,74 +121,110 @@ LogicClientCodeLoader = function () {
     };
 
     this.reloadClientCode = function (callback) {
-        loadClientCode();
+        reloadMainClientCode();
+        loadClientCodeVK();
+        loadClientCodeStandalone();
         callback('<pre>' + "Reload Client Code executed!" + new Date().getTime() + '</pre>');
     };
 
     /**
-     * �������� ���� ��������� ��� � �������� ��� � ���������� clientCode.
+     * �������� ���� ��������� ��� � �������� ��� � ���������� clientCodeVK.
      */
-    var loadClientCode = function () {
-        var clientJSCode, advCode, advHeight;
+    var loadClientCodeVK = function () {
+        var advCode, advHeight;
         Logs.log("Load client code.");
-        clientJSCode = getClientJSCode();
+
         /* ���������� ��������� ���. */
         if (Config.Adv) {
             var advId = Config.Adv.id;
             var advHash = Config.Adv.hash;
             advCode = "<div id='vk_ads_" + advId + "'></div>" +
-            "<script type='text/javascript'>" +
-            "setTimeout(function() {" +
-            "   var adsParams = {'ad_unit_id':" + advId + ",'ad_unit_hash':'" + advHash + "'};" +
-            "   function vkAdsInit() {" +
-            "       VK.Widgets.Ads('vk_ads_" + advId + "', {}, adsParams);" +
-            "   }" +
-            "   if (window.VK && VK.Widgets) {" +
-            "       vkAdsInit();" +
-            "   } else {" +
-            "       if (!window.vkAsyncInitCallbacks) window.vkAsyncInitCallbacks = [];" +
-            "       vkAsyncInitCallbacks.push(vkAdsInit);" +
-            "       var protocol = ((location.protocol === 'https:') ? 'https:' : 'http:');" +
-            "       var adsElem = document.getElementById('vk_ads_" + advId + "');" +
-            "       var scriptElem = document.createElement('script');" +
-            "       scriptElem.type = 'text/javascript';" +
-            "       scriptElem.async = true;" +
-            "       scriptElem.src = protocol + '//vk.com/js/api/openapi.js?116';" +
-            "       adsElem.parentNode.insertBefore(scriptElem, adsElem.nextSibling);" +
-            "   }" +
-            "}, 0);" +
-            "</script>";
+                "<script type='text/javascript'>" +
+                "setTimeout(function() {" +
+                "   var adsParams = {'ad_unit_id':" + advId + ",'ad_unit_hash':'" + advHash + "'};" +
+                "   function vkAdsInit() {" +
+                "       VK.Widgets.Ads('vk_ads_" + advId + "', {}, adsParams);" +
+                "   }" +
+                "   if (window.VK && VK.Widgets) {" +
+                "       vkAdsInit();" +
+                "   } else {" +
+                "       if (!window.vkAsyncInitCallbacks) window.vkAsyncInitCallbacks = [];" +
+                "       vkAsyncInitCallbacks.push(vkAdsInit);" +
+                "       var protocol = ((location.protocol === 'https:') ? 'https:' : 'http:');" +
+                "       var adsElem = document.getElementById('vk_ads_" + advId + "');" +
+                "       var scriptElem = document.createElement('script');" +
+                "       scriptElem.type = 'text/javascript';" +
+                "       scriptElem.async = true;" +
+                "       scriptElem.src = protocol + '//vk.com/js/api/openapi.js?116';" +
+                "       adsElem.parentNode.insertBefore(scriptElem, adsElem.nextSibling);" +
+                "   }" +
+                "}, 0);" +
+                "</script>";
             advCode = '<div style="height:125px;">' + advCode + "</div>";
             advHeight = 125;
         } else {
             advCode = '';
             advHeight = 0;
         }
-
-        clientCode = "";
-        clientCode += "<HTML>\r\n";
-        clientCode += "<HEAD>\r\n";
-        clientCode += "<meta charset='utf-8' />\r\n";
-        clientCode += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
-        clientCode += "<script type='text/javascript' src='" + Config.Project.urlPrefix + "/js/VKClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
-        clientCode += "</HEAD><BODY style='margin:0px;'>\r\n";
-        clientCode += getClientImageCode();
+        //@todo сделать тут HTML5
+        clientCodeVK = "";
+        clientCodeVK += "<HTML>\r\n";
+        clientCodeVK += "<HEAD>\r\n";
+        clientCodeVK += "<meta charset='utf-8' />\r\n";
+        clientCodeVK += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
+        clientCodeVK += "<script>window.PLATFORM_ID = 'VK';</script>";
+        clientCodeVK += "<script type='text/javascript' src='" + Config.Project.urlPrefix + "/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        clientCodeVK += "</HEAD><BODY style='margin:0px;'>\r\n";
+        clientCodeVK += getClientImageCode();
         /* application div */
-        clientCode += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;top:" + advHeight + "px;' id='applicationArea' ></div>\r\n";
+        clientCodeVK += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;top:" + advHeight + "px;' id='applicationArea' ></div>\r\n";
         /* comments div */
-        clientCode += "<div style='top:" + (Config.Project.applicationAreaHeight + advHeight ) + "px;position:absolute;'>";
-        clientCode += "<iframe src='" + Config.Project.urlPrefix + "/commentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
-        clientCode += "</div>\r\n";
-        clientCode += advCode;
-        clientCode += "</BODY></HTML>";
+        clientCodeVK += "<div style='top:" + (Config.Project.applicationAreaHeight + advHeight ) + "px;position:absolute;'>";
+        clientCodeVK += "<iframe src='" + Config.Project.urlPrefix + "/commentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
+        clientCodeVK += "</div>\r\n";
+        clientCodeVK += advCode;
+        clientCodeVK += "</BODY></HTML>";
 
-        FS.writeFile(ROOT_DIR + '/js/VKClientCodeSource.js', clientJSCode);
+        reloadMainClientCode();
+    };
+
+    /**
+     * �������� ���� ��������� ��� � �������� ��� � ���������� clientCodeVK.
+     */
+    var loadClientCodeStandalone = function () {
+        Logs.log("Load client code.");
+        var code;
+        code = "";
+        code += "<!DOCTYPE html>";
+        code += "<html>";
+        code += "<head>";
+        code += "<meta charset='utf-8' />";
+        code += "<script src='" + Config.Project.urlPrefix + "/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        code += "</head>";
+        code += "<body>";
+        code += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;' id='applicationArea' ></div>\r\n";
+        code += getClientImageCode();
+        code += "</body>";
+        code += "</html>";
+
+        clientCodeStandalone = code;
+
+        reloadMainClientCode();
+    };
+
+    /**
+     * Перезагрузка основного кода клиента.
+     */
+    var reloadMainClientCode = function () {
+        var mainClientJSCode;
+        mainClientJSCode = getMainClientJSCode();
+        FS.writeFile(ROOT_DIR + '/js/MainClientCodeSource.js', mainClientJSCode);
 
         if (Config.WebSocketServer.compressJSClientCode) {
-            var result = UGLIFYJS.minify(clientJSCode, {fromString: true});
-            clientJSCode = result.code;
+            var result = UGLIFYJS.minify(mainClientJSCode, {fromString: true});
+            mainClientJSCode = result.code;
         }
-        FS.writeFile(ROOT_DIR + '/js/VKClientCode.js', clientJSCode);
+        FS.writeFile(ROOT_DIR + '/js/MainClientCode.js', mainClientJSCode);
     };
 
     /**
@@ -161,8 +232,8 @@ LogicClientCodeLoader = function () {
      * @param files[]
      */
     var clientCodePrepareCode = function (files) {
-        var clientCode, path, file_content, name;
-        clientCode = '';
+        var path, file_content, name, code;
+        code = '';
         for (var i in files) {
             path = files[i];
             file_content = FS.readFileSync(path);
@@ -170,20 +241,20 @@ LogicClientCodeLoader = function () {
                 path = path.replace(clientCodePath, '');
                 file_content = FS.readFileSync(path);
             }
-            // clientCode += "\r\n<script type='text/javascript'>" +
-            clientCode += "\r\n/* " + path + " */\r\n";
-            clientCode += file_content;
+            code += "\r\n/* " + path + " */\r\n";
+            code += file_content;
             name = PATH.basename(path, '.js');
             /* ������� ���� � ������ ���������, ��� ����� ��� ������� */
-            clientCode += 'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"};\r\n';
+            code += 'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"};\r\n';
         }
-        return clientCode;
+        return code;
     };
 
     /**
-     * ������ ���������� js-�������.
+     * Собирает основной JS код клиента.
+     * Этот код одинаков для всех социальных сетей(платформ).
      */
-    var getClientJSCode = function () {
+    var getMainClientJSCode = function () {
         var jsFiles, hostname, clientConfigPath, code;
         /* �������� ������ ������ ����������� ����. */
         jsFiles = [];

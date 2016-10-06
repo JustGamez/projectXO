@@ -22,7 +22,17 @@ LogicUser = function () {
         var socNetUserId, authParams;
         socNetUserId = SocNet.getSocNetUserId();
         authParams = SocNet.getAuthParams();
-        SAPIUser.authorizeByVK(socNetUserId, authParams);
+        switch (SocNet.getType()) {
+            case SocNet.TYPE_VK:
+                SAPIUser.authorizeByVK(socNetUserId, authParams);
+                break;
+            case SocNet.TYPE_STANDALONE:
+                SAPIUser.authorizeByStandalone(socNetUserId, authParams);
+                break;
+            default:
+                Logs.log("Wrong soc net type", Logs.LEVEL_FATAL_ERROR);
+                break;
+        }
     };
 
     /**

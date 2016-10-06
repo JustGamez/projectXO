@@ -29,6 +29,16 @@ SAPIUser = function () {
     };
 
     /**
+     * Авторизация через Сайт.
+     * @param cntx контекст соединения
+     * @param socNetUserId id юзера в соц сети
+     * @param authParams параметры аутентифиакации.
+     */
+    this.authorizeByStandalone = function (cntx, socNetUserId, authParams) {
+        Logs.log("TODO ME! SAPIUser.authorizeByStandalone", Logs.LEVEL_WARNING);
+    };
+
+    /**
      * Отправяел информацию о пользователи в текущие соединение.
      * @param cntx object
      * @param userId number
