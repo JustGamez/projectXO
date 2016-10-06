@@ -22,7 +22,7 @@ SocNet = function () {
                 Logs.log("Wrong soc net type", Logs.LEVEL_FATAL_ERROR);
                 break;
         }
-        self.init(afterInitCallBack);
+        self.__proto__.init(afterInitCallBack);
     };
 
     /**
