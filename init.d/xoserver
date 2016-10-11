@@ -11,9 +11,9 @@
 
 DAEMON_PATH="/var/www/xo/server/"
 
-DAEMON="run.sh"
+DAEMON="nodejs"
 
-DAEMONOPTS=""
+DAEMONOPTS="run.js"
 
 OUTPUT_FILE="/var/www/xo/server/xoserver_last.out"
 
@@ -31,7 +31,7 @@ start)
 	printf "%-50s" "Starting $NAME..."
 	cd $DAEMON_PATH
 	
-	PID=`./$DAEMON $DAEMONOPTS > $OUTPUT_FILE 2>&1 & echo $!`
+	PID=`$DAEMON $DAEMONOPTS > $OUTPUT_FILE 2>&1 & echo $!`
 	
 	echo "Saving PID" $PID " to " $PIDFILE
 	
