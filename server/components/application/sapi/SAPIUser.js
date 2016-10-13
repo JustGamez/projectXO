@@ -35,7 +35,23 @@ SAPIUser = function () {
      * @param authParams параметры аутентифиакации.
      */
     this.authorizeByStandalone = function (cntx, socNetUserId, authParams) {
-        Logs.log("TODO ME! SAPIUser.authorizeByStandalone", Logs.LEVEL_WARNING);
+        if (!socNetUserId) {
+            Logs.log("SAPIUser.authorizeByStandalone: must have socNetUserId", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!authParams || typeof authParams != 'object') {
+            Logs.log("SAPIUser.authorizeByStandalone: must have authParams", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (cntx.isAuthorized) {
+            Logs.log("SAPIUser.authorizeByStandalone: user already authorized", Logs.LEVEL_WARNING, {
+                userId: cntx.userId,
+                socNetUserId: socNetUserId
+            });
+            return;
+        }
+        //@todo is it reused code... like a authorizeByVK?
+        LogicUser.authorizeByStandalone(socNetUserId, authParams, cntx);
     };
 
     /**
@@ -144,7 +160,6 @@ SAPIUser = function () {
             Profiler.stop(Profiler.ID_WALLPOST_RECEIVE_DATA, prid2);
         } else {
             var prid3 = Profiler.start(Profiler.ID_WALLPOST_WRITE_FILE);
-			//@todo move to config
             fileName = Config.SAPUUser.postsPath + 'image_' + fileId + '.png';
             content = new Buffer(files[fileId], 'base64');
             delete files[fileId];

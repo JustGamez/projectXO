@@ -3,6 +3,7 @@
  */
 var WEBSOCKET = require('websocket');
 var HTTP = require('http');
+var URL = require('url');
 
 /**
  * Компонент обслуживающий соединения на сервере.
@@ -133,10 +134,11 @@ WebSocketServer = function (givenMap) {
      * @returns {boolean}
      */
     var onHTTPRequest = function (request, response) {
-        var path;
+        var path, requestUrlParts;
         /* Запрашивается клинетский код? */
         for (var path in map) {
-            if (request.url.indexOf(path) == 0) {
+            requestUrlParts = URL.parse(request.url, true);
+            if (requestUrlParts.pathname == path) {
                 map[path].call(null, function (answer) {
                     response.writeHead(200, {'Content-Type': 'text/html'});
                     response.end(answer);

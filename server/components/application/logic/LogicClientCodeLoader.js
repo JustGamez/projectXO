@@ -43,6 +43,7 @@ LogicClientCodeLoader = function () {
     this.init = function () {
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
         clientCodePath = Config.WebSocketServer.clientCodePath;
+        //@todo is it no WebSocketServer config , but is it LogicClientCodeLoader component config.
         imagesPath = Config.WebSocketServer.imagesPath;
         // check before after init
         if (typeof reloadClientCodeEveryRequest != 'boolean') {
@@ -55,7 +56,9 @@ LogicClientCodeLoader = function () {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
         /* �������� ����������� ����. */
+        reloadMainClientCode();
         loadClientCodeVK();
+        loadClientCodeStandalone();
     };
 
     /**
@@ -85,7 +88,7 @@ LogicClientCodeLoader = function () {
         callback(clientCodeVK);
     };
 
-    this.getClientCodeStandalone = function () {
+    this.getClientCodeStandalone = function (callback) {
         if (Config.Project.maintance) {
             var html;
             html = '';
@@ -131,7 +134,7 @@ LogicClientCodeLoader = function () {
      * �������� ���� ��������� ��� � �������� ��� � ���������� clientCodeVK.
      */
     var loadClientCodeVK = function () {
-        var advCode, advHeight;
+        var advCode, advHeight, code;
         Logs.log("Load client code.");
 
         /* ���������� ��������� ���. */
@@ -167,24 +170,24 @@ LogicClientCodeLoader = function () {
             advHeight = 0;
         }
         //@todo сделать тут HTML5
-        clientCodeVK = "";
-        clientCodeVK += "<HTML>\r\n";
-        clientCodeVK += "<HEAD>\r\n";
-        clientCodeVK += "<meta charset='utf-8' />\r\n";
-        clientCodeVK += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
-        clientCodeVK += "<script>window.PLATFORM_ID = 'VK';</script>";
-        clientCodeVK += "<script type='text/javascript' src='" + Config.Project.urlPrefix + "/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
-        clientCodeVK += "</HEAD><BODY style='margin:0px;'>\r\n";
-        clientCodeVK += getClientImageCode();
+        code = "";
+        code += "<HTML>\r\n";
+        code += "<HEAD>\r\n";
+        code += "<meta charset='utf-8' />\r\n";
+        code += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
+        code += "<script>window.PLATFORM_ID = 'VK';</script>";
+        code += "<script type='text/javascript' src='/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        code += "</HEAD><BODY style='margin:0px;'>\r\n";
+        code += getClientImageCode();
         /* application div */
-        clientCodeVK += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;top:" + advHeight + "px;' id='applicationArea' ></div>\r\n";
+        code += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;top:" + advHeight + "px;' id='applicationArea' ></div>\r\n";
         /* comments div */
-        clientCodeVK += "<div style='top:" + (Config.Project.applicationAreaHeight + advHeight ) + "px;position:absolute;'>";
-        clientCodeVK += "<iframe src='" + Config.Project.urlPrefix + "/commentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
-        clientCodeVK += "</div>\r\n";
-        clientCodeVK += advCode;
-        clientCodeVK += "</BODY></HTML>";
-
+        code += "<div style='top:" + (Config.Project.applicationAreaHeight + advHeight ) + "px;position:absolute;'>";
+        code += "<iframe src='/service/commentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
+        code += "</div>\r\n";
+        code += advCode;
+        code += "</BODY></HTML>";
+        clientCodeVK = code;
         reloadMainClientCode();
     };
 
@@ -199,7 +202,8 @@ LogicClientCodeLoader = function () {
         code += "<html>";
         code += "<head>";
         code += "<meta charset='utf-8' />";
-        code += "<script src='" + Config.Project.urlPrefix + "/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        code += "<script>window.PLATFORM_ID = 'STANDALONE';</script>";
+        code += "<script src='/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
         code += "</head>";
         code += "<body>";
         code += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;' id='applicationArea' ></div>\r\n";
@@ -218,13 +222,15 @@ LogicClientCodeLoader = function () {
     var reloadMainClientCode = function () {
         var mainClientJSCode;
         mainClientJSCode = getMainClientJSCode();
-        FS.writeFile(ROOT_DIR + '/js/MainClientCodeSource.js', mainClientJSCode);
+        //@todo path to JS move to Config file
+        //FS.writeFile(ROOT_DIR + '/public/js/MainClientCodeSource.js', mainClientJSCode);
 
         if (Config.WebSocketServer.compressJSClientCode) {
             var result = UGLIFYJS.minify(mainClientJSCode, {fromString: true});
             mainClientJSCode = result.code;
         }
-        FS.writeFile(ROOT_DIR + '/js/MainClientCode.js', mainClientJSCode);
+        //@todo path to JS move to Config file
+        FS.writeFile(ROOT_DIR + '/public/js/MainClientCode.js', mainClientJSCode);
     };
 
     /**
@@ -263,7 +269,7 @@ LogicClientCodeLoader = function () {
         /* Include Config file. */
         hostname = OS.hostname();
         clientConfigPath = clientCodePath + 'Config.' + hostname + '.js';
-        Logs.log("Generate client code. the config file: " + clientConfigPath, Logs.LEVEL_NOTIFY);
+        Logs.log("Generate client code(MainClientCode). the config file: " + clientConfigPath, Logs.LEVEL_NOTIFY);
         jsFiles.push(clientConfigPath);
         jsFiles.push(clientCodePath + '/run.js');
         code = clientCodePrepareCode(jsFiles);
@@ -282,7 +288,7 @@ LogicClientCodeLoader = function () {
         imageCode += "imagesData = {};";
         timePostfix = "?t=" + new Date().getTime();
         for (var i in imageFiles) {
-            path = Config.Project.urlPrefix + imagesPrefix + imageFiles[i].substr(imagesPath.length);
+            path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
             demension = IMAGE_SIZE(imageFiles[i]);
             imageCode += "\r\nimagesData['" + path + "']={path:'" + path + timePostfix + "',w:" + demension.width + ",h:" + demension.height + "};";
         }
@@ -290,7 +296,7 @@ LogicClientCodeLoader = function () {
         /* ������� img ���� ��� ������������. */
         imageCode += "<div style='display:none;'>";
         for (var i in imageFiles) {
-            path = Config.Project.urlPrefix + imagesPrefix + imageFiles[i].substr(imagesPath.length);
+            path = imagesPrefix + imageFiles[i].substr(imagesPath.length);
             imageCode += "\r\n<img src='" + path + timePostfix + "'>";
         }
         imageCode += "</div>";

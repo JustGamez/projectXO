@@ -2,6 +2,10 @@
 
 require('./system/loader.js');
 
+$logicMain = LogicMain();
+$logicMain.main();
+
+
 /* User statistics. */
 /* 1 */
 Statistic.ID_AUTHORIZE = Statistic.getNewId("авторизация через ВКонтакте ");
@@ -54,17 +58,17 @@ Statistic.ID_NOTIFIER_FAILED = Statistic.getNewId("отправка нотифи
 
 /*  WebSocketServer */
 webSocketServer = new WebSocketServer({
-    '/xo/clientCode': LogicClientCodeLoader.getClientCode,  //TODO удалить после изменеия настроек в приложении вКонтаке
-    '/xo/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
-    '/xo/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
-    '/xo/reloadClientCode': LogicClientCodeLoader.reloadClientCode,
-    '/xo/commentsWidget': LogicClientCodeLoader.getVKCommentsWidget,
-    '/xo/status': LogicSystemRequests.getStatus,
-    '/xo/statistic': LogicSystemRequests.getStatistic,
-    '/xo/shutdown___': LogicSystemRequests.shutdown,
-    '/xo/runNotifier': LogicSystemRequests.runNotifier,
-    '/xo/logsSetDetail': LogicSystemRequests.logsSetDetail,
-    '/xo/logsSetNotify': LogicSystemRequests.logsSetNotify
+    '/service/clientCode': LogicClientCodeLoader.getClientCode,  //TODO удалить после изменеия настроек в приложении вКонтаке
+    '/service/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
+    '/service/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
+    '/service/reloadClientCode': LogicClientCodeLoader.reloadClientCode,
+    '/service/commentsWidget': LogicClientCodeLoader.getVKCommentsWidget,
+    '/service/status': LogicSystemRequests.getStatus,
+    '/service/statistic': LogicSystemRequests.getStatistic,
+    '/service/shutdown___': LogicSystemRequests.shutdown,
+    '/service/runNotifier': LogicSystemRequests.runNotifier,
+    '/service/logsSetDetail': LogicSystemRequests.logsSetDetail,
+    '/service/logsSetNotify': LogicSystemRequests.logsSetNotify
 });
 
 /* ApiRouter */

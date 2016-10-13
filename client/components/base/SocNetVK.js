@@ -43,7 +43,7 @@ SocNetVK = function () {
          */
     };
 
-    this.getAuthParams = function () {
+        this.getAuthParams = function () {
         /*	auth_key = md5(app_id+'_'+viewer_id+'_'+app_secret); */
         return {
             authKey: getParams.auth_key,
@@ -105,14 +105,8 @@ SocNetVK = function () {
     };
 
     this.detectIsItThat = function () {
-        //TODO
-        // 1 - изменить настройки приложения вонтакте
-        // путь: http://ktrestik-noliki.xyz/xo/clientCode....
-
-//  https://krestiki-noliki.xyz.local/xo/clientCode?api_url=https://api.vk.com/api.php&api_id=4467180&api_settings=8199&viewer_id=12578187&viewer_type=2&sid=f440116dd70e8e9d9b4e7f41d56739ff71f2e6ae77f7209b5588160c53132df69eebab214df902737c868&secret=4268a596e1&access_token=f3a9117438f30237b5f54b7dd4b586caa096f0f721b8facb43fa4b0b3f24df5f216e4e7f855729b24127c&user_id=12578187&group_id=0&is_app_user=1&auth_key=1bb91dabd1b8e7913c3ebb052f7d2a39&language=0&parent_language=0&ad_info=ElsdCQBeRFJsBAxcAwJSXHt4A0Q8HTJXUVBBJRVBNwoIFjI2HA8E&is_secure=1&ads_app_id=4467180_e6225405a908985a33&referrer=unknown&lc_name=a8e15b4a&hash=
-        // видимо тут мы и определим тип социально сети...
-        // лучш еонечно опредлить по НАШЕМУ УРЛУ!, т.е. изменит ьнатсройки на /xo/clientCodeVK/VK или вроде того...
-        return true;
+        if (window.PLATFORM_ID == 'VK') return true;
+        return false;
     }
 
 };

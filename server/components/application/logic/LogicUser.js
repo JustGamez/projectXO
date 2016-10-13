@@ -36,7 +36,7 @@ LogicUser = function () {
         var socNetTypeId = SocNet.TYPE_VK;
         var checkResult = SocNet(socNetTypeId).checkAuth(socNetUserId, authParams);
         if (!checkResult) {
-            Logs.log("LogicUser: cant auth, SocNet.checkAuth failed.", Logs.LEVEL_WARNING, {
+            Logs.log("LogicUser: cant auth, SocNet.checkAuth failed. (VK)", Logs.LEVEL_WARNING, {
                 socNeUserId: socNetUserId,
                 authParams: authParams
             });
@@ -46,18 +46,42 @@ LogicUser = function () {
         var prid = Profiler.start(Profiler.ID_AUTH_VK);
         /* get from db */
         DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
-            authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx, prid);
+            authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx, prid, Profiler.ID_AUTH_VK);
         });
     };
 
-    var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx, prid) {
+    /**
+     * @todo authorization is equal authorizeByVK! is it reusable code
+     * @param socNetUserId {int}
+     * @param authParams {Object}
+     * @param cntx {Object}
+     */
+    this.authorizeByStandalone = function (socNetUserId, authParams, cntx) {
+        //@todo
+        var socNetTypeId = SocNet.TYPE_STANDALONE;
+        var checkResult = SocNet(socNetTypeId).checkAuth(socNetUserId, authParams);
+        if (!checkResult) {
+            Logs.log("LogicUser: cant auth, SocNet.checkAuth failed.(Standalone)", Logs.LEVEL_WARNING, {
+                socNetUserId: socNetUserId,
+                authParams: authParams
+            });
+        }
+        if (!checkResult) return;
+        var prid = Profiler.start(Profiler.ID_AUTH_STANDALONE);
+        /* get from db */
+        DataUser.getFromSocNet(socNetTypeId, socNetUserId, function (user) {
+            authorizeOrCreate(user, socNetTypeId, socNetUserId, cntx, prid, Profiler.ID_AUTH_STANDALONE);
+        });
+    };
+
+    var authorizeOrCreate = function (user, socNetTypeId, socNetUserId, cntx, prid, profilerType) {
         /* if not exists create user */
         if (!user) {
             createUser(socNetTypeId, socNetUserId, function (user) {
-                authorizeSendSuccess(user, cntx, prid);
+                authorizeSendSuccess(user, cntx, prid, profilerType);
             })
         } else {
-            authorizeSendSuccess(user, cntx, prid);
+            authorizeSendSuccess(user, cntx, prid, profilerType);
         }
     };
 
@@ -79,14 +103,17 @@ LogicUser = function () {
      * Отправить уведомомление клиенту, что авторизация прошла успешно.
      * @param user {Object} инфо пользователя.
      * @param cntx {Object} контекст соединения.
+     * @param prid {int} id профелируйщего таймера
+     * @param profilerType {int} id профайлера.
+     * @todo prid and profilerType conflited by means..
      */
-    var authorizeSendSuccess = function (user, cntx, prid) {
+    var authorizeSendSuccess = function (user, cntx, prid, profilerType) {
         /* тут мы запомним его connectionId раз и на всегда */
         Statistic.add(user.id, Statistic.ID_AUTHORIZE);
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
-        Profiler.stop(Profiler.ID_AUTH_VK, prid);
+        Profiler.stop(profilerType, prid);
         LogicNotifier.onUserLogin(user);
         refreshUserSocNetInfo(user, function (user) {
         });

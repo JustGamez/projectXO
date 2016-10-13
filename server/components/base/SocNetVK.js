@@ -21,7 +21,7 @@ SocNetVK = function () {
      * Получить список друзей из соц сети.
      * @param socNetTypeId {Number} id социальной сети SoNet.TYPE_*
      * @param socNetUserId {Number} id юзера, в социальной сети.
-     * @param callback {Function}
+     * @param callback {Function} is it array of friend ids
      */
     this.getFriends = function (socNetUserId, callback) {
         self.executeMethod('friends.get', {user_id: socNetUserId}, callback);
@@ -56,6 +56,12 @@ SocNetVK = function () {
         )
     };
 
+    /**
+     * @deprecated
+     * @todo remove it after remove LogicNotifier.js file
+     * @param userIds
+     * @param callback
+     */
     this.getUsersOnline = function (userIds, callback) {
         self.executeMethod('users.get', {user_ids: userIds.join(','), fields: 'online'}, function (sourceList) {
             var out;
@@ -69,7 +75,6 @@ SocNetVK = function () {
 
     /**
      * Проверка авторизации
-     * @param socNetTypeId тип социальной сети SocNet.TYPE_*
      * @param socNetUserId id в социальной сети.
      * @param authParams специфичные для соц.сети данные проверки м.
      * @returns {boolean} результат аутентификации.
