@@ -181,7 +181,7 @@ PageBlockBackground = function PageBlockBackground() {
                 var name = inviter.lastName + " " + inviter.firstName[0];
                 name = name.length > 16 ? name.substr(0, 16 - 3) + '...' : name;
                 text += name + ". ";
-                text += "поле " + (inviter.fieldTypeId == LogicXO.FIELD_TYPE_3X3 ? '3х3' : '15х15');
+                text += "поле " + (invite.fieldTypeId == LogicXO.FIELD_TYPE_3X3 ? '3х3' : '15х15');
                 text += " твой знак " + ( signs.XUserId == currentUser.id ? 'х' : 'о' ) + ".";
                 elementInviteText.setText(text);
                 elementInviteButton.show();

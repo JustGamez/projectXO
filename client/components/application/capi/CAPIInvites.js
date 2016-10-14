@@ -5,7 +5,7 @@ CAPIInvites = function () {
      * @param cntx контекст соединения.
      * @param whoId {Number} внутрений id пользователя который пригласил.
      * @param whomId {Number} внутрений id пользователя которого пригласили.
-     * @param fieldTypeId {Number}
+     * @param fieldTypeId {Number} look LogicXO.FIELD_TYPE_*
      * @param signId {Number}
      */
     this.receive = function (cntx, whoId, whomId, fieldTypeId, signId) {

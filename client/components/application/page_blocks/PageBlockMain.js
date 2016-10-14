@@ -207,7 +207,7 @@ PageBlockMain = function PageBlockMain() {
      * Настройка перед отрисовкой.
      */
     this.preset = function () {
-        var usersList, ids, friendIds, onlineIds, user, currentUser, showButtonInvite, showButtonLetsPlay, showIndicatorWaiting, showBusyText, showOfflineText;
+        var usersList, ids, user, currentUser;
         usersList = [];
         ids = [];
         currentUser = LogicUser.getCurrentUser();

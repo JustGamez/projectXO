@@ -11,9 +11,11 @@ LogicInvites = function () {
      * Сохраняет приглашение.
      * @param whoId {Number} внутрений id пользователя который пригласил.
      * @param whomId {Number} внутрений id пользователя которого пригласили.
+     * @param fieldTypeId {Number}
+     * @param signId {Number}
      */
-    this.save = function (whoId, whomId, fielTypeId, signId) {
-        invites.push({whoId: whoId, whomId: whomId, fieldTypeId: fielTypeId, signId: signId});
+    this.save = function (whoId, whomId, fieldTypeId, signId) {
+        invites.push({whoId: whoId, whomId: whomId, fieldTypeId: fieldTypeId, signId: signId});
         PageController.redraw();
     };
 

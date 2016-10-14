@@ -65,7 +65,7 @@ LogicMain = function () {
         Statistic.ID_NOTIFIER_SUCCESS = Statistic.getNewId("отправка нотификации: успешно");
         /* 24*/
         Statistic.ID_NOTIFIER_FAILED = Statistic.getNewId("отправка нотификации: не успешно");
-    }
+    };
 
     this.createWebSocketServer = function () {
         /*  WebSocketServer */
