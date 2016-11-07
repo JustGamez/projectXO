@@ -56,15 +56,15 @@ LogicDrawWallPost = function () {
         /* Стираем всё. */
         context.clearRect(0, 0, canvasWidth, canvasHeight);
         /* 1 - рисуем стол */
-        drawImage(context, '/xo/images/wallPost.png', 0, 0);
+        drawImage(context, '/images/wallPost.png', 0, 0);
         /* 2 - рисуем поле */
-        drawImage(context, '/xo' + cfg.srcField, fieldStartX, fieldStartY);
+        drawImage(context, cfg.srcField, fieldStartX, fieldStartY);
         /* 3 - рисуем знаки */
         for (var y = 0; y < cfg.fieldSize; y++) {
             for (var x = 0; x < cfg.fieldSize; x++) {
                 imageX = fieldStartX + cfg.signOffsetX + x * (cfg.signWidth + cfg.padding);
                 imageY = fieldStartY + cfg.signOffsetY + y * (cfg.signHeight + cfg.padding);
-                src = '/xo/images/notFound.png';
+                src = '/images/notFound.png';
                 switch (game.field[y][x]) {
                     case LogicXO.SIGN_ID_X:
                         src = cfg.srcSignX;
@@ -76,17 +76,17 @@ LogicDrawWallPost = function () {
                         src = cfg.srcSignClear;
                         break;
                 }
-                drawImage(context, '/xo' + src, imageX, imageY);
+                drawImage(context, '' + src, imageX, imageY);
             }
         }
         /* 4 - рисуем линю победы, если есть */
         if (game && game.outcomeResults) {
             if (game.outcomeResults.someBodyWin) {
-                src = '/xo/images/notFound.png';
+                src = '/images/notFound.png';
                 imageX = fieldStartX + cfg.lineOffset + game.outcomeResults.x * (cfg.signWidth + cfg.padding);
                 imageY = fieldStartY + cfg.lineOffset + game.outcomeResults.y * (cfg.signHeight + cfg.padding);
                 src = cfg.lines[game.outcomeResults.lineId];
-                drawImage(context, '/xo' + src, imageX, imageY);
+                drawImage(context, src, imageX, imageY);
             }
         }
         if (!notText) {
@@ -201,104 +201,104 @@ LogicDrawWallPost = function () {
 
     var init = function (callback) {
         loadImages([
-            '/xo/images/fields/15x15Field.png',
-            '/xo/images/fields/15x15SignX.png',
-            '/xo/images/fields/15x15SignO.png',
-            '/xo/images/fields/15x15SignClear.png',
-            '/xo/images/fields/3x3Field.png',
-            '/xo/images/fields/3x3SignX.png',
-            '/xo/images/fields/3x3SignO.png',
-            '/xo/images/fields/3x3SignClear.png',
-            '/xo/images/wallPost.png',
-            '/xo/images/fields/15x15LineHorizontal.png',
-            '/xo/images/fields/15x15LineVertical.png',
-            '/xo/images/fields/15x15LineLeftToDown.png',
-            '/xo/images/fields/15x15LineLeftToUp.png',
-            '/xo/images/fields/3x3LineVertical.png',
-            '/xo/images/fields/3x3LineHorizontal.png',
-            '/xo/images/fields/3x3LineLeftToUp.png',
-            '/xo/images/fields/3x3LineLeftToDown.png',
-            '/xo/images/font/1025.png',
-            '/xo/images/font/1040.png',
-            '/xo/images/font/1041.png',
-            '/xo/images/font/1042.png',
-            '/xo/images/font/1043.png',
-            '/xo/images/font/1044.png',
-            '/xo/images/font/1045.png',
-            '/xo/images/font/1046.png',
-            '/xo/images/font/1047.png',
-            '/xo/images/font/1048.png',
-            '/xo/images/font/1049.png',
-            '/xo/images/font/1050.png',
-            '/xo/images/font/1051.png',
-            '/xo/images/font/1052.png',
-            '/xo/images/font/1053.png',
-            '/xo/images/font/1054.png',
-            '/xo/images/font/1055.png',
-            '/xo/images/font/1056.png',
-            '/xo/images/font/1057.png',
-            '/xo/images/font/1058.png',
-            '/xo/images/font/1059.png',
-            '/xo/images/font/1060.png',
-            '/xo/images/font/1061.png',
-            '/xo/images/font/1062.png',
-            '/xo/images/font/1063.png',
-            '/xo/images/font/1064.png',
-            '/xo/images/font/1065.png',
-            '/xo/images/font/1066.png',
-            '/xo/images/font/1067.png',
-            '/xo/images/font/1068.png',
-            '/xo/images/font/1069.png',
-            '/xo/images/font/1070.png',
-            '/xo/images/font/1071.png',
-            '/xo/images/font/1072.png',
-            '/xo/images/font/1073.png',
-            '/xo/images/font/1074.png',
-            '/xo/images/font/1075.png',
-            '/xo/images/font/1076.png',
-            '/xo/images/font/1077.png',
-            '/xo/images/font/1078.png',
-            '/xo/images/font/1079.png',
-            '/xo/images/font/1080.png',
-            '/xo/images/font/1081.png',
-            '/xo/images/font/1082.png',
-            '/xo/images/font/1083.png',
-            '/xo/images/font/1084.png',
-            '/xo/images/font/1085.png',
-            '/xo/images/font/1086.png',
-            '/xo/images/font/1087.png',
-            '/xo/images/font/1088.png',
-            '/xo/images/font/1089.png',
-            '/xo/images/font/1090.png',
-            '/xo/images/font/1091.png',
-            '/xo/images/font/1092.png',
-            '/xo/images/font/1093.png',
-            '/xo/images/font/1094.png',
-            '/xo/images/font/1095.png',
-            '/xo/images/font/1096.png',
-            '/xo/images/font/1097.png',
-            '/xo/images/font/1098.png',
-            '/xo/images/font/1099.png',
-            '/xo/images/font/1100.png',
-            '/xo/images/font/1101.png',
-            '/xo/images/font/1102.png',
-            '/xo/images/font/1103.png',
-            '/xo/images/font/1105.png',
-            '/xo/images/font/32.png',
-            '/xo/images/font/33.png',
-            '/xo/images/font/45.png',
-            '/xo/images/font/46.png',
-            '/xo/images/font/48.png',
-            '/xo/images/font/49.png',
-            '/xo/images/font/50.png',
-            '/xo/images/font/51.png',
-            '/xo/images/font/52.png',
-            '/xo/images/font/53.png',
-            '/xo/images/font/54.png',
-            '/xo/images/font/55.png',
-            '/xo/images/font/56.png',
-            '/xo/images/font/57.png',
-            '/xo/images/font/58.png'
+            '/images/fields/15x15Field.png',
+            '/images/fields/15x15SignX.png',
+            '/images/fields/15x15SignO.png',
+            '/images/fields/15x15SignClear.png',
+            '/images/fields/3x3Field.png',
+            '/images/fields/3x3SignX.png',
+            '/images/fields/3x3SignO.png',
+            '/images/fields/3x3SignClear.png',
+            '/images/wallPost.png',
+            '/images/fields/15x15LineHorizontal.png',
+            '/images/fields/15x15LineVertical.png',
+            '/images/fields/15x15LineLeftToDown.png',
+            '/images/fields/15x15LineLeftToUp.png',
+            '/images/fields/3x3LineVertical.png',
+            '/images/fields/3x3LineHorizontal.png',
+            '/images/fields/3x3LineLeftToUp.png',
+            '/images/fields/3x3LineLeftToDown.png',
+            '/images/font/1025.png',
+            '/images/font/1040.png',
+            '/images/font/1041.png',
+            '/images/font/1042.png',
+            '/images/font/1043.png',
+            '/images/font/1044.png',
+            '/images/font/1045.png',
+            '/images/font/1046.png',
+            '/images/font/1047.png',
+            '/images/font/1048.png',
+            '/images/font/1049.png',
+            '/images/font/1050.png',
+            '/images/font/1051.png',
+            '/images/font/1052.png',
+            '/images/font/1053.png',
+            '/images/font/1054.png',
+            '/images/font/1055.png',
+            '/images/font/1056.png',
+            '/images/font/1057.png',
+            '/images/font/1058.png',
+            '/images/font/1059.png',
+            '/images/font/1060.png',
+            '/images/font/1061.png',
+            '/images/font/1062.png',
+            '/images/font/1063.png',
+            '/images/font/1064.png',
+            '/images/font/1065.png',
+            '/images/font/1066.png',
+            '/images/font/1067.png',
+            '/images/font/1068.png',
+            '/images/font/1069.png',
+            '/images/font/1070.png',
+            '/images/font/1071.png',
+            '/images/font/1072.png',
+            '/images/font/1073.png',
+            '/images/font/1074.png',
+            '/images/font/1075.png',
+            '/images/font/1076.png',
+            '/images/font/1077.png',
+            '/images/font/1078.png',
+            '/images/font/1079.png',
+            '/images/font/1080.png',
+            '/images/font/1081.png',
+            '/images/font/1082.png',
+            '/images/font/1083.png',
+            '/images/font/1084.png',
+            '/images/font/1085.png',
+            '/images/font/1086.png',
+            '/images/font/1087.png',
+            '/images/font/1088.png',
+            '/images/font/1089.png',
+            '/images/font/1090.png',
+            '/images/font/1091.png',
+            '/images/font/1092.png',
+            '/images/font/1093.png',
+            '/images/font/1094.png',
+            '/images/font/1095.png',
+            '/images/font/1096.png',
+            '/images/font/1097.png',
+            '/images/font/1098.png',
+            '/images/font/1099.png',
+            '/images/font/1100.png',
+            '/images/font/1101.png',
+            '/images/font/1102.png',
+            '/images/font/1103.png',
+            '/images/font/1105.png',
+            '/images/font/32.png',
+            '/images/font/33.png',
+            '/images/font/45.png',
+            '/images/font/46.png',
+            '/images/font/48.png',
+            '/images/font/49.png',
+            '/images/font/50.png',
+            '/images/font/51.png',
+            '/images/font/52.png',
+            '/images/font/53.png',
+            '/images/font/54.png',
+            '/images/font/55.png',
+            '/images/font/56.png',
+            '/images/font/57.png',
+            '/images/font/58.png'
         ], callback);
     };
 
@@ -319,7 +319,7 @@ LogicDrawWallPost = function () {
                 //fuck off! @fuckOff @todo
                 Logs.log("LogicDrawWallPost. symbol does not found!", Logs.LEVEL_WARNING);
             } else {
-                symbol_url = "/xo/images/font/" + charCode + ".png";
+                symbol_url = "/images/font/" + charCode + ".png";
                 resultWidth += images[symbol_url].width * scale;
             }
         }
@@ -338,7 +338,7 @@ LogicDrawWallPost = function () {
                 //fuck off! @fuckOff @todo
                 Logs.log("LogicDrawWallPost. symbol does not found!", Logs.LEVEL_WARNING);
             } else {
-                symbol_url = "/xo/images/font/" + charCode + ".png";
+                symbol_url = "/images/font/" + charCode + ".png";
                 drawImage(context, symbol_url, x, y, images[symbol_url].width * scale, images[symbol_url].height * scale);
                 x += images[symbol_url].width * scale;
             }
