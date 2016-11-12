@@ -55,8 +55,7 @@ LogicClientCodeLoader = function () {
         if (typeof imagesPath != 'string') {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
-        /* �������� ����������� ����. */
-        reloadMainClientCode();
+        /* Обновим клиентский код. */
         loadClientCodeVK();
         loadClientCodeStandalone();
     };
