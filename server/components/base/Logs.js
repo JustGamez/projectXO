@@ -50,7 +50,14 @@ Logs = function () {
         // добавим к тексту лога детали, если они были переданы
         if (details) logText += ' ' + details;
         // выведем на экран
-        console.log(" > " + logText);
+        switch (level) {
+            case Logs.LEVEL_WARNING:
+                console.warn(   " > " + logText);
+                break;
+            default:
+                console.log(" > " + logText);
+                break;
+        }
         // если это фатальная ошибка - завершим работу программы.
         if (level == Logs.LEVEL_FATAL_ERROR) {
             throw new Error("Vse polamalos'!");

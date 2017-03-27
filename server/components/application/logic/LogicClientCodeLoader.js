@@ -35,7 +35,7 @@ LogicClientCodeLoader = function () {
 
 
     /**
-     * ���� ������ ��������� ���������� ���.
+     * Инитиализация
      * @type {string}
      */
     var clientCodePath = null;
@@ -191,7 +191,7 @@ LogicClientCodeLoader = function () {
     };
 
     /**
-     * �������� ���� ��������� ��� � �������� ��� � ���������� clientCodeVK.
+     * Загрузка клиенсткого кода для стэндэлон версии.
      */
     var loadClientCodeStandalone = function () {
         Logs.log("Load client code.");
@@ -267,7 +267,13 @@ LogicClientCodeLoader = function () {
         jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'components/'));
         /* Include Config file. */
         hostname = OS.hostname();
-        clientConfigPath = clientCodePath + 'Config.' + hostname + '.js';
+        var parentFolderName = (function () {
+            var cwd;
+            cwd = process.cwd().split(PATH.sep);
+            cwd.pop();
+            return cwd.pop();
+        })();
+        clientConfigPath = clientCodePath + 'Config.' + hostname + '.' + parentFolderName + '.js';
         Logs.log("Generate client code(MainClientCode). the config file: " + clientConfigPath, Logs.LEVEL_NOTIFY);
         jsFiles.push(clientConfigPath);
         jsFiles.push(clientCodePath + '/run.js');

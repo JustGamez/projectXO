@@ -72,44 +72,26 @@ CAPIGame = function () {
         }
 
         if (LogicGame.getCurrentGameId() == created.id) {
-            if (created.vsRobot && LogicXO.isHisTurn(created, 0)) {
-                setTimeout(function () {
-                    SAPIRobotGame.raiseAIMove(created.id)
-                }, 750);
-            }
             if (created.vsRobot == false) {
                 LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
             }
         }
         PageController.showPage(PageXOGame);
         PageController.redraw();
+
+        LogicGame.onTurnStart(created);
     };
 
-    this.updateMove = function (cntx, gameId, x, y) {
-        var game, currentGameId;
+    this.updateMove = function (cntx, gameId, x, y, timerStartPoint) {
+        var game;
         game = LogicGame.getById(gameId);
-        currentGameId = LogicGame.getCurrentGameId();
         if (!game) {
             Logs.log("CAPIGAme.updateMove some error.", Logs.LEVEL_ERROR);
             return;
         }
-        Sounds.play('/sounds/turn.mp3');
-        /* Мы ставим это у себя. */
-        game = LogicXO.setSign(game, x, y);
-        game = LogicXO.switchTurn(game);
+        game.timerStartPoint = timerStartPoint;
+        LogicGame.onSetSign(game, x, y);
         LogicGame.update(game);
-        /* В этом случае, мы являемсяе наблюдателем. */
-        if (LogicGame.getLookingGameId()) {
-            LogicXO.setOutcomeResults(game, LogicXO.findWinLine(game));
-            LogicGame.update(game);
-        }
-        if (game.id == currentGameId && game.vsRobot) {
-            LogicXO.setOutcomeResults(game, LogicXO.findWinLine(game));
-            LogicGame.update(game);
-            if (game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin) {
-                SAPIGame.checkWinner(gameId);
-            }
-        }
     };
 };
 

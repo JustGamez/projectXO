@@ -6,6 +6,12 @@ LogicXO = function () {
     var self = this;
 
     /**
+     * Время таймера, сколько на ход?
+     * @type {number} миллисекунды  .
+     */
+    this.TIMER_TIMEOUT = 1000 * 60;
+
+    /**
      * Тип поля 3 на 3.
      * @type {number}
      */
@@ -275,6 +281,7 @@ LogicXO = function () {
      */
     this.run = function (game) {
         game.status = LogicXO.STATUS_RUN;
+        game = self.resetTimer(game);
         return game;
     };
 
@@ -336,6 +343,8 @@ LogicXO = function () {
      * @param y {Number}
      */
     this.userCanDoMove = function (game, userId, x, y) {
+        //check timer
+        if (game.gameTime && self.timerIsFinished(game)) return false;
         var fieldSize;
         if (!LogicXO.isMember(game, userId)) return false;
         if (!LogicXO.isHisTurn(game, userId)) return false;
@@ -368,6 +377,7 @@ LogicXO = function () {
      * @returns {*}
      */
     this.switchTurn = function (game) {
+        game = self.resetTimer(game);
         switch (game.turnId) {
             case LogicXO.SIGN_ID_X:
                 game.turnId = LogicXO.SIGN_ID_O;
@@ -620,7 +630,40 @@ LogicXO = function () {
         if (game.fieldTypeId == LogicXO.FIELD_TYPE_3X3 && game.vsRobot) {
             return user.score3x3vsRobot;
         }
-        Logs.log("LogicXO.getScoreByGame. can't detec score for game", Logs.LEVELR_WARNING, {game: game, user: user});
+        Logs.log("LogicXO.getScoreByGame. can't detect score for game", Logs.LEVELR_WARNING, {game: game, user: user});
+    };
+
+    /**
+     * Сбрасывает таймер.
+     * @param game
+     * @returns {*}
+     */
+    this.resetTimer = function (game) {
+        game.timerStartPoint = mtime();
+        return game;
+    };
+
+    /**
+     * Закончился ли таймер.
+     * @param game
+     * @returns {boolean}
+     */
+    this.timerIsFinished = function (game) {
+        return this.getTimerMilliseconds(game) == 0;
+    };
+
+    /**
+     * Возвращает миллисекунды оставшегося времени.
+     * @param game
+     */
+    this.getTimerMilliseconds = function (game) {
+        var tStart, tNow, tDiff;
+        tStart = game.timerStartPoint;
+        tNow = mtime();
+        //@Todo текущее время нужно брать с сервера, а не локальное :)
+        tDiff = LogicXO.TIMER_TIMEOUT - (tNow - tStart);
+        if (tDiff < 0) tDiff = 0;
+        return tDiff;
     };
 };
 

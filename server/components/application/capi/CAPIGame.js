@@ -18,8 +18,8 @@ CAPIGame = function () {
         LogicUser.sendToUser(toUserId, 'CAPIGame', 'gameCreated', [gameId]);
     };
 
-    this.updateMove = function (toUserId, gameId, x, y) {
-        LogicUser.sendToUser(toUserId, 'CAPIGame', 'updateMove', [gameId, x, y]);
+    this.updateMove = function (toUserId, gameId, x, y, timerStartPoint) {
+        LogicUser.sendToUser(toUserId, 'CAPIGame', 'updateMove', [gameId, x, y, timerStartPoint]);
     };
 };
 

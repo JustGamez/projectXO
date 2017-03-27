@@ -43,7 +43,7 @@ LogicPageXO = function () {
      * @param y {Number}
      */
     this.onFieldSignClick = function (x, y) {
-        var game, user, winLine, checkWinLine;
+        var game, user;
         game = LogicGame.getCurrentGame();
         user = LogicUser.getCurrentUser();
         if (!game) {
@@ -54,27 +54,9 @@ LogicPageXO = function () {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
-        Sounds.play('/sounds/turn.mp3');
+        LogicGame.onSetSign(game, x, y);
         /* Сообщим серверу. */
         SAPIGame.doMove(game.id, x, y);
-        /* Обновим у нас. */
-        game = LogicXO.setSign(game, x, y);
-        game = LogicXO.switchTurn(game);
-        /* Проверим, есть ли победитель. */
-        winLine = LogicXO.findWinLine(game);
-        game = LogicXO.setOutcomeResults(game, winLine);
-        LogicGame.update(game);
-        if (game.vsRobot) {
-            if (!(game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin)) {
-                setTimeout(function () {
-                    SAPIRobotGame.raiseAIMove(game.id)
-                }, 350);
-            }
-        }
-        if (game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin) {
-            /* send win line coords */
-            SAPIGame.checkWinner(game.id);
-        }
     };
 
     /**

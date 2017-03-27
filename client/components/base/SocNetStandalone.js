@@ -30,7 +30,6 @@ SocNetStandalone = function () {
 
     this.getSocNetUserId = function () {
         var socNetUserId;
-        // getQueryVariable('socNetUserId');
         socNetUserId = getQueryVariable('socNetUserId');
         if (!socNetUserId) {
             //@todo we need a real guest!!! :)

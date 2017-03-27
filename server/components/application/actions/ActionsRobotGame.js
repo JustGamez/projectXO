@@ -54,10 +54,10 @@ ActionsRobotGame = function () {
                 game = LogicXO.setSign(game, AICoords.x, AICoords.y);
                 game = LogicXO.switchTurn(game);
                 DataGame.save(game, function (game) {
-                    CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y);
+                    CAPIGame.updateMove(game.creatorUserId, game.id, game.lastMove.x, game.lastMove.y, game.timerStartPoint);
                     var lookers = LogicGameLookers.get(game.id);
                     for (var userId in lookers) {
-                        CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
+                        CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y, game.timerStartPoint);
                     }
                     Profiler.stop(Profiler.ID_ROBOT_THINKING, prid);
                 });

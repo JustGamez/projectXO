@@ -28,11 +28,11 @@ SAPIGame = function () {
         ActionsGame.doMove(cntx.userId, gameId, x, y, function (game) {
             /* Если по приглашению, оповестим оппонента, в игре с роботом этого не нужно. */
             if (game.isInvitation) {
-                CAPIGame.updateMove(LogicXO.getOpponentUserId(game, cntx.userId), game.id, game.lastMove.x, game.lastMove.y);
+                CAPIGame.updateMove(LogicXO.getOpponentUserId(game, cntx.userId), game.id, game.lastMove.x, game.lastMove.y, game.timerStartPoint);
             }
             var lookers = LogicGameLookers.get(game.id);
             for (var userId in lookers) {
-                CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y);
+                CAPIGame.updateMove(userId, game.id, game.lastMove.x, game.lastMove.y, game.timerStartPoint);
             }
         });
     };
@@ -75,6 +75,44 @@ SAPIGame = function () {
         });
     };
 
+    /**
+     * Проверим таймер игры.
+     * Если время вышло, то сбросим таймер,
+     * переключим ход и сообщим, конечно, игрокам об этом :)
+     */
+    this.checkTimer = function (cntx, gameId) {
+        var game;
+        if (!cntx.isAuthorized) {
+            Logs.log("SAPIRobotGame.checkWinner: must be authorized", Logs.LEVEL_WARNING);
+            return;
+        }
+        if (!gameId || typeof gameId != 'number') {
+            Logs.log("SAPIRobotGame.checkWinner: must have gameId", Logs.LEVEL_WARNING, gameId);
+            return;
+        }
+
+        DataGame.getById(gameId, function (game) {
+            if (!game || !game.id) {
+                Logs.log("SAPIGame.checkWinner: game does not exits.", Logs.LEVEL_WARNING, gameId);
+                return;
+            }
+            if (LogicXO.timerIsFinished(game)) {
+                LogicXO.resetTimer(game);
+                LogicXO.switchTurn(game);
+                if (LogicXO.isHisTurn(game, 0) && game.vsRobot) {
+                    ActionsRobotGame.raiseAIMove(game.id);
+                }
+                DataGame.save(game, function (game) {
+                    CAPIGame.updateInfo(game.creatorUserId, game);
+                    if (!game.vsRobot) {
+                        CAPIGame.updateInfo(game.joinerUserId, game);
+                    }
+                });
+            } else {
+                Logs.log("SAPIGame.checktimer. check timer, but ...", Logs.LEVEL_WARNING);
+            }
+        });
+    };
 
     /**
      * Закроем игру, обычно это означает, что игрок вышел из игры.

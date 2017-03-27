@@ -69,6 +69,11 @@ LogicGame = function () {
         return games[gameId];
     };
 
+    /**
+     * Мы будем просить сервер проверять таймер игры
+     */
+    var checkTimerTimerId;
+
     var lookingGameId;
     this.setLookingGameId = function (id) {
         lookingGameId = id;
@@ -76,6 +81,49 @@ LogicGame = function () {
 
     this.getLookingGameId = function () {
         return lookingGameId;
+    };
+
+    this.onSetSign = function (game, x, y) {
+        var winLine;
+        if (checkTimerTimerId) {
+            clearTimeout(checkTimerTimerId);
+        }
+        Sounds.play('/sounds/turn.mp3');
+        /* Обновим у нас. */
+        LogicXO.setSign(game, x, y);
+        LogicXO.switchTurn(game);
+        /* Проверим, есть ли победитель. */
+        winLine = LogicXO.findWinLine(game);
+        LogicXO.setOutcomeResults(game, winLine);
+        LogicGame.update(game);
+
+        // вынос проверки на клиент
+        if (game.id == LogicGame.getCurrentGameId() && game.vsRobot) {
+            if (game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin) {
+                SAPIGame.checkWinner(game.id);
+            }
+        }
+        if (game.status == LogicXO.STATUS_RUN) {
+            LogicGame.onTurnStart(game);
+        }
+    };
+
+    this.onTurnStart = function (game) {
+        var ourGame, isOurTurn;
+        ourGame = LogicGame.getCurrentGameId() == game.id;
+        isOurTurn = LogicXO.isHisTurn(game, LogicUser.getCurrentUser().id);
+        // если это наша игра с роботом, и ход робота - попросим сервер сделать ход :)
+        if (ourGame && game.vsRobot && game.status == LogicXO.STATUS_RUN && !isOurTurn) {
+            setTimeout(function () {
+                SAPIRobotGame.raiseAIMove(game.id)
+            }, 350);
+        }
+        // если это наша игра, и ход наш, то запустим таймер на проверку таймера-игры
+        if ((ourGame && isOurTurn) || game.vsRobot) {
+            checkTimerTimerId = setTimeout(function () {
+                SAPIGame.checkTimer(game.id);
+            }, LogicXO.TIMER_TIMEOUT + 5);//добавим 5 м.секунд, что бы точно попасть в timeout :)
+        }
     };
 };
 

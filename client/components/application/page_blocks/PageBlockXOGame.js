@@ -48,6 +48,12 @@ PageBlockXOGame = function PageBlockXOGame() {
     var elementButtonAgain = null;
 
     /**
+     * Элемент, таймер игры.
+     * @type {ElementGraphicText}
+     */
+    var elementTimer = null;
+
+    /**
      * @type {GUIDom}
      */
     var domSignX;
@@ -115,6 +121,8 @@ PageBlockXOGame = function PageBlockXOGame() {
 
     var textVariants = null;
 
+    var timerTimerId = null;
+
     /**
      * Собствено проинициализируем нашу страницу.
      */
@@ -122,36 +130,178 @@ PageBlockXOGame = function PageBlockXOGame() {
 
         textVariants = [
             {status: LogicXO.STATUS_WAIT, text: gameStatusTextList.waiting},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: true, text: gameStatusTextList.yourTurnX},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.opponentTurnX},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: true, text: gameStatusTextList.yourTurnO},
-            {status: LogicXO.STATUS_RUN, isLooking: false, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.opponentTurnO},
+            {
+                status: LogicXO.STATUS_RUN,
+                isLooking: false,
+                turnId: LogicXO.SIGN_ID_X,
+                isOurTurn: true,
+                text: gameStatusTextList.yourTurnX
+            },
+            {
+                status: LogicXO.STATUS_RUN,
+                isLooking: false,
+                turnId: LogicXO.SIGN_ID_X,
+                isOurTurn: false,
+                text: gameStatusTextList.opponentTurnX
+            },
+            {
+                status: LogicXO.STATUS_RUN,
+                isLooking: false,
+                turnId: LogicXO.SIGN_ID_O,
+                isOurTurn: true,
+                text: gameStatusTextList.yourTurnO
+            },
+            {
+                status: LogicXO.STATUS_RUN,
+                isLooking: false,
+                turnId: LogicXO.SIGN_ID_O,
+                isOurTurn: false,
+                text: gameStatusTextList.opponentTurnO
+            },
 
-            {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_X, isOurTurn: false, text: gameStatusTextList.turnX},
-            {status: LogicXO.STATUS_RUN, isLooking: true, turnId: LogicXO.SIGN_ID_O, isOurTurn: false, text: gameStatusTextList.turnO},
+            {
+                status: LogicXO.STATUS_RUN,
+                isLooking: true,
+                turnId: LogicXO.SIGN_ID_X,
+                isOurTurn: false,
+                text: gameStatusTextList.turnX
+            },
+            {
+                status: LogicXO.STATUS_RUN,
+                isLooking: true,
+                turnId: LogicXO.SIGN_ID_O,
+                isOurTurn: false,
+                text: gameStatusTextList.turnO
+            },
 
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_UNKNOWN, text: gameStatusTextList.youWinSexUnknown},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_MAN, text: gameStatusTextList.youWinSexMan},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: true, sex: SocNet.SEX_WOMAN, text: gameStatusTextList.youWinSexWoman},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: false, isOurWin: false, text: gameStatusTextList.opponentWin},
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: false,
+                isOurWin: true,
+                sex: SocNet.SEX_UNKNOWN,
+                text: gameStatusTextList.youWinSexUnknown
+            },
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: false,
+                isOurWin: true,
+                sex: SocNet.SEX_MAN,
+                text: gameStatusTextList.youWinSexMan
+            },
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: false,
+                isOurWin: true,
+                sex: SocNet.SEX_WOMAN,
+                text: gameStatusTextList.youWinSexWoman
+            },
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: false,
+                isOurWin: false,
+                text: gameStatusTextList.opponentWin
+            },
 
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: true, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_X, text: gameStatusTextList.XWin},
-            {status: LogicXO.STATUS_SOMEBODY_WIN, isLooking: true, vsRobot: false, winSignId: LogicXO.SIGN_ID_O, text: gameStatusTextList.OWin},
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: true,
+                vsRobot: true,
+                winSignId: LogicXO.SIGN_ID_X,
+                text: gameStatusTextList.XWin
+            },
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: true,
+                vsRobot: true,
+                winSignId: LogicXO.SIGN_ID_O,
+                text: gameStatusTextList.OWin
+            },
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: true,
+                vsRobot: false,
+                winSignId: LogicXO.SIGN_ID_X,
+                text: gameStatusTextList.XWin
+            },
+            {
+                status: LogicXO.STATUS_SOMEBODY_WIN,
+                isLooking: true,
+                vsRobot: false,
+                winSignId: LogicXO.SIGN_ID_O,
+                text: gameStatusTextList.OWin
+            },
 
             {status: LogicXO.STATUS_NOBODY_WIN, text: gameStatusTextList.nobodyWin},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: false, vsRobot: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
-            {status: LogicXO.STATUS_NOBODY_WIN, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
+            {
+                status: LogicXO.STATUS_NOBODY_WIN,
+                isLooking: false,
+                vsRobot: false,
+                opponentLeave: true,
+                text: gameStatusTextList.opponentLeave
+            },
+            {
+                status: LogicXO.STATUS_NOBODY_WIN,
+                isLooking: true,
+                vsRobot: false,
+                XLeave: true,
+                OLeave: false,
+                text: gameStatusTextList.playerXLeave
+            },
+            {
+                status: LogicXO.STATUS_NOBODY_WIN,
+                isLooking: true,
+                vsRobot: false,
+                XLeave: false,
+                OLeave: true,
+                text: gameStatusTextList.playerOLeave
+            },
+            {
+                status: LogicXO.STATUS_NOBODY_WIN,
+                isLooking: true,
+                vsRobot: false,
+                XLeave: true,
+                OLeave: true,
+                text: gameStatusTextList.playersLeave
+            },
 
             {status: LogicXO.STATUS_CLOSED, text: gameStatusTextList.closed},
-            {status: LogicXO.STATUS_CLOSED, isLooking: false, opponentLeave: true, text: gameStatusTextList.opponentLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: false, text: gameStatusTextList.playerXLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: false, OLeave: true, text: gameStatusTextList.playerOLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: false, XLeave: true, OLeave: true, text: gameStatusTextList.playersLeave},
-            {status: LogicXO.STATUS_CLOSED, isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
+            {
+                status: LogicXO.STATUS_CLOSED,
+                isLooking: false,
+                opponentLeave: true,
+                text: gameStatusTextList.opponentLeave
+            },
+            {
+                status: LogicXO.STATUS_CLOSED,
+                isLooking: true,
+                vsRobot: false,
+                XLeave: true,
+                OLeave: false,
+                text: gameStatusTextList.playerXLeave
+            },
+            {
+                status: LogicXO.STATUS_CLOSED,
+                isLooking: true,
+                vsRobot: false,
+                XLeave: false,
+                OLeave: true,
+                text: gameStatusTextList.playerOLeave
+            },
+            {
+                status: LogicXO.STATUS_CLOSED,
+                isLooking: true,
+                vsRobot: false,
+                XLeave: true,
+                OLeave: true,
+                text: gameStatusTextList.playersLeave
+            },
+            {
+                status: LogicXO.STATUS_CLOSED,
+                isLooking: true,
+                vsRobot: true,
+                bothLeave: true,
+                text: gameStatusTextList.playerLeave
+            },
 
             /* Это должно быть внизу таблицы! */
             {isLooking: true, vsRobot: true, bothLeave: true, text: gameStatusTextList.playerLeave},
@@ -328,6 +478,14 @@ PageBlockXOGame = function PageBlockXOGame() {
         });
         element.setText('5');
         elementCameraWait = element;
+        element = GUI.createElement(ElementGraphicText, {
+            x: 575,
+            y: 345,
+            width: 140,
+            text: '00 : 00'
+        });
+        self.elements.push(element);
+        elementTimer = element;
     };
 
     /**
@@ -341,6 +499,7 @@ PageBlockXOGame = function PageBlockXOGame() {
             self.elements[i].show();
         }
         self.redraw();
+        timerTimerId = setInterval(self.redrawTimer, 1000 / 35);
     };
 
     /**
@@ -363,6 +522,7 @@ PageBlockXOGame = function PageBlockXOGame() {
         elementWallPostWait.hide();
         elementCameraButton.hide();
         elementCameraWait.hide();
+        clearInterval(timerTimerId);
     };
 
     /**
@@ -541,6 +701,11 @@ PageBlockXOGame = function PageBlockXOGame() {
             clearInterval(wallPostIntervalId);
             wallPostIntervalId = false;
         }
+        if (game && game.status == LogicXO.STATUS_RUN) {
+            elementTimer.show();
+        } else {
+            elementTimer.hide();
+        }
     };
 
     var getRobotDummy = function () {
@@ -581,8 +746,47 @@ PageBlockXOGame = function PageBlockXOGame() {
         for (var i in self.elements) {
             self.elements[i].redraw();
         }
+        // отдельно, потому что не хотим показывтаь при вызове .show функции.
         elementWallPostWait.redraw();
         elementCameraWait.redraw();
+    };
+
+    /**
+     * Да, таймер перерисовываем отдельно,
+     * так надо потому что перерисовка будет раз в 1000/35 миллисекунду(real-time)!
+     * Всю страницу перерисовывать так часто не надо, т.е. это оптимизация, хотя механизм перерисовки страницы достаточно быстрый,
+     * т.е. не перерисовывает ненужные элементы, все же
+     */
+    this.redrawTimer = function () {
+        console.log('redraw timer');
+        var game, text, dateLast, tLast;
+        game = LogicGame.getCurrentGame();
+        if (!game) {
+            //try get looking game!
+            lookingId = LogicGame.getLookingGameId();
+            if (lookingId) {
+                game = LogicGame.getById(lookingId);
+            }
+        }
+        tLast = LogicXO.getTimerMilliseconds(game);
+        dateLast = new Date(tLast);
+        text =
+            str_pad(dateLast.getMinutes()) + ':' +
+            str_pad(dateLast.getSeconds());
+
+        // показать время.ммм т.е. это точка и  текущая точка, т.е. их разница
+        elementTimer.setText(text);
+        elementTimer.redraw();
+    };
+
+    /**
+     * Дополним нулями значение и вернёт строку
+     * Тут это специфичная функция, дополнит нулями число спереди до 2ух знаков.
+     * @param sourceValue {Mixed}
+     * @todo эта функция уже есть в Logs.js
+     */
+    var str_pad = function (sourceValue) {
+        return "00000".substr(0, 2 - sourceValue.toString().length) + sourceValue;
     };
 };
 
