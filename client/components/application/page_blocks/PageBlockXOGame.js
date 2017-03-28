@@ -758,7 +758,6 @@ PageBlockXOGame = function PageBlockXOGame() {
      * т.е. не перерисовывает ненужные элементы, все же
      */
     this.redrawTimer = function () {
-        console.log('redraw timer');
         var game, text, dateLast, tLast;
         game = LogicGame.getCurrentGame();
         if (!game) {
