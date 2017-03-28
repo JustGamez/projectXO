@@ -25,15 +25,19 @@ DataGame = function () {
 
     var cache = [];
 
-    var autoIncrementValue = null;
+    var lastGamesId = null;
     var notSavedIds = [];
 
     this.init = function (afterInitCallback) {
-        DB.query("SELECT `AUTO_INCREMENT` as autoIncrement FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'xo' AND TABLE_NAME   = 'games';", function (rows) {
-            autoIncrementValue = rows[0].autoIncrement;
-            Logs.log("games.autoincrementId:" + autoIncrementValue, Logs.LEVEL_NOTIFY);
+        // "SELECT `AUTO_INCREMENT` as autoIncrement FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'xo' AND TABLE_NAME   = 'games';
+        DB.query("SELECT MAX(id) as `autoIncrement` FROM games;", function (rows) {
+            lastGamesId = rows[0].autoIncrement;
+            Logs.log("games.autoincrementId:" + lastGamesId, Logs.LEVEL_NOTIFY);
             afterInitCallback();
         });
+        setTimeout(function () {
+            DataGame.flushCache(true);
+        }, Config.DataGame.checkCacheEvery);
     };
 
     /**
@@ -67,37 +71,29 @@ DataGame = function () {
      */
     this.save = function (game, callback) {
         if (!game.id) {
-            game.id = autoIncrementValue++;
+            game.id = ++lastGamesId;
             cache[game.id] = game;
             notSavedIds[game.id] = true;
             callback(game);
-            setTimeout(function () {
-                flushGameById(game.id, false);
-            }, 120000);
         } else {
             if (!cache[game.id]) {
                 Logs.log("DataGame.save", "game does not exists in cache. strange...", Logs.LEVEL_WARNING, game);
             }
             cache[game.id] = game;
+            //@todo remove it after 28.05.2017
             switch (game.status) {
                 // Если статус запущено\ждём, то обновляем в кэше.
                 case LogicXO.STATUS_WAIT:
                 case LogicXO.STATUS_RUN:
-                    callback(game);
-                    break;
-                // Если статус закрыто\выиграл\ничья, то удаляем из кэша и обновляем в БД.
                 case LogicXO.STATUS_CLOSED:
                 case LogicXO.STATUS_SOMEBODY_WIN:
                 case LogicXO.STATUS_NOBODY_WIN:
-                    callback(game);
-                    setTimeout(function () {
-                        flushGameById(game.id);
-                    }, Config.DataGame.cacheFinishedGameTimeout);
                     break;
                 default:
                     Logs.log("DataGame.save. unknown games status", Logs.LEVEL_WARNING, game);
                     break;
             }
+            callback(game);
         }
     };
 
@@ -119,41 +115,43 @@ DataGame = function () {
         return out;
     };
 
-    this.flushCache = function () {
+    this.flushCache = function (checkCreated) {
         Logs.log("Flush data game cache begin.");
         cache.forEach(function (game) {
+            // 5часов если прошло, то сливаем, иначе пусть в кэшэ остается.
+            if (checkCreated && (game.created > (time() + Config.DataGame.cacheCreatedKeepSeconds))) {
+                return;
+            }
+            if (game.status == LogicXO.STATUS_RUN) return;
             flushGameById(game.id);
             Logs.log("Game flushed. id:" + game.id + " status:" + game.status);
         });
+        setTimeout(function () {
+            DataGame.flushCache(true);
+        }, Config.DataGame.checkCacheEvery);
     };
 
-    var flushGameById = function (id, deleteCache) {
+    var flushGameById = function (id) {
         var game;
-        if (deleteCache == undefined) {
-            deleteCache = true;
-        }
         game = cache[id];
         if (notSavedIds[id]) {
-            delete notSavedIds[game.id];
             DB.insert(tableName, game, function (result) {
-                //@todo Cannot read property `insertId` of undefined
-                if (!result) {
-                    console.log(game);
-                    Logs.log("DataGame.save. result. is undefined, something wrong here", Logs.LEVEL_ERROR, game);
-                    return;
-                }
-                if (result.insertId != game.id) {
-                    Logs.log("DataGame.save. result. insertId != game.id", Logs.LEVEL_WARNING, game);
-                }
-                if (deleteCache) {
+                    //@todo Cannot read property `insertId` of undefined
+                    if (!result) {
+                        console.log(game);
+                        Logs.log("DataGame.save. result. is undefined, something wrong here", Logs.LEVEL_ERROR, game);
+                        return;
+                    }
+                    if (result.insertId != game.id) {
+                        Logs.log("DataGame.save. result. insertId != game.id", Logs.LEVEL_WARNING, game);
+                    }
+                    delete notSavedIds[game.id];
                     delete cache[game.id];
-                }
-            }, fields, {field: compressField});
+                }, fields, {field: compressField},
+                'flushGameById');
         } else {
             DB.update(tableName, game, function () {
-                if (deleteCache) {
-                    delete cache[game.id];
-                }
+                delete cache[game.id];
             }, fields, {field: compressField});
         }
     }

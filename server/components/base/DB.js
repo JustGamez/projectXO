@@ -117,9 +117,10 @@ DB = function () {
      * @param values {object} объект значений { fieldName: value }.
      * @param callback {function}.
      */
-    this.insert = function (tableName, values, callback, fields, packFunctions) {
+    this.insert = function (tableName, values, callback, fields, packFunctions, comment) {
         var query, value, fieldsSQL, valuesSQL;
         query = fieldsSQL = valuesSQL = '';
+        if (comment) query += "/*" + comment + "*/";
         query += "INSERT INTO " + tableName;
         if (!fields) {
             fields = values;

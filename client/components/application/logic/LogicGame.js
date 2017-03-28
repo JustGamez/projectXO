@@ -109,6 +109,7 @@ LogicGame = function () {
     };
 
     this.onTimerFinished = function (game, timerStartPoint) {
+        if (game.status != LogicXO.STATUS_RUN) return;
         if (checkTimerTimerId) {
             clearTimeout(checkTimerTimerId);
         }
@@ -118,13 +119,11 @@ LogicGame = function () {
         game.timerStartPoint = timerStartPoint;
         LogicXO.switchTurn(game);
         LogicGame.update(game);
-        if (game.status == LogicXO.STATUS_RUN) {
-            LogicGame.onTurnStart(game);
-        }
+        LogicGame.onTurnStart(game);
     };
 
     this.onTurnStart = function (game) {
-        var ourGame, isOurTurn;
+        var ourGame, isOurTurn, gameId;
         ourGame = LogicGame.getCurrentGameId() == game.id;
         isOurTurn = LogicXO.isHisTurn(game, LogicUser.getCurrentUser().id);
         // если это наша игра с роботом, и ход робота - попросим сервер сделать ход :)
@@ -133,11 +132,18 @@ LogicGame = function () {
                 SAPIRobotGame.raiseAIMove(game.id)
             }, 350);
         }
+        gameId = game.id;
         // если это наша игра, и ход наш, то запустим таймер на проверку таймера-игры
         if (ourGame && (isOurTurn || game.vsRobot)) {
             checkTimerTimerId = setTimeout(function () {
-                SAPIGame.checkTimer(game.id);
-            }, LogicXO.TIMER_TIMEOUT + 5);//добавим 5 м.секунд, что бы точно попасть в timeout :)
+                var game = LogicGame.getById(gameId);
+                console.log(game);
+                if (game.status !== LogicXO.STATUS_RUN) {
+                    return;
+                }
+                SAPIGame.checkTimer(gameId);
+            }, LogicXO.TIMER_TIMEOUT + 5);//добавим 5 милли секунд, что бы точно попасть в timeout :)
+            Logs.log('Timer start, game.id=' + game.id + ' checkTimerTimerId=' + checkTimerTimerId, Logs.LEVEL_DETAIL);
         }
     };
 };

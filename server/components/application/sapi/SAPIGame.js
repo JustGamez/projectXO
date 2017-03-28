@@ -96,6 +96,10 @@ SAPIGame = function () {
                 Logs.log("SAPIGame.checkWinner: game does not exits.", Logs.LEVEL_WARNING, gameId);
                 return;
             }
+            if (game.status !== LogicXO.STATUS_RUN) {
+                Logs.log("SAPI.checkTimer. game is not run, but checkTimer requestd", Logs.LEVEL_WARNING, game);
+                return;
+            }
             if (LogicXO.timerIsFinished(game)) {
                 LogicXO.resetTimer(game);
                 LogicXO.switchTurn(game);
@@ -109,22 +113,8 @@ SAPIGame = function () {
                         CAPIGame.onTimerFinished(userId, game.id, game.timerStartPoint);
                     }
                 });
-
-                //!!!!
-                // 0 - is it robot id
-                /*
-                 if (LogicXO.isHisTurn(game, 0) && game.vsRobot) {
-                 ActionsRobotGame.raiseAIMove(game.id);
-                }
-                DataGame.save(game, function (game) {
-                 //   CAPIGame.updateInfo(game.creatorUserId, game);
-                    if (!game.vsRobot) {
-                   //     CAPIGame.updateInfo(game.joinerUserId, game);
-                    }
-                });
-                */
             } else {
-                Logs.log("SAPIGame.checktimer. check timer, but ...", Logs.LEVEL_WARNING);
+                Logs.log("SAPIGame.checkTimer. check timer, but ...", Logs.LEVEL_WARNING, game);
             }
         });
     };
