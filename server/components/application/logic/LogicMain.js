@@ -74,12 +74,24 @@ LogicMain = function () {
             '/service/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
             '/service/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
             '/service/reloadClientCode': LogicClientCodeLoader.reloadClientCode,
-            '/service/commentsWidget': LogicClientCodeLoader.getVKCommentsWidget,
-            '/service/status': LogicSystemRequests.getStatus,
-            '/service/statistic': LogicSystemRequests.getStatistic,
-            '/service/shutdown___': LogicSystemRequests.shutdown,
-            '/service/logsSetDetail': LogicSystemRequests.logsSetDetail,
-            '/service/logsSetNotify': LogicSystemRequests.logsSetNotify
+            '/service/VKCommentsWidget': LogicClientCodeLoader.getVKCommentsWidget,
+
+            '/service/--status': LogicSystemRequests.getStatus,
+            '/service/--statistic': LogicSystemRequests.getStatistic,
+            '/service/--shutdown___': LogicSystemRequests.shutdown,
+            '/service/--logsSetDetail': LogicSystemRequests.logsSetDetail,
+            '/service/--logsSetNotify': LogicSystemRequests.logsSetNotify,
+            '/service/--help' : function(callback){
+                callback("--status <br>" +
+                    "--statistic <br>" +
+                    "--logsSetDetail<br>" +
+                    "--logsSetNotify<br>" +
+                    "--help<br>" +
+                    "<br>" +
+                    "reloadClientCode<br>" +
+                    "clientCodeVK<br>" +
+                    "clientCodeStandalone?socNetUserId={socNetUserId}<br>");
+            }
         });
     };
 
