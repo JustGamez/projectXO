@@ -54,9 +54,10 @@ LogicPageXO = function () {
             Logs.log("current user can't go right now", Logs.LEVEL_DETAIL);
             return;
         }
-        LogicGame.onSetSign(game, x, y);
         /* Сообщим серверу. */
         SAPIGame.doMove(game.id, x, y);
+        /* Выполняем эвент. */
+        LogicGame.onSetSign(game, x, y);
     };
 
     /**
