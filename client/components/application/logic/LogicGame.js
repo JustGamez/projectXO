@@ -119,7 +119,7 @@ LogicGame = function () {
             }, 350);
         }
         // если это наша игра, и ход наш, то запустим таймер на проверку таймера-игры
-        if ((ourGame && isOurTurn) || game.vsRobot) {
+        if (ourGame && (isOurTurn || game.vsRobot)) {
             checkTimerTimerId = setTimeout(function () {
                 SAPIGame.checkTimer(game.id);
             }, LogicXO.TIMER_TIMEOUT + 5);//добавим 5 м.секунд, что бы точно попасть в timeout :)
