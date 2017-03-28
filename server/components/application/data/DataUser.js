@@ -26,7 +26,6 @@ DataUser = function () {
     };
 
     var autoIncrementValue = null;
-    var notSavedIds = [];
 
     this.init = function (afterInitCallback) {
         DB.query("SELECT `AUTO_INCREMENT` as autoIncrement FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + Config.DB.database + "' AND TABLE_NAME   = 'users';", function (rows) {
