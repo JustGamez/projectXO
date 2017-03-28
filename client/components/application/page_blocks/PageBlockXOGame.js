@@ -768,12 +768,15 @@ PageBlockXOGame = function PageBlockXOGame() {
                 game = LogicGame.getById(lookingId);
             }
         }
-        tLast = LogicXO.getTimerMilliseconds(game);
-        dateLast = new Date(tLast);
-        text =
-            str_pad(dateLast.getMinutes()) + ':' +
-            str_pad(dateLast.getSeconds());
-
+        if (game) {
+            tLast = LogicXO.getTimerMilliseconds(game);
+            dateLast = new Date(tLast);
+            text =
+                str_pad(dateLast.getMinutes()) + ':' +
+                str_pad(dateLast.getSeconds());
+        } else {
+            text = "00:00";
+        }
         // показать время.ммм т.е. это точка и  текущая точка, т.е. их разница
         elementTimer.setText(text);
         elementTimer.redraw();

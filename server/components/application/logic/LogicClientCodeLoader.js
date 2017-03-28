@@ -22,6 +22,13 @@ LogicClientCodeLoader = function () {
     var reloadClientCodeEveryRequest = null;
 
     /**
+     * Перезагружать ли код картинок каждый раз.
+     * @todo передлеать как : clientImagesCodeCache
+     * @type {boolean}
+     */
+    var reloadClientImageCodeEveryRequest = null;
+
+    /**
      * Client code VK.
      * @type {string}
      */
@@ -33,7 +40,13 @@ LogicClientCodeLoader = function () {
      */
     var clientCodeStandalone = '';
 
+    /**
+     * Client code for images
+     * @type {string}
+     */
+    var clientImageCode = '';
 
+    var imagesPath;
     /**
      * Инитиализация
      * @type {string}
@@ -42,6 +55,7 @@ LogicClientCodeLoader = function () {
 
     this.init = function () {
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
+        reloadClientImageCodeEveryRequest = Config.WebSocketServer.reloadClientImageCodeEveryRequest;
         clientCodePath = Config.WebSocketServer.clientCodePath;
         //@todo is it no WebSocketServer config , but is it LogicClientCodeLoader component config.
         imagesPath = Config.WebSocketServer.imagesPath;
@@ -284,10 +298,13 @@ LogicClientCodeLoader = function () {
     };
 
     /**
-     * ������ ���������� ��������.
+     * Формирует Js-код картинок.
      */
     var getClientImageCode = function () {
         var imageFiles, imageCode, path, timePostfix, demension;
+        if (!reloadClientImageCodeEveryRequest && clientImageCode) {
+            return clientImageCode;
+        }
         imageFiles = getFileListRecursive(imagesPath);
         imageCode = "<script>";
         imageCode += "imagesData = {};";
@@ -305,6 +322,8 @@ LogicClientCodeLoader = function () {
             imageCode += "\r\n<img src='" + path + timePostfix + "'>";
         }
         imageCode += "</div>";
+        // cache it
+        clientImageCode = imageCode;
         return imageCode;
     };
 

@@ -15,7 +15,13 @@ require('./functions.js');
 loadAllComponents(process.cwd() + '/components/');
 /* Include Config file. */
 var hostname = OS.hostname();
-var configPath = './../Config.' + hostname + '.js';
+var parentFolderName = (function () {
+    var cwd;
+    cwd = process.cwd().split(PATH.sep);
+    cwd.pop();
+    return cwd.pop();
+})();
+var configPath = './../Config.' + hostname + '.' + parentFolderName + '.js';
 Logs.log("Config file: " + configPath, Logs.LEVEL_NOTIFY);
 require(configPath);
 

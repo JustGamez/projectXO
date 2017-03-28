@@ -7,9 +7,9 @@ LogicXO = function () {
 
     /**
      * Время таймера, сколько на ход?
-     * @type {number} миллисекунды  .
+     * @type {number} миллисекунды
      */
-    this.TIMER_TIMEOUT = 1000 * 60;
+    this.TIMER_TIMEOUT = 1000 * 10;
 
     /**
      * Тип поля 3 на 3.
@@ -644,11 +644,12 @@ LogicXO = function () {
     };
 
     /**
-     * Закончился ли таймер.
+     * Закончился ли таймер :)
      * @param game
      * @returns {boolean}
      */
     this.timerIsFinished = function (game) {
+        if(!game) return false;
         return this.getTimerMilliseconds(game) == 0;
     };
 
