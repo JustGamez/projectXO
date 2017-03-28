@@ -34,6 +34,14 @@ LogicUser = function () {
      */
     this.authorizeByVK = function (socNetUserId, authParams, cntx) {
         var socNetTypeId = SocNet.TYPE_VK;
+        socNetUserId = parseInt(socNetUserId);
+        if (isNaN(socNetUserId)) {
+            Logs.log("LogicUser: cant auth, SocNet.checkAuth failed. (VK), socNetUserId is not a number", Logs.LEVEL_WARNING, {
+                socNeUserId: socNetUserId,
+                authParams: authParams
+            });
+            return;
+        }
         var checkResult = SocNet(socNetTypeId).checkAuth(socNetUserId, authParams);
         if (!checkResult) {
             Logs.log("LogicUser: cant auth, SocNet.checkAuth failed. (VK)", Logs.LEVEL_WARNING, {
@@ -57,8 +65,15 @@ LogicUser = function () {
      * @param cntx {Object}
      */
     this.authorizeByStandalone = function (socNetUserId, authParams, cntx) {
-        //@todo
         var socNetTypeId = SocNet.TYPE_STANDALONE;
+        socNetUserId = parseInt(socNetUserId);
+        if (isNaN(socNetUserId)) {
+            Logs.log("LogicUser: cant auth, SocNet.checkAuth failed. (VK), socNetUserId is not a number", Logs.LEVEL_WARNING, {
+                socNeUserId: socNetUserId,
+                authParams: authParams
+            });
+            return;
+        }
         var checkResult = SocNet(socNetTypeId).checkAuth(socNetUserId, authParams);
         if (!checkResult) {
             Logs.log("LogicUser: cant auth, SocNet.checkAuth failed.(Standalone)", Logs.LEVEL_WARNING, {
