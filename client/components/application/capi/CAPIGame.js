@@ -91,7 +91,16 @@ CAPIGame = function () {
         }
         game.timerStartPoint = timerStartPoint;
         LogicGame.onSetSign(game, x, y);
-        LogicGame.update(game);
+    };
+
+    this.onTimerFinished = function (cntx, gameId, timerStartPoint) {
+        var game;
+        game = LogicGame.getById(gameId);
+        if (!game) {
+            Logs.log("CAPIGAme.updateMove some error.", Logs.LEVEL_ERROR);
+            return;
+        }
+        LogicGame.onTimerFinished(game, timerStartPoint);
     };
 };
 

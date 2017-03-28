@@ -108,6 +108,21 @@ LogicGame = function () {
         }
     };
 
+    this.onTimerFinished = function (game, timerStartPoint) {
+        if (checkTimerTimerId) {
+            clearTimeout(checkTimerTimerId);
+        }
+        //@todo some sound here like a pip?
+        //Sounds.play('/sounds/turn.mp3');
+        /* Обновим у нас. */
+        game.timerStartPoint = timerStartPoint;
+        LogicXO.switchTurn(game);
+        LogicGame.update(game);
+        if (game.status == LogicXO.STATUS_RUN) {
+            LogicGame.onTurnStart(game);
+        }
+    };
+
     this.onTurnStart = function (game) {
         var ourGame, isOurTurn;
         ourGame = LogicGame.getCurrentGameId() == game.id;

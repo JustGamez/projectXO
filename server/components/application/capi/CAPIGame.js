@@ -21,6 +21,10 @@ CAPIGame = function () {
     this.updateMove = function (toUserId, gameId, x, y, timerStartPoint) {
         LogicUser.sendToUser(toUserId, 'CAPIGame', 'updateMove', [gameId, x, y, timerStartPoint]);
     };
+
+    this.onTimerFinished = function (toUserId, gameId, timerStartPoint) {
+        LogicUser.sendToUser(toUserId, 'CAPIGame', 'onTimerFinished', [gameId, timerStartPoint]);
+    };
 };
 
 /**

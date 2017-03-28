@@ -64,7 +64,7 @@ SAPIGame = function () {
                 LogicUser.onWin(game.winnerId, game);
             }
             LogicUser.onGameFinish(game.creatorUserId, game);
-            if (!game.vsRobot)LogicUser.onGameFinish(game.joinerUserId, game);
+            if (!game.vsRobot) LogicUser.onGameFinish(game.joinerUserId, game);
             DataGame.save(game, function (game) {
                 // @todo CAPIGame.winData
                 CAPIGame.updateInfo(game.creatorUserId, game);
@@ -99,15 +99,30 @@ SAPIGame = function () {
             if (LogicXO.timerIsFinished(game)) {
                 LogicXO.resetTimer(game);
                 LogicXO.switchTurn(game);
-                if (LogicXO.isHisTurn(game, 0) && game.vsRobot) {
-                    ActionsRobotGame.raiseAIMove(game.id);
-                }
                 DataGame.save(game, function (game) {
-                    CAPIGame.updateInfo(game.creatorUserId, game);
+                    CAPIGame.onTimerFinished(game.creatorUserId, game.id, game.timerStartPoint);
                     if (!game.vsRobot) {
-                        CAPIGame.updateInfo(game.joinerUserId, game);
+                        CAPIGame.onTimerFinished(game.joinerUserId, game.id, game.timerStartPoint);
+                    }
+                    var lookers = LogicGameLookers.get(game.id);
+                    for (var userId in lookers) {
+                        CAPIGame.onTimerFinished(userId, game.id, game.timerStartPoint);
                     }
                 });
+
+                //!!!!
+                // 0 - is it robot id
+                /*
+                 if (LogicXO.isHisTurn(game, 0) && game.vsRobot) {
+                 ActionsRobotGame.raiseAIMove(game.id);
+                }
+                DataGame.save(game, function (game) {
+                 //   CAPIGame.updateInfo(game.creatorUserId, game);
+                    if (!game.vsRobot) {
+                   //     CAPIGame.updateInfo(game.joinerUserId, game);
+                    }
+                });
+                */
             } else {
                 Logs.log("SAPIGame.checktimer. check timer, but ...", Logs.LEVEL_WARNING);
             }
