@@ -57,23 +57,6 @@ SocNetVK = function () {
     };
 
     /**
-     * @deprecated
-     * @todo remove it after remove LogicNotifier.js file
-     * @param userIds
-     * @param callback
-     */
-    this.getUsersOnline = function (userIds, callback) {
-        self.executeMethod('users.get', {user_ids: userIds.join(','), fields: 'online'}, function (sourceList) {
-            var out;
-            out = [];
-            sourceList.forEach(function (source) {
-                out[source.uid] = {socNetUserId: source.uid, online: source.online};
-            });
-            callback(out);
-        })
-    };
-
-    /**
      * Проверка авторизации
      * @param socNetUserId id в социальной сети.
      * @param authParams специфичные для соц.сети данные проверки м.

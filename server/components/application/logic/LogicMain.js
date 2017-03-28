@@ -78,7 +78,6 @@ LogicMain = function () {
             '/service/status': LogicSystemRequests.getStatus,
             '/service/statistic': LogicSystemRequests.getStatistic,
             '/service/shutdown___': LogicSystemRequests.shutdown,
-            '/service/runNotifier': LogicSystemRequests.runNotifier,
             '/service/logsSetDetail': LogicSystemRequests.logsSetDetail,
             '/service/logsSetNotify': LogicSystemRequests.logsSetNotify
         });
