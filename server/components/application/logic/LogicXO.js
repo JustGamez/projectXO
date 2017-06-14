@@ -9,7 +9,7 @@ LogicXO = function () {
      * Время таймера, сколько на ход?
      * @type {number} миллисекунды
      */
-    this.TIMER_TIMEOUT = 1000 * 10;
+    this.TIMER_TIMEOUT = 1000 * 60;
 
     /**
      * Тип поля 3 на 3.
