@@ -141,7 +141,7 @@ LogicUser = function () {
                 host: 'smtp.gmail.com',
                 auth: {
                     user: Config.Mail.user,
-                    pass: Config.Mail.password,
+                    pass: Config.Mail.password
                 }
             });
 
