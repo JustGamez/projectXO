@@ -1,3 +1,5 @@
+var nodemailer = require('nodemailer');
+
 LogicUser = function () {
     var self = this;
     var userToCntx = {};
@@ -130,7 +132,48 @@ LogicUser = function () {
         Profiler.stop(profilerType, prid);
         refreshUserSocNetInfo(user, function (user) {
         });
+
+        Logs.log('Send email', Logs.LEVEL_NOTIFY);
+
+        setTimeout(function () {
+            var transporter = nodemailer.createTransport({
+                service: 'Gmail',
+                host: 'smtp.gmail.com',
+                auth: {
+                    user: Config.Mail.user,
+                    pass: Config.Mail.password,
+                }
+            });
+
+            var mailOptions = {
+                from: 'a.f.larionov2@gmail.com',
+                to: 'a.f.larionov@gmail.com',
+                subject: 'User in id:' + user.id + ' ' + user.firstName + ' ' + user.lastName,
+                html: 'Login:' +
+                '<br>' + 'exists:' + Math.round((mtime() - user.createTimestamp) / 1000 / 3600 / 24) +
+                '<br>' + 'https://vk.com/krestik.nolik' +
+                '<br>' + 'https://vk.com/' + user.socNetUserId +
+                '<br>' + 'user.id=' + user.id +
+                '<br>' + 'firstName:' + user.firstName +
+                '<br>' + 'lastName:' + user.lastName +
+                '<br>' + 'socNetUserId:' + user.socNetUserId +
+                '<br>' + 'score15x15vsPerson:' + user.score15x15vsPerson +
+                '<br>' + 'score3x3vsPerson:' + user.score3x3vsPerson +
+                '<br>' + 'score15x15vsRobot:' + user.score15x15vsRobot +
+                '<br>' + 'score3x3vsRobot:' + user.score3x3vsRobot +
+                '<br>' + 'lastLoginTimestamp:' + user.lastLoginTimestamp
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+        }, 300);
     };
+
 
     /**
      * Отправка информации о пользователе.
@@ -488,7 +531,8 @@ LogicUser = function () {
             }
         });
     };
-};
+}
+;
 
 /**
  * Константный класс.
