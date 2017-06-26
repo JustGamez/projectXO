@@ -41,7 +41,7 @@ DataUser = function () {
      * @param socNetUserId id пользователя в социальной сети.
      * @param callback
      */
-    this.getFromSocNet = function (socNetTypeId, socNetUserId, callback) {
+    this.getBySocNet = function (socNetTypeId, socNetUserId, callback) {
         DB.queryWhere(tableName, {
             socNetTypeId: [socNetTypeId],
             socNetUserId: [socNetUserId]

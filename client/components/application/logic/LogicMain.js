@@ -27,10 +27,7 @@ LogicMain = function () {
         /* Link ApiRouter and WebSocketClient */
         apiRouter.sendData = webSocketClient.sendData;
         webSocketClient.onData = apiRouter.onData;
-        webSocketClient.onConnect = function (connectionId) {
-            apiRouter.onConnect(connectionId);
-            LogicUser.authorize();
-        };
+        webSocketClient.onConnect = this.onConnect;
         webSocketClient.onDisconnect = apiRouter.onDisconnect;
 
         /* @todo do it automaticaly*/
@@ -45,4 +42,13 @@ LogicMain = function () {
         /* running */
         webSocketClient.run();
     };
+
+    /**
+     * After connect
+     * @param connectionId
+     */
+    this.onConnect = function (connectionId) {
+        apiRouter.onConnect(connectionId);
+        LogicUser.authorize();
+    }
 };
