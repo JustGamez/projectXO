@@ -45,6 +45,7 @@ LogicFriends = function () {
      * Обновить данные о друзьях
      * @param userId {Number} внутрений id юзера.
      * @param friendList {Number} внутрение id друзей.
+     * @deprecated
      */
     this.updateFriends = function (userId, friendList) {
         waitForLoadingUser[userId] = false;

@@ -13,6 +13,7 @@ CAPIUser = function () {
      * Обновить данные о пользователи.
      * @param cntx {Object} контекст соединения.
      * @param user {Object} юзер инфо.
+     * @deprecated
      */
     this.updateUserInfo = function (cntx, user) {
         LogicUser.updateUserInfo(user);
@@ -23,6 +24,7 @@ CAPIUser = function () {
      * @param cntx {Object} контекст соединения.
      * @param userId {Number} id int пользователя, чьи друзья
      * @param friends {Number[]} список друзей.
+     * @deprecated
      */
     this.updateFriends = function (cntx, userId, friends) {
         LogicFriends.updateFriends(userId, friends);

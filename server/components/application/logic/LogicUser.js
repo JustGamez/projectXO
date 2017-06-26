@@ -47,7 +47,7 @@ LogicUser = function () {
         var checkResult = SocNet(socNetTypeId).checkAuth(socNetUserId, authParams);
         if (!checkResult) {
             Logs.log("LogicUser: cant auth, SocNet.checkAuth failed. (VK)", Logs.LEVEL_WARNING, {
-                socNeUserId: socNetUserId,
+                socNetUserId: socNetUserId,
                 authParams: authParams
             });
             return;
@@ -130,6 +130,7 @@ LogicUser = function () {
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
         Profiler.stop(profilerType, prid);
+        //TODO
         refreshUserSocNetInfo(user, function (user) {
         });
 
@@ -241,6 +242,7 @@ LogicUser = function () {
      * Отправка списка друзей в соединение.
      * @param userId {Number}
      * @param cntx {object} контекст соединения
+     * @deprecated
      */
     this.sendFriends = function (userId, cntx) {
         var prid = Profiler.start(Profiler.ID_SEND_FRIENDS);

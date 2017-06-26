@@ -23,6 +23,7 @@ CAPIUser = function () {
      * @param toUserId {Number} кому отправляем.
      * @param userId id int пользователя, чьи друзья
      * @param friends [] список друзей.
+     * @deprecated
      */
     this.updateFriends = function (toUserId, userId, friends) {
         LogicUser.sendToUser(toUserId, 'CAPIUser', 'updateFriends', [userId, friends]);
