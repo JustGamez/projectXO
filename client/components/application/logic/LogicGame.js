@@ -98,7 +98,7 @@ LogicGame = function () {
         LogicGame.update(game);
 
         // вынос проверки на клиент
-        if (game.id == LogicGame.getCurrentGameId() && game.vsRobot) {
+        if (game.id == LogicGame.getCurrentGameId()) {
             if (game.outcomeResults.someBodyWin || game.outcomeResults.noBodyWin) {
                 SAPIGame.checkWinner(game.id);
             }
