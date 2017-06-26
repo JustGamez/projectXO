@@ -14,7 +14,7 @@ SAPIUser = function () {
             Logs.log("SAPIUser.authorizeByVK: must have socNetUserId", Logs.LEVEL_WARNING);
             return;
         }
-        if (!authParams || typeof authParams != 'object') {
+        if (!authParams || typeof authParams !== 'object') {
             Logs.log("SAPIUser.authorizeByVK: must have authParams", Logs.LEVEL_WARNING);
             return;
         }

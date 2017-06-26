@@ -69,7 +69,7 @@ DataUser = function () {
         });
     };
 
-    var waitForCreateByScoNet = [];
+    var waitForCreateBySocNet = [];
     /**
      * Создать пользователя по данным из социальной сети.
      * @param socNetTypeId id социальной сети SocNet.TYPE_*
@@ -78,8 +78,8 @@ DataUser = function () {
      */
     this.createFromSocNet = function (socNetTypeId, socNetUserId, callback) {
         /* Предотвращение двойной мгновенной регистрации. */
-        if (waitForCreateByScoNet[socNetUserId])return;
-        waitForCreateByScoNet[socNetUserId] = true;
+        if (waitForCreateBySocNet[socNetUserId])return;
+        waitForCreateBySocNet[socNetUserId] = true;
         var user = {
             id: autoIncrementValue++,
             firstName: '',
@@ -99,9 +99,9 @@ DataUser = function () {
         callback(user);
         DB.insert(tableName, user, function (result) {
             if (result.insertId != user.id) {
-                Logs.log("DataUser.createFromSocNet. result.insertId != user.id", Logs.LEVEL_ERROR);
+                Logs.log("DataUser.createFromSocNet. result.insertId != user.id", Logs.LEVEL_FATAL_ERROR);
             }
-            delete waitForCreateByScoNet[socNetUserId];
+            delete waitForCreateBySocNet[socNetUserId];
         });
     };
 
