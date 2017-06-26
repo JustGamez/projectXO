@@ -168,8 +168,8 @@ ApiRouter = function (apiMap) {
         var pureData;
         pureData = {};
         for (var group in map) {
-            for (var method in GLOBAL[group]) {
-                if (typeof GLOBAL[group][method] != 'function')continue;
+            for (var method in global[group]) {
+                if (typeof global[group][method] != 'function')continue;
                 if (!pureData[group]) {
                     pureData[group] = {};
                 }

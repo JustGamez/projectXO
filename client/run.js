@@ -1,7 +1,7 @@
 window.onload = function () {
     Logs.log('OnLoad raized', Logs.LEVEL_NOTIFY);
     /* Эмуляция совместимости клиентского и серверного кода. */
-    GLOBAL = window;
+    global = window;
     process = {};
     process.exit = function () {
         console.log("Внезапное завершение работы!");

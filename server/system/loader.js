@@ -55,7 +55,7 @@ function loadAllComponents(path) {
         /*log("component:" + getComponentNameFromPath(path));*/
         require(path);
         validateComponent(path);
-        GLOBAL[getComponentNameFromPath(path)].__path = path;
+        global[getComponentNameFromPath(path)].__path = path;
     };
 
     /**
@@ -74,12 +74,12 @@ function loadAllComponents(path) {
     var validateComponent = function (path) {
         var name;
         name = getComponentNameFromPath(path);
-        if (!GLOBAL[name]) {
+        if (!global[name]) {
             error("Файл компонента должен содержать определение компонента." +
                 "\r\nфайл: " + path + "" +
                 "\r\nкомпонент: " + name);
         }
-        if (!(typeof GLOBAL[name] == 'function' || typeof GLOBAL[name] == 'object')) {
+        if (!(typeof global[name] == 'function' || typeof global[name] == 'object')) {
             error("Определение компонента должно иметь тип function." +
                 "\r\nфайл: " + path + "" +
                 "\r\nкомпонент: " + name);
