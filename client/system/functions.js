@@ -92,12 +92,12 @@ str_pad = function (str, len, pad, dir) {
  * Возвращает время в секундах.
  */
 time = function () {
-    return Math.floor((new Date()).getTime() / 1000);
+    return LogicTimeClient.getTime();
 };
 
 /**
  * Возвращает время в миллисекундах секундах.
  */
 mtime = function () {
-    return new Date().getTime();
+    return LogicTimeClient.getMicroTime();
 };

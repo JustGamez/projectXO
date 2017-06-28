@@ -40,6 +40,7 @@ LogicUser = function () {
      * @param userId
      */
     this.authorizeSuccess = function (userId) {
+        /** @todo useR? **/
         var user;
         authorizedUserId = userId;
         Logs.log("Authorization success. userId:" + userId, Logs.LEVEL_NOTIFY);
@@ -47,6 +48,7 @@ LogicUser = function () {
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
         SAPIUser.sendMeOnlineUserIds();
+        SAPITimeServer.sendMeTime();
         SAPIRating.sendMeLastPosition();
         waitForLoadingUser = [];
         if (LogicGame.getLookingGameId()) {

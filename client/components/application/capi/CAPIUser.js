@@ -16,6 +16,8 @@ CAPIUser = function () {
      * @deprecated
      */
     this.updateUserInfo = function (cntx, user) {
+        user.createTimestamp = LogicTimeClient.convertToClient(user.createTimestamp);
+        user.lastLoginTimestamp = LogicTimeClient.convertToClient(user.lastLoginTimestamp);
         LogicUser.updateUserInfo(user);
     };
 

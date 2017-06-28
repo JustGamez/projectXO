@@ -98,6 +98,7 @@ LogicMain = function () {
     this.createApiRouter = function () {
 
         /* ApiRouter */
+        /* @todo use SAPI folder */
         apiRouter = new ApiRouter({
             SAPIUser: SAPIUser,
             SAPIGame: SAPIGame,
@@ -108,7 +109,8 @@ LogicMain = function () {
             SAPIRating: SAPIRating,
             SAPIRepeatGame: SAPIRepeatGame,
             SAPIStatistic: SAPIStatistic,
-            SAPIGameLooks: SAPIGameLooks
+            SAPIGameLooks: SAPIGameLooks,
+            SAPITimeServer: SAPITimeServer
         });
     };
 

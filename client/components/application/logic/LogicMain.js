@@ -21,7 +21,8 @@ LogicMain = function () {
             CAPIChat: CAPIChat,
             CAPIInvites: CAPIInvites,
             CAPIUserState: CAPIUserState,
-            CAPIRating: CAPIRating
+            CAPIRating: CAPIRating,
+            CAPITimeServer: CAPITimeServer
         });
 
         /* Link ApiRouter and WebSocketClient */

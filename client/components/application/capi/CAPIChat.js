@@ -1,6 +1,7 @@
 CAPIChat = function () {
 
     this.gotNewMessage = function (cntx, message) {
+        message.timestamp = LogicTimeClient.convertToClient(message.timestamp, true);
         message.text = LogicChat.censureIt(message.text);
         LogicChat.addList([message]);
         checkIsOpened(message);
@@ -27,6 +28,7 @@ CAPIChat = function () {
 
     this.gotMessages = function (cntx, messages) {
         messages.forEach(function (message, i) {
+            messages[i].timestamp = LogicTimeClient.convertToClient(messages[i].timestamp, true);
             messages[i].text = LogicChat.censureIt(message.text);
             checkIsOpened(message);
         });
