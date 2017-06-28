@@ -29,7 +29,7 @@ PageBlockMain = function PageBlockMain() {
     var elementFriendsTypeLeftButton;
 
     /**
-     * @typw {ElementButton}
+     * @type {ElementButton}
      */
     var elementFriendsTypeRightButton;
 
