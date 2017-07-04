@@ -7,7 +7,6 @@
     "MD5": "*",
     "websocket": "*",
     "image-size": "*",
-    "uglify-js": "*",
-    "restler": "*"
+    "uglify-js": "*"
   }
 }

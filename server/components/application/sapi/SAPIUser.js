@@ -3,6 +3,12 @@ var FS = require('fs');
 
 SAPIUser = function () {
 
+    var someUploadFunction = function (url, fileName, content) {
+        console.log('uploading');
+        console.log(url, fileName);
+//@todo HARD-WORK! не работает загрузка на сервер вк
+    };
+
     /**
      * Авторизация через вКонтакте.
      * @param cntx контекст соединения
@@ -140,11 +146,11 @@ SAPIUser = function () {
     /**
      * if(finish) data is upload_url esel data is chunk of image data
      * @param cntx
-     * @param data
+     * @param uploadServerUrl
      * @param fileId
      * @param finish
      */
-    this.sendWallPost = function (cntx, data, fileId, finish) {
+    this.sendWallPost = function (cntx, uploadServerUrl, fileId, finish) {
         var content, fileName;
         var prid1 = Profiler.start(Profiler.ID_WALLPOST_SUM);
         if (!cntx.isAuthorized) {
@@ -156,27 +162,36 @@ SAPIUser = function () {
             if (!files[fileId]) {
                 files[fileId] = '';
             }
-            files[fileId] += data;
+            files[fileId] += uploadServerUrl;
             Profiler.stop(Profiler.ID_WALLPOST_RECEIVE_DATA, prid2);
         } else {
             var prid3 = Profiler.start(Profiler.ID_WALLPOST_WRITE_FILE);
             fileName = Config.SAPUUser.postsPath + 'image_' + fileId + '.png';
             content = new Buffer(files[fileId], 'base64');
             delete files[fileId];
+
+            var fs2 = require('fs');
+            var FormData = require('form-data');
+
             FS.writeFile(fileName, content, null, function (a, b, c) {
-                Profiler.stop(Profiler.ID_WALLPOST_WRITE_FILE, prid3);
-                var prid4 = Profiler.start(Profiler.ID_WALLPOST_SEND_TO_VK_SERVER);
-                REST.post(data, {
-                    multipart: true,
-                    data: {
-                        'photo': REST.file(fileName, null, FS.statSync(fileName).size, null, 'image/png')
-                    }
-                }).on('complete', function (response) {
-                    CAPIUser.wallPostSended(cntx.userId, response);
-                    Profiler.stop(Profiler.ID_WALLPOST_SEND_TO_VK_SERVER, prid4);
-                    Profiler.stop(Profiler.ID_WALLPOST_SUM, prid1);
-                });
+                someUploadFunction(uploadServerUrl, fileName, content);
             });
+
+
+            /*FS.writeFile(fileName, content, null, function (a, b, c) {
+             Profiler.stop(Profiler.ID_WALLPOST_WRITE_FILE, prid3);
+             var prid4 = Profiler.start(Profiler.ID_WALLPOST_SEND_TO_VK_SERVER);
+             REST.post(data, {
+             multipart: true,
+             data: {
+             'photo': REST.file(fileName, null, FS.statSync(fileName).size, null, 'image/png')
+             }
+             }).on('complete', function (response) {
+             CAPIUser.wallPostSended(cntx.userId, response);
+             Profiler.stop(Profiler.ID_WALLPOST_SEND_TO_VK_SERVER, prid4);
+             Profiler.stop(Profiler.ID_WALLPOST_SUM, prid1);
+             });
+             });*/
         }
     }
 };
