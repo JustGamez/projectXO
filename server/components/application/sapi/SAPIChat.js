@@ -24,6 +24,7 @@ SAPIChat = function () {
         var message = {
             id: 0,
             userId: cntx.userId,
+            //@todo microtime, это влияет на сортирвку Карл!:)
             timestamp: time(),
             text: text,
             withUserId: withUserId

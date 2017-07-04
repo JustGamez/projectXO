@@ -211,8 +211,10 @@ LogicUser = function () {
      * Обновление данных из социальной сети для пользователя.
      * @param user
      * @param callback
+     * @deprecated
      */
     var refreshUserSocNetInfo = function (user, callback) {
+        //TODO
         var prid = Profiler.start(Profiler.ID_UPDATE_SOCNET_INFO);
         SocNet(user.socNetTypeId).getUserInfo(user.socNetUserId, function (info) {
             user.firstName = info.firstName;

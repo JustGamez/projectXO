@@ -1,36 +1,35 @@
 CAPIChat = function () {
 
     this.gotNewMessage = function (cntx, message) {
+        console.log(message);
         message.timestamp = LogicTimeClient.convertToClient(message.timestamp, true);
         message.text = LogicChat.censureIt(message.text);
         LogicChat.addList([message]);
-        checkIsOpened(message);
-        //@todo only if is it current chat
-        Sounds.play('/sounds/chatMessage.wav', 0.4);
+        if (isOpenedDialog(message)) {
+            Sounds.play('/sounds/chatMessage.wav', 0.4);
+        }
     };
 
-    var checkIsOpened = function (message) {
+    var isOpenedDialog = function (message) {
         var dialogOpened;
-        /* @Todo */
-        return;
-        if (message.blocked) return;
-        if (message.userId != LogicUser.getCurrentUser().id) return;
         dialogOpened = false;
+        if (message.withUserId == LogicUser.getCurrentUser().id) dialogOpened = true;
         LogicPageChat.chats.forEach(function (chat) {
             if (chat.withUserId == message.withUserId) {
                 dialogOpened = true;
             }
         });
-        if (dialogOpened == false) {
-            LogicPageChat.openDialogWithUser(message.withUserId);
-        }
+        /*if (dialogOpened == false) {
+         LogicPageChat.openDialogWithUser(message.withUserId);
+         }*/
+        return dialogOpened;
     };
 
     this.gotMessages = function (cntx, messages) {
         messages.forEach(function (message, i) {
             messages[i].timestamp = LogicTimeClient.convertToClient(messages[i].timestamp, true);
             messages[i].text = LogicChat.censureIt(message.text);
-            checkIsOpened(message);
+            isOpenedDialog(message);
         });
         LogicChat.addList(messages);
     };
