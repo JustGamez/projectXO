@@ -39,59 +39,11 @@ LogicChat = function () {
     var waitMessagesBeforeId = [];
 
     /**
-     * @param count
-     * @param withUserId
-     * @returns {Array.<T>|*}
-     */
-    this.getMessages = function (count, withUserId) {
-        var out, i, lastId, currentUser, isMember, withMember;
-        if (!waitMessagesBeforeId[withUserId]) waitMessagesBeforeId[withUserId] = [];
-        currentUser = LogicUser.getCurrentUser();
-        sortChat();
-        out = [];
-        lastId = Infinity;
-        cache.forEach(function (message) {
-            lastId = message.id < lastId ? message.id : lastId;
-            if (message.blocked) return;
-            isMember = message.userId == currentUser.id || message.withUserId == currentUser.id;
-            withMember = message.userId == withUserId || message.withUserId == withUserId;
-            if (withUserId != 0 && !(isMember && withMember)) return;
-            if (withUserId == 0 && message.withUserId != 0) return;
-            if (i == count) return;
-            out.push(message);
-            i++;
-        });
-        if (out.length < count && lastId < Infinity && waitMessagesBeforeId[withUserId][lastId] != true) {
-            waitMessagesBeforeId[withUserId][lastId] = true;
-            SAPIChat.sendMeMessagesBeforeId(lastId, withUserId);
-        }
-        out.reverse();
-        return out;
-    };
-
-    /**
-     * ВНИМАНИЕ: сортировка идёт в обратном порядке!
-     */
-    var sortChat = function () {
-        cache.sort(function (a, b) {
-            if (a.id == 0 || b.id == 0) return 0;
-            if (a.id > b.id) return -1;
-            if (a.id < b.id) return +1;
-            return 0;
-        });
-        cache.sort(function (a, b) {
-            if (a.timestamp > b.timestamp) return -1;
-            if (a.timestamp < b.timestamp) return +1;
-            return 0;
-        });
-    };
-
-    //@todo вынести в отдельный файл , класс, таблицу, like a CensureVocabulary.processIt();
-    /**
      * Словарь не цензурных слов, все они будут удалены из сообщеий и не отображаются пользователям.
      * @type {string[]}
      */
-    var censureVocabulary = [
+    var censureVocabulary =
+        [
         'млять',
         'блядина',
         'ебина',
@@ -333,6 +285,54 @@ LogicChat = function () {
         'сук-а',
         'трахаться'
     ];
+
+    /**
+     * @param count
+     * @param withUserId
+     * @returns {Array.<T>|*}
+     */
+    this.getMessages = function (count, withUserId) {
+        var out, i, lastId, currentUser, isMember, withMember;
+        if (!waitMessagesBeforeId[withUserId]) waitMessagesBeforeId[withUserId] = [];
+        currentUser = LogicUser.getCurrentUser();
+        sortChat();
+        out = [];
+        lastId = Infinity;
+        cache.forEach(function (message) {
+            lastId = message.id < lastId ? message.id : lastId;
+            if (message.blocked) return;
+            isMember = message.userId == currentUser.id || message.withUserId == currentUser.id;
+            withMember = message.userId == withUserId || message.withUserId == withUserId;
+            if (withUserId != 0 && !(isMember && withMember)) return;
+            if (withUserId == 0 && message.withUserId != 0) return;
+            if (i == count) return;
+            out.push(message);
+            i++;
+        });
+        if (out.length < count && lastId < Infinity && waitMessagesBeforeId[withUserId][lastId] != true) {
+            waitMessagesBeforeId[withUserId][lastId] = true;
+            SAPIChat.sendMeMessagesBeforeId(lastId, withUserId);
+        }
+        out.reverse();
+        return out;
+    };
+
+    /**
+     * ВНИМАНИЕ: сортировка идёт в обратном порядке!
+     */
+    var sortChat = function () {
+        cache.sort(function (a, b) {
+            if (a.id == 0 || b.id == 0) return 0;
+            if (a.id > b.id) return -1;
+            if (a.id < b.id) return +1;
+            return 0;
+        });
+        cache.sort(function (a, b) {
+            if (a.timestamp > b.timestamp) return -1;
+            if (a.timestamp < b.timestamp) return +1;
+            return 0;
+        });
+    };
 
     /**
      * Удалить нецензурные слова\выражения.
