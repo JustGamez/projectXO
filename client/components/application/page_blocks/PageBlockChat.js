@@ -170,7 +170,7 @@ PageBlockChat = function PageBlockChat() {
         } else {
             LogicPageChat.currentChat.button.show();
         }
-        messages = LogicChat.getMessages(0, 6, LogicPageChat.currentChat.withUserId);
+        messages = LogicChat.getMessages(6, LogicPageChat.currentChat.withUserId);
         self.elementChatWindow.updateMessages(messages);
     };
 

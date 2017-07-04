@@ -39,13 +39,11 @@ LogicChat = function () {
     var waitMessagesBeforeId = [];
 
     /**
-     * @todo start unused ...
-     * @param start
      * @param count
      * @param withUserId
      * @returns {Array.<T>|*}
      */
-    this.getMessages = function (start, count, withUserId) {
+    this.getMessages = function (count, withUserId) {
         var out, i, lastId, currentUser, isMember, withMember;
         if (!waitMessagesBeforeId[withUserId]) waitMessagesBeforeId[withUserId] = [];
         currentUser = LogicUser.getCurrentUser();
