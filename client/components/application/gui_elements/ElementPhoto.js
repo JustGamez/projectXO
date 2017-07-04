@@ -480,8 +480,7 @@ ElementPhoto = function () {
         for (var i in string) {
             number += string.charCodeAt(i) * ((i * 256) + 1);
         }
-        date = new Date;
-        number += date.getDay(); //TODO switch to getTime()
+        number += (new Date).getDay();
         /* super real-random */
         deg = (number % ( superPosition + 1)) - (( superPosition + 1) / 2);
         deg = deg / superPosition * self.degreesDiapazon;
