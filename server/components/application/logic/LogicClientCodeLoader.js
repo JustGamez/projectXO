@@ -8,15 +8,11 @@ LogicClientCodeLoader = function () {
 
     var self = this;
     /**
-     * ������� ������������� ��������, ��� ������� � ��������� ������ ���������� � ����� ��������.
-     * ����� ������� ����� ���������, � ���������� ����� ���� ����� ��������� ����� � ��������
-     * � ����� imagesPath.
      * @type {string}
      */
     var imagesPrefix = '/images/';
 
     /**
-     * ������������� �� ���������� ���, ������ ���, ����� ��� �����������.
      * @type {boolean}
      */
     var reloadClientCodeEveryRequest = null;
@@ -72,6 +68,7 @@ LogicClientCodeLoader = function () {
         /* Обновим клиентский код. */
         loadClientCodeVK();
         loadClientCodeStandalone();
+        reloadMainClientCode();
     };
 
     /**
@@ -201,7 +198,6 @@ LogicClientCodeLoader = function () {
         code += advCode;
         code += "</BODY></HTML>";
         clientCodeVK = code;
-        reloadMainClientCode();
     };
 
     /**
@@ -225,8 +221,6 @@ LogicClientCodeLoader = function () {
         code += "</html>";
 
         clientCodeStandalone = code;
-
-        reloadMainClientCode();
     };
 
     /**
@@ -239,15 +233,15 @@ LogicClientCodeLoader = function () {
         //FS.writeFile(ROOT_DIR + '/public/js/MainClientCodeSource.js', mainClientJSCode);
 
         if (Config.WebSocketServer.compressJSClientCode) {
-            var result = UGLIFYJS.minify(mainClientJSCode, {fromString: true});
+            var result = UGLIFYJS.minify(mainClientJSCode);
             mainClientJSCode = result.code;
         }
         //@todo path to JS move to Config file
-        FS.writeFile(ROOT_DIR + '/public/js/MainClientCode.js', mainClientJSCode);
+        FS.writeFile(ROOT_DIR + '/public/js/MainClientCode.js', mainClientJSCode, function () {
+        });
     };
 
     /**
-     * �������� ��� ���� ������, ������������� � �������� �� ��� ���� ������ ����.
      * @param files[]
      */
     var clientCodePrepareCode = function (files) {
@@ -263,7 +257,6 @@ LogicClientCodeLoader = function () {
             code += "\r\n/* " + path + " */\r\n";
             code += file_content;
             name = PATH.basename(path, '.js');
-            /* ������� ���� � ������ ���������, ��� ����� ��� ������� */
             code += 'if(window["' + name + '"] != undefined){' + 'window["' + name + '"].__path="' + path + '"};\r\n';
         }
         return code;
@@ -275,7 +268,6 @@ LogicClientCodeLoader = function () {
      */
     var getMainClientJSCode = function () {
         var jsFiles, hostname, clientConfigPath, code;
-        /* �������� ������ ������ ����������� ����. */
         jsFiles = [];
         jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'system/'));
         jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'components/'));

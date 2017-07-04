@@ -6,9 +6,7 @@
  * Логи на этапах создания.
  * @param message
  */
-log = function (message) {
-    console.log(message);
-};
+log = console.log;
 
 /**
  * Ошибка создания, выводит сообщение и завершает работу.
@@ -71,6 +69,7 @@ deInitBeforeShutdown = function (callback) {
  * При вызове process.exit(), выполниться каллбэки деинициализации.
  */
 process.on('exit', function () {
+    Logs.showCache();
     log("on Exit raized!");
 });
 
@@ -80,6 +79,7 @@ process.on('exit', function () {
 process.on('uncaughtException', function (err) {
     log('ERROR HAPPENDZ');
     console.log(err.stack);
+    Logs.showCache();
     process.exit();
 });
 

@@ -11,9 +11,18 @@ Logs = function () {
      */
     var trigger_level = null;
 
+    var cache = [];
+
     this.init = function (afterInitCallback) {
         trigger_level = Config.Logs.triggerLevel;
+        for (var i = 0; i < 100; i++) {
+            cache.push('dummy');
+        }
         afterInitCallback();
+    };
+
+    this.showCache = function(){
+        console.log(cache);
     };
 
     /**
@@ -50,9 +59,11 @@ Logs = function () {
         // добавим к тексту лога детали, если они были переданы
         if (details) logText += ' ' + details;
         // выведем на экран
+        cache.push(logText);
+        cache.shift();
         switch (level) {
             case Logs.LEVEL_WARNING:
-                console.warn(   " > " + logText);
+                console.warn(" > " + logText);
                 break;
             default:
                 console.log(" > " + logText);
@@ -60,6 +71,7 @@ Logs = function () {
         }
         // если это фатальная ошибка - завершим работу программы.
         if (level == Logs.LEVEL_FATAL_ERROR) {
+            self.showCache();
             throw new Error("Vse polamalos'!");
         }
     };
