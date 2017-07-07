@@ -12,15 +12,15 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
-        if (!gameId || typeof gameId != 'number') {
+        if (!gameId || typeof gameId !== 'number') {
             Logs.log("SAPIGame.doMove: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
-        if (x == undefined || typeof x != 'number') {
+        if (x === undefined || typeof x !== 'number') {
             Logs.log("SAPIGame.doMove: must have x with type number", Logs.LEVEL_WARNING, x);
             return;
         }
-        if (y == undefined || typeof y != 'number') {
+        if (y === undefined || typeof y === 'number') {
             Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
             return;
         }
@@ -48,7 +48,7 @@ SAPIGame = function () {
             Logs.log("SAPIRobotGame.checkWinner: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
-        if (!gameId || typeof gameId != 'number') {
+        if (!gameId || typeof gameId !== 'number') {
             Logs.log("SAPIRobotGame.checkWinner: must have gameId", Logs.LEVEL_WARNING, gameId);
             return;
         }
@@ -60,13 +60,12 @@ SAPIGame = function () {
             oldStatus = game.status;
             winLine = LogicXO.findWinLine(game);
             game = LogicXO.setOutcomeResults(game, winLine);
-            if (oldStatus == LogicXO.STATUS_RUN && game.status == LogicXO.STATUS_SOMEBODY_WIN && game.winnerId) {
+            if (oldStatus === LogicXO.STATUS_RUN && game.status === LogicXO.STATUS_SOMEBODY_WIN && game.winnerId) {
                 LogicUser.onWin(game.winnerId, game);
             }
             LogicUser.onGameFinish(game.creatorUserId, game);
             if (!game.vsRobot) LogicUser.onGameFinish(game.joinerUserId, game);
             DataGame.save(game, function (game) {
-                // @todo CAPIGame.winData
                 CAPIGame.updateInfo(game.creatorUserId, game);
                 if (!game.vsRobot) {
                     CAPIGame.updateInfo(game.joinerUserId, game);
