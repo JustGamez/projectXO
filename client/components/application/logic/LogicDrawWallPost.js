@@ -347,7 +347,6 @@ LogicDrawWallPost = function () {
                 x: 0,
                 y: 0
             });
-            //@todo size to 500x500 or somethink like this.
             canvasDom.__dom.setAttribute('height', canvasHeight);
             canvasDom.__dom.setAttribute('width', canvasWidth);
             canvasDom.__dom.style.display = 'none';
