@@ -147,9 +147,9 @@ ElementGraphicText = function () {
                 } else {
                     symbol_url = "/images/font/" + charCode + ".png";
                     if (self.scale) {
-                        textHTML += "<img height = " + self.scale * 28 + " alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                        textHTML += "<img height = " + self.scale * 28 + " alt='" + symbol + "' src='" + GUI.getImagePath(symbol_url) + "'  />";
                     } else {
-                        textHTML += "<img alt='" + symbol + "' src='" + GUI.getImageURL(symbol_url) + "'  />";
+                        textHTML += "<img alt='" + symbol + "' src='" + GUI.getImagePath(symbol_url) + "'  />";
                     }
                 }
             }

@@ -276,18 +276,14 @@ GUIDom = function () {
     var redrawBackgroundImage = function () {
         var url;
         /* Если размер не задан, пробуем задать его автоматически. */
-        if (!self.width && !self.height && window.imagesData[self.backgroundImage]) {
-            self.width = window.imagesData[self.backgroundImage].w;
-            self.height = window.imagesData[self.backgroundImage].h;
+        if (!self.width && !self.height && GUI.getImagePath(self.backgroundImage)) {
+            self.width = GUI.getImageWidth(self.backgroundImage);
+            self.height = GUI.getImageHeight(self.backgroundImage);
             props.height.call();
             props.width.call();
         }
-        /* абсолютный url, используем без изменений */
-        if (self.backgroundImage.indexOf('https://') != 0 && self.backgroundImage.indexOf('http://') != 0) {
-            url = GUI.getImageURL(self.backgroundImage);
-        } else {
-            url = self.backgroundImage;
-        }
+        url = GUI.getImagePath(self.backgroundImage);
+
         if (GUIDom.hidePictures) {
             if (GUIDom.makeTransparent) {
                 dom.style.backgroundImage = 'url(' + url + ')';

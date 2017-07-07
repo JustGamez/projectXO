@@ -83,22 +83,22 @@ GUI = function () {
         var style = document.createElement('style');
         style.type = 'text/css';
         style.innerHTML = '.sepia { ' +
-        'filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'old-timey\'><feColorMatrix type=\'matrix\' values=\'0.14 0.45 0.05 0 0 0.12 0.39 0.04 0 0 0.08 0.28 0.03 0 0 0 0 0 1 0\'/></filter></svg>#old-timey");' +
-        '-webkit-filter: sepia(0.5);' +
-        '-webkit-filter: sepia(85%) grayscale(50%);' +
-        '-moz-filter: sepia(70%);' +
-        '-ms-filter: sepia(70%);' +
-        '-o-filter: sepia(70%);' +
-        'filter: sepia(70%);' +
-        '}';
+            'filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'old-timey\'><feColorMatrix type=\'matrix\' values=\'0.14 0.45 0.05 0 0 0.12 0.39 0.04 0 0 0.08 0.28 0.03 0 0 0 0 0 1 0\'/></filter></svg>#old-timey");' +
+            '-webkit-filter: sepia(0.5);' +
+            '-webkit-filter: sepia(85%) grayscale(50%);' +
+            '-moz-filter: sepia(70%);' +
+            '-ms-filter: sepia(70%);' +
+            '-o-filter: sepia(70%);' +
+            'filter: sepia(70%);' +
+            '}';
         style.innerHTML += '* {' +
-        '-webkit-touch-callout: none;' +
-        '-webkit-user-select: none;' +
-        '-khtml-user-select: none;' +
-        '-moz-user-select: none;' +
-        '-ms-user-select: none;' +
-        'user-select: none;' +
-        '}';
+            '-webkit-touch-callout: none;' +
+            '-webkit-user-select: none;' +
+            '-khtml-user-select: none;' +
+            '-moz-user-select: none;' +
+            '-ms-user-select: none;' +
+            'user-select: none;' +
+            '}';
         document.getElementsByTagName('head')[0].appendChild(style);
     };
 
@@ -225,18 +225,42 @@ GUI = function () {
     };
 
     /**
-     * Заранее загруженные картинки, но с timestampom
-     * timestamp вставлять везже сложно, проще сделать это в одном месте.
+     * Заранее загруженные картинки, но с timestamp-ом.
+     * timestamp вставлять везде сложно, проще сделать это в одном месте.
      * @param url
      * @returns {*}
      */
-    this.getImageURL = function (url) {
-        //@todo it's so complicated...
+    this.getImagePath = function (url) {
+        return this.getImageMetaData(url).path;
+    };
+
+    this.getImageHeight = function (url) {
+        return this.getImageMetaData(url).h;
+    };
+
+    this.getImageWidth = function (url) {
+        return this.getImageMetaData(url).w;
+    };
+
+    /**
+     * Return image meta data
+     * @param url
+     * @returns {{path: string, w: number, h: number}}
+     */
+    this.getImageMetaData = function (url) {
+        /* абсолютный url, используем без изменений, т.к. это внешний url */
+        if (url.indexOf('https://') == 0 && url.indexOf('http://') == 0) {
+            return {
+                path: url,
+                w: undefined,
+                h: undefined
+            }
+        }
         if (!window.imagesData[url]) {
             Logs.log("Image url not found for: " + url, Logs.LEVEL_ERROR);
-            return '/images/notFound.png';
+            return window.imagesData['/images/notFound.png'];
         }
-        return window.imagesData[url].path;
+        return window.imagesData[url];
     };
 };
 
