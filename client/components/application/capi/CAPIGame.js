@@ -36,15 +36,15 @@ CAPIGame = function () {
         LogicUser.loadNameCasesById(created.joinerUserId);
 
         if (looking) {
-            if (created.id == looking.id) {
+            if (created.id === looking.id) {
                 LogicGame.setLookingGameId(created.id);
             }
-            if (created.copyFromId == looking.id) {
+            if (created.copyFromId === looking.id) {
                 SAPIGameLooks.stop(looking.id);
                 SAPIGameLooks.start(created.id);
                 LogicGame.setLookingGameId(created.id);
             }
-            if (created.id != looking.id && created.copyFromId != looking.id) {
+            if (created.id !== looking.id && created.copyFromId !== looking.id) {
                 SAPIGameLooks.stop(looking.id);
                 LogicGame.setLookingGameId(0);
                 LogicGame.setCurrentGameId(created.id);
@@ -52,7 +52,7 @@ CAPIGame = function () {
         }
 
         if (!looking && current && current.vsRobot) {
-            if (created.copyFromId == current.id) {
+            if (created.copyFromId === current.id) {
                 LogicGame.setCurrentGameId(created.id);
             }
             if (!created.vsRobot) {
@@ -62,7 +62,7 @@ CAPIGame = function () {
         }
 
         if (!looking && current && !current.vsRobot) {
-            if (created.copyFromId == current.id) {
+            if (created.copyFromId === current.id) {
                 LogicGame.setCurrentGameId(created.id);
             }
         }
@@ -71,8 +71,8 @@ CAPIGame = function () {
             LogicGame.setCurrentGameId(created.id);
         }
 
-        if (LogicGame.getCurrentGameId() == created.id) {
-            if (created.vsRobot == false) {
+        if (LogicGame.getCurrentGameId() === created.id) {
+            if (created.vsRobot === false) {
                 LogicPageChat.openDialogWithUser(LogicXO.getOpponentUserId(created, LogicUser.getCurrentUser().id));
             }
         }

@@ -118,7 +118,7 @@ ElementChatWindow = function () {
             } else {
                 text += "<b style='font-size:9pt;letter-spacing:-2px;font-weight:normal;float:right;opacity:0.47;' >";
                 if (isAdmin) {
-                    text += "<b style='cursor:hand;' onclick='LogicPageChat.onChatDelete(" + message.id + ")'> x </b>";
+                    text += "<b style='cursor:hand;' onclick='LogicPageChat.onChatBlock(" + message.id + ")'> x </b>";
                 }
                 text += message.timeHours + ":" + message.timeMinutes + ":" + message.timeSeconds + " ";
                 text += "</b>";

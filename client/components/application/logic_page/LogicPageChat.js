@@ -3,10 +3,9 @@ LogicPageChat = function () {
 
     this.chats = [];
 
-    this.currentChat;
+    this.currentChat = undefined;
 
     /**
-     * ��� ������, ���� �������� ��������� � ����������.
      * @param message {String}
      */
     this.onChatInputEnterMessage = function (message) {
@@ -15,43 +14,45 @@ LogicPageChat = function () {
         }
     };
 
-    this.onChatDelete = function (id) {
+    this.onChatBlock = function (id) {
         SAPIChat.blockThisMessage(id);
     };
 
     /**
-     * ��� �� ������� ������ ����, � ��������� �
-     * ���� ������ ��������� ��� ������.
-     * ���� ������ ��� �����, �� ��������� �� �� ���, � ������� ���������� ����� �����.
      * @param withUserId {int}
      */
     this.onNameClick = function (withUserId) {
         this.openDialogWithUser(withUserId);
     };
 
+    /**
+     * Open(show) dialog with requested user id
+     * @param withUserId internal user id
+     */
     this.openDialogWithUser = function (withUserId) {
         var targetChat;
-        if (withUserId == LogicUser.getCurrentUser().id) return;
-        /* ������ ������ ��������� ������, ���� ��� ���� �������. */
-        targetChat = null;
+        if (withUserId === LogicUser.getCurrentUser().id) return;
         self.chats.forEach(function (chat) {
-            if (targetChat) return;
-            if ((chat.withUserId == withUserId && chat.enabled == true ) || chat.enabled == false) {
-                targetChat = chat;
+            if (self.currentChat.withUserId === withUserId) return;
+            if (chat.withUserId === withUserId && chat.enabled === true) { // if dialog already opened
+                self.currentChat = chat;
+            } else if (chat.enabled === false) {                              // or open new dialog
+                chat.enabled = true;
+                chat.withUserId = withUserId;
+                self.currentChat = chat;
             }
         });
-        /* ���� ��� ����������, ������� ��� � ������� ��������� ��������� ����� ������ */
-        if (!targetChat) {
-            // @todo
+        if (self.currentChat.withUserId !== withUserId) {
+            // disable(close) one dialog, and then open again for requested userId
+            self.chats[1].enabled = false;
+            self.openDialogWithUser(withUserId);
+            return;
         }
-        targetChat.enabled = true;
-        targetChat.withUserId = withUserId;
-        self.currentChat = targetChat;
         PageController.redraw();
     };
 
     /**
-     * ��� �� ��������� ������� ���.
+     * Actions on click chat label.
      */
     this.onChatLabelClick = function () {
         if (this.chat === self.currentChat) {

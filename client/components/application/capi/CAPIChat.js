@@ -18,9 +18,6 @@ CAPIChat = function () {
                 dialogOpened = true;
             }
         });
-        /*if (dialogOpened == false) {
-         LogicPageChat.openDialogWithUser(message.withUserId);
-         }*/
         return dialogOpened;
     };
 
