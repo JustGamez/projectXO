@@ -672,7 +672,7 @@ PageBlockXOGame = function PageBlockXOGame() {
         //@todo
         // кнопка рассказать
         if (game && (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN) && !justLooking && !LogicDrawWallPost.blocked) {
-            //@todo HARD-WORK! не работает загрузка на сервер вк.
+            //@todo upload-image HARD-WORK
             //elementButtonWallPost.show();
             elementButtonWallPost.hide();
         } else {
@@ -687,7 +687,7 @@ PageBlockXOGame = function PageBlockXOGame() {
         }
         // кнопка "фотоаппарат"
         if (!LogicDrawWallPost.blocked) {
-            //@todo HARD-WORK!
+            //@todo upload-image HARD-WORK
             //не работает загрузка на сервер VK
             //elementCameraButton.show();
             elementCameraButton.hide();

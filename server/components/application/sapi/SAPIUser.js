@@ -6,7 +6,7 @@ SAPIUser = function () {
     var someUploadFunction = function (url, fileName, content) {
         console.log('uploading');
         console.log(url, fileName);
-//@todo HARD-WORK! не работает загрузка на сервер вк
+        //@todo upload-image HARD-WORK
     };
 
     /**

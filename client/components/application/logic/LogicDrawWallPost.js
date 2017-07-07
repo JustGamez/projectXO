@@ -168,7 +168,7 @@ LogicDrawWallPost = function () {
     };
 
     this.onUploadComplete = function (vkResponse) {
-        //@todo id for every requests...
+        //@todo upload-image HARD-WORK
         vkResponse = JSON.parse(vkResponse);
         VK.api('photos.saveWallPhoto', {
             user_id: LogicUser.getCurrentUser().socNetUserId,
