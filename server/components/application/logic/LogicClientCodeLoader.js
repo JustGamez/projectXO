@@ -307,7 +307,6 @@ LogicClientCodeLoader = function () {
             imageCode += "\r\nimagesData['" + path + "']={path:'" + path + timePostfix + "',w:" + demension.width + ",h:" + demension.height + "};";
         }
         imageCode += "</script>";
-        /* ������� img ���� ��� ������������. */
         imageCode += "<div style='display:none;'>";
         for (var i in imageFiles) {
             path = imagesPrefix + imageFiles[i].substr(imagesPath.length);

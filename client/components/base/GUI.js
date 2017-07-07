@@ -249,7 +249,7 @@ GUI = function () {
      */
     this.getImageMetaData = function (url) {
         /* абсолютный url, используем без изменений, т.к. это внешний url */
-        if (url.indexOf('https://') == 0 && url.indexOf('http://') == 0) {
+        if (url.indexOf('https://') == 0 || url.indexOf('http://') == 0) {
             return {
                 path: url,
                 w: undefined,
@@ -258,7 +258,11 @@ GUI = function () {
         }
         if (!window.imagesData[url]) {
             Logs.log("Image url not found for: " + url, Logs.LEVEL_ERROR);
-            return window.imagesData['/images/notFound.png'];
+            return {
+                path: '/images/notFound.png',
+                w: undefined,
+                h: undefined
+            }
         }
         return window.imagesData[url];
     };
