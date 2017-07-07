@@ -11,7 +11,7 @@ SAPIChat = function () {
             Logs.log("SAPIChat.sendMessage: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
-        if (text == undefined || typeof text != 'string') {
+        if (text === undefined || typeof text !== 'string') {
             Logs.log("SAPIChat.sendMessage: must have message with type string", Logs.LEVEL_WARNING, [text, typeof text]);
             return;
         }
