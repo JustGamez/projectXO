@@ -128,21 +128,21 @@ ElementGraphicText = function () {
     };
 
     var refreshText = function () {
-        var textHTML, symbol_url, charCode, existsSymbols, symbol;
+        var textHTML, symbol_url, charCode, existsSymbols, symbol, i;
         existsSymbols = '1234567890абвгдеёжзийклмнопрстуфхцчшщьыъэюя.!-: АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
         textHTML = '';
-        for (var i in self.text) {
+        for (i in self.text) {
             symbol = self.text[i];
             charCode = self.text.charCodeAt(i);
             /* feed line symbol: 0xAh, 10d, \n */
-            if (charCode == 10) {
+            if (charCode === 10) {
                 textHTML += "<br>";
                 continue;
             }
             if (GUIDom.hidePictures) {
                 textHTML += symbol;
             } else {
-                if (existsSymbols.indexOf(symbol) == -1) {
+                if (existsSymbols.indexOf(symbol) === -1) {
                     textHTML += symbol;
                 } else {
                     symbol_url = "/images/font/" + charCode + ".png";

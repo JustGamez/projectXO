@@ -300,7 +300,7 @@ LogicDrawWallPost = function () {
     };
 
     var drawText = function (context, text, offsetX, offsetY, width, scale) {
-        var textHTML, symbol_url, charCode, existsSymbols, symbol, x, y, resultWidth;
+        var textHTML, symbol_url, charCode, existsSymbols, symbol, x, y, resultWidth, i;
         if (!scale) {
             scale = 0.85;
         }
@@ -308,12 +308,11 @@ LogicDrawWallPost = function () {
         x = offsetX;
         y = offsetY;
         resultWidth = 0;
-        for (var i in text) {
+        for (i in text) {
             symbol = text[i];
             charCode = text.charCodeAt(i);
             /* feed line symbol: 0xAh, 10d, \n */
-            if (existsSymbols.indexOf(symbol) == -1) {
-                //fuck off! @fuckOff @todo
+            if (existsSymbols.indexOf(symbol) === -1) {
                 Logs.log("LogicDrawWallPost. symbol does not found!", Logs.LEVEL_WARNING);
             } else {
                 symbol_url = "/images/font/" + charCode + ".png";
@@ -323,15 +322,15 @@ LogicDrawWallPost = function () {
         if (width) {
             x += (width - resultWidth) / 2;
         }
-        for (var i in text) {
+        for (i in text) {
             symbol = text[i];
             charCode = text.charCodeAt(i);
             /* feed line symbol: 0xAh, 10d, \n */
-            if (charCode == 10) {
+            if (charCode === 10) {
                 y += 28;
                 continue;
             }
-            if (existsSymbols.indexOf(symbol) == -1) {
+            if (existsSymbols.indexOf(symbol) === -1) {
                 //fuck off! @fuckOff @todo
                 Logs.log("LogicDrawWallPost. symbol does not found!", Logs.LEVEL_WARNING);
             } else {
@@ -367,13 +366,13 @@ LogicDrawWallPost = function () {
             if (!images[path]) {
                 loadImage(path, function () {
                     loaded++;
-                    if (loaded == pathList.length) {
+                    if (loaded === pathList.length) {
                         callback();
                     }
                 });
             } else {
                 loaded++;
-                if (loaded == pathList.length) {
+                if (loaded === pathList.length) {
                     callback();
                 }
             }
@@ -395,7 +394,7 @@ LogicDrawWallPost = function () {
         if (!x) x = 0;
         if (!y) y = 0;
         if (!width) width = images[path].width;
-        if (!height)height = images[path].height;
+        if (!height) height = images[path].height;
         context.drawImage(images[path], x, y, width, height);
     };
 
