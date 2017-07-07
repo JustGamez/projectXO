@@ -32,13 +32,9 @@ LogicTimeClient = function () {
         return new Date().getTime() + timeDiff;
     };
 
-    this.convertToClient = function (timestamp, isSeconds) {
+    this.convertToClient = function (timestamp) {
         var newTimestamp;
-        if (isSeconds) {
-            newTimestamp = Math.round(((timestamp * 1000) - timeDiff) / 1000);
-        } else {
-            newTimestamp = timestamp - timeDiff;
-        }
+        newTimestamp = timestamp - timeDiff;
         return newTimestamp;
     };
 };

@@ -151,9 +151,9 @@ ElementChatWindow = function () {
      */
     this.updateMessages = function (inMessages) {
         for (var i in inMessages) {
-            inMessages[i].timeHours = new Date(inMessages[i].timestamp * 1000).getHours();
-            inMessages[i].timeMinutes = new Date(inMessages[i].timestamp * 1000).getMinutes();
-            inMessages[i].timeSeconds = new Date(inMessages[i].timestamp * 1000).getSeconds();
+            inMessages[i].timeHours = new Date(inMessages[i].timestamp).getHours();
+            inMessages[i].timeMinutes = new Date(inMessages[i].timestamp).getMinutes();
+            inMessages[i].timeSeconds = new Date(inMessages[i].timestamp).getSeconds();
         }
         messages = inMessages;
         self.redraw();
