@@ -26,6 +26,12 @@ LogicClientCodeLoader = function () {
     var reloadClientImageCodeEveryRequest = null;
 
     /**
+     * Use Sprite image by SpriteSmith
+     * @type {boolean}
+     */
+    var useSpritedImage = true;
+
+    /**
      * Client code VK.
      * @type {string}
      */
@@ -58,6 +64,7 @@ LogicClientCodeLoader = function () {
         clientCodePath = Config.WebSocketServer.clientCodePath;
         //@todo is it no WebSocketServer config , but is it LogicClientCodeLoader component config.
         imagesPath = Config.WebSocketServer.imagesPath;
+        useSpritedImage = Config.WebSocketServer.useSpritedImage;
         // check before after init
         if (typeof reloadClientCodeEveryRequest != 'boolean') {
             Logs.log("reloadClientCodeEveryRequest given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, reloadClientCodeEveryRequest);
@@ -67,6 +74,9 @@ LogicClientCodeLoader = function () {
         }
         if (typeof imagesPath != 'string') {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
+        }
+        if (typeof useSpritedImage != 'string') {
+            Logs.log("useSpritedImage given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
         /* Обновим клиентский код. */
         generateImageSprite(function (result) {
@@ -296,6 +306,14 @@ LogicClientCodeLoader = function () {
     };
 
     var getClientImageCode = function () {
+        if (useSpritedImage) {
+            return getClientImageCodeSprited();
+        } else {
+            return getClientImageCodeImageList();
+        }
+    };
+
+    var getClientImageCodeSprited = function () {
         var imageCode, path, timePostfix, demension;
         if (!reloadClientImageCodeEveryRequest && clientImageCode) {
             return clientImageCode;
@@ -321,10 +339,11 @@ LogicClientCodeLoader = function () {
         clientImageCode = imageCode;
         return imageCode;
     };
+
     /**
      * Формирует Js-код картинок.
      */
-    var getClientImageCode_OLD = function () {
+    var getClientImageCodeImageList = function () {
         var imageFiles, imageCode, path, timePostfix, demension;
         if (!reloadClientImageCodeEveryRequest && clientImageCode) {
             return clientImageCode;
