@@ -242,11 +242,11 @@ GUI = function () {
         return this.getImageMetaData(url).w;
     };
 
-    this.getImageX= function (url) {
+    this.getImageX = function (url) {
         return this.getImageMetaData(url).x;
     };
 
-    this.getImageY= function (url) {
+    this.getImageY = function (url) {
         return this.getImageMetaData(url).y;
     };
 
@@ -261,7 +261,9 @@ GUI = function () {
             return {
                 path: url,
                 w: undefined,
-                h: undefined
+                h: undefined,
+                x: 0,
+                y: 0
             }
         }
         if (!window.imagesData[url]) {

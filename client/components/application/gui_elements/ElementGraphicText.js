@@ -151,7 +151,7 @@ ElementGraphicText = function () {
                     } else {
                         textHTML += "<div " +
                             "style='" +
-                            "width:" + GUI.getImageWidth(symbol_url) + "px;" +
+                            "width:" + (GUI.getImageWidth(symbol_url) - 0.5) + "px;" +
                             "height:" + GUI.getImageHeight(symbol_url) + "px;" +
                             "background-image:url(\"" + GUI.getImagePath(symbol_url) + "\");" +
                             "background-repeat: no-repeat;" +

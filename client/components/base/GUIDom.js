@@ -294,10 +294,11 @@ GUIDom = function () {
             }
         } else {
             dom.style.backgroundImage = 'url(' + url + ')';
-            if (GUI.getImageX(self.backgroundImage) !== undefined) {
-                dom.style.backgroundPosition = '-' + GUI.getImageX(self.backgroundImage) + 'px -' + GUI.getImageY(self.backgroundImage) + 'px';
-                dom.style.backgroundRepeat = 'no-repeat';
-            }
+
+            dom.style.backgroundPositionX = '-' + GUI.getImageX(self.backgroundImage) + 'px';
+            dom.style.backgroundPositionY = '-' + GUI.getImageY(self.backgroundImage) + 'px';
+            dom.style.backgroundRepeat = 'no-repeat';
+
         }
     };
     var redrawBackgroundSize = function () {
