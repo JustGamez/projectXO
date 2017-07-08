@@ -25,16 +25,16 @@ PageController = function () {
                 id: newBlockId
             };
             if (!block.init) {
-                Logs.log("PageController.addPage. block must have method init(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+                Logs.log("PageController.addPage. block must have method init(). ", Logs.LEVEL_FATAL_ERROR, block);
             }
             if (!block.show) {
-                Logs.log("PageController.addPage. block must have method show(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+                Logs.log("PageController.addPage. block must have method show().", Logs.LEVEL_FATAL_ERROR, block);
             }
             if (!block.hide) {
-                Logs.log("PageController.addPage. block must have method hide(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+                Logs.log("PageController.addPage. block must have method hide()", Logs.LEVEL_FATAL_ERROR, block);
             }
             if (!block.redraw) {
-                Logs.log("PageController.addPage. block must have method redraw(). Page constructor:" + block.constructorName, Logs.LEVEL_FATAL_ERROR, block);
+                Logs.log("PageController.addPage. block must have method redraw()", Logs.LEVEL_FATAL_ERROR, block);
             }
             block.init();
         });
@@ -55,12 +55,12 @@ PageController = function () {
                 }
             }
             if (toShow) {
-                if (blocks[id].showed == false) {
+                if (blocks[id].showed === false) {
                     blocks[id].block.show();
                     blocks[id].showed = true;
                 }
             } else {
-                if (blocks[id].showed == true) {
+                if (blocks[id].showed === true) {
                     blocks[id].block.hide();
                     blocks[id].showed = false;
                 }
@@ -68,32 +68,14 @@ PageController = function () {
         }
 
         self.redraw();
-
-        return;
-        var tmp = [];
-        for (var i in pagesToShow) {
-            tmp[pagesToShow[i]] = pagesToShow[i];
-        }
-        pagesToShow = tmp;
-        /* show page_blocks */
-        for (var id in pagesToShow) {
-            blocks[id].show();
-        }
-        /* hide all other */
-        for (var id in blocks) {
-            if (tmp[id])continue;
-            blocks[id].hide();
-        }
-        currentShowedPages = pagesToShow;
-        self.redraw();
     };
 
     /**
      * Вызывает редрей всех активных страниц.
      */
     this.redraw = function () {
-        for (var id in blocks) {
-            blocks[id].block.redraw();
+        for (var i in blocks) {
+            blocks[i].block.redraw();
         }
     };
 
@@ -106,7 +88,7 @@ PageController = function () {
 
     /**
      * Показаны ли сейчас эта страница.
-     * @param page {Number} id Страницы.
+     * @param page
      */
     this.isShowedNow = function (page) {
         return page === currentPage;

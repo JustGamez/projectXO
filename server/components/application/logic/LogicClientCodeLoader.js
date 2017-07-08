@@ -140,9 +140,6 @@ LogicClientCodeLoader = function () {
         callback('<pre>' + "Reload Client Code executed!" + new Date().getTime() + '</pre>');
     };
 
-    /**
-     * �������� ���� ��������� ��� � �������� ��� � ���������� clientCodeVK.
-     */
     var loadClientCodeVK = function () {
         var advCode, advHeight, code;
         Logs.log("Load client code.");
@@ -232,6 +229,7 @@ LogicClientCodeLoader = function () {
         //@todo path to JS move to Config file
         //FS.writeFile(ROOT_DIR + '/public/js/MainClientCodeSource.js', mainClientJSCode);
 
+        //@todo LogicClintCodeloader.config?
         if (Config.WebSocketServer.compressJSClientCode) {
             var result = UGLIFYJS.minify(mainClientJSCode);
             mainClientJSCode = result.code;
@@ -318,9 +316,6 @@ LogicClientCodeLoader = function () {
         return imageCode;
     };
 
-    /**
-     * ���������� ������ ���� ������, ����������.
-     */
     var getFileListRecursive = function (basePath) {
         var dirList, path, files;
         files = [];

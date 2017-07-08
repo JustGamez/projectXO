@@ -1,5 +1,5 @@
-var nodemailer = require('nodemailer');
-
+//@todo не работает ...
+//var nodemailer = require('nodemailer');
 LogicUser = function () {
     var self = this;
     var userToCntx = {};
@@ -135,7 +135,8 @@ LogicUser = function () {
         });
 
         Logs.log('Send email', Logs.LEVEL_NOTIFY);
-
+return;
+        //@todo не работает
         setTimeout(function () {
             var transporter = nodemailer.createTransport({
                 service: 'Gmail',

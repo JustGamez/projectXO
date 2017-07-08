@@ -31,8 +31,14 @@ LogicMain = function () {
         webSocketClient.onConnect = this.onConnect;
         webSocketClient.onDisconnect = apiRouter.onDisconnect;
 
-        /* @todo do it automaticaly*/
+        /* @todo do it automaticaly */
         {
+            // on server:
+            // scan /application/page_blocks/*
+            // and if file begin 'PageBlock'
+            // add it to PageController.blocks.push('']);
+            // need get all PageBlock*
+            // and add script-code after application code
             PageController.addBlocks([PageBlockBackground, PageBlockChat, PageBlockHelp, PageBlockHelpMainMenu, PageBlockHelpRating, PageBlockHelpRules, PageBlockMain, PageBlockOnlineAndRating, PageBlockRating, PageBlockXOGame]);
             PageMain.init();
             PageXOGame.init();

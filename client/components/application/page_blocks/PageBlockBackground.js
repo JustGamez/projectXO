@@ -150,7 +150,7 @@ PageBlockBackground = function PageBlockBackground() {
      * Спрачем все элементы на странице.
      */
     this.hide = function () {
-        if (showed == false) return;
+        if (showed === false) return;
         showed = false;
         for (var i in self.elements) {
             self.elements[i].hide();
