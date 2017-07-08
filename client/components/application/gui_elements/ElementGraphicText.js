@@ -149,7 +149,19 @@ ElementGraphicText = function () {
                     if (self.scale) {
                         textHTML += "<img height = " + self.scale * 28 + " alt='" + symbol + "' src='" + GUI.getImagePath(symbol_url) + "'  />";
                     } else {
-                        textHTML += "<img alt='" + symbol + "' src='" + GUI.getImagePath(symbol_url) + "'  />";
+                        textHTML += "<div " +
+                            "style='" +
+                            "width:" + GUI.getImageWidth(symbol_url) + "px;" +
+                            "height:" + GUI.getImageHeight(symbol_url) + "px;" +
+                            "background-image:url(\"" + GUI.getImagePath(symbol_url) + "\");" +
+                            "background-repeat: no-repeat;" +
+                            "display: inline-block;" +
+                            "background-position: " +
+                            " -" + GUI.getImageX(symbol_url) + "px" +
+                            " -" + GUI.getImageY(symbol_url) + "px" +
+                            ";" +   // end of background-position
+                            "'" +   //end style
+                            "/></div>";
                     }
                 }
             }

@@ -3,6 +3,7 @@ var OS = require('os');
 var PATH = require('path');
 var IMAGE_SIZE = require('image-size');
 var UGLIFYJS = require('uglify-js');
+var SPRITESMITH = require('spritesmith');
 
 LogicClientCodeLoader = function () {
 
@@ -49,7 +50,9 @@ LogicClientCodeLoader = function () {
      */
     var clientCodePath = null;
 
-    this.init = function () {
+    var generateImageSpriteResult = null;
+
+    this.init = function (callback) {
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
         reloadClientImageCodeEveryRequest = Config.WebSocketServer.reloadClientImageCodeEveryRequest;
         clientCodePath = Config.WebSocketServer.clientCodePath;
@@ -66,9 +69,13 @@ LogicClientCodeLoader = function () {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
         /* Обновим клиентский код. */
-        loadClientCodeVK();
-        loadClientCodeStandalone();
-        reloadMainClientCode();
+        generateImageSprite(function (result) {
+            generateImageSpriteResult = result;
+            loadClientCodeVK();
+            loadClientCodeStandalone();
+            reloadMainClientCode();
+            callback();
+        });
     };
 
     /**
@@ -287,10 +294,36 @@ LogicClientCodeLoader = function () {
         return code;
     };
 
+    var getClientImageCode = function () {
+        var imageCode, path, timePostfix, demension;
+        if (!reloadClientImageCodeEveryRequest && clientImageCode) {
+            return clientImageCode;
+        }
+        imageCode = "<script>";
+        imageCode += "imagesData = {};";
+        timePostfix = "?t=" + new Date().getTime();
+        for (var i in generateImageSpriteResult.coordinates) {
+            path = i.replace('../public', '');
+            imageCode += "\r\nimagesData['" + path + "']={" + "" +
+                "path:'" + '/images/sprite.png' + timePostfix + "'," +
+                "w:" + generateImageSpriteResult.coordinates[i].width + "," +
+                "h:" + generateImageSpriteResult.coordinates[i].height + "," +
+                "x:" + generateImageSpriteResult.coordinates[i].x + "," +
+                "y:" + generateImageSpriteResult.coordinates[i].y + "" +
+                "};";
+        }
+        imageCode += "</script>";
+        imageCode += "<div style='display:none;'>";
+        imageCode += "<img src='/images/sprite.png" + timePostfix + "'>";
+        imageCode += "</div>";
+        // cache it
+        clientImageCode = imageCode;
+        return imageCode;
+    };
     /**
      * Формирует Js-код картинок.
      */
-    var getClientImageCode = function () {
+    var getClientImageCode_OLD = function () {
         var imageFiles, imageCode, path, timePostfix, demension;
         if (!reloadClientImageCodeEveryRequest && clientImageCode) {
             return clientImageCode;
@@ -329,6 +362,39 @@ LogicClientCodeLoader = function () {
             }
         }
         return files;
+    };
+
+    var generateImageSpriteLoaded = false;
+
+    var generateImageSprite = function (callback) {
+        var sprites, spritePath;
+
+        if (generateImageSpriteLoaded) return;
+        generateImageSpriteLoaded = true;
+        spritePath = '../public/images/sprite.png';
+
+        if (FS.existsSync(spritePath)) {
+            FS.unlink(spritePath);
+        }
+
+        sprites = getFileListRecursive(imagesPath);
+
+        Logs.log("SPRITESMITH BEGIN", Logs.LEVEL_NOTIFY);
+
+        SPRITESMITH.run({src: sprites}, function handleResult(err, result) {
+            // result.image; // Buffer representation of image
+            // result.coordinates; // Object mapping filename to {x, y, width, height} of image
+            // result.properties; // Object with metadata about spritesheet {width, height}
+            if (err) {
+                console.log(err);
+            }
+            // coordinates: ['../public/images/buttons/addFriendActive.png': { x: 75, y: 1353, width: 75, height: 80 },
+            //'../public/images/buttons/addFriendHover.png': { x: 150, y: 1353, width
+            //console.log(result);
+            fsResult = FS.writeFileSync(spritePath, result.image, 'binary');
+            Logs.log("SPRITESMITH Complete", Logs.LEVEL_NOTIFY);
+            callback(result);
+        });
     };
 };
 

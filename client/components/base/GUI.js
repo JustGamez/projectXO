@@ -242,6 +242,14 @@ GUI = function () {
         return this.getImageMetaData(url).w;
     };
 
+    this.getImageX= function (url) {
+        return this.getImageMetaData(url).x;
+    };
+
+    this.getImageY= function (url) {
+        return this.getImageMetaData(url).y;
+    };
+
     /**
      * Return image meta data
      * @param url

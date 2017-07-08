@@ -294,6 +294,10 @@ GUIDom = function () {
             }
         } else {
             dom.style.backgroundImage = 'url(' + url + ')';
+            if (GUI.getImageX(self.backgroundImage) !== undefined) {
+                dom.style.backgroundPosition = '-' + GUI.getImageX(self.backgroundImage) + 'px -' + GUI.getImageY(self.backgroundImage) + 'px';
+                dom.style.backgroundRepeat = 'no-repeat';
+            }
         }
     };
     var redrawBackgroundSize = function () {
