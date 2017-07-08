@@ -20,7 +20,7 @@ SAPIGame = function () {
             Logs.log("SAPIGame.doMove: must have x with type number", Logs.LEVEL_WARNING, x);
             return;
         }
-        if (y === undefined || typeof y === 'number') {
+        if (y === undefined || typeof y !== 'number') {
             Logs.log("SAPIGame.doMove: must have y with type number", Logs.LEVEL_WARNING, y);
             return;
         }
