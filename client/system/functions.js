@@ -6,7 +6,7 @@
  * Логи на этапах создания.
  * @param message
  */
-log = function (message) {
+var log = function (message) {
     console.log(message);
 };
 
@@ -14,7 +14,7 @@ log = function (message) {
  * Ошибка создания, выводит сообщение и завершает работу.
  * @param message
  */
-error = function (message) {
+var error = function (message) {
     console.log("Ошибка: " + message);
     process.exit();
 };
@@ -27,7 +27,7 @@ var sequencedInitBlocked = false;
  * Выполнить очередной инит по завершению всех предыдущих.
  * @param initFunction {function}
  */
-sequencedInit = function (initFunction) {
+var sequencedInit = function (initFunction) {
     sequencedInitStack.push(initFunction);
     tryInitNext();
 };
@@ -57,7 +57,7 @@ var STR_PAD_LEFT = 1;
 var STR_PAD_RIGHT = 2;
 var STR_PAD_BOTH = 3;
 
-str_pad = function (str, len, pad, dir) {
+var str_pad = function (str, len, pad, dir) {
     if (typeof(len) == "undefined") {
         var len = 0;
     }
@@ -91,13 +91,13 @@ str_pad = function (str, len, pad, dir) {
 /**
  * Возвращает время в секундах.
  */
-time = function () {
+var time = function () {
     return LogicTimeClient.getTime();
 };
 
 /**
  * Возвращает время в миллисекундах секундах.
  */
-mtime = function () {
+var mtime = function () {
     return LogicTimeClient.getMicroTime();
 };

@@ -238,6 +238,7 @@ LogicClientCodeLoader = function () {
 
         //@todo LogicClintCodeloader.config?
         if (Config.WebSocketServer.compressJSClientCode) {
+            mainClientJSCode = 'function ___(){ ' + mainClientJSCode + ' };___();';
             var result = UGLIFYJS.minify(mainClientJSCode);
             mainClientJSCode = result.code;
         }
