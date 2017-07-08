@@ -52,7 +52,7 @@ function loadAllComponents(path) {
      */
     var includeComponent = function (path) {
         path = PATH.resolve(path);
-        /*log("component:" + getComponentNameFromPath(path));*/
+        log("component:" + getComponentNameFromPath(path));
         require(path);
         validateComponent(path);
         global[getComponentNameFromPath(path)].__path = path;
