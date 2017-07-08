@@ -69,7 +69,7 @@ deInitBeforeShutdown = function (callback) {
  * При вызове process.exit(), выполниться каллбэки деинициализации.
  */
 process.on('exit', function () {
-    Logs.showCache();
+    if (typeof Logs !== 'undefined') Logs.showCache();
     log("on Exit raized!");
 });
 
@@ -79,7 +79,7 @@ process.on('exit', function () {
 process.on('uncaughtException', function (err) {
     log('ERROR HAPPENDZ');
     console.log(err.stack);
-    Logs.showCache();
+    if (typeof Logs !== 'undefined') Logs.showCache();
     process.exit();
 });
 
