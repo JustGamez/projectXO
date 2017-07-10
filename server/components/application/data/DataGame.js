@@ -135,13 +135,12 @@ DataGame = function () {
         game = cache[id];
         if (notSavedIds[id]) {
             DB.insert(tableName, game, function (result) {
-                    //@todo Cannot read property `insertId` of undefined
                     if (!result) {
                         console.log(game);
                         Logs.log("DataGame.save. result. is undefined, something wrong here", Logs.LEVEL_ERROR, game);
                         return;
                     }
-                    if (result.insertId != game.id) {
+                    if (result.insertId !== game.id) {
                         Logs.log("DataGame.save. result. insertId != game.id", Logs.LEVEL_WARNING, game);
                     }
                     delete notSavedIds[game.id];
