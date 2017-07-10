@@ -93,8 +93,8 @@ SocNetVK = function () {
             Logs.log("VK client API inited.", Logs.LEVEL_NOTIFY);
         };
         onFail = function () {
-            // @todo send fail to server? may be...
             alert('Произошла ошибка доступа к вКонтакте, обратитесь к автору приложения.');
+            Logs.log("SocNetVK Fail", Logs.LEVEL_FATAL_ERROR);
         };
         VK.init(onSuccess, onFail, apiVersion);
         parseSocNetURL();

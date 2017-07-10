@@ -21,7 +21,7 @@ Logs = function () {
         afterInitCallback();
     };
 
-    this.showCache = function(){
+    this.showCache = function () {
         console.log(cache);
     };
 
@@ -70,6 +70,9 @@ Logs = function () {
                 break;
         }
         // если это фатальная ошибка - завершим работу программы.
+        if (level == Logs.LEVEL_ERROR || level == Logs.LEVEL_FATAL_ERROR) {
+            //@todo send to server
+        }
         if (level == Logs.LEVEL_FATAL_ERROR) {
             self.showCache();
             throw new Error("Vse polamalos'!");
