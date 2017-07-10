@@ -17,14 +17,12 @@ SocNetStandalone = function () {
     };
 
     this.getUserProfileUrl = function () {
-        // TODO return something! may be url to dummy image!:)
         Logs.log("TODO Me, SocNetStandalone.getUserProfileUrl", Logs.LEVEL_WARNING);
         return '/notFound/todo/me/please/:)';
     };
 
     this.openInviteFriendDialog = function () {
-        //@todo
-        Logs.log("TODO me SocNetStandalone.openIvniteFirendDialog", Logs.LEVEL_WARNING);
+        Logs.log("todo me SocNetStandalone.openIvniteFirendDialog", Logs.LEVEL_WARNING);
         alert('Sorry, but functional is not realized!');
     };
 
@@ -32,7 +30,6 @@ SocNetStandalone = function () {
         var socNetUserId;
         socNetUserId = getQueryVariable('socNetUserId');
         if (!socNetUserId) {
-            //@todo we need a real guest!!! :)
             Logs.log("TODO Me. SocNetStandlaone.getSocNetUesrId and ... guset mode :)", Logs.LEVEL_WARNING);
             socNetUserId = 111; // is it guest!!!
         }
@@ -46,24 +43,6 @@ SocNetStandalone = function () {
     this.detectIsItThat = function () {
         if (window.PLATFORM_ID == 'STANDALONE') return true;
         return false;
-    };
-
-    /**
-     * Return some value by key from GET params
-     * @todo is it common tools, look on SocNetVK, resulable code anti-pattenr
-     * @param variable
-     * @returns {*}
-     */
-    var getQueryVariable = function (variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split("&");
-        for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split("=");
-            if (pair[0] == variable) {
-                return pair[1];
-            }
-        }
-        Logs.log('Query Variable ' + variable + ' not found', Logs.LEVEL_WARNING);
     };
 };
 

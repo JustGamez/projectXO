@@ -101,3 +101,15 @@ var time = function () {
 var mtime = function () {
     return LogicTimeClient.getMicroTime();
 };
+
+var getQueryVariable = function (variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] === variable) {
+            return pair[1];
+        }
+    }
+    Logs.log('Query Variable ' + variable + ' not found', Logs.LEVEL_WARNING);
+};
