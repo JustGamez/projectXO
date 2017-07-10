@@ -39,12 +39,9 @@ LogicUser = function () {
      * Метод для обработки ответа от сервера об успешной авторизации.
      * @param userId
      */
-    this.authorizeSuccess = function (userId) {
-        /** @todo useR? **/
-        var user;
+    this.authorizeSuccess = function (userId) {g
         authorizedUserId = userId;
         Logs.log("Authorization success. userId:" + userId, Logs.LEVEL_NOTIFY);
-        user = LogicUser.getById(userId);
         SAPIUser.sendMeOnlineCount();
         SAPIChat.sendMeLastMessages();
         SAPIUser.sendMeOnlineUserIds();
