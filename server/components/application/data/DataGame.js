@@ -80,7 +80,6 @@ DataGame = function () {
                 Logs.log("DataGame.save", "game does not exists in cache. strange...", Logs.LEVEL_WARNING, game);
             }
             cache[game.id] = game;
-            //@todo remove it after 28.05.2017
             switch (game.status) {
                 // Если статус запущено\ждём, то обновляем в кэше.
                 case LogicXO.STATUS_WAIT:
