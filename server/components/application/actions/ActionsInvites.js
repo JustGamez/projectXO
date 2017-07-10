@@ -14,7 +14,6 @@ ActionsInvites = function () {
         var game;
         Logs.log("ActionsInvites.createGame", Logs.LEVEL_DETAIL, arguments);
         game = LogicXO.create(creatorUserId, creatorSignId, fieldTypeId, false, true, false);
-        /* @todo учесть знак второго игрока, пока что любой  */
         game = LogicXO.joinGame(joinerUserId, joinerSignId, game);
         game = LogicXO.chooseSigns(game);
         game = LogicXO.run(game);
