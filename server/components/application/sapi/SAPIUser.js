@@ -9,6 +9,25 @@ SAPIUser = function () {
         //@todo upload-image HARD-WORK
     };
 
+    var auhthorizeValidateParams = function (cntx, socNetUseRId, authParams) {
+        if (!socNetUserId) {
+            Logs.log("SAPIUser.auhthorizeValidateParams: must have socNetUserId", Logs.LEVEL_WARNING);
+            return false;
+        }
+        if (!authParams || typeof authParams !== 'object') {
+            Logs.log("SAPIUser.auhthorizeValidateParams: must have authParams", Logs.LEVEL_WARNING);
+            return false;
+        }
+        if (cntx.isAuthorized) {
+            Logs.log("SAPIUser.auhthorizeValidateParams: user already authorized", Logs.LEVEL_WARNING, {
+                userId: cntx.userId,
+                socNetUserId: socNetUserId
+            });
+            return false;
+        }
+        return true;
+    };
+
     /**
      * Авторизация через вКонтакте.
      * @param cntx контекст соединения
@@ -16,20 +35,8 @@ SAPIUser = function () {
      * @param authParams параметры аутентифиакации.
      */
     this.authorizeByVK = function (cntx, socNetUserId, authParams) {
-        if (!socNetUserId) {
-            Logs.log("SAPIUser.authorizeByVK: must have socNetUserId", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (!authParams || typeof authParams !== 'object') {
-            Logs.log("SAPIUser.authorizeByVK: must have authParams", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (cntx.isAuthorized) {
-            Logs.log("SAPIUser.authorizeByVK: user already authorized", Logs.LEVEL_WARNING, {
-                userId: cntx.userId,
-                socNetUserId: socNetUserId
-            });
-            return;
+        if (!authorizeCheckParams(cntx, socNetUserId, authParams)) {
+            return false;
         }
         LogicUser.authorizeByVK(socNetUserId, authParams, cntx);
     };
@@ -41,22 +48,9 @@ SAPIUser = function () {
      * @param authParams параметры аутентифиакации.
      */
     this.authorizeByStandalone = function (cntx, socNetUserId, authParams) {
-        if (!socNetUserId) {
-            Logs.log("SAPIUser.authorizeByStandalone: must have socNetUserId", Logs.LEVEL_WARNING);
-            return;
+        if (!authorizeCheckParams(cntx, socNetUserId, authParams)) {
+            return false;
         }
-        if (!authParams || typeof authParams != 'object') {
-            Logs.log("SAPIUser.authorizeByStandalone: must have authParams", Logs.LEVEL_WARNING);
-            return;
-        }
-        if (cntx.isAuthorized) {
-            Logs.log("SAPIUser.authorizeByStandalone: user already authorized", Logs.LEVEL_WARNING, {
-                userId: cntx.userId,
-                socNetUserId: socNetUserId
-            });
-            return;
-        }
-        //@todo is it reused code... like a authorizeByVK?
         LogicUser.authorizeByStandalone(socNetUserId, authParams, cntx);
     };
 
