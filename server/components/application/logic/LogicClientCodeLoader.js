@@ -75,8 +75,8 @@ LogicClientCodeLoader = function () {
         if (typeof imagesPath != 'string') {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
-        if (typeof useSpritedImage != 'string') {
-            Logs.log("useSpritedImage given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
+        if (typeof useSpritedImage != 'boolean') {
+            Logs.log("useSpritedImage given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, useSpritedImage);
         }
         /* Обновим клиентский код. */
         generateImageSprite(function (result) {
@@ -302,6 +302,7 @@ LogicClientCodeLoader = function () {
         code = clientCodePrepareCode(jsFiles);
         /* generate sapi */
         code += apiRouter.getSAPIJSCode();
+        code += getGUIGeneratedCode();
         return code;
     };
 
@@ -416,6 +417,38 @@ LogicClientCodeLoader = function () {
             callback(result);
         });
     };
+
+    var getGUIGeneratedCode = function () {
+
+        /*
+         1 - get PageBlock folder files
+         2 - for each generate add block code
+         */
+        var files, guiCode, pageBlocks, name;
+        guiCode = '';
+        guiCode += 'GUI.init();' + "\r\n";
+        pageBlocks = [];
+        // page-blocks
+        files = getFileListRecursive(clientCodePath + 'components/application/page_blocks/');
+        files.forEach(function (filePath) {
+            name = PATH.basename(filePath, '.js');
+            if (name.substr(0, 9) === 'PageBlock') {
+                pageBlocks.push(name);
+            }
+        });
+        guiCode += ' PageController.addBlocks([' + pageBlocks.join(',') + ']);' + "\r\n";
+        // pages
+        files = getFileListRecursive(clientCodePath + 'components/application/pages/');
+        files.forEach(function (filePath) {
+            name = PATH.basename(filePath, '.js');
+            if (name.substr(0, 4) === 'Page') {
+                guiCode += ' ' + name + '.init();' + "\r\n";
+            }
+
+        });
+
+        return 'document.addEventListener("DOMContentLoaded", function() {' + guiCode + '});';
+    }
 };
 
 LogicClientCodeLoader = new LogicClientCodeLoader;

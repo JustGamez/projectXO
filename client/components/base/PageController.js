@@ -1,29 +1,28 @@
 /**
- * Контроллер страниц.
+ * Page controller
  * @constructor
  */
 PageController = function () {
     var self = this;
+
+    var currentPage;
+
     /**
-     * Все страницы.
+     * All blocks
      * @type {Array}
      */
     var blocks = [];
 
-    var lastBlockId = 0;
-
     /**
-     * Добавляет страницу.
-     * @param blocksToAdd {array} массив.
+     * Add page blocks to page controller stack.
+     * @param blocksToAdd {Array} массив.
      */
     this.addBlocks = function (blocksToAdd) {
         blocksToAdd.forEach(function (block) {
-            var newBlockId = lastBlockId++;
-            blocks[newBlockId] = {
+            blocks.push({
                 block: block,
-                showed: false,
-                id: newBlockId
-            };
+                showed: false
+            });
             if (!block.init) {
                 Logs.log("PageController.addPage. block must have method init(). ", Logs.LEVEL_FATAL_ERROR, block);
             }
@@ -41,28 +40,28 @@ PageController = function () {
     };
 
     /**
-     * Показать страницу, все остальные скрыть.
+     * Show requested page-blocks, and hide other page-blocks
      * @param pagesToShow {Array}
      */
     this.showBlocks = function (pagesToShow) {
         Logs.log("Pages to show:...", Logs.LEVEL_DETAIL);
         var toShow;
-        for (var id in blocks) {
+        for (var i in blocks) {
             toShow = false;
             for (var j in pagesToShow) {
-                if (blocks[id].block === pagesToShow[j]) {
+                if (blocks[i].block === pagesToShow[j]) {
                     toShow = true;
                 }
             }
             if (toShow) {
-                if (blocks[id].showed === false) {
-                    blocks[id].block.show();
-                    blocks[id].showed = true;
+                if (blocks[i].showed === false) {
+                    blocks[i].block.show();
+                    blocks[i].showed = true;
                 }
             } else {
-                if (blocks[id].showed === true) {
-                    blocks[id].block.hide();
-                    blocks[id].showed = false;
+                if (blocks[i].showed === true) {
+                    blocks[i].block.hide();
+                    blocks[i].showed = false;
                 }
             }
         }
@@ -71,7 +70,7 @@ PageController = function () {
     };
 
     /**
-     * Вызывает редрей всех активных страниц.
+     * Redraw all page-blocks(include hidden)
      */
     this.redraw = function () {
         for (var i in blocks) {
@@ -79,21 +78,27 @@ PageController = function () {
         }
     };
 
-    var currentPage;
-
+    /**
+     * Show requested page with page-blocks
+     * @param page
+     */
     this.showPage = function (page) {
         currentPage = page;
         self.showBlocks(page.blocks);
     };
 
     /**
-     * Показаны ли сейчас эта страница.
+     * Is page showed now?
      * @param page
      */
     this.isShowedNow = function (page) {
         return page === currentPage;
     };
 
+    /**
+     * Return current page
+     * @returns {*}
+     */
     this.getCurrentPage = function () {
         return currentPage;
     };
