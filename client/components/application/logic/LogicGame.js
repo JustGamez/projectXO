@@ -109,12 +109,11 @@ LogicGame = function () {
     };
 
     this.onTimerFinished = function (game, timerStartPoint) {
-        if (game.status != LogicXO.STATUS_RUN) return;
+        if (game.status !== LogicXO.STATUS_RUN) return;
         if (checkTimerTimerId) {
             clearTimeout(checkTimerTimerId);
         }
-        //@todo some sound here like a pip?
-        //Sounds.play('/sounds/turn.mp3');
+        Sounds.play('/sounds/pip.mp3');
         /* Обновим у нас. */
         game.timerStartPoint = timerStartPoint;
         LogicXO.switchTurn(game);
