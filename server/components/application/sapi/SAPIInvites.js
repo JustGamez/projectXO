@@ -13,23 +13,23 @@ SAPIInvites = function () {
             Logs.log("SAPIInvites.send: must be authorized.", Logs.LEVEL_WARNING);
             return;
         }
-        if (!whoId || typeof whoId != 'number') {
+        if (!whoId || typeof whoId !== 'number') {
             Logs.log("SAPIInvites.send: must have whoId.", Logs.LEVEL_WARNING, whoId);
             return;
         }
-        if (!whomId || typeof whomId != 'number') {
+        if (!whomId || typeof whomId !== 'number') {
             Logs.log("SAPIInvites.send: must have whomId.", Logs.LEVEL_WARNING, whomId);
             return;
         }
-        if (cntx.userId != whoId) {
+        if (cntx.userId !== whoId) {
             Logs.log("SAPIInvites.send: user can not send invite because whoId != currentUser.id.", Logs.LEVEL_WARNING);
             return;
         }
-        if (!fieldTypeId || typeof fieldTypeId != 'number') {
+        if (!fieldTypeId || typeof fieldTypeId !== 'number') {
             Logs.log("SAPIInvites.send: must have fieldTypeId", Logs.LEVEL_WARNING, fieldTypeId);
             return;
         }
-        if (!signId || typeof signId != 'number') {
+        if (!signId || typeof signId !== 'number') {
             Logs.log("SAPIInvites.send: must have signId", Logs.LEVEL_WARNING, signId);
             return;
         }
@@ -37,7 +37,6 @@ SAPIInvites = function () {
             Logs.log("SAPIInvites.send: whom must be online.", Logs.LEVEL_WARNING, {whoId: whoId, whomId: whomId});
             return;
         }
-        /* @todo проверить, что это друг */
         var prid = Profiler.start(Profiler.ID_SEND_INVITE);
         Statistic.add(cntx.userId, Statistic.ID_INVITATION_SEND);
         CAPIInvites.receive(whomId, whoId, whomId, fieldTypeId, signId);
