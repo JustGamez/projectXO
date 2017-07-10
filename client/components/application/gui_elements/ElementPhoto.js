@@ -241,7 +241,6 @@ ElementPhoto = function () {
         domPhoto.y = 0;
         domPhoto.height = self.photoHeight;
         domPhoto.width = self.photoWidth;
-        domPhoto.backgroundSize = self.photoWidth;
         domPhoto.isItsepia = true;
         /* Кнопка приглашения в игру */
         stateElInvite = GUI.createElement(ElementButton, {
