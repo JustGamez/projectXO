@@ -60,15 +60,15 @@ SAPIInvites = function () {
             Logs.log("SAPIInvites.createGame: must have fieldTypeId", Logs.LEVEL_WARNING, fieldTypeId);
             return;
         }
-        if (!creatorSignId || !(creatorSignId == LogicXO.SIGN_ID_X || creatorSignId == LogicXO.SIGN_ID_O || creatorSignId == LogicXO.SIGN_ID_Empty)) {
+        if (!creatorSignId || !(creatorSignId === LogicXO.SIGN_ID_X || creatorSignId == LogicXO.SIGN_ID_O || creatorSignId == LogicXO.SIGN_ID_Empty)) {
             Logs.log("SAPIInvites.createGame: must have creatorSignId", Logs.LEVEL_WARNING, creatorSignId);
             return;
         }
-        if (!joinerSignId || !(joinerSignId == LogicXO.SIGN_ID_X || joinerSignId == LogicXO.SIGN_ID_O || joinerSignId == LogicXO.SIGN_ID_Empty)) {
+        if (!joinerSignId || !(joinerSignId === LogicXO.SIGN_ID_X || joinerSignId == LogicXO.SIGN_ID_O || joinerSignId == LogicXO.SIGN_ID_Empty)) {
             Logs.log("SAPIInvites.createGame: must have joinerSignId", Logs.LEVEL_WARNING, joinerSignId);
             return;
         }
-        if (!withUserId || typeof withUserId != 'number') {
+        if (!withUserId || typeof withUserId !== 'number') {
             Logs.log("SAPIInvites.createGame: must have withUserId", Logs.LEVEL_WARNING, withUserId);
             return;
         }
@@ -76,8 +76,6 @@ SAPIInvites = function () {
             Logs.log("SAPIInvites.createGame: withUserId must be online", Logs.LEVEL_WARNING, withUserId);
             return;
         }
-        /* @todo проверка занят\не занят */
-        /* @todo проверка на друга */
         Statistic.add(cntx.userId, Statistic.ID_CREATE_GAME_INVATION);
         ActionsInvites.createGame(fieldTypeId, creatorSignId, joinerSignId, withUserId, cntx.userId, function (game) {
             CAPIGame.updateInfo(game.creatorUserId, game);

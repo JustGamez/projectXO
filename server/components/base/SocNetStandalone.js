@@ -38,7 +38,6 @@ SocNetStandalone = function () {
 
     /**
      * Проверка авторизации
-     * @todo please, realize this method :)
      * @param socNetUserId id в социальной сети.
      * @param authParams специфичные для соц.сети данные проверки м.
      * @returns {boolean} результат аутентификации.
