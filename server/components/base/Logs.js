@@ -69,11 +69,13 @@ Logs = function () {
                 console.log(" > " + logText);
                 break;
         }
-        // если это фатальная ошибка - завершим работу программы.
-        if (level == Logs.LEVEL_ERROR || level == Logs.LEVEL_FATAL_ERROR) {
-            //@todo send to server
+        if (level === Logs.LEVEL_ERROR || level === Logs.LEVEL_FATAL_ERROR) {
+            if (typeof ENGINE_IS_SERVER === 'undefined') {
+                SAPILogs.log(message, level, details);
+            }
         }
-        if (level == Logs.LEVEL_FATAL_ERROR) {
+        // если это фатальная ошибка - завершим работу программы.
+        if (level === Logs.LEVEL_FATAL_ERROR) {
             self.showCache();
             throw new Error("Vse polamalos'!");
         }

@@ -88,3 +88,5 @@ function loadAllComponents(path) {
     log("Подключение компонент.");
     includeRecursive(path);
 };
+
+global.ENGINE_IS_SERVER = true;

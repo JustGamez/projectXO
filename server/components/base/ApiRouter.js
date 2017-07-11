@@ -72,7 +72,7 @@ ApiRouter = function (apiMap) {
         // выполним запрашиваемый метод.
         var connectionsKey;
         connectionsKey = '';
-        if (id)connectionsKey = id;
+        if (id) connectionsKey = id;
         if (Config.Logs.triggerLevel == Logs.LEVEL_DETAIL) {
             var argsString;
             argsString = JSON.stringify(args);
@@ -102,24 +102,19 @@ ApiRouter = function (apiMap) {
     };
 
     this.executeRequest = function (group, method, args, cntxList) {
-        /* Конвертируем объект в массив. */
-        var connectionsKey;
-        connectionsKey = '';
-        for (var i in cntxList) {
-            connectionsKey += cntxList[i].connectionId
-        }
+        var connectionsKey, i;
+        /* Convert object to array. */
         args = Array.prototype.slice.call(args);
 
-        if (Config.Logs.triggerLevel == Logs.LEVEL_DETAIL) {
-            var argsString;
-            argsString = JSON.stringify(args);
-            if (method == 'sendWallPost') {
-                // data, may be chunk of image! it's 30 000 bytes or less!
-                argsString = argsString.substr(0, 250);
-            }
-            Logs.log(connectionsKey + " " + "<< " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
+        if (!cntxList) {
+            cntxList = [{connectionId: null}];
         }
-        /* group_method.counter ++ */
+        connectionsKey = '';
+        for (i in cntxList) {
+            connectionsKey += cntxList[i].connectionId
+        }
+        Logs.log(connectionsKey + " " + "<< " + group + "." + method + args.join(','), Logs.LEVEL_DETAIL);
+
         var packet = {
             group: group,
             method: method,
@@ -127,16 +122,16 @@ ApiRouter = function (apiMap) {
         };
         packet = JSON.stringify(packet);
         var cntxListLength = 0;
-        for (var i in cntxList) {
+        for (i in cntxList) {
             if (!this.sendData(packet, cntxList[i].connectionId)) {
                 Logs.log("ApiRouter.failedToSend", Logs.LEVEL_WARNING, {packet: packet, cntx: cntxList[i]});
-                for (var i in onFailedSendCallbacks) {
-                    onFailedSendCallbacks[i].call(self, cntxList[i]);
+                for (var j in onFailedSendCallbacks) {
+                    onFailedSendCallbacks[j].call(self, cntxList[j]);
                 }
             }
             cntxListLength++;
         }
-        if (cntxListLength == 0) {
+        if (cntxListLength === 0) {
             Logs.log("ApiRouter. Try send to empty contextlist.", Logs.LEVEL_WARNING, {
                 packet: packet,
                 cntxList: cntxList
@@ -163,12 +158,12 @@ ApiRouter = function (apiMap) {
     };
 
     this.getSAPIJSCode = function () {
-        var code;
+        var code, group, method;
         code = '';
         var pureData;
         pureData = {};
-        for (var group in map) {
-            for (var method in global[group]) {
+        for (group in map) {
+            for (method in global[group]) {
                 if (typeof global[group][method] != 'function')continue;
                 if (!pureData[group]) {
                     pureData[group] = {};
@@ -176,11 +171,11 @@ ApiRouter = function (apiMap) {
                 pureData[group][method] = true;
             }
         }
-        for (var group in pureData) {
+        for (group in pureData) {
             code += "" + group + " = function(){\r\n";
-            for (var method in pureData[group]) {
+            for (method in pureData[group]) {
                 code += "\tthis." + method + " = function(){\r\n";
-                code += "\t\tapiRouter.executeRequest('" + group + "' ,'" + method + "', arguments, [{connectionId: null}]);\r\n";
+                code += "\t\tapiRouter.executeRequest('" + group + "' ,'" + method + "', arguments);\r\n";
                 code += "\t};\r\n";
             }
             code += "};\r\n";

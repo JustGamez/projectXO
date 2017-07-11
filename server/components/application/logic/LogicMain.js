@@ -1,9 +1,5 @@
 LogicMain = function () {
 
-
-    //var webSocketServer;
-    //var apiRouter;
-
     this.main = function () {
 
         this.loadStatisticIds();
@@ -81,7 +77,7 @@ LogicMain = function () {
             '/service/--shutdown___': LogicSystemRequests.shutdown,
             '/service/--logsSetDetail': LogicSystemRequests.logsSetDetail,
             '/service/--logsSetNotify': LogicSystemRequests.logsSetNotify,
-            '/service/--help' : function(callback){
+            '/service/--help': function (callback) {
                 callback("--status <br>" +
                     "--statistic <br>" +
                     "--logsSetDetail<br>" +
@@ -110,7 +106,8 @@ LogicMain = function () {
             SAPIRepeatGame: SAPIRepeatGame,
             SAPIStatistic: SAPIStatistic,
             SAPIGameLooks: SAPIGameLooks,
-            SAPITimeServer: SAPITimeServer
+            SAPITimeServer: SAPITimeServer,
+            SAPILogs: SAPILogs
         });
     };
 

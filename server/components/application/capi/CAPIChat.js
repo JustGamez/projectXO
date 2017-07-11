@@ -1,3 +1,4 @@
+//@todo need to automate!
 CAPIChat = function () {
 
     this.gotMessages = function (toUserId, messages) {
