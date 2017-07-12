@@ -52,7 +52,7 @@ function loadAllComponents(path) {
      */
     var includeComponent = function (path) {
         path = PATH.resolve(path);
-        log("component:" + getComponentNameFromPath(path));
+        log("include component:" + getComponentNameFromPath(path));
         require(path);
         validateComponent(path);
         global[getComponentNameFromPath(path)].__path = path;
@@ -85,7 +85,7 @@ function loadAllComponents(path) {
                 "\r\nкомпонент: " + name);
         }
     };
-    log("Подключение компонент.");
+    log("Include components");
     includeRecursive(path);
 };
 

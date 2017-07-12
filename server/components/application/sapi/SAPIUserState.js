@@ -47,9 +47,8 @@ SAPIUserState = function () {
             return;
         }
         if (typeof vsRobot != 'boolean') {
-            //@todo back it.
             Logs.log("SAPIUserState.onGame: must have vsRobot with type boolean", Logs.LEVEL_WARNING, {arguments: arguments, vsRobotType: typeof vsRobot});
-            //return;
+            return;
         }
         var prid = Profiler.start(Profiler.ID_USER_ON_GAME);
         cntx.user.onGameId = gameId;
