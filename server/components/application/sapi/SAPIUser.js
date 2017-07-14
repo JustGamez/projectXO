@@ -9,7 +9,7 @@ SAPIUser = function () {
         //@todo upload-image HARD-WORK
     };
 
-    var auhthorizeValidateParams = function (cntx, socNetUseRId, authParams) {
+    var auhthorizeValidateParams = function (cntx, socNetUserId, authParams) {
         if (!socNetUserId) {
             Logs.log("SAPIUser.auhthorizeValidateParams: must have socNetUserId", Logs.LEVEL_WARNING);
             return false;
@@ -35,7 +35,7 @@ SAPIUser = function () {
      * @param authParams параметры аутентифиакации.
      */
     this.authorizeByVK = function (cntx, socNetUserId, authParams) {
-        if (!authorizeCheckParams(cntx, socNetUserId, authParams)) {
+        if (!auhthorizeValidateParams(cntx, socNetUserId, authParams)) {
             return false;
         }
         LogicUser.authorizeByVK(socNetUserId, authParams, cntx);
@@ -48,7 +48,7 @@ SAPIUser = function () {
      * @param authParams параметры аутентифиакации.
      */
     this.authorizeByStandalone = function (cntx, socNetUserId, authParams) {
-        if (!authorizeCheckParams(cntx, socNetUserId, authParams)) {
+        if (!auhthorizeValidateParams(cntx, socNetUserId, authParams)) {
             return false;
         }
         LogicUser.authorizeByStandalone(socNetUserId, authParams, cntx);
