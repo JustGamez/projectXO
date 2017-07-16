@@ -1,29 +1,79 @@
 /**
- * Загрузчик:
- * - подключение всех компонент в папке /components/;
- * - подключение создателя;
- * - подключение схемы
+ * Loader:
+ * - set constants
+ * - include functions
+ * - generate autocode
+ * - include components
+ * - include config file
  */
 
-/* Подключаем nodeJS модули. */
+/* Include nodeJS modules. */
 var FS = require('fs');
 var PATH = require('path');
 var OS = require('os');
-ROOT_DIR = FS.realpathSync('./..') + '/';
-SERVER_DIR = ROOT_DIR + '/server/';
+/* Init constants */
+DIR_ROOT = FS.realpathSync('./..') + PATH.sep;
+DIR_SERVER = DIR_ROOT + 'server' + PATH.sep;
+DIR_COMPONENTS = DIR_SERVER + 'components' + PATH.sep;
+DIR_CLIENT = DIR_ROOT + 'client/' + PATH.sep;
+PROJECT_FOLDER_NAME = FS.realpathSync('./..').split('/').pop();
+ENGINE_IS_SERVER = true;
+
 require('./functions.js');
-loadAllComponents(process.cwd() + '/components/');
+
+generateAutoCode();
+
+loadAllComponents(DIR_COMPONENTS);
+
 /* Include Config file. */
 var hostname = OS.hostname();
-var parentFolderName = (function () {
-    var cwd;
-    cwd = process.cwd().split(PATH.sep);
-    cwd.pop();
-    return cwd.pop();
-})();
-var configPath = './../Config.' + hostname + '.' + parentFolderName + '.js';
+
+var configPath = './../Config.' + hostname + '.' + PROJECT_FOLDER_NAME + '.js';
 Logs.log("Config file: " + configPath, Logs.LEVEL_NOTIFY);
 require(configPath);
+
+function generateAutoCode() {
+    var list, path, groupName, methodName;
+
+    path = DIR_CLIENT + 'components/application/capi/';
+    list = FS.readdirSync(path);
+    var capiList = [];
+    for (var i in list) {
+        groupName = getComponentNameFromPath(path + list[i]);
+        require(path + list[i]);
+        capiList[groupName] = [];
+        for (methodName in global[groupName]) {
+            if (typeof global[groupName][methodName] === 'function') {
+                capiList[groupName][methodName] = true;
+            }
+        }
+    }
+    var capiCode = '';
+    for (groupName in capiList) {
+        capiCode = '';
+        capiCode += groupName + ' = function(){\r\n\r\n';
+        for (methodName in capiList[groupName]) {
+            capiCode += '\tthis.' + methodName + ' = function(){\r\n\r\n';
+            capiCode += '\t\tvar args, toUserId;\r\n';
+            capiCode += '\t\targs = Array.prototype.slice.call(arguments);\r\n';
+            capiCode += '\t\ttoUserId = args.shift();\r\n';
+            capiCode += '\t\tLogicUser.sendToUser(toUserId, "' + groupName + '", "' + methodName + '", args);\r\n';
+            capiCode += '\t};\r\n\r\n';
+        }
+        capiCode += '};\r\n';
+        capiCode += groupName + ' = new ' + groupName + '();\r\n';
+        FS.writeFileSync(DIR_COMPONENTS + 'generated/' + groupName + '.js', capiCode);
+    }
+}
+
+/**
+ * Определить имя компонента по пути к нему.
+ * @param path путь к файлу компоненат.
+ * @returns string имя компонента.
+ */
+function getComponentNameFromPath(path) {
+    return PATH.basename(path).replace('.js', '');
+}
 
 /**
  * Подключение всех компонент.
@@ -59,15 +109,6 @@ function loadAllComponents(path) {
     };
 
     /**
-     * Определить имя компонента по пути к нему.
-     * @param path путь к файлу компоненат.
-     * @returns string имя компонента.
-     */
-    var getComponentNameFromPath = function (path) {
-        return PATH.basename(path).replace('.js', '');
-    };
-
-    /**
      * Проверка компонента.
      * @param path {string} путь к файлу компонента.
      */
@@ -87,6 +128,5 @@ function loadAllComponents(path) {
     };
     log("Include components");
     includeRecursive(path);
-};
+}
 
-global.ENGINE_IS_SERVER = true;

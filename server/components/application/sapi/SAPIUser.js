@@ -64,7 +64,7 @@ SAPIUser = function () {
             Logs.log("SAPIUser.sendMeUserInfo: must be authorized", Logs.LEVEL_WARNING);
             return;
         }
-        if (!userId || typeof userId != 'number') {
+        if (!userId || typeof userId !== 'number') {
             Logs.log("SAPIUser.sendMeUserInfo: must have userId", Logs.LEVEL_WARNING, userId);
             return;
         }

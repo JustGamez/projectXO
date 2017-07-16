@@ -23,34 +23,34 @@ ApiRouter = function (apiMap) {
         try {
             packet = JSON.parse(packet);
         } catch (e) {
-            Logs.log("Wrong data:parse error", Logs.LEVEL_WARNING, packet);
+            log("Wrong data:parse error", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (typeof packet != 'object') {
+        if (typeof packet !== 'object') {
             Logs.log("Wrong data: packet must be 'object'", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (packet.group == undefined) {
+        if (packet.group === undefined) {
             Logs.log("Wrong data: packet must have .group", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (typeof packet.group != 'string') {
+        if (typeof packet.group !== 'string') {
             Logs.log("Wrong data: packet.group must have type 'string'", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (packet.method == undefined) {
+        if (packet.method === undefined) {
             Logs.log("Wrong data: packet must have .method", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (typeof packet.method != 'string') {
+        if (typeof packet.method !== 'string') {
             Logs.log("Wrong data: packet.method must have type 'string'", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (packet.args == undefined) {
+        if (packet.args === undefined) {
             Logs.log("Wrong data: packet must have .args", Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (typeof packet.args != 'object') {
+        if (typeof packet.args !== 'object') {
             Logs.log("Wrong data: packet.args must have type 'object'", Logs.LEVEL_WARNING, packet);
             return;
         }
@@ -59,11 +59,11 @@ ApiRouter = function (apiMap) {
         method = packet.method;
         args = packet.args;
 
-        if (map[group] == undefined) {
+        if (map[group] === undefined) {
             Logs.log("Wrong data: group not found " + group, Logs.LEVEL_WARNING, packet);
             return;
         }
-        if (map[group][method] == undefined) {
+        if (map[group][method] === undefined) {
             Logs.log("Wrong data: method not found " + method, Logs.LEVEL_WARNING, packet);
             return;
         }
@@ -73,15 +73,9 @@ ApiRouter = function (apiMap) {
         var connectionsKey;
         connectionsKey = '';
         if (id) connectionsKey = id;
-        if (Config.Logs.triggerLevel == Logs.LEVEL_DETAIL) {
-            var argsString;
-            argsString = JSON.stringify(args);
-            if (method == 'sendWallPost') {
-                // data, may be chunk of image! it's 30 000 bytes or less!
-                argsString = argsString.substr(0, 250);
-            }
-            Logs.log(id + " " + ">> " + group + "." + method + argsString, Logs.LEVEL_DETAIL);
-        }
+
+        Logs.log(id + " " + ">> " + group + "." + method + ':' + JSON.stringify(args), Logs.LEVEL_DETAIL);
+
         /* group_method.counter ++ */
         map[group][method].apply(self, args);
     };
@@ -111,9 +105,9 @@ ApiRouter = function (apiMap) {
         }
         connectionsKey = '';
         for (i in cntxList) {
-            connectionsKey += cntxList[i].connectionId
+            connectionsKey += cntxList[i].connectionId;
         }
-        Logs.log(connectionsKey + " " + "<< " + group + "." + method + args.join(','), Logs.LEVEL_DETAIL);
+        Logs.log(connectionsKey + " " + "<< " + group + "." + method + ':' + args.join(','), Logs.LEVEL_DETAIL);
 
         var packet = {
             group: group,

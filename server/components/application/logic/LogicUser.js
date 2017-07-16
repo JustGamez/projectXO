@@ -135,7 +135,7 @@ LogicUser = function () {
         });
 
         Logs.log('Send email', Logs.LEVEL_NOTIFY);
-return;
+        return;
         //@todo не работает
         setTimeout(function () {
             var transporter = nodemailer.createTransport({
@@ -301,10 +301,15 @@ return;
      * @param arg7 {*} любой параметр, будет передан в CAPI-функцию 7-ым
      * @param arg8 {*} любой параметр, будет передан в CAPI-функцию 8-ым.
      */
-    this.sendToAll = function (capiFunction, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) {
+    this.sendToAll = function () {
         var prid = Profiler.start(Profiler.ID_LOGIC_SEND_TO_ALL);
+        var args = [];
+        args = Array.prototype.slice.call(arguments);
+        capiFunction = args.shift();
+        args.unshift(0);
         for (var userId in userToCntx) {
-            capiFunction.call(null, userId, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+            args[0] = userId;
+            capiFunction.apply(null, args);
         }
         Profiler.stop(Profiler.ID_LOGIC_SEND_TO_ALL, prid);
     };

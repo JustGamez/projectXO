@@ -669,7 +669,6 @@ PageBlockXOGame = function PageBlockXOGame() {
         if (!game) {
             elementScores.setText('побед: -');
         }
-        //@todo
         // кнопка рассказать
         if (game && (game.status == LogicXO.STATUS_SOMEBODY_WIN || game.status == LogicXO.STATUS_NOBODY_WIN) && !justLooking && !LogicDrawWallPost.blocked) {
             //@todo upload-image HARD-WORK

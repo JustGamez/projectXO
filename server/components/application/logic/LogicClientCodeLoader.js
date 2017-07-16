@@ -244,7 +244,7 @@ LogicClientCodeLoader = function () {
         var mainClientJSCode;
         mainClientJSCode = getMainClientJSCode();
         //@todo path to JS move to Config file
-        //FS.writeFile(ROOT_DIR + '/public/js/MainClientCodeSource.js', mainClientJSCode);
+        //FS.writeFile(DIR_ROOT + '/public/js/MainClientCodeSource.js', mainClientJSCode);
 
         //@todo LogicClintCodeloader.config?
         if (Config.WebSocketServer.compressJSClientCode) {
@@ -253,8 +253,7 @@ LogicClientCodeLoader = function () {
             mainClientJSCode = result.code;
         }
         //@todo path to JS move to Config file
-        FS.writeFile(ROOT_DIR + '/public/js/MainClientCode.js', mainClientJSCode, function () {
-        });
+        FS.writeFileSync(DIR_ROOT + '/public/js/MainClientCode.js', mainClientJSCode);
     };
 
     /**
