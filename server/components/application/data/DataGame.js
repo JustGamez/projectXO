@@ -136,7 +136,6 @@ DataGame = function () {
         if (notSavedIds[id]) {
             DB.insert(tableName, game, function (result) {
                     if (!result) {
-                        console.log(game);
                         Logs.log("DataGame.save. result. is undefined, something wrong here", Logs.LEVEL_ERROR, game);
                         return;
                     }

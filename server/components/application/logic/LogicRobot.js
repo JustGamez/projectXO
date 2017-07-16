@@ -113,14 +113,6 @@ LogicRobot = function () {
         /* вероятность заивист от уровня робота, от 1 до 1000 */
         isUserLikeStep = !(Math.random() * 1000 <= robotLevel);
 
-        if (false) {
-            out = "                ";
-            out += "robotLevel:   " + robotLevel + " ";
-            out += "robotMovesCount:   " + robotMovesCount + " ";
-            out += "userLikeStep:      " + userLikeStep + " ";
-            out += "isUserLikeTurn:    " + (isUserLikeStep ? 'yes' : 'no') + " ";
-            console.log(out);
-        }
         if (isUserLikeStep) {
             if (lines.length) {
                 var emptyLines;

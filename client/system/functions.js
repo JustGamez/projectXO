@@ -6,9 +6,7 @@
  * Логи на этапах создания.
  * @param message
  */
-var log = function (message) {
-    console.log(message);
-};
+var log = console.log;
 
 /**
  * Ошибка создания, выводит сообщение и завершает работу.

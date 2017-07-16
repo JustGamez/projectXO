@@ -136,7 +136,6 @@ LogicGame = function () {
         if (ourGame && (isOurTurn || game.vsRobot)) {
             checkTimerTimerId = setTimeout(function () {
                 var game = LogicGame.getById(gameId);
-                console.log(game);
                 if (game.status !== LogicXO.STATUS_RUN) {
                     return;
                 }
