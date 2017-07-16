@@ -39,7 +39,7 @@ LogicUser = function () {
      * Метод для обработки ответа от сервера об успешной авторизации.
      * @param userId
      */
-    this.authorizeSuccess = function (userId) {g
+    this.authorizeSuccess = function (userId) {
         authorizedUserId = userId;
         Logs.log("Authorization success. userId:" + userId, Logs.LEVEL_NOTIFY);
         SAPIUser.sendMeOnlineCount();
@@ -123,7 +123,7 @@ LogicUser = function () {
      * @param userId {int}
      */
     this.loadUserInfoById = function (userId) {
-        if (authorizedUserId == null) {
+        if (authorizedUserId === null) {
             return;
         }
         if (!waitForLoadingUser[userId]) {
