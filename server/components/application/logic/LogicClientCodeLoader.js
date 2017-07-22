@@ -20,7 +20,6 @@ LogicClientCodeLoader = function () {
 
     /**
      * Перезагружать ли код картинок каждый раз.
-     * @todo передлеать как : clientImagesCodeCache
      * @type {boolean}
      */
     var reloadClientImageCodeEveryRequest = null;
@@ -81,9 +80,9 @@ LogicClientCodeLoader = function () {
         /* Обновим клиентский код. */
         generateImageSprite(function (result) {
             generateImageSpriteResult = result;
+            reloadMainClientCode();
             loadClientCodeVK();
             loadClientCodeStandalone();
-            reloadMainClientCode();
             callback();
         });
     };

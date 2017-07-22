@@ -7,7 +7,7 @@
 ApiRouter = function (apiMap) {
     var self = this;
 
-    var map = apiMap;
+    var map = ApiRouter.map ? ApiRouter.map : apiMap;
 
     var connections = {};
     var onDisconnectCallbacks = [];
@@ -151,6 +151,10 @@ ApiRouter = function (apiMap) {
         onFailedSendCallbacks.push(callback);
     };
 
+    /**
+     * авто-код для клиента.
+     * @returns {string}
+     */
     this.getSAPIJSCode = function () {
         var code, group, method;
         code = '';
@@ -158,7 +162,7 @@ ApiRouter = function (apiMap) {
         pureData = {};
         for (group in map) {
             for (method in global[group]) {
-                if (typeof global[group][method] != 'function')continue;
+                if (typeof global[group][method] !== 'function')continue;
                 if (!pureData[group]) {
                     pureData[group] = {};
                 }
@@ -175,6 +179,15 @@ ApiRouter = function (apiMap) {
             code += "};\r\n";
             code += group + " = new " + group + "();\r\n";
         }
+        // api router map для клиента CAPI : CAPI
+
+        code += 'ApiRouter.map2 = {\r\n';
+        for (group in pureData) {
+            code += '\t' + group + ' : ' + group + ',\r\n';
+        }
+        // remove last symbol
+        code = code.substr(0, code.length - 1);
+        code += '};\r\n';
         return code;
     };
 };

@@ -94,7 +94,9 @@ LogicMain = function () {
     this.createApiRouter = function () {
 
         /* ApiRouter */
+
         /* @todo use SAPI folder */
+
         apiRouter = new ApiRouter({
             SAPIUser: SAPIUser,
             SAPIGame: SAPIGame,
@@ -132,6 +134,7 @@ LogicMain = function () {
     this.setInits = function () {
 
 
+        //@todo must be auto
         /* init all components */
         sequencedInit(Logs.init);
         sequencedInit(Profiler.init);

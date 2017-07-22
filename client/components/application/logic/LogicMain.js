@@ -14,6 +14,7 @@ LogicMain = function () {
 
         //@todo need be automate...
         /* ApiRouter */
+
         apiRouter = new ApiRouter({
             CAPIUser: CAPIUser,
             CAPIGame: CAPIGame,
