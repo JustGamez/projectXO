@@ -23,16 +23,17 @@ generateAutoCode();
 
 loaderIncludeComponents(DIR_COMPONENTS);
 
-loaderIncludConfig();
+includeConfig();
 
 loaderCallMainFunction();
 
-function loaderIncludConfig() {
-    /* Include Config file. */
+/**
+ * Include Config file.
+ */
+function includeConfig() {
     var hostname = OS.hostname();
-
-    var configPath = './../Config.' + hostname + '.' + PROJECT_FOLDER_NAME + '.js';
-    Logs.log("Config file: " + configPath, Logs.LEVEL_NOTIFY);
+    var configPath = './../config.' + hostname + '.' + PROJECT_FOLDER_NAME + '.js';
+    log("Config file: " + configPath);
     require(configPath);
 }
 

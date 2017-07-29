@@ -293,7 +293,7 @@ LogicClientCodeLoader = function () {
             cwd.pop();
             return cwd.pop();
         })();
-        clientConfigPath = clientCodePath + 'Config.' + hostname + '.' + parentFolderName + '.js';
+        clientConfigPath = clientCodePath + 'config.' + hostname + '.' + parentFolderName + '.js';
         Logs.log("Generate client code(MainClientCode). The config file: " + clientConfigPath, Logs.LEVEL_NOTIFY);
         jsFiles.push(clientConfigPath);
         jsFiles.push(clientCodePath + '/run.js');
