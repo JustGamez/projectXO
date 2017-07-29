@@ -1,18 +1,21 @@
 /**
  * Loader:
- * - set constants
- * - include functions
- * - generate autocode
- * - include components
+ * - declare core constants
+ * - declare core functions
  * - include config file
+ * - execute code-generators
+ * - include components
+ * - - call .preInit()
+ * - - call .init()
+ * - cal main();
  */
+
+require('constants.js');
 
 /* Include nodeJS modules. */
 var FS = require('fs');
 var PATH = require('path');
 var OS = require('os');
-
-loaderSetConstants();
 
 loaderDelareSystemFunctions();
 
@@ -181,17 +184,6 @@ function loaderDelareSystemFunctions() {
     mtime = function () {
         return new Date().getTime();
     };
-
-}
-
-function loaderSetConstants() {
-    /* Init constants */
-    DIR_ROOT = FS.realpathSync('./..') + PATH.sep;
-    DIR_SERVER = DIR_ROOT + 'server' + PATH.sep;
-    DIR_COMPONENTS = DIR_SERVER + 'components' + PATH.sep;
-    DIR_CLIENT = DIR_ROOT + 'client/' + PATH.sep;
-    PROJECT_FOLDER_NAME = FS.realpathSync('./..').split('/').pop();
-    ENGINE_IS_SERVER = true;
 
 }
 
