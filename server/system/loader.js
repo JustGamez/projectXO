@@ -10,20 +10,23 @@
  * - cal main();
  */
 
-require('./constants.js');
-
-require('./functions.js');
-
 /* Include nodeJS modules. */
 var FS = require('fs');
 var PATH = require('path');
 var OS = require('os');
 
+/* declare core constants */
+require('./constants.js');
+
+/* declare code functions */
+require('./functions.js');
+
+/* include config file */
+includeConfig();
+
 generateAutoCode();
 
 loaderIncludeComponents(DIR_COMPONENTS);
-
-includeConfig();
 
 loaderCallMainFunction();
 
