@@ -3,10 +3,12 @@
 var FS = require('fs');
 var PATH = require('path');
 
-PROJECT_FOLDER_NAME = FS.realpathSync('./..').split('/').pop();
-DIR_ROOT = FS.realpathSync('./..') + PATH.sep;
-DIR_SERVER = DIR_ROOT + 'server' + PATH.sep;
-DIR_COMPONENTS = DIR_SERVER + 'components' + PATH.sep;
-DIR_CLIENT = DIR_ROOT + 'client' + PATH.sep;
-IS_SERVER_SIDE = true;
-IS_CLIENT_SIDE = false;
+CONST_PROJECT_FOLDER_NAME = FS.realpathSync('./..').split('/').pop();
+CONST_DIR_ROOT = FS.realpathSync('./..') + PATH.sep;
+CONST_DIR_SERVER = CONST_DIR_ROOT + 'server' + PATH.sep;
+CONST_DIR_COMPONENTS = CONST_DIR_SERVER + 'components' + PATH.sep;
+CONST_DIR_CLIENT = CONST_DIR_ROOT + 'client' + PATH.sep;
+CONST_IS_SERVER_SIDE = true;
+CONST_IS_CLIENT_SIDE = false;
+
+

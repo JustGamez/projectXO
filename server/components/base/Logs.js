@@ -70,7 +70,7 @@ Logs = function () {
                 break;
         }
         if (level === Logs.LEVEL_ERROR || level === Logs.LEVEL_FATAL_ERROR) {
-            if (typeof IS_SERVER_SIDE === 'undefined') {
+            if (typeof CONST_IS_SERVER_SIDE === 'undefined') {
                 SAPILogs.log(message, level, details);
             }
         }

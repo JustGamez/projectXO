@@ -98,7 +98,7 @@ Profiler = function () {
     };
 
     this.init = function (afterInitCallback) {
-        require(DIR_SERVER + 'profilerIds.js');
+        require(CONST_DIR_SERVER + 'profilerIds.js');
         setInterval(Profiler.printReport, Config.Profiler.reportTimeout);
         setInterval(Profiler.saveToDB, Config.Profiler.saveToDBTimeout);
         afterInitCallback();

@@ -24,9 +24,9 @@ require('./functions.js');
 /* include config file */
 includeConfig();
 
-generateAutoCode();
+codeGenerator();
 
-loaderIncludeComponents(DIR_COMPONENTS);
+loaderIncludeComponents(CONST_DIR_COMPONENTS);
 
 loaderCallMainFunction();
 
@@ -35,61 +35,16 @@ loaderCallMainFunction();
  */
 function includeConfig() {
     var hostname = OS.hostname();
-    var configPath = './../config.' + hostname + '.' + PROJECT_FOLDER_NAME + '.js';
+    var configPath = './../config.' + hostname + '.' + CONST_PROJECT_FOLDER_NAME + '.js';
     log("Config file: " + configPath);
     require(configPath);
 }
 
 function loaderCallMainFunction() {
 
-    /* Передаем управление вхдоной точки. */
+    /* Execute main function. */
     logicMain = new LogicMain();
     logicMain.main();
-}
-
-function generateAutoCode() {
-    var list, path, groupName, methodName;
-
-    path = DIR_CLIENT + 'components/application/capi/';
-    list = FS.readdirSync(path);
-    var capiList = [];
-    for (var i in list) {
-        groupName = getComponentNameFromPath(path + list[i]);
-        require(path + list[i]);
-        capiList[groupName] = [];
-        for (methodName in global[groupName]) {
-            if (typeof global[groupName][methodName] === 'function') {
-                capiList[groupName][methodName] = true;
-            }
-        }
-    }
-    var capiCode = '';
-    for (groupName in capiList) {
-        capiCode = '';
-        capiCode += groupName + ' = function(){\r\n\r\n';
-        for (methodName in capiList[groupName]) {
-            capiCode += '\tthis.' + methodName + ' = function(){\r\n\r\n';
-            capiCode += '\t\tvar args, toUserId;\r\n';
-            capiCode += '\t\targs = Array.prototype.slice.call(arguments);\r\n';
-            capiCode += '\t\ttoUserId = args.shift();\r\n';
-            capiCode += '\t\tLogicUser.sendToUser(toUserId, "' + groupName + '", "' + methodName + '", args);\r\n';
-            capiCode += '\t};\r\n\r\n';
-        }
-        capiCode += '};\r\n';
-        capiCode += groupName + ' = new ' + groupName + '();\r\n';
-        FS.writeFileSync(DIR_COMPONENTS + 'generated/' + groupName + '.js', capiCode);
-    }
-    // формирование карты для ApiRouter. { SAPI*: SAPI*, ... }
-    var code2 = '';
-    code2 += 'apiRouter.map = {\r\n';
-    for (groupName in capiList) {
-        code2 += '\t' + groupName + ' : ' + groupName + ',\r\n';
-    }
-    // remove last symbol
-    code2 = code2.substr(0, code2.length - 1);
-    code2 += '};\r\n';
-    capiCode = 'document.addEventListener("DOMContentLoaded", function() {' + code2 + '})';
-    console.log(capiCode);
 }
 
 /**
@@ -156,3 +111,32 @@ function loaderIncludeComponents(path) {
     includeRecursive(path);
 }
 
+/**
+ * Code generator.
+ */
+function codeGenerator() {
+
+    /**
+     * 1 - взять все файлы /generators/
+     * 2 - подключить все
+     * 3 - выполнить метод generate() в любом порядке
+     * 4 - вынести отдельные части в отдельные генераторы
+     */
+
+    var list, path, name, map, i;
+    path = CONST_DIR_COMPONENTS + 'generators' + PATH.sep;
+    list = FS.readdirSync(path);
+    map = {};
+    for (i in list) {
+        name = getComponentNameFromPath(path + list[i]);
+        map[name] = path + list[i];
+    }
+    for (name in map) {
+        require(map[name]);
+    }
+    //@todo test generate method must be
+    for (name in map) {
+        log("Execute generator:" + name);
+        global[name].generate();
+    }
+}
