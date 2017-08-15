@@ -97,7 +97,7 @@ LogicMain = function () {
 
         /* @todo use SAPI folder */
 
-        apiRouter = new ApiRouter({
+        ApiRouter.setMap({
             SAPIUser: SAPIUser,
             SAPIGame: SAPIGame,
             SAPIChat: SAPIChat,
@@ -115,11 +115,11 @@ LogicMain = function () {
 
     this.linkWebSocketAndApiRouter = function () {
 
-        /* links apiRouter and webSocketServer */
-        apiRouter.sendData = webSocketServer.sendData;
-        webSocketServer.onConnect = apiRouter.onConnect;
-        webSocketServer.onDisconnect = apiRouter.onDisconnect;
-        webSocketServer.onData = apiRouter.onData;
+        /* links ApiRouter and webSocketServer */
+        ApiRouter.sendData = webSocketServer.sendData;
+        webSocketServer.onConnect = ApiRouter.onConnect;
+        webSocketServer.onDisconnect = ApiRouter.onDisconnect;
+        webSocketServer.onData = ApiRouter.onData;
     };
 
     this.setDeInitCallbacks = function () {

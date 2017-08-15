@@ -1,20 +1,27 @@
 /**
  * ApiRouter
- * Клиент-серверный компонент!
- * @param apiMap {Object}
+ * Cross-side component.
  * @constructor
  */
-ApiRouter = function (apiMap) {
+ApiRouter = new (function () {
     var self = this;
 
-    var map = ApiRouter.map ? ApiRouter.map : apiMap;
+    var map;
 
     var connections = {};
     var onDisconnectCallbacks = [];
     var onFailedSendCallbacks = [];
 
     /**
-     * Обрабатываем поступающие данные.
+     * Set API Map
+     * @param newMap
+     */
+    this.setMap = function (newMap) {
+        map = newMap;
+    };
+
+    /**
+     * Process requests.
      * @param packet {string} пакет данных, фомат:JSON, {group:string, method:string, args:[...]}
      * @param id {Number} id соединения.
      */
@@ -173,7 +180,7 @@ ApiRouter = function (apiMap) {
             code += "" + group + " = function(){\r\n";
             for (method in pureData[group]) {
                 code += "\tthis." + method + " = function(){\r\n";
-                code += "\t\tapiRouter.executeRequest('" + group + "' ,'" + method + "', arguments);\r\n";
+                code += "\t\tApiRouter.executeRequest('" + group + "' ,'" + method + "', arguments);\r\n";
                 code += "\t};\r\n";
             }
             code += "};\r\n";
@@ -190,4 +197,4 @@ ApiRouter = function (apiMap) {
         code += '};\r\n';
         return code;
     };
-};
+})();

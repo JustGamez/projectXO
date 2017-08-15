@@ -22,8 +22,8 @@ LogicUser = function () {
     this.SEX_MAN = 3;
 
     this.init = function (afterInitCallback) {
-        apiRouter.addOnDisconnectCallback(onDisconnectOrFailedSend);
-        apiRouter.addOnFailedSendCallback(onDisconnectOrFailedSend);
+        ApiRouter.addOnDisconnectCallback(onDisconnectOrFailedSend);
+        ApiRouter.addOnFailedSendCallback(onDisconnectOrFailedSend);
         Logs.log("LogicUser inited.", Logs.LEVEL_NOTIFY);
         afterInitCallback();
     };
@@ -286,7 +286,7 @@ LogicUser = function () {
      */
     this.sendToUser = function (userId, group, method, arguments) {
         var cntxList = userGetConns(userId);
-        apiRouter.executeRequest(group, method, arguments, cntxList);
+        ApiRouter.executeRequest(group, method, arguments, cntxList);
     };
 
     /**

@@ -299,7 +299,7 @@ LogicClientCodeLoader = function () {
         jsFiles.push(clientCodePath + '/run.js');
         code = clientCodePrepareCode(jsFiles);
         /* generate sapi */
-        code += apiRouter.getSAPIJSCode();
+        code += ApiRouter.getSAPIJSCode();
         code += getGUIGeneratedCode();
         return code;
     };

@@ -15,7 +15,7 @@ LogicMain = function () {
         //@todo need be automate...
         /* ApiRouter */
 
-        apiRouter = new ApiRouter({
+        ApiRouter.setMap({
             CAPIUser: CAPIUser,
             CAPIGame: CAPIGame,
             CAPIChat: CAPIChat,
@@ -26,10 +26,10 @@ LogicMain = function () {
         });
 
         /* Link ApiRouter and WebSocketClient */
-        apiRouter.sendData = webSocketClient.sendData;
-        webSocketClient.onData = apiRouter.onData;
+        ApiRouter.sendData = webSocketClient.sendData;
+        webSocketClient.onData = ApiRouter.onData;
         webSocketClient.onConnect = this.onConnect;
-        webSocketClient.onDisconnect = apiRouter.onDisconnect;
+        webSocketClient.onDisconnect = ApiRouter.onDisconnect;
 
         PageController.showPage(PageMain);
 
@@ -43,7 +43,7 @@ LogicMain = function () {
      * @param connectionId
      */
     this.onConnect = function (connectionId) {
-        apiRouter.onConnect(connectionId);
+        ApiRouter.onConnect(connectionId);
         LogicUser.authorize();
     }
 };
