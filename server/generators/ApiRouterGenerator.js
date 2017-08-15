@@ -29,29 +29,6 @@ ApiRouterGenerator = function () {
     };
 
     /**
-     *
-     */
-    var generateCAPIComponents = function (map) {
-        var groupName, methodName;
-        var code = '';
-        for (groupName in map) {
-            code = '';
-            code += groupName + ' = function(){\r\n\r\n';
-            for (methodName in map[groupName]) {
-                code += '\tthis.' + methodName + ' = function(){\r\n\r\n';
-                code += '\t\tvar args, toUserId;\r\n';
-                code += '\t\targs = Array.prototype.slice.call(arguments);\r\n';
-                code += '\t\ttoUserId = args.shift();\r\n';
-                code += '\t\tLogicUser.sendToUser(toUserId, "' + groupName + '", "' + methodName + '", args);\r\n';
-                code += '\t};\r\n\r\n';
-            }
-            code += '};\r\n';
-            code += groupName + ' = new ' + groupName + '();\r\n';
-            FS.writeFileSync(CONST_DIR_COMPONENTS + 'generated/' + groupName + '.js', code);
-        }
-    };
-
-    /**
      * Generate capi map from exist code.
      * @returns {*}
      */
@@ -113,6 +90,30 @@ ApiRouterGenerator = function () {
         code += "});\r\n";
         return code;
     }
+
+    /**
+     *
+     */
+    var generateCAPIComponents = function (map) {
+        var groupName, methodName;
+        var code = '';
+        for (groupName in map) {
+            code = '';
+            code += groupName + ' = function(){\r\n\r\n';
+            for (methodName in map[groupName]) {
+                code += '\tthis.' + methodName + ' = function(){\r\n\r\n';
+                code += '\t\tvar args, toUserId;\r\n';
+                code += '\t\targs = Array.prototype.slice.call(arguments);\r\n';
+                code += '\t\ttoUserId = args.shift();\r\n';
+                code += '\t\tLogicUser.sendToUser(toUserId, "' + groupName + '", "' + methodName + '", args);\r\n';
+                code += '\t};\r\n\r\n';
+            }
+            code += '};\r\n';
+            code += groupName + ' = new ' + groupName + '();\r\n';
+            FS.writeFileSync(CONST_DIR_COMPONENTS + 'generated/' + groupName + '.js', code);
+        }
+    };
+
 };
 
 
