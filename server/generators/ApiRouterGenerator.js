@@ -1,31 +1,37 @@
 var FS = require('fs');
 var PATH = require('path');
 
-ApiRouter = function () {
+ApiRouterGenerator = function () {
 
     this.generate = function () {
-        var groupName, methodName;
 
-        var map = getCapiMap();
+        generateCAPIComponents(getCAPIMap());
 
-        generateCapiFiles(map);
-        // формирование карты для ApiRouter. { SAPI*: SAPI*, ... }
+        return generateSAPIMapCode(getSAPIMap());
+    };
+
+    this.generateClient = function () {
+        var groupName, map;
+
+        map = getCAPIMap();
+        // for client
+        // формирование карты для ApiRouter. { CAPI*: CAPI*, ... }
         var code2 = '';
-        code2 += 'apiRouter.map = {\r\n';
+        code2 += 'ApiRouter.map = {\r\n';
         for (groupName in map) {
             code2 += '\t' + groupName + ' : ' + groupName + ',\r\n';
         }
         // remove last symbol
         code2 = code2.substr(0, code2.length - 1);
         code2 += '};\r\n';
-        capiCode = 'document.addEventListener("DOMContentLoaded", function() {' + code2 + '})';
+        code2 = 'document.addEventListener("DOMContentLoaded", function() {' + code2 + '})';
         console.log(code2);
     };
 
     /**
      *
      */
-    var generateCapiFiles = function (map) {
+    var generateCAPIComponents = function (map) {
         var groupName, methodName;
         var code = '';
         for (groupName in map) {
@@ -49,9 +55,31 @@ ApiRouter = function () {
      * Generate capi map from exist code.
      * @returns {*}
      */
-    var getCapiMap = function () {
+    var getCAPIMap = function () {
         var path, list, groupName, methodName, map;
         path = CONST_DIR_CLIENT + 'components/application/capi/';
+        list = FS.readdirSync(path);
+        map = {};
+        for (var i in list) {
+            groupName = getComponentNameFromPath(path + list[i]);
+            require(path + list[i]);
+            map[groupName] = [];
+            for (methodName in global[groupName]) {
+                if (typeof global[groupName][methodName] === 'function') {
+                    map[groupName][methodName] = true;
+                }
+            }
+        }
+        return map;
+    };
+
+    /**
+     * Generate sapi map from exist code.
+     * @returns {*}
+     */
+    var getSAPIMap = function () {
+        var path, list, groupName, methodName, map;
+        path = CONST_DIR_COMPONENTS + '/application/sapi/';
         list = FS.readdirSync(path);
         map = {};
         for (var i in list) {
@@ -70,7 +98,22 @@ ApiRouter = function () {
     var getComponentNameFromPath = function (path) {
         return PATH.basename(path).replace('.js', '');
     };
+
+    /**
+     *
+     * @param map
+     */
+    var generateSAPIMapCode = function (map) {
+        var groupName, code;
+        code = '';
+        code += ' apiRouter.map =  {\r\n';
+        for (groupName in map) {
+            code += "\t" + groupName + ":" + groupName + ",\r\n";
+        }
+        code += "};\r\n";
+        console.log(code);
+    }
 };
 
 
-ApiRouter = new ApiRouter;
+ApiRouterGenerator = new ApiRouterGenerator;

@@ -24,9 +24,12 @@ require('./functions.js');
 /* include config file */
 includeConfig();
 
-codeGenerator();
+/* execute code-generators */
+var code = codeGenerator();
 
 loaderIncludeComponents(CONST_DIR_COMPONENTS);
+
+executeGeneratedCode(code);
 
 loaderCallMainFunction();
 
@@ -69,6 +72,7 @@ function loaderIncludeComponents(path) {
         var list;
         list = FS.readdirSync(path);
         for (var i in list) {
+            if (list[i] == '.gitkeep')continue;
             if (FS.statSync(path + list[i]).isDirectory()) {
                 includeRecursive(path + list[i] + '/');
             } else {
@@ -123,8 +127,8 @@ function codeGenerator() {
      * 4 - вынести отдельные части в отдельные генераторы
      */
 
-    var list, path, name, map, i;
-    path = CONST_DIR_COMPONENTS + 'generators' + PATH.sep;
+    var list, path, name, map, i, code, result;
+    path = CONST_DIR_SERVER + 'generators' + PATH.sep;
     list = FS.readdirSync(path);
     map = {};
     for (i in list) {
@@ -135,8 +139,20 @@ function codeGenerator() {
         require(map[name]);
     }
     //@todo test generate method must be
+    code = '';
     for (name in map) {
-        log("Execute generator:" + name);
-        global[name].generate();
+        log("Execute generator: " + name);
+        result = global[name].generate();
+        if (result) code += result;
     }
+    return code;
+}
+
+/**
+ * Execute auto-generate code.
+ */
+function executeGeneratedCode(code) {
+
+    FS.writeFileSync(CONST_DIR_SERVER + '/generated.js', code);
+    require(CONST_DIR_SERVER + '/generated.js');
 }
