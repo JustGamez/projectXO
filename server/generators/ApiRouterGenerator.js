@@ -106,12 +106,12 @@ ApiRouterGenerator = function () {
     var generateSAPIMapCode = function (map) {
         var groupName, code;
         code = '';
-        code += ' ApiRouter.map =  {\r\n';
+        code += ' ApiRouter.setMap({\r\n';
         for (groupName in map) {
             code += "\t" + groupName + ":" + groupName + ",\r\n";
         }
-        code += "};\r\n";
-        console.log(code);
+        code += "});\r\n";
+        return code;
     }
 };
 

@@ -4,7 +4,6 @@ LogicMain = function () {
 
         this.loadStatisticIds();
         this.createWebSocketServer();
-        this.createApiRouter();
         this.linkWebSocketAndApiRouter();
         this.setDeInitCallbacks();
         this.setInits();
@@ -88,28 +87,6 @@ LogicMain = function () {
                     "clientCodeVK<br>" +
                     "clientCodeStandalone?socNetUserId={socNetUserId}<br>");
             }
-        });
-    };
-
-    this.createApiRouter = function () {
-
-        /* ApiRouter */
-
-        /* @todo use SAPI folder */
-
-        ApiRouter.setMap({
-            SAPIUser: SAPIUser,
-            SAPIGame: SAPIGame,
-            SAPIChat: SAPIChat,
-            SAPIRobotGame: SAPIRobotGame,
-            SAPIInvites: SAPIInvites,
-            SAPIUserState: SAPIUserState,
-            SAPIRating: SAPIRating,
-            SAPIRepeatGame: SAPIRepeatGame,
-            SAPIStatistic: SAPIStatistic,
-            SAPIGameLooks: SAPIGameLooks,
-            SAPITimeServer: SAPITimeServer,
-            SAPILogs: SAPILogs
         });
     };
 
