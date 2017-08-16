@@ -25,11 +25,17 @@ require('./functions.js');
 includeConfig();
 
 /* execute code-generators */
-var code = codeGenerator();
+var code = loaderGenerateCode();
 
-loaderIncludeComponents(CONST_DIR_COMPONENTS);
+var componentsMap = loaderGetComponentsMap();
 
-executeGeneratedCode(code);
+loaderIncludeComponents(componentsMap);
+
+//loaderPreInitComponents(componentsMap);
+
+//loaderInitComponents(componentsMap);
+
+loaderExecuteGeneratedCode(code);
 
 loaderCallMainFunction();
 
@@ -62,25 +68,30 @@ function getComponentNameFromPath(path) {
 /**
  * Подключение всех компонент.
  */
-function loaderIncludeComponents(path) {
-
+function loaderGetComponentsMap() {
+    var map;
+    map = [];
     /**
      * Рекурсивное подключение всех файлов.
      * @param path
      */
-    var includeRecursive = function (path) {
+    var scanRecursive = function (path) {
         var list;
         list = FS.readdirSync(path);
         for (var i in list) {
             if (list[i] == '.gitkeep')continue;
             if (FS.statSync(path + list[i]).isDirectory()) {
-                includeRecursive(path + list[i] + '/');
+                scanRecursive(path + list[i] + '/');
             } else {
-                includeComponent(path + list[i]);
+                map[getComponentNameFromPath(path + list[i])] = path + list[i];
             }
         }
     };
+    scanRecursive(CONST_DIR_COMPONENTS);
+    return map;
+}
 
+function loaderIncludeComponents(map) {
     /**
      * Подключение компонента по пути.
      * @param path путь к файлу компонента.
@@ -111,14 +122,31 @@ function loaderIncludeComponents(path) {
                 "\r\nкомпонент: " + name);
         }
     };
-    log("Include components");
-    includeRecursive(path);
+    for (var name in map) {
+        includeComponent(map[name]);
+    }
+}
+
+function loaderPreInitComponents(map) {
+    for (var name in map) {
+        if (global[name].preInit) {
+            global[name].preInit();
+        }
+    }
+}
+
+function loaderInitComponents(map) {
+    for (var name in map) {
+        if (global[name].init()) {
+            global[name].init();
+        }
+    }
 }
 
 /**
  * Code generator.
  */
-function codeGenerator() {
+function loaderGenerateCode() {
 
     /**
      * 1 - взять все файлы /generators/
@@ -151,7 +179,7 @@ function codeGenerator() {
 /**
  * Execute auto-generate code.
  */
-function executeGeneratedCode(code) {
+function loaderExecuteGeneratedCode(code) {
 
     FS.writeFileSync(CONST_DIR_SERVER + '/generated.js', code);
     require(CONST_DIR_SERVER + '/generated.js');

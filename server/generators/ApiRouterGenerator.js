@@ -89,7 +89,7 @@ ApiRouterGenerator = function () {
         }
         code += "});\r\n";
         return code;
-    }
+    };
 
     /**
      *
