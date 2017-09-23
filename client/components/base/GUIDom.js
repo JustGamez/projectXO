@@ -63,27 +63,31 @@ GUIDom = function () {
     /**
      * Создается элемент браузера
      * Настраиваются минимальные параметры
-     * @param type [string] input|div
+     * @param tagName [string] input|div
      * @param parent [GUIDom] родитель.
      */
-    this.init = function (type, parent) {
+    this.init = function (tagName, parent) {
         /* Начальное значение старых свойств */
         for (var i in props) {
             oldProps[i] = undefined;
         }
-        if (!type) {
-            type = 'div';
+        if (!tagName) {
+            tagName = 'div';
         }
         /* Создадим дом */
-        dom = document.createElement(type);
+        dom = document.createElement(tagName);
         /* значения по умолчанию для дом-ов. */
         dom.style.position = 'absolute';
         dom.style.overflow = 'hidden';
+        if (tagName === 'input') {
+            dom.style.border = 'none';
+        }
         /* no dragable by default */
         dom.ondragstart = function () {
             return false;
         };
         /* hidden mode..:begin */
+        //@todo remove hidePictures
         if (GUIDom.hidePictures) {
             document.body.style.opacity = 0.01;
             dom.style.border = '1px dotted grey';
