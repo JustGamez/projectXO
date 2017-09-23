@@ -1,13 +1,13 @@
 /**
  * Loader:
- * - declare core constants
- * - declare core functions
- * - include config file
- * - execute code-generators
- * - include components
+ * 1 - declare core constants
+ * 2 - declare core functions
+ * 3 - include config file
+ * 4 - execute code-generators
+ * 5 - include components
  * - - call .preInit()
  * - - call .init()
- * - cal main();
+ * 6 - call main();
  */
 
 /* Include nodeJS modules. */
@@ -15,16 +15,16 @@ var FS = require('fs');
 var PATH = require('path');
 var OS = require('os');
 
-/* declare core constants */
+/* 1 - declare core constants */
 require('./constants.js');
 
-/* declare code functions */
+/* 2 - declare code functions */
 require('./functions.js');
 
-/* include config file */
+/* 3 - include config file */
 includeConfig();
 
-/* execute code-generators */
+/* 4 - execute code-generators */
 var code = loaderGenerateCode();
 
 var componentsMap = loaderGetComponentsMap();
@@ -37,6 +37,7 @@ loaderIncludeComponents(componentsMap);
 
 loaderExecuteGeneratedCode(code);
 
+/* 6 - call main */
 loaderCallMainFunction();
 
 /**
