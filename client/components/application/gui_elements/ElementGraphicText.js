@@ -142,21 +142,13 @@ ElementGraphicText = function () {
             if (GUIDom.hidePictures) {
                 textHTML += symbol;
             } else {
-                //@todo сделать шрифт
-                if (existsSymbols.indexOf(symbol) === -1 || true) {
+                if ((existsSymbols.indexOf(symbol) === -1) || self.scale) {
                     textHTML += symbol;
                 } else {
                     symbol_url = "/images/font/" + charCode + ".png";
-                    /*if (self.scale) {
-                     textHTML += "<img " +
-                     "style='" +
-                     "width:10; height:10;" +
-                     "background-position: " +
-                     " -" + GUI.getImageX(symbol_url) + "px" +
-                     " -" + GUI.getImageY(symbol_url) + "px" +
-                     "height = " + self.scale * 28 + " alt='" + symbol + "' src='" + GUI.getImagePath(symbol_url) + "'  />";
-                     } else */
-                    {
+                    if (self.scale) {
+                        textHTML += "<img height = " + self.scale * 28 + " alt='" + symbol + "' src='" + GUI.getImagePath(symbol_url) + "'  />";
+                    } else {
                         textHTML += "<div " +
                             "style='" +
                             "width:" + (GUI.getImageWidth(symbol_url) - 0.5) + "px;" +
@@ -165,7 +157,6 @@ ElementGraphicText = function () {
                             "background-repeat: no-repeat;" +
                             "display: inline-block;" +
                             "background-position: " +
-                            "background-size:  " +
                             " -" + GUI.getImageX(symbol_url) + "px" +
                             " -" + GUI.getImageY(symbol_url) + "px" +
                             ";" +   // end of background-position
