@@ -55,3 +55,5 @@ SocNet.SEX_WOMAN = 2;
  * @type {number}
  */
 SocNet.SEX_MAN = 3;
+
+SocNet.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic'];

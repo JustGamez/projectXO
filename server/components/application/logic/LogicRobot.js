@@ -43,9 +43,9 @@ LogicRobot = function () {
         lines = [];
         for (var i in LogicXO.lineIds) {
             line = generateOneLine(game, X, Y, LogicXO.lineIds[i], true, state);
-            if (line.length == state.lineSize)lines.push(line);
+            if (line.length == state.lineSize) lines.push(line);
             line = generateOneLine(game, X, Y, LogicXO.lineIds[i], false, state);
-            if (line.length == state.lineSize)lines.push(line);
+            if (line.length == state.lineSize) lines.push(line);
         }
         return lines;
     };
@@ -80,7 +80,8 @@ LogicRobot = function () {
      * @param user {Object}
      */
     this.generateMovementCoords = function (game, user) {
-        var state, max, target, line, robotSignId, playerSignId, lines, randomIndex, emptyPoints, tmp, robotMovesCount, robotLevel, isUserLikeStep;
+        var state, max, target, line, robotSignId, playerSignId, lines, randomIndex, emptyPoints, tmp, robotMovesCount,
+            robotLevel, isUserLikeStep;
 
         state = {
             fieldSize: LogicXO.getFieldSize(game.fieldTypeId),
@@ -224,3 +225,5 @@ LogicRobot = function () {
  * @type {LogicRobot}
  */
 LogicRobot = new LogicRobot();
+
+LogicRobot.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic', 'SocNet', 'LogicUser'];

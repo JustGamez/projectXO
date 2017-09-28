@@ -159,3 +159,5 @@ DataGame = function () {
  * @type {DataGame}
  */
 DataGame = new DataGame();
+
+DataGame.depends = ['Logs', 'DB'];

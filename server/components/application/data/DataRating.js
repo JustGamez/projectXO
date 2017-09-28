@@ -85,3 +85,5 @@ DataRating = function () {
  * @type {DataRating}
  */
 DataRating = new DataRating();
+
+DataRating.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic', 'SocNet', 'LogicUser', 'LogicRobot'];

@@ -549,3 +549,5 @@ LogicUser = function () {
  * @type {LogicUser}
  */
 LogicUser = new LogicUser();
+
+LogicUser.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic', 'SocNet'];

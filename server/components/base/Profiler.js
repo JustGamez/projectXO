@@ -110,3 +110,5 @@ Profiler = function () {
  * @type {Profiler}
  */
 Profiler = new Profiler();
+
+Profiler.depends = ['Logs'];

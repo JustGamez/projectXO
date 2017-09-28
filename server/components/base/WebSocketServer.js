@@ -10,10 +10,10 @@ var URL = require('url');
  * А так же возвращающий клиентский код.
  * @constructor
  */
-WebSocketServer = function (givenMap) {
+WebSocketServer = function () {
     var self = this;
 
-    var map = givenMap;
+    var map = {};
 
     var lastConnectionId = null;
 
@@ -65,6 +65,14 @@ WebSocketServer = function (givenMap) {
      * Каллбэек будет вызываться при получении данных.
      */
     this.onData = null;
+
+    /**
+     * Set new map
+     * @param newMap
+     */
+    this.setMap = function (newMap) {
+        map = newMap;
+    };
 
     /**
      * Отправляет данные клиенту.
@@ -177,3 +185,7 @@ WebSocketServer = function (givenMap) {
         });
     };
 };
+
+WebSocketServer = new WebSocketServer;
+
+WebSocketServer.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic', 'SocNet', 'LogicUser', 'LogicRobot', 'DataRating'];

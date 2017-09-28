@@ -173,3 +173,5 @@ DataUser = function () {
  * @type {DataUser}
  */
 DataUser = new DataUser();
+
+DataUser.depends = ['Logs', 'Profiler', 'DB', 'DataGame'];

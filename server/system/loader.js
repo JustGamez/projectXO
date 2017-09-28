@@ -53,8 +53,7 @@ function includeConfig() {
 function loaderCallMainFunction() {
 
     /* Execute main function. */
-    logicMain = new LogicMain();
-    logicMain.main();
+    LogicMain.main();
 }
 
 /**
@@ -80,6 +79,7 @@ function loaderGetComponentsMap() {
         var list;
         list = FS.readdirSync(path);
         for (var i in list) {
+            //@TODO *.js extension must be
             if (list[i] == '.gitkeep')continue;
             if (FS.statSync(path + list[i]).isDirectory()) {
                 scanRecursive(path + list[i] + '/');
@@ -123,9 +123,62 @@ function loaderIncludeComponents(map) {
                 "\r\nкомпонент: " + name);
         }
     };
+    var mapLength = 0, newMapLength = 0;
     for (var name in map) {
+        mapLength++;
         includeComponent(map[name]);
     }
+    // sort by depends
+    map [name] = 'path';
+
+    var dependsMap = [];
+    while (mapLength != newMapLength) {
+        for (var name in map) {
+
+            if (dependsMap[name])continue;
+
+            if (global[name].depends) {
+                var depends, dependsAll, dependsInNewMap;
+                depends = global[name].depends;
+                dependsAll = global[name].depends.length;
+                dependsInNewMap = 0;
+                for (var i in depends) {
+                    if (dependsMap[depends[i]]) {
+                        dependsInNewMap++;
+                    }
+                }
+                if (dependsInNewMap == dependsAll) {
+                    dependsMap[name] = map[name];
+                    newMapLength++;
+                }
+            } else {
+                dependsMap[name] = map[name];
+                newMapLength++;
+            }
+        }
+    }
+
+    // preinit
+    // init
+    for (var name in dependsMap) {
+        if (global[name].preInit) {
+            sequencedInit(global[name].preInit);
+        }
+    }
+    sequencedInit(function (afterInitCallback) {
+        Logs.log("Pre init finished.", Logs.LEVEL_NOTIFY);
+        afterInitCallback();
+    });
+    // init
+    for (var name in dependsMap) {
+        if (global[name].init) {
+            sequencedInit(global[name].init);
+        }
+    }
+    sequencedInit(function (afterInitCallback) {
+        Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
+        afterInitCallback();
+    });
 }
 
 function loaderPreInitComponents(map) {

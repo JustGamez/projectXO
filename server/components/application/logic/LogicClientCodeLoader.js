@@ -450,3 +450,5 @@ LogicClientCodeLoader = function () {
 };
 
 LogicClientCodeLoader = new LogicClientCodeLoader;
+
+LogicClientCodeLoader.depends = ['Logs', 'Profiler', 'SocNet', 'WebSocketServer'];

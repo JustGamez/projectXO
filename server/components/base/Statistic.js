@@ -3,17 +3,19 @@ Statistic = function () {
 
     var cache = [];
 
-    var data = {};
+    var titles = {};
 
     var lastId = 0;
-
-    var maxTitleLength = 0;
 
     /**
      * @param userId int
      * @param statisticId int
      */
     this.add = function (userId, statisticId) {
+        if (!titles[statisticId]) {
+            Logs.log('Statisti with id: ' + statisticId + ' not found', Logs.LEVEL_WARNING);
+            return;
+        }
         cache.push({
             userId: userId,
             timeStamp: new Date().getTime(),
@@ -49,23 +51,11 @@ Statistic = function () {
         }
     };
 
-    this.getNewId = function (title) {
-        var newId;
-        if (!title) {
-            title = '';
-        }
-        newId = ++lastId;
-        data[newId] = {
+    this.addTitle = function (id, title) {
+        titles[id] = {
             title: title
         };
-        if (title.length > maxTitleLength) {
-            maxTitleLength = title.length;
-        }
-        return newId;
-    };
-
-    this.getTitles = function () {
-        return data;
+        return id;
     };
 
     this.getStatus = function (callback) {
@@ -73,7 +63,7 @@ Statistic = function () {
         query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join statistic on users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 1000";
         // id, userId, timeStamp, statisticId
         DB.query(query, function (rows) {
-            var html, row;
+            var html, row, title;
             html = "";
             html += "<html><head><meta charset='utf8' ></head><body>";
             html += "<table>";
@@ -84,7 +74,7 @@ Statistic = function () {
                 html += "<td>" + row.firstName + " " + row.lastName + "</td>";
                 html += "<td>" + row.userId + "</td>";
                 html += "<td>" + time + "</td>";
-                html += "<td>" + data[row.statisticId].title + "</td>";
+                html += "<td>" + title + "</td>";
                 html += "</tr>";
             }
             html += "</table>";
@@ -99,3 +89,5 @@ Statistic = function () {
  * @type {Statistic}
  */
 Statistic = new Statistic();
+
+Statistic.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser'];

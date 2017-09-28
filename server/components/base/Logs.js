@@ -134,3 +134,5 @@ Logs = function () {
  * @type {Logs}
  */
 Logs = new Logs();
+
+Logs.depends = [];

@@ -1,70 +1,50 @@
 LogicMain = function () {
+    var self = this;
+
+    this.preInit = function (afterCallback) {
+        self.setStatisticsIds();
+        self.setWebSocketServerMap();
+        self.linkWebSocketAndApiRouter();
+        afterCallback();
+    };
 
     this.main = function () {
 
-        this.loadStatisticIds();
-        this.createWebSocketServer();
-        this.linkWebSocketAndApiRouter();
         this.setDeInitCallbacks();
-        this.setInits();
     };
 
-    this.loadStatisticIds = function () {
+    this.setStatisticsIds = function () {
 
         /* User statistics. */
-        /* 1 */
-        Statistic.ID_AUTHORIZE = Statistic.getNewId("авторизация через ВКонтакте ");
-        /* 2 */
-        Statistic.ID_LOGOUT = Statistic.getNewId("покинул игру.");
-        /* 3 */
-        Statistic.ID_DO_MOVE = Statistic.getNewId("сделал ход");
-        /* 4  removed. */
-        Statistic.ID_REQUEST_RANDOM_GAME = Statistic.getNewId("запрос случайной игры");
-        /* 5 */
-        Statistic.ID_CLOSE_GAME = Statistic.getNewId("закрыл игру");
-        /* 6 */
-        Statistic.ID_REPEAT_GAME = Statistic.getNewId("повтор игры");
-        /* 7 */
-        Statistic.ID_GAME_ROBOT_CREATE = Statistic.getNewId("создал игру с роботом");
-        /* 8  removed */
-        Statistic.ID_GAME_ROBOT_CLOSE = Statistic.getNewId("закрыл игру с роботом");
-        /* 9 */
-        Statistic.ID_CLICK_RATING = Statistic.getNewId("нажал кнопку рейтинга");
-        /* 10 */
-        Statistic.ID_CLICK_INVITE_DIALOG = Statistic.getNewId("открыл диалог приглашения друзей");
-        /* 11 */
-        Statistic.ID_WIN_ROBOT = Statistic.getNewId("выиграл у робота");
-        /* 12 */
-        Statistic.ID_CLICK_HELP = Statistic.getNewId("нажал кнопку помощь");
-        /* 13 */
-        Statistic.ID_CHAT_SEND_MESSAGE = Statistic.getNewId("оптравил сообщеие");
-        /* 14 */
-        Statistic.ID_WIN_INVITATION = Statistic.getNewId("выиграл в игре по приглашению");
-        /* 15 */
-        Statistic.ID_INVITATION_SEND = Statistic.getNewId("оптравил приглашение");
-        /* 16 */
-        Statistic.ID_CREATE_GAME_INVATION = Statistic.getNewId("создал игру по приглашению");
-        /* 17 */
-        Statistic.ID_LOOK_GAME_START = Statistic.getNewId("начал просмотривать игру");
-        /* 18 */
-        Statistic.ID_LOOK_GAME_STOP = Statistic.getNewId("закрыл просмотр игры");
-        /* 19 */
-        Statistic.ID_CLICK_RATING_TOP = Statistic.getNewId("клик: рейтинг топ");
-        /* 20 */
-        Statistic.ID_CLICK_RATING_MY = Statistic.getNewId("клик: рейтинг мой");
-        /* 21 */
-        Statistic.ID_CLICK_RATING_UP = Statistic.getNewId("клик: рейтинг вверх");
-        /* 22 */
-        Statistic.ID_CLICK_RATING_DOWN = Statistic.getNewId("клик: рейтинг вниз");
-        /* 23 */
-        Statistic.ID_NOTIFIER_SUCCESS = Statistic.getNewId("отправка нотификации: успешно");
-        /* 24*/
-        Statistic.ID_NOTIFIER_FAILED = Statistic.getNewId("отправка нотификации: не успешно");
+        Statistic.ID_AUTHORIZE = Statistic.addTitle(1, "авторизация через ВКонтакте ");
+        Statistic.ID_LOGOUT = Statistic.addTitle(2, "покинул игру.");
+        Statistic.ID_DO_MOVE = Statistic.addTitle(3, "сделал ход");
+        Statistic.ID_REQUEST_RANDOM_GAME = Statistic.addTitle(4, "запрос случайной игры");
+        Statistic.ID_CLOSE_GAME = Statistic.addTitle(5, "закрыл игру");
+        Statistic.ID_REPEAT_GAME = Statistic.addTitle(6, "повтор игры");
+        Statistic.ID_GAME_ROBOT_CREATE = Statistic.addTitle(7, "создал игру с роботом");
+        Statistic.ID_GAME_ROBOT_CLOSE = Statistic.addTitle(8, "закрыл игру с роботом");
+        Statistic.ID_CLICK_RATING = Statistic.addTitle(9, "нажал кнопку рейтинга");
+        Statistic.ID_CLICK_INVITE_DIALOG = Statistic.addTitle(10, "открыл диалог приглашения друзей");
+        Statistic.ID_WIN_ROBOT = Statistic.addTitle(11, "выиграл у робота");
+        Statistic.ID_CLICK_HELP = Statistic.addTitle(12, "нажал кнопку помощь");
+        Statistic.ID_CHAT_SEND_MESSAGE = Statistic.addTitle(13, "оптравил сообщеие");
+        Statistic.ID_WIN_INVITATION = Statistic.addTitle(14, "выиграл в игре по приглашению");
+        Statistic.ID_INVITATION_SEND = Statistic.addTitle(15, "оптравил приглашение");
+        Statistic.ID_CREATE_GAME_INVATION = Statistic.addTitle(16, "создал игру по приглашению");
+        Statistic.ID_LOOK_GAME_START = Statistic.addTitle(17, "начал просмотривать игру");
+        Statistic.ID_LOOK_GAME_STOP = Statistic.addTitle(18, "закрыл просмотр игры");
+        Statistic.ID_CLICK_RATING_TOP = Statistic.addTitle(19, "клик: рейтинг топ");
+        Statistic.ID_CLICK_RATING_MY = Statistic.addTitle(20, "клик: рейтинг мой");
+        Statistic.ID_CLICK_RATING_UP = Statistic.addTitle(21, "клик: рейтинг вверх");
+        Statistic.ID_CLICK_RATING_DOWN = Statistic.addTitle(22, "клик: рейтинг вниз");
+        Statistic.ID_NOTIFIER_SUCCESS = Statistic.addTitle(23, "отправка нотификации: успешно");
+        Statistic.ID_NOTIFIER_FAILED = Statistic.addTitle(24, "отправка нотификации: не успешно");
     };
 
-    this.createWebSocketServer = function () {
-        /*  WebSocketServer */
-        webSocketServer = new WebSocketServer({
+    this.setWebSocketServerMap = function () {
+
+        WebSocketServer.setMap({
             '/service/clientCode': LogicClientCodeLoader.getClientCode,  //TODO удалить после изменеия настроек в приложении вКонтаке
             '/service/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
             '/service/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
@@ -93,43 +73,21 @@ LogicMain = function () {
     this.linkWebSocketAndApiRouter = function () {
 
         /* links ApiRouter and webSocketServer */
-        ApiRouter.sendData = webSocketServer.sendData;
-        webSocketServer.onConnect = ApiRouter.onConnect;
-        webSocketServer.onDisconnect = ApiRouter.onDisconnect;
-        webSocketServer.onData = ApiRouter.onData;
+        ApiRouter.sendData = WebSocketServer.sendData;
+        WebSocketServer.onConnect = ApiRouter.onConnect;
+        WebSocketServer.onDisconnect = ApiRouter.onDisconnect;
+        WebSocketServer.onData = ApiRouter.onData;
     };
 
     this.setDeInitCallbacks = function () {
 
-
         /* set deinit callbacks */
         addDeInitCallback(Statistic.flushCache);
         addDeInitCallback(DataGame.flushCache);
-
     };
-
-    this.setInits = function () {
-
-
-        //@todo must be auto
-        /* init all components */
-        sequencedInit(Logs.init);
-        sequencedInit(Profiler.init);
-        sequencedInit(DB.init);
-        sequencedInit(DataGame.init);
-        sequencedInit(DataUser.init);
-        sequencedInit(Statistic.init);
-        sequencedInit(SocNet.init);
-        sequencedInit(LogicUser.init);
-        sequencedInit(LogicRobot.init);
-        sequencedInit(DataRating.init);
-        sequencedInit(webSocketServer.init);
-        sequencedInit(LogicClientCodeLoader.init);
-
-        sequencedInit(function (afterInitCallback) {
-            Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
-            afterInitCallback();
-        });
-    }
 };
 
+
+LogicMain = new LogicMain;
+
+LogicMain.depends = ['Logs', 'Statistic', 'WebSocketServer', 'ApiRouter'];

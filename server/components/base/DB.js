@@ -181,3 +181,5 @@ DB = function () {
  * @type {DB}
  */
 DB = new DB();
+
+DB.depends = ['Logs'];
