@@ -45,7 +45,6 @@ LogicMain = function () {
     this.setWebSocketServerMap = function () {
 
         WebSocketServer.setMap({
-            '/service/clientCode': LogicClientCodeLoader.getClientCode,  //TODO удалить после изменеия настроек в приложении вКонтаке
             '/service/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
             '/service/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
             '/service/reloadClientCode': LogicClientCodeLoader.reloadClientCode,

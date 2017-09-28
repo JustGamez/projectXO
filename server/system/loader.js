@@ -27,13 +27,10 @@ includeConfig();
 /* 4 - execute code-generators */
 var code = loaderGenerateCode();
 
+/* 5 - include components, pre init and init components */
 var componentsMap = loaderGetComponentsMap();
 
 loaderIncludeComponents(componentsMap);
-
-//loaderPreInitComponents(componentsMap);
-
-//loaderInitComponents(componentsMap);
 
 loaderExecuteGeneratedCode(code);
 
@@ -179,22 +176,6 @@ function loaderIncludeComponents(map) {
         Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
         afterInitCallback();
     });
-}
-
-function loaderPreInitComponents(map) {
-    for (var name in map) {
-        if (global[name].preInit) {
-            global[name].preInit();
-        }
-    }
-}
-
-function loaderInitComponents(map) {
-    for (var name in map) {
-        if (global[name].init()) {
-            global[name].init();
-        }
-    }
 }
 
 /**

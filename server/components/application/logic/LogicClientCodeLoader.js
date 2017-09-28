@@ -87,15 +87,6 @@ LogicClientCodeLoader = function () {
         });
     };
 
-    /**
-     * DEPRECATED
-     * @TODO удалить после настройки
-     * @param callback
-     */
-    this.getClientCode = function (callback) {
-        self.getClientCodeVK(callback);
-    };
-
     this.getClientCodeVK = function (callback) {
         if (Config.Project.maintance) {
             var html;
