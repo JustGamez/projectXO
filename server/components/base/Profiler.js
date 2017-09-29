@@ -1,7 +1,7 @@
 Profiler = function () {
     var self = this;
 
-    var data = [];
+    var titles = [];
     var lastId = 0;
     var maxTitleLength = 0;
 
@@ -10,7 +10,7 @@ Profiler = function () {
 
     this.start = function (id) {
         lastPrid++;
-        data[id].stamps[lastPrid] = mtime();
+        titles[id].stamps[lastPrid] = mtime();
         return lastPrid;
     };
 
@@ -18,30 +18,26 @@ Profiler = function () {
         if (!prid) {
             Logs.log("Profiler.stop().", Logs.LEVEL_WARNING, prid);
         }
-        if (!data[id].stamps[prid]) {
+        if (!titles[id].stamps[prid]) {
             Logs.log("Profiler.stop(). no stamp for", Logs.LEVEL_WARNING, {prid: prid, id: id});
         }
-        data[id].sumTime += mtime() - data[id].stamps[prid];
-        data[id].count++;
-        delete data[id].stamps[prid];
+        titles[id].sumTime += mtime() - titles[id].stamps[prid];
+        titles[id].count++;
+        delete titles[id].stamps[prid];
     };
 
-    this.getNewId = function (title) {
-        var newId;
-        if (!title) {
-            title = '';
-        }
-        newId = ++lastId;
-        data[newId] = {
+    this.addTitle = function (id, title) {
+        titles[id] = {
             stamps: {},
             sumTime: 0,
             count: 0,
             title: title
         };
+        // @todo move to this.getMaxTitleLength = function()
         if (title.length > maxTitleLength) {
             maxTitleLength = title.length;
         }
-        return newId;
+        return id;
     };
 
     this.printReport = function () {
@@ -52,8 +48,8 @@ Profiler = function () {
     this.saveToDB = function () {
         var row, query;
         query = "INSERT INTO profiling ( `datetime`, `profileId`, `sumTime`, `count` ) VALUES ";
-        for (var id in data) {
-            row = data[id];
+        for (var id in titles) {
+            row = titles[id];
             query += "(" + time() + "," + id + "," + row.sumTime + "," + row.count + "),";
         }
         query = query.substr(0, query.length - 1);
@@ -65,13 +61,13 @@ Profiler = function () {
         var output, row, rps;
         output = '';
         output += "id " + str_pad("title", maxTitleLength + 3) + "  sumTime    count   rps\r\n";
-        data.forEach(function (row) {
+        titles.forEach(function (row) {
             row.rps = (row.count / (row.sumTime / 1000) * 10000) / 10000;
             if (!row.rps) {
                 row.rps = 0;
             }
         });
-        var data2 = data.slice(0);
+        var data2 = titles.slice(0);
         data2.sort(function (a, b) {
             if (a.rps > b.rps) return -1;
             if (a.rps < b.rps) return 1;
@@ -98,7 +94,6 @@ Profiler = function () {
     };
 
     this.init = function (afterInitCallback) {
-        require(CONST_DIR_SERVER + 'profilerIds.js');
         setInterval(Profiler.printReport, Config.Profiler.reportTimeout);
         setInterval(Profiler.saveToDB, Config.Profiler.saveToDBTimeout);
         afterInitCallback();

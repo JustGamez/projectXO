@@ -3,6 +3,7 @@ LogicMain = function () {
 
     this.preInit = function (afterCallback) {
         self.setStatisticsIds();
+        self.setProfileIds();
         self.setWebSocketServerMap();
         self.linkWebSocketAndApiRouter();
         afterCallback();
@@ -40,6 +41,62 @@ LogicMain = function () {
         Statistic.ID_CLICK_RATING_DOWN = Statistic.addTitle(22, "клик: рейтинг вниз");
         Statistic.ID_NOTIFIER_SUCCESS = Statistic.addTitle(23, "отправка нотификации: успешно");
         Statistic.ID_NOTIFIER_FAILED = Statistic.addTitle(24, "отправка нотификации: не успешно");
+    };
+
+    this.setProfileIds = function () {
+        /* SAPIUser  1 */
+        Profiler.ID_AUTH_VK = Profiler.addTitle(1, "ID_AUTH_VK");
+        Profiler.ID_SEND_USER_INFO = Profiler.addTitle(2, "ID_SEND_USER_INFO");
+        Profiler.ID_UPDATE_SOCNET_INFO = Profiler.addTitle(3, "ID_UPDATE_SOCNET_INFO");
+        Profiler.ID_SEND_FRIENDS = Profiler.addTitle(4, "ID_SEND_FRIENDS");
+        Profiler.ID_SENDME_ONLINE = Profiler.addTitle(5, "ID_SENDME_ONLINE");
+        /* SAPIChat */
+        Profiler.ID_GET_LAST_MESSAGES = Profiler.addTitle(6, "ID_GET_LAST_MESSAGES");
+        Profiler.ID_CHAT_SEND_MESSAGE = Profiler.addTitle(7, "ID_CHAT_SEND_MESSAGE");
+        /* SAPIUserState */
+        Profiler.ID_USER_IS_BUSY = Profiler.addTitle(8, "ID_USER_IS_BUSY");
+        Profiler.ID_USER_IS_NO_BUSY = Profiler.addTitle(9, "ID_USER_IS_NO_BUSY");
+        Profiler.ID_USER_ON_GAME = Profiler.addTitle(10, "ID_USER_ON_GAME");
+        /* SAPIInvites */
+        Profiler.ID_SEND_INVITE = Profiler.addTitle(11, "ID_SEND_INVITE");
+        /* LogicUser */
+        Profiler.ID_LOGIC_SEND_TO_ALL = Profiler.addTitle(12, "ID_LOGIC_SEND_TO_ALL");
+        /* WebSocketServer */
+        Profiler.ID_WEBSOCKETSERVER_SEND_IMAGE = Profiler.addTitle(13, "ID_WEBSOCKETSERVER_SEND_IMAGE"); // unused, but id nedded //
+        Profiler.ID_WEBSOCKETSERVER_SEND_CLIENT_CODE = Profiler.addTitle(14, "ID_WEBSOCKETSERVER_SEND_CLIENT_CODE");
+        /* SAPIRating*/
+        Profiler.ID_SAPIRATING_SEND_ME_TOP_LIST = Profiler.addTitle(15, "ID_SAPIRATING_SEND_ME_TOP_LIST");
+        /* SAPIGame */
+        Profiler.ID_SAPIGAME_REQUEST_RANDOM_GAME = Profiler.addTitle(16, "ID_SAPIGAME_REQUEST_RANDOM_GAME");
+        Profiler.ID_SAPIGAME_CANCEL_RANDOM_GAME = Profiler.addTitle(17, "ID_SAPIGAME_CANCEL_RANDOM_GAME");
+        Profiler.ID_DO_MOVE = Profiler.addTitle(18, "ID_DO_MOVE");
+        /* ActionsGame */
+        Profiler.ID_CREATE_WAITER = Profiler.addTitle(19, "ID_CREATE_WAITER");
+        Profiler.ID_CREATE_RANDOM_GAME = Profiler.addTitle(20, "ID_CREATE_RANDOM_GAME");
+        /* SAPIRobot */
+        Profiler.ID_CREATE_ROBOT_GAME = Profiler.addTitle(21, "ID_CREATE_ROBOT_GAME");
+        Profiler.ID_ROBOT_DO_MOVE = Profiler.addTitle(22, "ID_ROBOT_DO_MOVE");
+        Profiler.ID_ROBOT_CHECKWINNER = Profiler.addTitle(23, "ID_ROBOT_CHECKWINNER");
+        Profiler.ID_ROBOT_CLOSE_GAME = Profiler.addTitle(24, "ID_ROBOT_CLOSE_GAME");
+        /* LogicXO */
+        Profiler.LOGIC_XO_FIND_WIN_LINE = Profiler.addTitle(25, "LOGIC_XO_FIND_WIN_LINE");
+        /* ActionsRepeatGame */
+        Profiler.ID_REPEATE_GAME = Profiler.addTitle(26, "ID_REPEATE_GAME");
+        Profiler.ID_GENERATE_LINES = Profiler.addTitle(27, "ID_GENERATE_LINES");
+        /* Rating */
+        Profiler.ID_RATING_UPDATE = Profiler.addTitle(28, "ID_RATING_UPDATE");
+        Profiler.ID_ROBOT_THINKING = Profiler.addTitle(29, "ID_ROBOT_THINKING");
+        Profiler.ID_CHAT_SEND_BEFORE_ID = Profiler.addTitle(30, "ID_CHAT_SEND_BEFORE_ID");
+        Profiler.ID_RATING_UPDATE_STEP_1 = Profiler.addTitle(31, "ID_RATING_UPDATE_STEP_1");
+        Profiler.ID_RATING_UPDATE_STEP_2 = Profiler.addTitle(32, "ID_RATING_UPDATE_STEP_2");
+        Profiler.ID_RATING_UPDATE_STEP_3 = Profiler.addTitle(33, "ID_RATING_UPDATE_STEP_3");
+        Profiler.ID_RATING_UPDATE_STEP_4 = Profiler.addTitle(34, "ID_RATING_UPDATE_STEP_4");
+        Profiler.ID_WALLPOST_SUM = Profiler.addTitle(35, 'ID_WALLPOST_SUM');
+        Profiler.ID_WALLPOST_RECEIVE_DATA = Profiler.addTitle(36, 'ID_WALLPOST_RECEIVE_DATA');
+        Profiler.ID_WALLPOST_WRITE_FILE = Profiler.addTitle(37, 'ID_WALLPOST_WRITE_FILE');
+        Profiler.ID_WALLPOST_SEND_TO_VK_SERVER = Profiler.addTitle(38, 'ID_WALLPOST_SEND_TO_VK_SERVER');
+        Profiler.ID_NOTIFIER_PROCESS_ONE = Profiler.addTitle(39, 'ID_NOTIFIER_PROCESS_ONE');
+        Profiler.ID_AUTH_STANDALONE = Profiler.addTitle(40, "ID_AUTH_STANDALONE");
     };
 
     this.setWebSocketServerMap = function () {
