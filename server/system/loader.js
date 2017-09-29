@@ -33,7 +33,7 @@ loader.callCodeGenerators();
 /* step 5 - include components, pre init and init components */
 loader.includeComponents();
 
-/* step 6  - execute generated code */
+/* step 6 - execute generated code */
 loader.executeGeneratedCode();
 
 /* step 7 - call main function */
