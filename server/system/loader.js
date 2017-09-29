@@ -216,6 +216,6 @@ function loaderGenerateCode() {
  */
 function loaderExecuteGeneratedCode(code) {
 
-    FS.writeFileSync(CONST_DIR_SERVER + '/generated.js', code);
-    require(CONST_DIR_SERVER + '/generated.js');
+    FS.writeFileSync(CONST_DIR_SERVER + '/system/generated.js', code);
+    require(CONST_DIR_SERVER + '/system/generated.js');
 }
