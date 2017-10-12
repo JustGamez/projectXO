@@ -2,9 +2,9 @@
 
 # This restart server after failed, after 1 seconds.
 
-parentFolder =${PWD##*/}
+#parentFolder =${PWD##*/}
 
 while true; do
-nodejs run.js $parentFolder
+nodejs run.js
 sleep 1
 done
