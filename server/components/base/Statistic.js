@@ -58,7 +58,7 @@ Statistic = function () {
         return id;
     };
 
-    this.getStatus = function (callback) {
+    this.getLog = function (callback) {
         var query;
         query = "SELECT firstName, lastName, userId, statisticId, timeStamp from users inner join statistic on users.id = statistic.userId ORDER BY statistic.id DESC LIMIT 1000";
         // id, userId, timeStamp, statisticId

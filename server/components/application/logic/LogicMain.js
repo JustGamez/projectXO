@@ -102,19 +102,19 @@ LogicMain = function () {
     this.setWebSocketServerMap = function () {
 
         WebSocketServer.setMap({
-            '/service/clientCodeVK': LogicClientCodeLoader.getClientCodeVK,
-            '/service/clientCodeStandalone': LogicClientCodeLoader.getClientCodeStandalone,
-            '/service/reloadClientCode': LogicClientCodeLoader.reloadClientCode,
-            '/service/VKCommentsWidget': LogicClientCodeLoader.getVKCommentsWidget,
+            '/service/clientCodeVK': ClientCodeLoader.getClientCodeVK,
+            '/service/clientCodeStandalone': ClientCodeLoader.getClientCodeStandalone,
+            '/service/reloadClientCode': ClientCodeLoader.reloadClientCode,
+            '/service/VKCommentsWidget': ClientCodeLoader.getVKCommentsWidget,
 
-            '/service/--status': LogicSystemRequests.getStatus,
-            '/service/--statistic': LogicSystemRequests.getStatistic,
+            '/service/--profiler': LogicSystemRequests.getProfiler,
+            '/service/--log': LogicSystemRequests.getLog,
             '/service/--shutdown___': LogicSystemRequests.shutdown,
             '/service/--logsSetDetail': LogicSystemRequests.logsSetDetail,
             '/service/--logsSetNotify': LogicSystemRequests.logsSetNotify,
             '/service/--help': function (callback) {
-                callback("--status <br>" +
-                    "--statistic <br>" +
+                callback("--profiler <br>" +
+                    "--log <br>" +
                     "--logsSetDetail<br>" +
                     "--logsSetNotify<br>" +
                     "--help<br>" +

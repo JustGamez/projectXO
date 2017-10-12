@@ -1,15 +1,15 @@
 LogicSystemRequests = function () {
 
-    this.getStatus = function (callback) {
+    this.getProfiler = function (callback) {
         callback(
             '<pre>' + Profiler.getTextReport() + '</pre>' +
             "<script>setTimeout(function(){window.location.href = window.location.href;},1000);</script>"
         );
     };
 
-    this.getStatistic = function (callback) {
+    this.getLog = function (callback) {
         Statistic.flushCache();
-        Statistic.getStatus(callback);
+        Statistic.getLog(callback);
     };
 
     this.shutdown = function (callback) {

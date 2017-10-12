@@ -5,7 +5,7 @@ var IMAGE_SIZE = require('image-size');
 var UGLIFYJS = require('uglify-js');
 var SPRITESMITH = require('spritesmith');
 
-LogicClientCodeLoader = function () {
+ClientCodeLoader = function () {
 
     var self = this;
     /**
@@ -65,16 +65,16 @@ LogicClientCodeLoader = function () {
         imagesPath = Config.WebSocketServer.imagesPath;
         useSpritedImage = Config.WebSocketServer.useSpritedImage;
         // check before after init
-        if (typeof reloadClientCodeEveryRequest != 'boolean') {
+        if (typeof reloadClientCodeEveryRequest !== 'boolean') {
             Logs.log("reloadClientCodeEveryRequest given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, reloadClientCodeEveryRequest);
         }
-        if (typeof clientCodePath != 'string') {
+        if (typeof clientCodePath !== 'string') {
             Logs.log("clientCodePath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, clientCodePath);
         }
-        if (typeof imagesPath != 'string') {
+        if (typeof imagesPath !== 'string') {
             Logs.log("imagesPath given by .setup, must be string", Logs.LEVEL_FATAL_ERROR, imagesPath);
         }
-        if (typeof useSpritedImage != 'boolean') {
+        if (typeof useSpritedImage !== 'boolean') {
             Logs.log("useSpritedImage given by .setup, must be boolean", Logs.LEVEL_FATAL_ERROR, useSpritedImage);
         }
         /* Обновим клиентский код. */
@@ -207,7 +207,10 @@ LogicClientCodeLoader = function () {
         if (Config.WebSocketServer.compressJSClientCode) {
             mainClientJSCode = 'function ___(){ ' + mainClientJSCode + ' };___();';
             var result = UGLIFYJS.minify(mainClientJSCode);
-            mainClientJSCode = result.code;
+            console.log(mainClientJSCode);
+            if (result.code) {
+                mainClientJSCode = result.code;
+            }
         }
         //@todo path to JS move to Config file
         FS.writeFileSync(CONST_DIR_ROOT + '/public/js/MainClientCode.js', mainClientJSCode);
@@ -407,6 +410,6 @@ LogicClientCodeLoader = function () {
     }
 };
 
-LogicClientCodeLoader = new LogicClientCodeLoader;
+ClientCodeLoader = new ClientCodeLoader;
 
-LogicClientCodeLoader.depends = ['Logs', 'Profiler', 'SocNet', 'WebSocketServer'];
+ClientCodeLoader.depends = ['Logs', 'Profiler', 'SocNet', 'WebSocketServer'];
