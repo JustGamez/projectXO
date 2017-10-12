@@ -27,16 +27,19 @@ loader.includeFunctions();
 /* step 3 - include config file */
 loader.includeConfig();
 
-/* step 4 - call code-generators */
-loader.callCodeGenerators();
-
-/* step 5 - include components, pre init and init components */
+/* step 4 - include components */
 loader.includeComponents();
 
-/* step 6 - execute generated code */
+/* step 5 - call generators */
+loader.callGenerators();
+
+/* step 6 - call components preinit and init */
+loader.initComponents();
+
+/* step 7 - execute generated code */
 loader.executeGeneratedCode();
 
-/* step 7 - call main function */
+/* step 8 - call main function */
 loader.callMainFunction();
 
 /**
@@ -52,7 +55,10 @@ function Loader() {
 
     var generatedCode = '';
 
+    var componentsMap = '';
+
     this.includeConstants = function () {
+
         /* 1 - declare core constants */
         require('./constants.js');
     };
@@ -61,7 +67,6 @@ function Loader() {
 
         /* 2 - declare code functions */
         require('./functions.js');
-
     };
 
     this.includeConfig = function () {
@@ -73,35 +78,16 @@ function Loader() {
 
     this.includeComponents = function () {
         var componentsMap = loader.getComponentsMap();
-
         loader.includeComponentsByMap(componentsMap);
     };
 
-    this.callCodeGenerators = function () {
-        /**
-         * 1 - взять все файлы /generators/
-         * 2 - подключить все
-         * 3 - выполнить метод generate() в любом порядке
-         * 4 - вынести отдельные части в отдельные генераторы
-         */
-
-        var list, path, name, map, i, code, result;
-        path = CONST_DIR_SERVER + 'generators' + PATH.sep;
-        list = FS.readdirSync(path);
-        map = {};
-        for (i in list) {
-            name = getComponentNameFromPath(path + list[i]);
-            map[name] = path + list[i];
-        }
-        for (name in map) {
-            require(map[name]);
-        }
-        //@todo test generate method must be
+    this.callGenerators = function () {
+        var code;
         code = '';
-        for (name in map) {
-            log("Execute generator: " + name);
-            result = global[name].generate();
-            if (result) code += result;
+        for (name in componentsMap) {
+            if (global[name].generate) {
+                code += global[name].generate();
+            }
         }
         generatedCode = code;
     };
@@ -150,7 +136,7 @@ function Loader() {
          */
         var includeComponent = function (path) {
             path = PATH.resolve(path);
-            log("include component:" + getComponentNameFromPath(path));
+            log("include component:" + getComponentNameFromPath(path) + '(' + path + ')');
             require(path);
             validateComponent(path);
             global[getComponentNameFromPath(path)].__path = path;
@@ -209,8 +195,13 @@ function Loader() {
             }
         }
 
+        componentsMap = dependsMap;
+    };
+
+    this.initComponents = function () {
+        var name;
         // preinit
-        for (name in dependsMap) {
+        for (name in componentsMap) {
             if (global[name].preInit) {
                 sequencedInit(global[name].preInit);
             }
@@ -220,7 +211,7 @@ function Loader() {
             afterInitCallback();
         });
         // init
-        for (name in dependsMap) {
+        for (name in componentsMap) {
             if (global[name].init) {
                 sequencedInit(global[name].init);
             }
@@ -229,5 +220,5 @@ function Loader() {
             Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
             afterInitCallback();
         });
-    };
+    }
 };
