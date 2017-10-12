@@ -16,13 +16,15 @@ Logs = function () {
     this.init = function (afterInitCallback) {
         trigger_level = Config.Logs.triggerLevel;
         for (var i = 0; i < 100; i++) {
-            cache.push('dummy');
+            cache.push('--dummy--');
         }
         afterInitCallback();
     };
 
     this.showCache = function () {
-        console.log(cache);
+        for (var i in cache) {
+            if (cache[i] == '--dummy--')continue;
+        }
     };
 
     /**
