@@ -93,8 +93,8 @@ function Loader() {
     };
 
     this.executeGeneratedCode = function () {
-        FS.writeFileSync(CONST_DIR_SERVER + '/system/generated.js', generatedCode);
-        require(CONST_DIR_SERVER + '/system/generated.js');
+        FS.writeFileSync(CONST_DIR_SERVER + '/core/generated.js', generatedCode);
+        require(CONST_DIR_SERVER + '/core/generated.js');
     };
 
     this.callMainFunction = function () {

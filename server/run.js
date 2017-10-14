@@ -1,4 +1,4 @@
 /* Entry point */
 
-require('./system/loader.js');
+require('./core/loader.js');
 

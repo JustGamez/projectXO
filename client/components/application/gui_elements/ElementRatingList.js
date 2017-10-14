@@ -104,7 +104,7 @@ ElementRatingList = function () {
             row.position = GUI.createElement(ElementGraphicText, {
                 x: self.x + self.offsetPosition,
                 y: self.y + i * (self.rowSpacing + rowHeight) + 10,
-                width: 50,
+                width: 60,
                 text: '-',
                 alignCenter: true,
                 pointer: GUI.POINTER_HAND

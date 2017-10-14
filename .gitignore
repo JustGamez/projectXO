@@ -1,5 +1,5 @@
 .idea/*
-/sql_dumps/
+/other/sql_dumps/*
 /hostingData
 /server/Config.*.js
 /client/Config.*.js

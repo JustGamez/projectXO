@@ -244,7 +244,7 @@ ClientCodeLoader = function () {
     var getMainClientJSCode = function () {
         var jsFiles, hostname, clientConfigPath, code;
         jsFiles = [];
-        jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'system/'));
+        jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'core/'));
         jsFiles = jsFiles.concat(getFileListRecursive(clientCodePath + 'components/'));
         /* Include Config file. */
         hostname = OS.hostname();

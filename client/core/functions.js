@@ -1,6 +1,3 @@
-CONST_IS_SERVER_SIDE = false;
-CONST_IS_CLIENT_SIDE = true;
-
 /**
  * В этом файле содержаться системные функции.
  */

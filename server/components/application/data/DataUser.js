@@ -1,21 +1,6 @@
 DataUser = function () {
 
     var tableName = 'users';
-    var fields = {
-        id: null,
-        firstName: null,
-        lastName: null,
-        socNetUserId: null,
-        socNetTypeId: null,
-        createTimestamp: null,
-        lastLoginTimestamp: null,
-        score15x15vsPerson: null,
-        score3x3vsPerson: null,
-        score15x15vsRobot: null,
-        score3x3vsRobot: null,
-        robotLevel3x3: null,
-        robotLevel15x15: null
-    };
 
     var fromDBToData = function (data) {
         if (!data) return data;
