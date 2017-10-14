@@ -90,4 +90,4 @@ Statistic = function () {
  */
 Statistic = new Statistic();
 
-Statistic.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser'];
+Statistic.depends = ['Logs', 'Profiler', 'DB'];

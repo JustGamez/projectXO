@@ -188,4 +188,4 @@ WebSocketServer = function () {
 
 WebSocketServer = new WebSocketServer;
 
-WebSocketServer.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic', 'SocNet', 'LogicUser', 'LogicRobot', 'DataRating'];
+WebSocketServer.depends = ['Logs', 'Profiler', 'DB', 'Statistic', 'SocNet'];

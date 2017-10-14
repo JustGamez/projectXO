@@ -56,4 +56,4 @@ SocNet.SEX_WOMAN = 2;
  */
 SocNet.SEX_MAN = 3;
 
-SocNet.depends = ['Logs', 'Profiler', 'DB', 'DataGame', 'DataUser', 'Statistic'];
+SocNet.depends = ['Logs', 'Profiler', 'DB', 'Statistic'];

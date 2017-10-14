@@ -17,28 +17,28 @@ var PATH = require('path');
 var OS = require('os');
 
 var loader = new Loader();
-
+console.log('step 1 - include constants');
 /* step 1 - include constants */
 loader.includeConstants();
-
+console.log('step 2 - include functions');
 /* step 2 - include functions */
 loader.includeFunctions();
-
+log('step 3 - include config file');
 /* step 3 - include config file */
 loader.includeConfig();
-
+log('step 4 - include components');
 /* step 4 - include components */
 loader.includeComponents();
-
+log('step 5 - call generators');
 /* step 5 - call generators */
 loader.callGenerators();
-
+log('step 6 - call components preinit and init');
 /* step 6 - call components preinit and init */
 loader.initComponents();
-
+log('step 7 - execute generated code');
 /* step 7 - execute generated code */
 loader.executeGeneratedCode();
-
+log('step 8 - call main function');
 /* step 8 - call main function */
 loader.callMainFunction();
 
@@ -166,8 +166,6 @@ function Loader() {
             includeComponent(map[name]);
         }
         // sort by depends
-        map [name] = 'path';
-
         var dependsMap = [];
         while (mapLength !== newMapLength) {
             for (name in map) {
@@ -200,6 +198,7 @@ function Loader() {
 
     this.initComponents = function () {
         var name;
+        log('step 6.1 - call preInit');
         // preinit
         for (name in componentsMap) {
             if (global[name].preInit) {
@@ -210,6 +209,7 @@ function Loader() {
             Logs.log("Pre init finished.", Logs.LEVEL_NOTIFY);
             afterInitCallback();
         });
+        log('step 6.2 - call init');
         // init
         for (name in componentsMap) {
             if (global[name].init) {

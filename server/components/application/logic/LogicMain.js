@@ -146,4 +146,4 @@ LogicMain = function () {
 
 LogicMain = new LogicMain;
 
-LogicMain.depends = ['Logs', 'Statistic', 'WebSocketServer', 'ApiRouter'];
+LogicMain.depends = ['Logs', 'Statistic', 'WebSocketServer', 'ApiRouter', 'DataGame', 'DataUser', 'LogicUser', 'LogicRobot'];
