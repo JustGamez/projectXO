@@ -34,13 +34,15 @@ log('step 5 - call generators');
 loader.callGenerators();
 log('step 6 - call components preinit and init');
 /* step 6 - call components preinit and init */
-loader.initComponents();
-log('step 7 - execute generated code');
-/* step 7 - execute generated code */
-loader.executeGeneratedCode();
-log('step 8 - call main function');
-/* step 8 - call main function */
-loader.callMainFunction();
+loader.initComponents(function(){
+    log('step 7 - execute generated code');
+    /* step 7 - execute generated code */
+    loader.executeGeneratedCode();
+    log('step 8 - call main function');
+    /* step 8 - call main function */
+    loader.callMainFunction();
+});
+
 
 /**
  * Определить имя компонента по пути к нему.
@@ -196,7 +198,7 @@ function Loader() {
         componentsMap = dependsMap;
     };
 
-    this.initComponents = function () {
+    this.initComponents = function (callback) {
         var name;
         log('step 6.1 - call preInit');
         // preinit
@@ -219,6 +221,7 @@ function Loader() {
         sequencedInit(function (afterInitCallback) {
             Logs.log("Server is running full.", Logs.LEVEL_NOTIFY);
             afterInitCallback();
+            callback();
         });
     }
 };
