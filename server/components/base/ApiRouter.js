@@ -240,6 +240,8 @@ ApiRouter = new (function () {
         list = FS.readdirSync(path);
         map = {};
         for (var i in list) {
+            /**@todo .js extenstion must be */
+            if (list[i] == '.gitkeep')continue;
             groupName = getComponentNameFromPath(path + list[i]);
             tmp = null;
             if (global[groupName]) {
@@ -252,7 +254,7 @@ ApiRouter = new (function () {
                     map[groupName][methodName] = true;
                 }
             }
-            if(tmp){
+            if (tmp) {
                 global[groupName] = tmp;
             }
         }
@@ -269,6 +271,8 @@ ApiRouter = new (function () {
         list = FS.readdirSync(path);
         map = {};
         for (var i in list) {
+            /**@todo .js extenstion must be */
+            if (list[i] == '.gitkeep')continue;
             groupName = getComponentNameFromPath(path + list[i]);
             require(path + list[i]);
             map[groupName] = [];
@@ -307,6 +311,8 @@ ApiRouter = new (function () {
         var groupName, methodName;
         var code = '';
         for (groupName in map) {
+            /*@todo must .js extension*/
+            if (groupName == '.gitkeep') continue;
             code = '';
             code += groupName + ' = function(){\r\n\r\n';
             for (methodName in map[groupName]) {

@@ -334,6 +334,8 @@ ClientCodeLoader = function () {
         files = [];
         dirList = FS.readdirSync(basePath);
         for (var i in dirList) {
+            /**@todo .js extenstion must be */
+            if (dirList[i] == '.gitkeep')continue;
             path = basePath + dirList[i];
             if (FS.statSync(path).isDirectory()) {
                 files = files.concat(getFileListRecursive(path + '/'));
