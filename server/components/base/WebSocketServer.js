@@ -28,15 +28,15 @@ WebSocketServer = function () {
      * - проверим установлены ли каллбэки пользовательским кодом;
      * - проверим настройки: port
      */
-    var checkBeforeInit = function () {
+    var checkBeforeRun = function () {
         if (typeof  self.onConnect != 'function') {
             Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onConnect);
         }
         if (typeof  self.onDisconnect != 'function') {
-            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onDisconnect);
+            Logs.log("onDisconnect must be function", Logs.LEVEL_FATAL_ERROR, self.onDisconnect);
         }
         if (typeof  self.onData != 'function') {
-            Logs.log("onConnect must be function", Logs.LEVEL_FATAL_ERROR, self.onData);
+            Logs.log("onData must be function", Logs.LEVEL_FATAL_ERROR, self.onData);
         }
         if (typeof port != 'number') {
             Logs.log("port given by .setup, must be number", Logs.LEVEL_FATAL_ERROR, port);
@@ -113,10 +113,10 @@ WebSocketServer = function () {
      * Создается севрер.
      * Инициируется прослушивание.
      */
-    this.init = function (afterInitCallback) {
+    this.run = function (afterRunCallback) {
         port = Config.WebSocketServer.port;
 
-        checkBeforeInit();
+        checkBeforeRun();
 
         /* создадим сервер */
         http = HTTP.createServer(onHTTPRequest);
@@ -131,7 +131,7 @@ WebSocketServer = function () {
 
         Logs.log("WebSocketServer running. port:" + port, Logs.LEVEL_NOTIFY);
         Logs.log("WebSocketServer inited.", Logs.LEVEL_NOTIFY);
-        afterInitCallback();
+        afterRunCallback();
     };
 
     /**

@@ -10,7 +10,8 @@ LogicMain = function () {
     };
 
     this.main = function () {
-
+        WebSocketServer.run(function () {
+        });
         this.setDeInitCallbacks();
     };
 

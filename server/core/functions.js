@@ -22,7 +22,7 @@ var sequencedInitStack = [];
 var sequencedInitBlocked = false;
 
 /**
- * Выполнить очередной инит по завершению всех предыдущих.
+ * Add to queue and try call next
  * @param initFunction {function}
  */
 sequencedInit = function (initFunction) {
@@ -32,7 +32,6 @@ sequencedInit = function (initFunction) {
 
 var tryInitNext = function () {
     if (!sequencedInitStack.length) {
-        log("Init stack empty now.");
         return;
     }
     if (sequencedInitBlocked) return;

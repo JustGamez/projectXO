@@ -34,7 +34,7 @@ log('step 5 - call generators');
 loader.callGenerators();
 log('step 6 - call components preinit and init');
 /* step 6 - call components preinit and init */
-loader.initComponents(function(){
+loader.initComponents(function () {
     log('step 7 - execute generated code');
     /* step 7 - execute generated code */
     loader.executeGeneratedCode();

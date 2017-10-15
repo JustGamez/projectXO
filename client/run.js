@@ -4,9 +4,9 @@ window.onload = function () {
     global = window;
     process = {};
     process.exit = function () {
-        console.log("Внезапное завершение работы!");
-        document.body.innerHTML = 'Всё поламалось!';
-        throw new Error("Всё поламалось!");
+        console.log("Unexpected termination of work!");
+        document.body.innerHTML = 'server is broken!';
+        throw new Error("server is broken!");
     };
 
 
