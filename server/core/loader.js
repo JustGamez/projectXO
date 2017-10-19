@@ -119,6 +119,7 @@ function Loader() {
             for (var i in list) {
                 //@TODO *.js extension must be
                 if (list[i] == '.gitkeep')continue;
+                if (list[i] == '.gitignore')continue;
                 if (FS.statSync(path + list[i]).isDirectory()) {
                     scanRecursive(path + list[i] + '/');
                 } else {

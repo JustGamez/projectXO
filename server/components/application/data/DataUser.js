@@ -151,6 +151,22 @@ DataUser = function () {
         DB.query("UPDATE users SET lastLogoutTimestamp = " + (new Date().getTime()) + " WHERE id = " + userId, function () {
         });
     };
+
+    /**
+     * Обновить данные о последнем входе игрока.
+     * @param userId {int} внутрений id пользователя.
+     */
+    this.updateLastLogin = function (userId) {
+        if (!userId) {
+            Logs.log("DataUser.udpateLastLogin. Must be userId", Logs.LEVEL_WARNING, userId);
+            return;
+        }
+        if (cache[userId]) {
+            cache[userId] = null;
+        }
+        DB.query("UPDATE " + tableName + " SET lastLoginTimestamp = " + (new Date().getTime()) + " WHERE id = " + userId, function () {
+        });
+    };
 };
 
 /**

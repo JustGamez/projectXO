@@ -172,6 +172,9 @@ ApiRouter = new (function () {
         code = '';
         var pureData;
         pureData = {};
+        if (!map){
+            map = getSAPIMap();
+        }
         for (group in map) {
             for (method in global[group]) {
                 if (typeof global[group][method] !== 'function')continue;
@@ -227,7 +230,7 @@ ApiRouter = new (function () {
         code2 = code2.substr(0, code2.length - 1);
         code2 += '};\r\n';
         code2 = 'document.addEventListener("DOMContentLoaded", function() {' + code2 + '})';
-        console.log(code2);
+        //console.log(code2);
     };
 
     /**
@@ -242,6 +245,7 @@ ApiRouter = new (function () {
         for (var i in list) {
             /**@todo .js extenstion must be */
             if (list[i] == '.gitkeep')continue;
+            if (list[i] == '.gitignore')continue;
             groupName = getComponentNameFromPath(path + list[i]);
             tmp = null;
             if (global[groupName]) {
@@ -273,6 +277,7 @@ ApiRouter = new (function () {
         for (var i in list) {
             /**@todo .js extenstion must be */
             if (list[i] == '.gitkeep')continue;
+            if (list[i] == '.gitignore')continue;
             groupName = getComponentNameFromPath(path + list[i]);
             require(path + list[i]);
             map[groupName] = [];
@@ -313,6 +318,7 @@ ApiRouter = new (function () {
         for (groupName in map) {
             /*@todo must .js extension*/
             if (groupName == '.gitkeep') continue;
+            if (groupName == '.gitignore')continue;
             code = '';
             code += groupName + ' = function(){\r\n\r\n';
             for (methodName in map[groupName]) {

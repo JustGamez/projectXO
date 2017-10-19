@@ -57,7 +57,10 @@ ClientCodeLoader = function () {
 
     var generateImageSpriteResult = null;
 
+    var projectPrefix = '';
+
     this.init = function (callback) {
+        projectPrefix = Config.Project.name ? '/' + Config.Project.name : '';
         reloadClientCodeEveryRequest = Config.WebSocketServer.reloadClientCodeEveryRequest;
         reloadClientImageCodeEveryRequest = Config.WebSocketServer.reloadClientImageCodeEveryRequest;
         clientCodePath = Config.WebSocketServer.clientCodePath;
@@ -150,7 +153,6 @@ ClientCodeLoader = function () {
     var loadClientCodeVK = function () {
         var code;
         Logs.log("Load client code.");
-
         //@todo сделать тут HTML5
         code = "";
         code += "<HTML>\r\n";
@@ -158,14 +160,14 @@ ClientCodeLoader = function () {
         code += "<meta charset='utf-8' />\r\n";
         code += "<script src='//vk.com/js/api/xd_connection.js?2' type='text/javascript'></script>\r\n";
         code += "<script>window.PLATFORM_ID = 'VK';</script>";
-        code += "<script type='text/javascript' src='/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        code += "<script type='text/javascript' src=" + projectPrefix + "/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
         code += "</HEAD><BODY style='margin:0px;'>\r\n";
         code += getClientImageCode();
         /* application div */
         code += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;top:0px;' id='applicationArea' ></div>\r\n";
         /* comments div */
         code += "<div style='top:" + Config.Project.applicationAreaHeight + "px;position:absolute;'>";
-        code += "<iframe src='/service/VKCommentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
+        code += "<iframe src='" + projectPrefix + "/service/VKCommentsWidget' style='border:none; height: " + (Config.VKCommentWidget.height + 44) + "px; width:" + Config.VKCommentWidget.width + ";'></iframe>";
         code += "</div>\r\n";
         code += "</BODY></HTML>";
         clientCodeVK = code;
@@ -183,7 +185,7 @@ ClientCodeLoader = function () {
         code += "<head>";
         code += "<meta charset='utf-8' />";
         code += "<script>window.PLATFORM_ID = 'STANDALONE';</script>";
-        code += "<script src='/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
+        code += "<script src='" + projectPrefix + "/js/MainClientCode.js?t=" + (new Date().getTime()).toString() + "'></script>\r\n";
         code += "</head>";
         code += "<body>";
         code += "<div style='height:" + Config.Project.applicationAreaHeight + "px;position:absolute;' id='applicationArea' ></div>\r\n";
@@ -201,19 +203,20 @@ ClientCodeLoader = function () {
         var mainClientJSCode;
         mainClientJSCode = getMainClientJSCode();
         //@todo path to JS move to Config file
-        //FS.writeFile(CONST_DIR_ROOT + '/public/js/MainClientCodeSource.js', mainClientJSCode);
 
         //@todo LogicClintCodeloader.config?
         if (Config.WebSocketServer.compressJSClientCode) {
             mainClientJSCode = 'function ___(){ ' + mainClientJSCode + ' };___();';
             var result = UGLIFYJS.minify(mainClientJSCode);
-            console.log(mainClientJSCode);
             if (result.code) {
                 mainClientJSCode = result.code;
             }
+            else {
+                Logs.log("no code minimized", Logs.LEVEL_WARNING);
+            }
         }
         //@todo path to JS move to Config file
-        FS.writeFileSync(CONST_DIR_ROOT + '/public/js/MainClientCode.js', mainClientJSCode);
+        FS.writeFileSync(CONST_DIR_ROOT + '/public' + projectPrefix + '/js/MainClientCode.js', mainClientJSCode);
     };
 
     /**
@@ -275,28 +278,35 @@ ClientCodeLoader = function () {
 
     var getClientImageCodeSprited = function () {
         var imageCode, path, timePostfix, demension;
+        var spritePath = '../public' + projectPrefix + '/images/sprite.png.json';
         if (!reloadClientImageCodeEveryRequest && clientImageCode) {
             return clientImageCode;
         }
-        imageCode = "<script>";
-        imageCode += "imagesData = {};";
-        timePostfix = "?t=" + new Date().getTime();
-        for (var i in generateImageSpriteResult.coordinates) {
-            path = i.replace('../public', '');
-            imageCode += "\r\nimagesData['" + path + "']={" + "" +
-                "path:'" + '/images/sprite.png' + timePostfix + "'," +
-                "w:" + generateImageSpriteResult.coordinates[i].width + "," +
-                "h:" + generateImageSpriteResult.coordinates[i].height + "," +
-                "x:" + generateImageSpriteResult.coordinates[i].x + "," +
-                "y:" + generateImageSpriteResult.coordinates[i].y + "" +
-                "};";
+        if (generateImageSpriteResult === true) {
+            imageCode = FS.readFileSync(spritePath);
+        } else {
+            imageCode = "<script>";
+            imageCode += "imagesData = {};";
+            timePostfix = "?t=" + new Date().getTime();
+            for (var i in generateImageSpriteResult.coordinates) {
+                path = i.replace('../public', '');
+                path = path.replace(projectPrefix, '');
+                imageCode += "\r\nimagesData['" + path + "']={" + "" +
+                    "path:'" + projectPrefix + '/images/sprite.png' + timePostfix + "'," +
+                    "w:" + generateImageSpriteResult.coordinates[i].width + "," +
+                    "h:" + generateImageSpriteResult.coordinates[i].height + "," +
+                    "x:" + generateImageSpriteResult.coordinates[i].x + "," +
+                    "y:" + generateImageSpriteResult.coordinates[i].y + "" +
+                    "};";
+            }
+            imageCode += "</script>";
+            imageCode += "<div style='display:none;'>";
+            imageCode += "<img src='" + projectPrefix + "/images/sprite.png" + timePostfix + "'>";
+            imageCode += "</div>";
+            FS.writeFileSync(spritePath, imageCode);
+            // cache it
+            clientImageCode = imageCode;
         }
-        imageCode += "</script>";
-        imageCode += "<div style='display:none;'>";
-        imageCode += "<img src='/images/sprite.png" + timePostfix + "'>";
-        imageCode += "</div>";
-        // cache it
-        clientImageCode = imageCode;
         return imageCode;
     };
 
@@ -336,6 +346,8 @@ ClientCodeLoader = function () {
         for (var i in dirList) {
             /**@todo .js extenstion must be */
             if (dirList[i] == '.gitkeep')continue;
+            if (dirList[i] == '.gitignore')continue;
+            if (dirList[i] == 'sprite.png.json')continue;
             path = basePath + dirList[i];
             if (FS.statSync(path).isDirectory()) {
                 files = files.concat(getFileListRecursive(path + '/'));
@@ -353,10 +365,11 @@ ClientCodeLoader = function () {
 
         if (generateImageSpriteLoaded) return;
         generateImageSpriteLoaded = true;
-        spritePath = '../public/images/sprite.png';
+        spritePath = '../public' + projectPrefix + '/images/sprite.png';
 
         if (FS.existsSync(spritePath)) {
             FS.unlink(spritePath);
+            callback(true);
         }
 
         sprites = getFileListRecursive(imagesPath);
@@ -372,8 +385,7 @@ ClientCodeLoader = function () {
             }
             // coordinates: ['../public/images/buttons/addFriendActive.png': { x: 75, y: 1353, width: 75, height: 80 },
             //'../public/images/buttons/addFriendHover.png': { x: 150, y: 1353, width
-            //console.log(result);
-            fsResult = FS.writeFileSync(spritePath, result.image, 'binary');
+            var fsResult = FS.writeFileSync(spritePath, result.image, 'binary');
             Logs.log("SPRITESMITH Complete", Logs.LEVEL_NOTIFY);
             callback(result);
         });

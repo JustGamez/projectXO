@@ -129,6 +129,7 @@ LogicUser = function () {
         userAddConn(user, cntx);
         sendOnlineCountToAll(user.id, true);
         CAPIUser.authorizeSuccess(user.id, user.id);
+        DataUser.updateLastLogin(user.id);
         Profiler.stop(profilerType, prid);
         //TODO
         refreshUserSocNetInfo(user, function (user) {

@@ -1,7 +1,10 @@
 LogicMain = function () {
     var self = this;
 
+    var projectPrefix = '';
+
     this.preInit = function (afterCallback) {
+        projectPrefix = Config.Project.name ? '/' + Config.Project.name : '';
         self.setStatisticsIds();
         self.setProfileIds();
         self.setWebSocketServerMap();
@@ -102,29 +105,34 @@ LogicMain = function () {
 
     this.setWebSocketServerMap = function () {
 
-        WebSocketServer.setMap({
-            '/service/clientCodeVK': ClientCodeLoader.getClientCodeVK,
-            '/service/clientCodeStandalone': ClientCodeLoader.getClientCodeStandalone,
-            '/service/reloadClientCode': ClientCodeLoader.reloadClientCode,
-            '/service/VKCommentsWidget': ClientCodeLoader.getVKCommentsWidget,
+        var map = {};
+        map[projectPrefix + '/service/clientCodeVK'] = ClientCodeLoader.getClientCodeVK;
+        map[projectPrefix + '/service/clientCodeStandalone'] = ClientCodeLoader.getClientCodeStandalone;
+        map[projectPrefix + '/service/reloadClientCode'] = ClientCodeLoader.reloadClientCode;
+        map[projectPrefix + '/service/VKCommentsWidget'] = ClientCodeLoader.getVKCommentsWidget;
 
-            '/service/--profiler': LogicSystemRequests.getProfiler,
-            '/service/--log': LogicSystemRequests.getLog,
-            '/service/--shutdown___': LogicSystemRequests.shutdown,
-            '/service/--logsSetDetail': LogicSystemRequests.logsSetDetail,
-            '/service/--logsSetNotify': LogicSystemRequests.logsSetNotify,
-            '/service/--help': function (callback) {
-                callback("--profiler <br>" +
-                    "--log <br>" +
-                    "--logsSetDetail<br>" +
-                    "--logsSetNotify<br>" +
-                    "--help<br>" +
-                    "<br>" +
-                    "reloadClientCode<br>" +
-                    "clientCodeVK<br>" +
-                    "clientCodeStandalone?socNetUserId={socNetUserId}<br>");
-            }
-        });
+        map[projectPrefix + '/service/--profiler'] = LogicSystemRequests.getProfiler;
+        map[projectPrefix + '/service/--log'] = LogicSystemRequests.getLog;
+        map[projectPrefix + '/service/--shutdown___'] = LogicSystemRequests.shutdown;
+        map[projectPrefix + '/service/--logsSetDetail'] = LogicSystemRequests.logsSetDetail;
+        map[projectPrefix + '/service/--logsSetNotify'] = LogicSystemRequests.logsSetNotify;
+        map[projectPrefix + '/service/--help'] = function (callback) {
+            callback("--profiler <br>" +
+                "--log <br>" +
+                "--logsSetDetail<br>" +
+                "--logsSetNotify<br>" +
+                "--help<br>" +
+                "<br>" +
+                "reloadClientCode<br>" +
+                "clientCodeVK<br>" +
+                "clientCodeStandalone?socNetUserId={socNetUserId}<br>");
+        };
+
+        console.log(map);
+        console.log(map);
+        console.log(map);
+
+        WebSocketServer.setMap(map);
     };
 
     this.linkWebSocketAndApiRouter = function () {
